@@ -45,12 +45,7 @@ HPExport void plugin_init (void) {
     addScriptCommand("closedialog", "", dummy);
     addScriptCommand("shop", "s", dummy);
     addScriptCommand("getitemlink", "s", dummyStr);
-//    addScriptCommand("menuimage", "ss", dummyStr);
-//    addScriptCommand("mesn", "*", dummy);
-//    addScriptCommand("mesq", "s*", dummy);
-//    addScriptCommand("g", "ss", dummyStr);
     addScriptCommand("l", "s*", l);
-    addScriptCommand("lg", "s*", dummyStr);
     addScriptCommand("getlang", "*", dummyStr);
     addScriptCommand("setlang", "i", dummy);
     addScriptCommand("requestlang", "*", dummy);
@@ -58,7 +53,6 @@ HPExport void plugin_init (void) {
     addScriptCommand("setq", "ii", dummy);
     addScriptCommand("getnpcdir", "*", dummyInt);
     addScriptCommand("setnpcdir", "*", dummy);
-//    addScriptCommand("col", "si", dummyStr);
     addScriptCommand("rif", "is*", dummyStr);
     addScriptCommand("countitemcolor", "*", dummyInt);
     addScriptCommand("getclientversion", "*", dummyInt);
