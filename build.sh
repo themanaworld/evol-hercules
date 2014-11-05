@@ -1,5 +1,8 @@
 #!/bin/bash
 
+mkdir build
 autoreconf -i
-./configure
+cd build
+../configure
 make -j3
+cd -
