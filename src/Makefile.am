@@ -2,7 +2,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 MAP_SRC = map/dummy.c \
     map/dummy.h \
-    map/init.c
+    map/init.c \
+    map/script.c \
+    map/script.h
 
 lib_LTLIBRARIES = libevol_map.la
 libevol_map_la_SOURCES = ${MAP_SRC}

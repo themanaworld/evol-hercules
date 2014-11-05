@@ -15,12 +15,13 @@
 #include "../../../map/script.h"
 
 #include "map/dummy.h"
+#include "map/script.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo =
 {
-    "evoldummy",
+    "evol_map",
     SERVER_TYPE_MAP,
     "0.1",
     HPM_VERSION
@@ -48,8 +49,7 @@ HPExport void plugin_init (void) {
 //    addScriptCommand("mesn", "*", dummy);
 //    addScriptCommand("mesq", "s*", dummy);
 //    addScriptCommand("g", "ss", dummyStr);
-    addScriptCommand("l", "s*", dummyStr);
-    // must be ss
+    addScriptCommand("l", "s*", l);
     addScriptCommand("lg", "s*", dummyStr);
     addScriptCommand("getlang", "*", dummyStr);
     addScriptCommand("setlang", "i", dummy);

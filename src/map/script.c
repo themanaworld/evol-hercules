@@ -14,27 +14,9 @@
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
 
-void showNotImplimented()
+BUILDIN(l)
 {
-    ShowWarning("Not implimented\n");
-}
-
-BUILDIN(dummy)
-{
-    showNotImplimented();
-    return true;
-}
-
-BUILDIN(dummyStr)
-{
-    showNotImplimented();
-    script_pushconststr(st, "");
-    return true;
-}
-
-BUILDIN(dummyInt)
-{
-    showNotImplimented();
-    script_pushint(st, 0);
+    // for now not translate and not use format parameters
+    script_pushstr(st, strdup(script_getstr(st, 2)));
     return true;
 }
