@@ -13,3 +13,4 @@ libevol_map_la_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare
 
 all-local: libevol_map.la
 	cp .libs/*.so ../../../plugins
+	cp .libs/*.so ../../../../server-data/plugins
