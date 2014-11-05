@@ -24,5 +24,5 @@ libevol_map_la_LDFLAGS = -avoid-version
 libevol_map_la_CFLAGS = ${SHARED_FLAGS}
 
 all-local: libevol_char.la libevol_login.la libevol_map.la
-	cp .libs/*.so ../../../plugins
-	cp .libs/*.so ../../../../server-data/plugins
+	cp .libs/*.so ../../../../plugins || cp .libs/*.so ../../../plugins
+	cp .libs/*.so ../../../../../server-data/plugins || cp .libs/*.so ../../../../server-data/plugins
