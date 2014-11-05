@@ -14,15 +14,7 @@
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
 
-#include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
-
-HPExport struct hplugin_info pinfo =
-{
-    "evoldummy",
-    SERVER_TYPE_MAP,
-    "0.1",
-    HPM_VERSION
-};
+//#include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 void showNotImplimented()
 {
@@ -47,53 +39,4 @@ BUILDIN(dummyInt)
     showNotImplimented();
     script_pushint(st, 0);
     return true;
-}
-
-/* run when server starts */
-HPExport void plugin_init (void) {
-    /* core interfaces */
-    iMalloc = GET_SYMBOL("iMalloc");
-
-    /* map-server interfaces */
-    script = GET_SYMBOL("script");
-    clif = GET_SYMBOL("clif");
-    pc = GET_SYMBOL("pc");
-    strlib = GET_SYMBOL("strlib");
-    session = GET_SYMBOL("session");
-
-    addScriptCommand("setcamnpc", "*", dummy);
-    addScriptCommand("restorecam", "", dummy);
-    addScriptCommand("npctalk3", "s", dummy);
-    addScriptCommand("closedialog", "", dummy);
-    addScriptCommand("shop", "s", dummy);
-    addScriptCommand("getitemlink", "s", dummyStr);
-//    addScriptCommand("menuimage", "ss", dummyStr);
-//    addScriptCommand("mesn", "*", dummy);
-//    addScriptCommand("mesq", "s*", dummy);
-//    addScriptCommand("g", "ss", dummyStr);
-    addScriptCommand("l", "s*", dummyStr);
-    // must be ss
-    addScriptCommand("lg", "s*", dummyStr);
-    addScriptCommand("getlang", "*", dummyStr);
-    addScriptCommand("setlang", "i", dummy);
-    addScriptCommand("requestlang", "*", dummy);
-    addScriptCommand("getq", "i", dummyInt);
-    addScriptCommand("setq", "ii", dummy);
-    addScriptCommand("getnpcdir", "*", dummyInt);
-    addScriptCommand("setnpcdir", "*", dummy);
-//    addScriptCommand("col", "si", dummyStr);
-    addScriptCommand("rif", "is*", dummyStr);
-    addScriptCommand("countitemcolor", "*", dummyInt);
-    addScriptCommand("getclientversion", "*", dummyInt);
-    // must be replaced to misceffect
-    addScriptCommand("misceffect2", "i*", dummy);
-}
-
-HPExport void server_preinit (void) {
-}
-
-HPExport void server_online (void) {
-}
-
-HPExport void plugin_final (void) {
 }
