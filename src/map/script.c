@@ -17,6 +17,6 @@
 BUILDIN(l)
 {
     // for now not translate and not use format parameters
-    script_pushstr(st, strdup(script_getstr(st, 2)));
+    script_pushstr(st, aStrdup(script_getstr(st, 2)));
     return true;
 }
