@@ -15,6 +15,7 @@
 #include "../../../map/script.h"
 
 #include "map/dummy.h"
+#include "map/parse.h"
 #include "map/script.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -38,6 +39,7 @@ HPExport void plugin_init (void) {
     pc = GET_SYMBOL("pc");
     strlib = GET_SYMBOL("strlib");
     session = GET_SYMBOL("session");
+    sockt = GET_SYMBOL("sockt");
 
     addScriptCommand("setcamnpc", "*", dummy);
     addScriptCommand("restorecam", "", dummy);
@@ -55,9 +57,11 @@ HPExport void plugin_init (void) {
     addScriptCommand("setnpcdir", "*", dummy);
     addScriptCommand("rif", "is*", dummyStr);
     addScriptCommand("countitemcolor", "*", dummyInt);
-    addScriptCommand("getclientversion", "*", dummyInt);
+    addScriptCommand("getclientversion", "", getClientVersion);
     // must be replaced to misceffect
     addScriptCommand("misceffect2", "i*", dummy);
+
+    addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
 }
 
 HPExport void server_preinit (void) {

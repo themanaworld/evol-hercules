@@ -5,5 +5,6 @@
 #define EVOL_MAP_SCRIPT
 
 BUILDIN(l);
+BUILDIN(getClientVersion);
 
 #endif  // EVOL_MAP_SCRIPT

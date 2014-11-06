@@ -9,8 +9,13 @@ LOGIN_SRC = login/init.c \
 MAP_SRC = map/dummy.c \
     map/dummy.h \
     map/init.c \
+    map/parse.c \
+    map/parse.h \
     map/script.c \
-    map/script.h
+    map/script.h \
+    map/session.c \
+    map/session.h \
+    map/sessionext.h
 
 SHARED_FLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -fsanitize=address
 

@@ -14,9 +14,29 @@
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
 
+#include "map/session.h"
+#include "map/sessionext.h"
+
 BUILDIN(l)
 {
     // for now not translate and not use format parameters
     script_pushstr(st, aStrdup(script_getstr(st, 2)));
     return true;
+}
+
+BUILDIN(getClientVersion)
+{
+    if (!st->rid)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    TBL_PC *sd = script->rid2sd(st);
+    if (!sd)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    struct SessionExt *data = session_get(sd->fd);
+    script_pushint(st, data->clientVersion);
 }
