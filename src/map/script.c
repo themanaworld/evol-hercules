@@ -17,18 +17,26 @@
 #include "map/session.h"
 #include "map/sessionext.h"
 
-#define getData(def) \
+#define getDataReturn(def) \
     if (!st->rid) \
     { \
-        script_pushint(st, 0); \
+        script_pushint(st, def); \
         return true; \
     } \
     TBL_PC *sd = script->rid2sd(st); \
     if (!sd) \
     { \
-        script_pushint(st, 0); \
+        script_pushint(st, def); \
         return true; \
     } \
+    struct SessionExt *data = session_get(sd->fd)
+
+#define getData() \
+    if (!st->rid) \
+        return true; \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+        return true; \
     struct SessionExt *data = session_get(sd->fd)
 
 BUILDIN(l)
@@ -40,12 +48,18 @@ BUILDIN(l)
 
 BUILDIN(getClientVersion)
 {
-    getData(0);
+    getDataReturn(0);
     script_pushint(st, data->clientVersion);
 }
 
 BUILDIN(getLang)
 {
-    getData(0);
+    getDataReturn(0);
     script_pushint(st, data->language);
+}
+
+BUILDIN(setLang)
+{
+    getData();
+    data->language = script_getint(st, 2);
 }
