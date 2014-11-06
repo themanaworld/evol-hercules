@@ -28,6 +28,8 @@ HPExport struct hplugin_info pinfo =
 HPExport void plugin_init (void) {
     /* core interfaces */
     iMalloc = GET_SYMBOL("iMalloc");
+    session = GET_SYMBOL("session");
+    sockt = GET_SYMBOL("sockt");
 
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
 }
