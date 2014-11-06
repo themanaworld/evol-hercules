@@ -2,7 +2,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 CHAR_SRC = char/init.c
 
-LOGIN_SRC = login/init.c
+LOGIN_SRC = login/init.c \
+    login/parse.c \
+    login/parse.h
 
 MAP_SRC = map/dummy.c \
     map/dummy.h \

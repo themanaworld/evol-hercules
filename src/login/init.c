@@ -12,6 +12,8 @@
 #include "../../../common/strlib.h"
 #include "../../../login/login.h"
 
+#include "login/parse.h"
+
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo =
@@ -26,6 +28,8 @@ HPExport struct hplugin_info pinfo =
 HPExport void plugin_init (void) {
     /* core interfaces */
     iMalloc = GET_SYMBOL("iMalloc");
+
+    addPacket(0x7530, 22, login_parse_version, hpParse_Login);
 }
 
 HPExport void server_preinit (void) {
