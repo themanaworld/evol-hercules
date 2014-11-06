@@ -7,6 +7,7 @@
 struct SessionExt
 {
     int clientVersion;
+    int language;
 };
 
 #endif  // EVOL_MAP_SESSIONEXT

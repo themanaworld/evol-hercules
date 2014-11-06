@@ -33,5 +33,6 @@ struct SessionExt *session_create(void)
     if (!data)
         return NULL;
     data->clientVersion = 0;
+    data->language = 0;
     return data;
 }

@@ -17,6 +17,20 @@
 #include "map/session.h"
 #include "map/sessionext.h"
 
+#define getData(def) \
+    if (!st->rid) \
+    { \
+        script_pushint(st, 0); \
+        return true; \
+    } \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+    { \
+        script_pushint(st, 0); \
+        return true; \
+    } \
+    struct SessionExt *data = session_get(sd->fd)
+
 BUILDIN(l)
 {
     // for now not translate and not use format parameters
@@ -26,17 +40,12 @@ BUILDIN(l)
 
 BUILDIN(getClientVersion)
 {
-    if (!st->rid)
-    {
-        script_pushint(st, 0);
-        return true;
-    }
-    TBL_PC *sd = script->rid2sd(st);
-    if (!sd)
-    {
-        script_pushint(st, 0);
-        return true;
-    }
-    struct SessionExt *data = session_get(sd->fd);
+    getData(0);
     script_pushint(st, data->clientVersion);
+}
+
+BUILDIN(getLang)
+{
+    getData(0);
+    script_pushint(st, data->language);
 }

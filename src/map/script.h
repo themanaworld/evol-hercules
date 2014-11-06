@@ -6,5 +6,6 @@
 
 BUILDIN(l);
 BUILDIN(getClientVersion);
+BUILDIN(getLang);
 
 #endif  // EVOL_MAP_SCRIPT
