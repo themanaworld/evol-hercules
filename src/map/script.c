@@ -61,5 +61,5 @@ BUILDIN(getLang)
 BUILDIN(setLang)
 {
     getData();
-    data->language = script_getint(st, 2);
+    data->language = script_getnum(st, 2);
 }
