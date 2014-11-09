@@ -17,18 +17,19 @@ MAP_SRC = map/dummy.c \
     map/session.h \
     map/sessionext.h
 
-SHARED_FLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -fsanitize=address
+SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -fsanitize=address
+SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 lib_LTLIBRARIES = libevol_char.la libevol_login.la libevol_map.la
 libevol_char_la_SOURCES = ${CHAR_SRC}
-libevol_char_la_LDFLAGS = -avoid-version
-libevol_char_la_CFLAGS = ${SHARED_FLAGS}
+libevol_char_la_LDFLAGS = ${SHARED_LDFLAGS}
+libevol_char_la_CFLAGS = ${SHARED_CFLAGS}
 libevol_login_la_SOURCES = ${LOGIN_SRC}
-libevol_login_la_LDFLAGS = -avoid-version
-libevol_login_la_CFLAGS = ${SHARED_FLAGS}
+libevol_login_la_LDFLAGS = ${SHARED_LDFLAGS}
+libevol_login_la_CFLAGS = ${SHARED_CFLAGS}
 libevol_map_la_SOURCES = ${MAP_SRC}
-libevol_map_la_LDFLAGS = -avoid-version
-libevol_map_la_CFLAGS = ${SHARED_FLAGS}
+libevol_map_la_LDFLAGS = ${SHARED_LDFLAGS}
+libevol_map_la_CFLAGS = ${SHARED_CFLAGS}
 
 all-local: libevol_char.la libevol_login.la libevol_map.la
 	cp .libs/*.so ../../../../plugins || cp .libs/*.so ../../../plugins
