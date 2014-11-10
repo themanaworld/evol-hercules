@@ -18,7 +18,7 @@ MAP_SRC = map/dummy.c \
     map/sessionext.h
 
 SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -fsanitize=address
-SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
+SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined -lasan
 
 lib_LTLIBRARIES = libevol_char.la libevol_login.la libevol_map.la
 libevol_char_la_SOURCES = ${CHAR_SRC}
