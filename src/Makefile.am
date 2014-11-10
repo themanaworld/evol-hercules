@@ -6,7 +6,9 @@ LOGIN_SRC = login/config.c \
     login/config.h \
     login/init.c \
     login/parse.c \
-    login/parse.h
+    login/parse.h \
+    login/send.c \
+    login/send.h
 
 MAP_SRC = map/dummy.c \
     map/dummy.h \

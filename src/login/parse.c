@@ -13,6 +13,7 @@
 #include "../../../login/login.h"
 
 #include "login/parse.h"
+#include "login/send.h"
 
 int clientVersion = 0;
 
@@ -30,12 +31,7 @@ void login_parse_version(int fd)
         return;
     }
 
-    WFIFOHEAD(fd, 4 + 8);
-    WFIFOW(fd, 0) = 0x7531;
-    WFIFOW(fd, 2) = 4 + 8;
-    WFIFOL(fd, 4) = 0;  // unused
-    WFIFOL(fd, 8) = 1;  // server version
-    WFIFOSET(fd, WFIFOW(fd,2));
+    send_server_version(fd);
 }
 
 int elogin_parse_client_login_pre(int *fd, struct login_session_data* sd, const char *const ip)
