@@ -21,17 +21,19 @@ HPExport struct hplugin_info pinfo =
     HPM_VERSION
 };
 
-/* run when server starts */
-HPExport void plugin_init (void) {
-    /* core interfaces */
+HPExport void plugin_init (void)
+{
     iMalloc = GET_SYMBOL("iMalloc");
 }
 
-HPExport void server_preinit (void) {
+HPExport void server_preinit (void)
+{
 }
 
-HPExport void server_online (void) {
+HPExport void server_online (void)
+{
 }
 
-HPExport void plugin_final (void) {
+HPExport void plugin_final (void)
+{
 }

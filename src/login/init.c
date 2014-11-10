@@ -25,9 +25,8 @@ HPExport struct hplugin_info pinfo =
     HPM_VERSION
 };
 
-/* run when server starts */
-HPExport void plugin_init (void) {
-    /* core interfaces */
+HPExport void plugin_init (void)
+{
     iMalloc = GET_SYMBOL("iMalloc");
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
@@ -35,12 +34,15 @@ HPExport void plugin_init (void) {
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
 }
 
-HPExport void server_preinit (void) {
+HPExport void server_preinit (void)
+{
     addLoginConf("update_server", config_update_server);
 }
 
-HPExport void server_online (void) {
+HPExport void server_online (void)
+{
 }
 
-HPExport void plugin_final (void) {
+HPExport void plugin_final (void)
+{
 }

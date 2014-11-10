@@ -28,12 +28,10 @@ HPExport struct hplugin_info pinfo =
     HPM_VERSION
 };
 
-/* run when server starts */
-HPExport void plugin_init (void) {
-    /* core interfaces */
+HPExport void plugin_init (void)
+{
     iMalloc = GET_SYMBOL("iMalloc");
 
-    /* map-server interfaces */
     script = GET_SYMBOL("script");
     clif = GET_SYMBOL("clif");
     pc = GET_SYMBOL("pc");
@@ -64,11 +62,14 @@ HPExport void plugin_init (void) {
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
 }
 
-HPExport void server_preinit (void) {
+HPExport void server_preinit (void)
+{
 }
 
-HPExport void server_online (void) {
+HPExport void server_online (void)
+{
 }
 
-HPExport void plugin_final (void) {
+HPExport void plugin_final (void)
+{
 }
