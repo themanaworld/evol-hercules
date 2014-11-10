@@ -31,6 +31,7 @@ void login_parse_version(int fd)
         return;
     }
 
+    send_update_host(fd);
     send_server_version(fd);
 }
 

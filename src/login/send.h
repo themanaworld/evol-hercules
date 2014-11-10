@@ -5,5 +5,6 @@
 #define EVOL_LOGIN_SEND
 
 void send_server_version();
+void send_update_host(int fd);
 
 #endif  // EVOL_LOGIN_SEND

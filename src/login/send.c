@@ -12,6 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../login/login.h"
 
+#include "login/config.h"
 #include "login/send.h"
 
 void send_server_version(int fd)
@@ -22,4 +23,16 @@ void send_server_version(int fd)
     WFIFOL(fd, 4) = 0;  // unused
     WFIFOL(fd, 8) = 1;  // server version
     WFIFOSET(fd, WFIFOW(fd,2));
+}
+
+void send_update_host(int fd)
+{
+    if (!update_server)
+        return;
+    const int sz = 4 + strlen(update_server);
+    WFIFOHEAD(fd, sz);
+    WFIFOW(fd, 0) = 0x63;
+    WFIFOW(fd, 2) = sz;
+    memcpy(WFIFOP (fd, 4), update_server, sz);
+    WFIFOSET(fd, sz);
 }

@@ -6,4 +6,6 @@
 
 void config_update_server(const char *val);
 
+extern char *update_server;
+
 #endif  // EVOL_LOGIN_CONFIG

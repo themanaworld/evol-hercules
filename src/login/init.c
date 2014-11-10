@@ -27,7 +27,6 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-    iMalloc = GET_SYMBOL("iMalloc");
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
 
@@ -39,6 +38,7 @@ HPExport void plugin_init (void)
 
 HPExport void server_preinit (void)
 {
+    iMalloc = GET_SYMBOL("iMalloc");
     addLoginConf("update_server", config_update_server);
 }
 

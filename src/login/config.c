@@ -17,5 +17,5 @@ char *update_server = NULL;
 
 void config_update_server(const char *val)
 {
-    update_server = val;
+    update_server = aStrdup(val);
 }
