@@ -31,7 +31,10 @@ HPExport void plugin_init (void)
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
 
+    login = GET_SYMBOL("login");
+
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
+    addHookPre("login->parse_client_login", elogin_parse_client_login_pre);
 }
 
 HPExport void server_preinit (void)
