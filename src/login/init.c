@@ -12,6 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../login/login.h"
 
+#include "login/config.h"
 #include "login/parse.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -35,6 +36,7 @@ HPExport void plugin_init (void) {
 }
 
 HPExport void server_preinit (void) {
+    addLoginConf("update_server", config_update_server);
 }
 
 HPExport void server_online (void) {
