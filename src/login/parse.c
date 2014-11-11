@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../login/account.h"
 #include "../../../login/login.h"
 
 #include "login/parse.h"
@@ -35,13 +36,99 @@ void login_parse_version(int fd)
     send_server_version(fd);
 }
 
-int elogin_parse_client_login_pre(int *fd, struct login_session_data* sd, const char *const ip)
+int elogin_parse_client_login_pre(int *fdPtr, struct login_session_data* sd, const char *const ip)
 {
-    if (clientVersion < 2)
+    int fd = *fdPtr;
+    uint16 command = RFIFOW(fd,0);
+    if (command != 0x64)
     {
-        login->login_error(*fd, 5);
+        login->login_error(fd, 3);
         hookStop();
         return 1;
     }
+    char username[NAME_LENGTH];
+    safestrncpy(username, (const char*)RFIFOP(fd, 6), NAME_LENGTH);
+    int len = strnlen(username, NAME_LENGTH);
+    if (clientVersion < 2)
+    {
+        login->login_error(fd, 5);
+        hookStop();
+        return 1;
+    }
+    else if (len >= 2 && username[len - 2] == '_' && memchr("FfMm", username[len - 1], 4))
+    {
+        login->login_error(fd, 3);
+        hookStop();
+        return 1;
+    }
+
+    return 0;
+}
+
+int elogin_parse_client_login2(int fd)
+{
+    char username[NAME_LENGTH];
+    char password[PASSWD_LEN];
+    char email[40];
+    uint8 clienttype;
+    int result;
+
+    safestrncpy(username, (const char*)RFIFOP(fd, 2), NAME_LENGTH);
+
+    int len = strnlen(username, NAME_LENGTH);
+    if (len < 2 || !username[len - 2] == '_' || !memchr("FfMm", username[len - 1], 4))
+    {
+        login->login_error(fd, 3);
+        return 1;
+    }
+
+    safestrncpy(password, (const char*)RFIFOP(fd, 26), NAME_LENGTH);
+    safestrncpy(email, (const char*)RFIFOP(fd, 51), 40);
+    clienttype = RFIFOB(fd, 50);
+
+    struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+
+    char ip[16];
+    uint32 ipl = session[fd]->client_addr;
+    ip2str(ipl, ip);
+    sd->clienttype = clienttype;
+    sd->version = clientVersion;
+    sd->passwdenc = 0;
+    safestrncpy(sd->userid, username, NAME_LENGTH);
+    ShowStatus("Request for connection of %s (ip: %s).\n", sd->userid, ip);
+    safestrncpy(sd->passwd, password, PASSWD_LEN);
+
+    if (e_mail_check(email) == 0)
+    {
+        ShowNotice("Attempt to create an e-mail REFUSED - e-mail is invalid (ip: %s)\n", ip);
+        login->login_error(fd, 11);
+        return 1;
+    }
+
+    result = login->mmo_auth(sd, false);
+
+    if (result == -1)
+    {
+        int account_id = sd->account_id;
+        struct mmo_account acc;
+        if (!login->accounts->load_num(login->accounts, &acc, account_id))
+        {
+            ShowNotice("Attempt to create an e-mail on an account REFUSED - account: %d, ip: %s).\n", account_id, ip);
+        }
+        else
+        {
+            memcpy(acc.email, email, 40);
+            ShowNotice("Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", account_id, email, ip);
+            // Save
+            login->accounts->save(login->accounts, &acc);
+        }
+
+        login->auth_ok(sd);
+    }
+    else
+    {
+        login->auth_failed(sd, result);
+    }
+
     return 0;
 }
