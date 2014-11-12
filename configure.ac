@@ -13,6 +13,26 @@ AC_PROG_LIBTOOL
 AC_ENABLE_SHARED
 AC_DISABLE_STATIC
 
+AC_ARG_ENABLE(
+    [static],
+    AC_HELP_STRING(
+        [--enable-static],
+        [
+            Enables or Disables Statick Linking (STATIC is disabled by default)
+        ]
+    ),
+    [
+        enable_static="$enableval"
+        case $enableval in
+            "no");;
+            "yes");;
+            *) AC_MSG_ERROR([[invalid argument --enable-static=$disableval... stopping]]);;
+        esac
+    ],
+    [enable_static="no"]
+)
+AM_CONDITIONAL(ENABLE_STATIC, test x$enable_static = xyes)
+
 AC_CHECK_FUNC([strnlen],[CFLAGS="$CFLAGS -DHAVE_STRNLEN"])
 
 AC_CHECK_FUNC([setrlimit],[CLAGS="$CFLAGS -DHAVE_SETRLIMIT"])
