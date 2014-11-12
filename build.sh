@@ -6,3 +6,4 @@ cd build
 ../configure
 make -j3
 cd -
+exit $?
