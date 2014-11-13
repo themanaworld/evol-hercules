@@ -26,7 +26,7 @@ SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_SANITIZE
 SHARED_CFLAGS += -fsanitize=address
-SHARED_LDFLAGS = -lasan
+SHARED_LDFLAGS += -lasan
 endif
 
 if ENABLE_STATIC
