@@ -14,6 +14,26 @@ AC_ENABLE_SHARED
 AC_DISABLE_STATIC
 
 AC_ARG_ENABLE(
+    [sanitize],
+    AC_HELP_STRING(
+        [--enable-sanitize],
+        [
+            Enables or Disables Sanitize Address Checking (SANITIZE is disabled by default)
+        ]
+    ),
+    [
+        enable_sanitize="$enableval"
+        case $enableval in
+            "no");;
+            "yes");;
+            *) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
+        esac
+    ],
+    [enable_sanitize="no"]
+)
+AM_CONDITIONAL(ENABLE_SANITIZE, test x$enable_sanitize = xyes)
+
+AC_ARG_ENABLE(
     [static],
     AC_HELP_STRING(
         [--enable-static],

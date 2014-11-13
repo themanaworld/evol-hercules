@@ -21,9 +21,13 @@ MAP_SRC = map/dummy.c \
     map/session.h \
     map/sessionext.h
 
-SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -fsanitize=address
+SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare
+SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
-SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined -lasan
+if ENABLE_SANITIZE
+SHARED_CFLAGS += -fsanitize=address
+SHARED_LDFLAGS = -lasan
+endif
 
 if ENABLE_STATIC
 SHARED_CFLAGS += "-static-libgcc"

@@ -3,7 +3,7 @@
 mkdir build
 autoreconf -i
 cd build
-../configure
+../configure --enable-sanitize
 make -j3
 cd -
 exit $?
