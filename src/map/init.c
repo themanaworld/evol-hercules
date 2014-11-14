@@ -17,6 +17,7 @@
 #include "map/dummy.h"
 #include "map/parse.h"
 #include "map/script.h"
+#include "map/pc.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -60,6 +61,7 @@ HPExport void plugin_init (void)
     addScriptCommand("misceffect2", "i*", dummy);
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
+    addHookPre("pc->readparam", epc_readparam_pre);
 }
 
 HPExport void server_preinit (void)
