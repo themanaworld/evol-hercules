@@ -10,7 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
-#include "../../../login/login.h"
+#include "../../../map/pc.h"
 
 #include "map/session.h"
 #include "map/sessionext.h"
@@ -24,6 +24,14 @@ struct SessionExt *session_get(int fd)
         addToSession(session[fd], data, 0, true);
     }
     return data;
+}
+
+struct SessionExt *session_get_bysd(struct map_session_data *sd)
+{
+    if (!sd)
+        return NULL;
+
+    return session_get(sd->fd);
 }
 
 struct SessionExt *session_create(void)
