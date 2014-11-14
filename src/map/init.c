@@ -56,7 +56,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setnpcdir", "*", dummy);
     addScriptCommand("rif", "is*", dummyStr);
     addScriptCommand("countitemcolor", "*", dummyInt);
-    addScriptCommand("getclientversion", "", getClientVersion);
+    addScriptCommandDeprecated("getclientversion", "", getClientVersion);
     // must be replaced to misceffect
     addScriptCommand("misceffect2", "i*", dummy);
 
