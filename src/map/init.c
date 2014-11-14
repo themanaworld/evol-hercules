@@ -21,6 +21,8 @@
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
+extern int langScriptId;
+
 HPExport struct hplugin_info pinfo =
 {
     "evol_map",
@@ -62,6 +64,9 @@ HPExport void plugin_init (void)
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addHookPre("pc->readparam", epc_readparam_pre);
+    addHookPre("pc->setregistry", epc_setregistry);
+
+    langScriptId = script->add_str("Lang");
 }
 
 HPExport void server_preinit (void)

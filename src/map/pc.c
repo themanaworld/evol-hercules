@@ -15,6 +15,8 @@
 #include "map/session.h"
 #include "map/sessionext.h"
 
+int langScriptId;
+
 int epc_readparam_pre(struct map_session_data* sd, int *type)
 {
     if (*type == Const_ClientVersion)
@@ -25,5 +27,19 @@ int epc_readparam_pre(struct map_session_data* sd, int *type)
             return 0;
         return data->clientVersion;
     }
+    return 0;
+}
+
+int epc_setregistry(struct map_session_data *sd, int64 *reg, int *val)
+{
+    if (*reg == langScriptId)
+    {
+        struct SessionExt *data = session_get_bysd(sd);
+        if (!data)
+            return 0;
+
+        data->language = *val;
+    }
+
     return 0;
 }
