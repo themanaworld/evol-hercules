@@ -46,3 +46,25 @@ void send_npccommand2 (struct map_session_data *sd, int npcId, int cmd, int id, 
     WFIFOW (fd, 14) = y;
     WFIFOSET (fd, 16);
 }
+
+void send_local_message(int fd, struct block_list* bl, const char* msg)
+{
+    unsigned short msg_len = strlen(msg) + 1;
+    uint8 buf[256];
+    if (!bl)
+        return;
+
+    int len = sizeof(buf) - 8;
+    if (msg_len > len)
+    {
+        ShowWarning("clif_message: Truncating too long message '%s' (len=%u).\n", msg, msg_len);
+        msg_len = len;
+    }
+
+    WFIFOHEAD (fd, msg_len + 8);
+    WBUFW (fd, 0) = 0x8d;
+    WBUFW (fd, 2) = msg_len + 8;
+    WBUFL (fd, 4) = bl->id;
+    safestrncpy((char*)WBUFP(fd, 8), msg, msg_len);
+    WFIFOSET (fd, msg_len + 8);
+}

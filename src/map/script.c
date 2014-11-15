@@ -85,3 +85,46 @@ BUILDIN(restoreCam)
     send_npccommand(sd, st->oid, 3);
     return 0;
 }
+
+BUILDIN(npcTalk3)
+{
+    getSD();
+
+    char *str;
+    char *msg;
+    struct npc_data *nd = NULL;
+
+    if (script_hasdata(st, 3))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+        str = script_getstr(st, 3);
+    }
+    else
+    {
+        nd = (struct npc_data *) map->id2bl (st->oid);
+        str = script_getstr(st, 2);
+    }
+
+    if (!nd)
+        return 0;
+
+    msg = nd->name;
+// +++ after restore lang support need translate here
+/*
+    if (sd)
+        msg = (char*)lang_pctrans (nd->name, sd);
+    else
+        msg = nd->name;
+*/
+    if (strlen(str) + strlen(msg) > 450)
+        return 0;
+
+    if (nd)
+    {
+        char message[500];
+        strcpy (message, msg);
+        strcat (message, " : ");
+        strcat (message, str);
+        send_local_message (sd, &(nd->bl), message);
+    }
+}

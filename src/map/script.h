@@ -10,5 +10,6 @@ BUILDIN(getLang);
 BUILDIN(setLang);
 BUILDIN(setCamNpc);
 BUILDIN(restoreCam);
+BUILDIN(npcTalk3);
 
 #endif  // EVOL_MAP_SCRIPT
