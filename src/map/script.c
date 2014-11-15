@@ -42,6 +42,11 @@
         return true; \
     struct SessionExt *data = session_get(sd->fd)
 
+#define getSD() \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+        return 1
+
 BUILDIN(l)
 {
     // for now not translate and not use format parameters
@@ -69,10 +74,7 @@ BUILDIN(setLang)
 
 BUILDIN(setCamNpc)
 {
-    TBL_PC *sd = script->rid2sd(st);
-    if (!sd)
-        return 1;
-
+    getSD();
     struct npc_data *nd = NULL;
 
     int x = 0;
@@ -105,10 +107,7 @@ BUILDIN(setCamNpc)
 
 BUILDIN(restoreCam)
 {
-    TBL_PC *sd = script->rid2sd(st);
-    if (!sd)
-        return 1;
-
+    getSD();
     send_npccommand(sd, st->oid, 3);
     return 0;
 }
