@@ -14,5 +14,6 @@ BUILDIN(npcTalk3);
 BUILDIN(closeDialog);
 BUILDIN(shop);
 BUILDIN(getItemLink);
+BUILDIN(requestLang);
 
 #endif  // EVOL_MAP_SCRIPT

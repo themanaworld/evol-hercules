@@ -51,7 +51,7 @@ HPExport void plugin_init (void)
     addScriptCommand("l", "s*", l);
     addScriptCommandDeprecated("getlang", "", getLang);
     addScriptCommandDeprecated("setlang", "i", setLang);
-    addScriptCommand("requestlang", "*", dummy);
+    addScriptCommand("requestlang", "v", requestLang);
     addScriptCommand("getq", "i", dummyInt);
     addScriptCommand("setq", "ii", dummy);
     addScriptCommand("getnpcdir", "*", dummyInt);

@@ -164,7 +164,7 @@ BUILDIN(getItemLink)
 
     if (script_isstringtype(st, 2))
     {
-        i_data = itemdb->searchname (script_getstr(st, 2));
+        i_data = itemdb->search_name (script_getstr(st, 2));
     }
     else
     {
@@ -173,7 +173,7 @@ BUILDIN(getItemLink)
     }
 
     item_name = (char *) aCalloc (100, sizeof (char));
-    TBL_PC *sd = script->rid2sd(st)
+    TBL_PC *sd = script->rid2sd(st);
 
     if (sd)
     {
@@ -191,7 +191,7 @@ BUILDIN(getItemLink)
         if (i_data)
 // +++ after restore lang support need translate here
 //            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
-            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[%s]", i_data->jname);
         else
             sprintf(item_name, "[Unknown Item]");
     }
@@ -200,3 +200,57 @@ BUILDIN(getItemLink)
 
     return true;
 }
+
+BUILDIN(requestLang)
+{
+    getSD();
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+    int min;
+    int max;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestlang: not a variable\n");
+        script->reportdata(data);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+    min = (script_hasdata(st,3) ? script_getnum(st,3) : script->config.input_min_value);
+    max = (script_hasdata(st,4) ? script_getnum(st,4) : script->config.input_max_value);
+
+    if (is_string_variable(name))
+        return false;
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send lang request
+        send_npccommand(script->rid2sd(st), st->oid, 0);
+        clif->scriptinputstr(sd, st->oid);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        int lng = -1;
+        if (*sd->npc_str)
+        {
+            lng = 3;
+// +++ after restore lang support need translate here
+//            lng = lang_getId(sd->npc_str);
+        }
+        script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(lng), script_getref(st,2));
+        st->state = RUN;
+    }
+    return true;
+}
+
