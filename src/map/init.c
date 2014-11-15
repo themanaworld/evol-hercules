@@ -42,7 +42,7 @@ HPExport void plugin_init (void)
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
 
-    addScriptCommand("setcamnpc", "*", dummy);
+    addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("restorecam", "", dummy);
     addScriptCommand("npctalk3", "s", dummy);
     addScriptCommand("closedialog", "", dummy);
