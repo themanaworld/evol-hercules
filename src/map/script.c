@@ -133,3 +133,10 @@ BUILDIN(npcTalk3)
 
     return true;
 }
+
+BUILDIN(closeDialog)
+{
+    getSD();
+    send_npccommand(script->rid2sd (st), st->oid, 5);
+    return true;
+}
