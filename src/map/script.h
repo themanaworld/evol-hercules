@@ -13,5 +13,6 @@ BUILDIN(restoreCam);
 BUILDIN(npcTalk3);
 BUILDIN(closeDialog);
 BUILDIN(shop);
+BUILDIN(getItemLink);
 
 #endif  // EVOL_MAP_SCRIPT

@@ -154,3 +154,49 @@ BUILDIN(shop)
     clif->npcbuysell (sd, nd->bl.id);
     return true;
 }
+
+BUILDIN(getItemLink)
+{
+    struct item_data *i_data;
+    char *item_name;
+    struct script_data *data;
+    int  item_id = 0;
+
+    if (script_isstringtype(st, 2))
+    {
+        i_data = itemdb->searchname (script_getstr(st, 2));
+    }
+    else
+    {
+        item_id = script_getnum (st, 2);
+        i_data = itemdb->search (item_id);
+    }
+
+    item_name = (char *) aCalloc (100, sizeof (char));
+    TBL_PC *sd = script->rid2sd(st)
+
+    if (sd)
+    {
+        if (i_data)
+// +++ after restore lang support need translate here
+//            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
+        else if (item_id > 0)
+            sprintf(item_name, "[@@%u|Unknown Item@@]", (unsigned)item_id);
+        else
+            sprintf(item_name, "[Unknown Item]");
+    }
+    else
+    {
+        if (i_data)
+// +++ after restore lang support need translate here
+//            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+        else
+            sprintf(item_name, "[Unknown Item]");
+    }
+
+    script_pushstr(st, item_name);
+
+    return true;
+}
