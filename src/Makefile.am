@@ -19,6 +19,8 @@ MAP_SRC = map/dummy.c \
     map/pc.h \
     map/script.c \
     map/script.h \
+    map/send.c \
+    map/send.h \
     map/session.c \
     map/session.h \
     map/sessionext.h
