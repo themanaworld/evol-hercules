@@ -32,18 +32,21 @@ BUILDIN(getClientVersion)
 {
     getDataReturn(0);
     script_pushint(st, data->clientVersion);
+    return true;
 }
 
 BUILDIN(getLang)
 {
     getDataReturn(0);
     script_pushint(st, data->language);
+    return true;
 }
 
 BUILDIN(setLang)
 {
     getData();
     data->language = script_getnum(st, 2);
+    return true;
 }
 
 BUILDIN(setCamNpc)
@@ -61,12 +64,12 @@ BUILDIN(setCamNpc)
     else
     {
         if (!st->oid)
-            return 1;
+            return false;
 
         nd = (struct npc_data *) map->id2bl (st->oid);
     }
     if (!nd || sd->bl.m != nd->bl.m)
-        return 1;
+        return false;
 
     if (script_hasdata(st, 3) && script_hasdata(st, 4))
     {
@@ -76,14 +79,14 @@ BUILDIN(setCamNpc)
 
     send_npccommand2(script->rid2sd (st), st->oid, 2, nd->bl.id, x, y);
 
-    return 0;
+    return true;
 }
 
 BUILDIN(restoreCam)
 {
     getSD();
     send_npccommand(sd, st->oid, 3);
-    return 0;
+    return true;
 }
 
 BUILDIN(npcTalk3)
@@ -106,7 +109,7 @@ BUILDIN(npcTalk3)
     }
 
     if (!nd)
-        return 0;
+        return false;
 
     msg = nd->name;
 // +++ after restore lang support need translate here
@@ -117,7 +120,7 @@ BUILDIN(npcTalk3)
         msg = nd->name;
 */
     if (strlen(str) + strlen(msg) > 450)
-        return 0;
+        return false;
 
     if (nd)
     {
@@ -127,4 +130,6 @@ BUILDIN(npcTalk3)
         strcat (message, str);
         send_local_message (sd, &(nd->bl), message);
     }
+
+    return true;
 }
