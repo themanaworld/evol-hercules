@@ -140,3 +140,17 @@ BUILDIN(closeDialog)
     send_npccommand(script->rid2sd (st), st->oid, 5);
     return true;
 }
+
+BUILDIN(shop)
+{
+    getSD();
+    struct npc_data *nd = npc->name2id (script_getstr(st, 2));
+    if (!nd)
+        return false;
+
+    st->state = sd->state.dialog == 1 ? CLOSE : END;
+    clif->scriptclose(sd, st->oid);
+
+    clif->npcbuysell (sd, nd->bl.id);
+    return true;
+}
