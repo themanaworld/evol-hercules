@@ -9,5 +9,6 @@ BUILDIN(getClientVersion);
 BUILDIN(getLang);
 BUILDIN(setLang);
 BUILDIN(setCamNpc);
+BUILDIN(restoreCam);
 
 #endif  // EVOL_MAP_SCRIPT

@@ -102,3 +102,13 @@ BUILDIN(setCamNpc)
 
     return 0;
 }
+
+BUILDIN(restoreCam)
+{
+    TBL_PC *sd = script->rid2sd(st);
+    if (!sd)
+        return 1;
+
+    send_npccommand(sd, st->oid, 3);
+    return 0;
+}
