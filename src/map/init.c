@@ -11,6 +11,8 @@
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
 #include "../../../map/clif.h"
+#include "../../../map/itemdb.h"
+#include "../../../map/npc.h"
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
 
@@ -38,9 +40,11 @@ HPExport void plugin_init (void)
     script = GET_SYMBOL("script");
     clif = GET_SYMBOL("clif");
     pc = GET_SYMBOL("pc");
+    npc = GET_SYMBOL("npc");
     strlib = GET_SYMBOL("strlib");
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
+    itemdb = GET_SYMBOL("itemdb");
 
     addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("restorecam", "", restoreCam);
