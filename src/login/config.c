@@ -19,3 +19,9 @@ void config_update_server(const char *val)
 {
     update_server = aStrdup(val);
 }
+
+void config_final(void)
+{
+    if (update_server)
+        aFree(update_server);
+}

@@ -49,4 +49,5 @@ HPExport void server_online (void)
 
 HPExport void plugin_final (void)
 {
+    config_final();
 }
