@@ -39,6 +39,7 @@ HPExport void plugin_init (void)
 
     script = GET_SYMBOL("script");
     clif = GET_SYMBOL("clif");
+    map = GET_SYMBOL("map");
     pc = GET_SYMBOL("pc");
     npc = GET_SYMBOL("npc");
     strlib = GET_SYMBOL("strlib");
