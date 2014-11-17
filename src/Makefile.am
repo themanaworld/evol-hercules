@@ -24,7 +24,9 @@ MAP_SRC = map/dummy.c \
     map/send.h \
     map/session.c \
     map/session.h \
-    map/sessionext.h
+    map/sessionext.h \
+    common/interfaces.c \
+    common/interfaces.h
 
 SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined

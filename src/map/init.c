@@ -10,8 +10,6 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
-#include "../../../common/sysinfo.h"
-#include "../../../common/timer.h"
 #include "../../../map/chat.h"
 #include "../../../map/chrif.h"
 #include "../../../map/clif.h"
@@ -35,6 +33,7 @@
 #include "../../../map/trade.h"
 #include "../../../map/quest.h"
 
+#include "common/interfaces.h"
 #include "map/dummy.h"
 #include "map/parse.h"
 #include "map/script.h"
@@ -54,16 +53,7 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-    iMalloc = GET_SYMBOL("iMalloc");
-    strlib = GET_SYMBOL("strlib");
-    session = GET_SYMBOL("session");
-    sockt = GET_SYMBOL("sockt");
-    sv = GET_SYMBOL("sv");
-    StrBuf = GET_SYMBOL("StrBuf");
-    SQL = GET_SYMBOL("SQL");
-    timer = GET_SYMBOL("timer");
-    libconfig = GET_SYMBOL("libconfig");
-    sysinfo = GET_SYMBOL("sysinfo");
+    interfaces_init_common();
 
     atcommand = GET_SYMBOL("atcommand");
     battle = GET_SYMBOL("battle");
