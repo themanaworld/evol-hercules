@@ -17,6 +17,8 @@ LOGIN_SRC = login/config.c \
 MAP_SRC = map/dummy.c \
     map/dummy.h \
     map/init.c \
+    map/npc.c \
+    map/npc.h \
     map/parse.c \
     map/parse.h \
     map/pc.c \

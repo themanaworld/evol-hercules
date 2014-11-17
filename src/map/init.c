@@ -35,6 +35,7 @@
 
 #include "common/interfaces.h"
 #include "map/dummy.h"
+#include "map/npc.h"
 #include "map/parse.h"
 #include "map/script.h"
 #include "map/pc.h"
@@ -121,6 +122,7 @@ HPExport void plugin_init (void)
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
+    addHookPre("npc->checknear", enpc_checknear);
 
     langScriptId = script->add_str("Lang");
 }
