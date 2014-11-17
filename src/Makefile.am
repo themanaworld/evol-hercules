@@ -26,7 +26,7 @@ MAP_SRC = map/dummy.c \
     map/session.h \
     map/sessionext.h
 
-SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare
+SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_SANITIZE

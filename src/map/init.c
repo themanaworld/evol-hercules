@@ -10,11 +10,30 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../common/sysinfo.h"
+#include "../../../common/timer.h"
+#include "../../../map/chat.h"
+#include "../../../map/chrif.h"
 #include "../../../map/clif.h"
+#include "../../../map/duel.h"
+#include "../../../map/elemental.h"
+#include "../../../map/homunculus.h"
+#include "../../../map/instance.h"
+#include "../../../map/intif.h"
+#include "../../../map/irc-bot.h"
 #include "../../../map/itemdb.h"
+#include "../../../map/mail.h"
+#include "../../../map/mapreg.h"
+#include "../../../map/mercenary.h"
+#include "../../../map/mob.h"
 #include "../../../map/npc.h"
+#include "../../../map/party.h"
+#include "../../../map/pet.h"
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
+#include "../../../map/storage.h"
+#include "../../../map/trade.h"
+#include "../../../map/quest.h"
 
 #include "map/dummy.h"
 #include "map/parse.h"
@@ -36,16 +55,58 @@ HPExport struct hplugin_info pinfo =
 HPExport void plugin_init (void)
 {
     iMalloc = GET_SYMBOL("iMalloc");
-
-    script = GET_SYMBOL("script");
-    clif = GET_SYMBOL("clif");
-    map = GET_SYMBOL("map");
-    pc = GET_SYMBOL("pc");
-    npc = GET_SYMBOL("npc");
     strlib = GET_SYMBOL("strlib");
     session = GET_SYMBOL("session");
     sockt = GET_SYMBOL("sockt");
+    sv = GET_SYMBOL("sv");
+    StrBuf = GET_SYMBOL("StrBuf");
+    SQL = GET_SYMBOL("SQL");
+    timer = GET_SYMBOL("timer");
+    libconfig = GET_SYMBOL("libconfig");
+    sysinfo = GET_SYMBOL("sysinfo");
+
+    atcommand = GET_SYMBOL("atcommand");
+    battle = GET_SYMBOL("battle");
+    bg = GET_SYMBOL("battlegrounds");
+    buyingstore = GET_SYMBOL("buyingstore");
+    clif = GET_SYMBOL("clif");
+    chrif = GET_SYMBOL("chrif");
+    guild = GET_SYMBOL("guild");
+    gstorage = GET_SYMBOL("gstorage");
+    homun = GET_SYMBOL("homun");
+    map = GET_SYMBOL("map");
+    ircbot = GET_SYMBOL("ircbot");
     itemdb = GET_SYMBOL("itemdb");
+    logs = GET_SYMBOL("logs");
+    mail = GET_SYMBOL("mail");
+    instance = GET_SYMBOL("instance");
+    script = GET_SYMBOL("script");
+    searchstore = GET_SYMBOL("searchstore");
+    skill = GET_SYMBOL("skill");
+    vending = GET_SYMBOL("vending");
+    pc = GET_SYMBOL("pc");
+    pcg = GET_SYMBOL("pc_groups");
+    party = GET_SYMBOL("party");
+    storage = GET_SYMBOL("storage");
+    trade = GET_SYMBOL("trade");
+    status = GET_SYMBOL("status");
+    chat = GET_SYMBOL("chat");
+    duel = GET_SYMBOL("duel");
+    elemental = GET_SYMBOL("elemental");
+    intif = GET_SYMBOL("intif");
+    mercenary = GET_SYMBOL("mercenary");
+    mob = GET_SYMBOL("mob");
+    unit = GET_SYMBOL("unit");
+    npc = GET_SYMBOL("npc");
+    mapreg = GET_SYMBOL("mapreg");
+    pet = GET_SYMBOL("pet");
+    path = GET_SYMBOL("path");
+    quest = GET_SYMBOL("quest");
+    npc_chat = GET_SYMBOL("npc_chat");
+    libpcre = GET_SYMBOL("libpcre");
+    mapit = GET_SYMBOL("mapit");
+    mapindex = GET_SYMBOL("mapindex");
+//    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
 
     addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("restorecam", "", restoreCam);
