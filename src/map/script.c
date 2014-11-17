@@ -159,7 +159,6 @@ BUILDIN(getItemLink)
 {
     struct item_data *i_data;
     char *item_name;
-    struct script_data *data;
     int  item_id = 0;
 
     if (script_isstringtype(st, 2))
@@ -207,8 +206,6 @@ BUILDIN(requestLang)
     struct script_data* data;
     int64 uid;
     const char* name;
-    int min;
-    int max;
 
     data = script_getdata(st, 2);
     if (!data_isreference(data))
@@ -220,8 +217,6 @@ BUILDIN(requestLang)
     }
     uid = reference_getuid(data);
     name = reference_getname(data);
-    min = (script_hasdata(st,3) ? script_getnum(st,3) : script->config.input_min_value);
-    max = (script_hasdata(st,4) ? script_getnum(st,4) : script->config.input_max_value);
 
     if (is_string_variable(name))
         return false;
