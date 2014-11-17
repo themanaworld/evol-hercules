@@ -11,6 +11,8 @@
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
 
+#include "common/interfaces.h"
+
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo =
@@ -23,7 +25,7 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-    iMalloc = GET_SYMBOL("iMalloc");
+    interfaces_init_common();
 }
 
 HPExport void server_preinit (void)

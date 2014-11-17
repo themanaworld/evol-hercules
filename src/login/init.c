@@ -12,6 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../login/login.h"
 
+#include "common/interfaces.h"
 #include "login/config.h"
 #include "login/parse.h"
 
@@ -27,9 +28,7 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-    session = GET_SYMBOL("session");
-    sockt = GET_SYMBOL("sockt");
-    strlib = GET_SYMBOL("strlib");
+    interfaces_init_common();
 
     login = GET_SYMBOL("login");
 
