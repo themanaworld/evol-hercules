@@ -50,5 +50,5 @@ libevol_map_la_LDFLAGS = ${SHARED_LDFLAGS}
 libevol_map_la_CFLAGS = ${SHARED_CFLAGS}
 
 all-local: libevol_char.la libevol_login.la libevol_map.la
-	cp .libs/*.so ../../../../plugins || cp .libs/*.so ../../../plugins
-	cp .libs/*.so ../../../../../server-data/plugins || cp .libs/*.so ../../../../server-data/plugins
+	@cp .libs/*.so ../../../../plugins || cp .libs/*.so ../../../plugins || cp .libs/*.so ../../../server-code/plugins || cp .libs/*.so ../../server-code/plugins
+	@cp .libs/*.so ../../../../../server-data/plugins || cp .libs/*.so ../../../../server-data/plugins || cp .libs/*.so ../../../server-data/plugins || cp .libs/*.so ../../server-data/plugins
