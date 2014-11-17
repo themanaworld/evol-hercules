@@ -62,9 +62,9 @@ void send_local_message(int fd, struct block_list* bl, const char* msg)
     }
 
     WFIFOHEAD (fd, msg_len + 8);
-    WBUFW (fd, 0) = 0x8d;
-    WBUFW (fd, 2) = msg_len + 8;
-    WBUFL (fd, 4) = bl->id;
-    safestrncpy((char*)WBUFP(fd, 8), msg, msg_len);
+    WFIFOW (fd, 0) = 0x8d;
+    WFIFOW (fd, 2) = msg_len + 8;
+    WFIFOL (fd, 4) = bl->id;
+    safestrncpy((char*)WFIFOP(fd, 8), msg, msg_len);
     WFIFOSET (fd, msg_len + 8);
 }
