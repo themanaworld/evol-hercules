@@ -91,11 +91,11 @@ BUILDIN(restoreCam)
 
 BUILDIN(npcTalk3)
 {
-    getSD();
-
-    char *str;
+    const char *str;
     char *msg;
     struct npc_data *nd = NULL;
+
+    getSD();
 
     if (script_hasdata(st, 3))
     {
@@ -128,7 +128,7 @@ BUILDIN(npcTalk3)
         strcpy (message, msg);
         strcat (message, " : ");
         strcat (message, str);
-        send_local_message (sd, &(nd->bl), message);
+        send_local_message (sd->fd, &(nd->bl), message);
     }
 
     return true;
