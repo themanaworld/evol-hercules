@@ -29,6 +29,14 @@
 #define getSD() \
     TBL_PC *sd = script->rid2sd(st); \
     if (!sd) \
-        return 1
+        return true
+
+#define getSDReturn(def) \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+    { \
+        script_pushint(st, def); \
+        return true; \
+    }
 
 #endif  // EVOL_MAP_SCRIPTDEFINES

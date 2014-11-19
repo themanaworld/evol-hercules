@@ -15,5 +15,7 @@ BUILDIN(closeDialog);
 BUILDIN(shop);
 BUILDIN(getItemLink);
 BUILDIN(requestLang);
+BUILDIN(getq);
+BUILDIN(setq);
 
 #endif  // EVOL_MAP_SCRIPT

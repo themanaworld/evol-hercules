@@ -14,6 +14,7 @@
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
+#include "../../../map/quest.h"
 
 #include "map/script.h"
 #include "map/scriptdefines.h"
@@ -249,3 +250,47 @@ BUILDIN(requestLang)
     return true;
 }
 
+BUILDIN(setq)
+{
+    int i;
+    getSD();
+
+    int quest_id = script_getnum(st, 2);
+    int quest_value = script_getnum(st, 3);
+
+    if (quest->check(sd, quest_id, HAVEQUEST) < 0)
+        quest->add(sd, quest_id);
+    ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
+    if (i == sd->num_quests)
+    {
+        ShowError("Quest with id=%d not found\n", quest_id);
+        return false;
+    }
+
+    sd->quest_log[i].count[0] = quest_value;
+    sd->save_quest = true;
+    clif->quest_update_objective(sd, &sd->quest_log[i]);
+    return true;
+}
+
+BUILDIN(getq)
+{
+    int i;
+    getSDReturn(0);
+
+    int quest_id = script_getnum(st, 2);
+    if (!quest->check(sd, quest_id, HAVEQUEST) < 0)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
+    if (i == sd->num_quests)
+    {
+        ShowError("Quest with id=%d not found\n", quest_id);
+        script_pushint(st, 0);
+        return false;
+    }
+    script_pushint(st, sd->quest_log[i].count[0]);
+    return true;
+}
