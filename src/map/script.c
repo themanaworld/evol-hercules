@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/chrif.h"
 #include "../../../map/clif.h"
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
@@ -269,7 +270,10 @@ BUILDIN(setq)
 
     sd->quest_log[i].count[0] = quest_value;
     sd->save_quest = true;
-    clif->quest_update_objective(sd, &sd->quest_log[i]);
+    if (map->save_settings & 64)
+        chrif->save(sd,0);
+
+    eclif_quest_add(sd, &sd->quest_log[i]);
     return true;
 }
 
@@ -287,7 +291,6 @@ BUILDIN(getq)
     ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
     if (i == sd->num_quests)
     {
-        ShowError("Quest with id=%d not found\n", quest_id);
         script_pushint(st, 0);
         return false;
     }

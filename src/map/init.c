@@ -34,11 +34,13 @@
 #include "../../../map/quest.h"
 
 #include "common/interfaces.h"
+#include "map/clif.h"
 #include "map/dummy.h"
 #include "map/npc.h"
 #include "map/parse.h"
 #include "map/script.h"
 #include "map/pc.h"
+#include "map/quest.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -53,6 +55,40 @@ HPExport struct hplugin_info pinfo =
 };
 
 HPExport void plugin_init (void)
+{
+//    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
+
+    addScriptCommand("setcamnpc", "*", setCamNpc);
+    addScriptCommand("restorecam", "", restoreCam);
+    addScriptCommand("npctalk3", "s", npcTalk3);
+    addScriptCommand("closedialog", "", closeDialog);
+    addScriptCommand("shop", "s", shop);
+    addScriptCommand("getitemlink", "s", getItemLink);
+    addScriptCommand("l", "s*", l);
+    addScriptCommandDeprecated("getlang", "", getLang);
+    addScriptCommandDeprecated("setlang", "i", setLang);
+    addScriptCommand("requestlang", "v", requestLang);
+    addScriptCommand("getq", "i", getq);
+    addScriptCommand("setq", "ii", setq);
+    addScriptCommand("getnpcdir", "*", dummyInt);
+    addScriptCommand("setnpcdir", "*", dummy);
+    addScriptCommand("rif", "is*", dummyStr);
+    addScriptCommand("countitemcolor", "*", dummyInt);
+    addScriptCommandDeprecated("getclientversion", "", getClientVersion);
+    // must be replaced to misceffect
+    addScriptCommand("misceffect2", "i*", dummy);
+
+    addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
+    addHookPre("pc->readparam", epc_readparam_pre);
+    addHookPre("pc->setregistry", epc_setregistry);
+    addHookPre("npc->checknear", enpc_checknear);
+    addHookPre("clif->quest_send_list", eclif_quest_send_list);
+    addHookPre("clif->quest_add", eclif_quest_add);
+
+    langScriptId = script->add_str("Lang");
+}
+
+HPExport void server_preinit (void)
 {
     interfaces_init_common();
 
@@ -97,38 +133,8 @@ HPExport void plugin_init (void)
     libpcre = GET_SYMBOL("libpcre");
     mapit = GET_SYMBOL("mapit");
     mapindex = GET_SYMBOL("mapindex");
-//    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
 
-    addScriptCommand("setcamnpc", "*", setCamNpc);
-    addScriptCommand("restorecam", "", restoreCam);
-    addScriptCommand("npctalk3", "s", npcTalk3);
-    addScriptCommand("closedialog", "", closeDialog);
-    addScriptCommand("shop", "s", shop);
-    addScriptCommand("getitemlink", "s", getItemLink);
-    addScriptCommand("l", "s*", l);
-    addScriptCommandDeprecated("getlang", "", getLang);
-    addScriptCommandDeprecated("setlang", "i", setLang);
-    addScriptCommand("requestlang", "v", requestLang);
-    addScriptCommand("getq", "i", getq);
-    addScriptCommand("setq", "ii", setq);
-    addScriptCommand("getnpcdir", "*", dummyInt);
-    addScriptCommand("setnpcdir", "*", dummy);
-    addScriptCommand("rif", "is*", dummyStr);
-    addScriptCommand("countitemcolor", "*", dummyInt);
-    addScriptCommandDeprecated("getclientversion", "", getClientVersion);
-    // must be replaced to misceffect
-    addScriptCommand("misceffect2", "i*", dummy);
-
-    addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
-    addHookPre("pc->readparam", epc_readparam_pre);
-    addHookPre("pc->setregistry", epc_setregistry);
-    addHookPre("npc->checknear", enpc_checknear);
-
-    langScriptId = script->add_str("Lang");
-}
-
-HPExport void server_preinit (void)
-{
+    addHookPre("quest->read_db", equest_read_db);
 }
 
 HPExport void server_online (void)

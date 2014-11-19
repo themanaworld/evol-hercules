@@ -14,7 +14,9 @@ LOGIN_SRC = login/config.c \
     common/interfaces.c \
     common/interfaces.h
 
-MAP_SRC = map/dummy.c \
+MAP_SRC = map/clif.c \
+    map/clif.h \
+    map/dummy.c \
     map/dummy.h \
     map/init.c \
     map/npc.c \
@@ -23,6 +25,8 @@ MAP_SRC = map/dummy.c \
     map/parse.h \
     map/pc.c \
     map/pc.h \
+    map/quest.c \
+    map/quest.h \
     map/script.c \
     map/script.h \
     map/scriptdefines.h \
