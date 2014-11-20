@@ -19,6 +19,8 @@ MAP_SRC = map/clif.c \
     map/dummy.c \
     map/dummy.h \
     map/init.c \
+    map/lang.c \
+    map/lang.h \
     map/npc.c \
     map/npc.h \
     map/parse.c \
