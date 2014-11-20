@@ -23,11 +23,11 @@
 #include "map/send.h"
 #include "map/session.h"
 #include "map/sessionext.h"
+#include "map/utils/formatutils.h"
 
 BUILDIN(l)
 {
-    // for now not translate and not use format parameters
-    script_pushstr(st, aStrdup(script_getstr(st, 2)));
+    format_sub(st, 1);
     return true;
 }
 

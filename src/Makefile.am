@@ -37,6 +37,8 @@ MAP_SRC = map/clif.c \
     map/session.c \
     map/session.h \
     map/sessionext.h \
+    map/utils/formatutils.c \
+    map/utils/formatutils.h \
     common/interfaces.c \
     common/interfaces.h
 
