@@ -34,6 +34,11 @@ void do_init_langs (void)
     langsdb_readdb ();
 }
 
+void do_final_langs(void)
+{
+    db_clear(translate_db);
+}
+
 static int langsdb_readlangs (void)
 {
     FILE *fp;

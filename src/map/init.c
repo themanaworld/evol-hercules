@@ -36,6 +36,7 @@
 #include "common/interfaces.h"
 #include "map/clif.h"
 #include "map/dummy.h"
+#include "map/lang.h"
 #include "map/npc.h"
 #include "map/parse.h"
 #include "map/script.h"
@@ -77,6 +78,8 @@ HPExport void plugin_init (void)
     addScriptCommandDeprecated("getclientversion", "", getClientVersion);
     // must be replaced to misceffect
     addScriptCommand("misceffect2", "i*", dummy);
+
+    do_init_langs();
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addHookPre("pc->readparam", epc_readparam_pre);
@@ -143,4 +146,5 @@ HPExport void server_online (void)
 
 HPExport void plugin_final (void)
 {
+    do_final_langs();
 }
