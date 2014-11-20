@@ -26,4 +26,5 @@ void interfaces_init_common(void)
     timer = GET_SYMBOL("timer");
     libconfig = GET_SYMBOL("libconfig");
     sysinfo = GET_SYMBOL("sysinfo");
+    DB = GET_SYMBOL("DB");
 }
