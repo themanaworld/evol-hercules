@@ -18,6 +18,7 @@
 #include "../../../map/quest.h"
 
 #include "map/script.h"
+#include "map/lang.h"
 #include "map/scriptdefines.h"
 #include "map/send.h"
 #include "map/session.h"
@@ -113,14 +114,10 @@ BUILDIN(npcTalk3)
     if (!nd)
         return false;
 
-    msg = nd->name;
-// +++ after restore lang support need translate here
-/*
     if (sd)
         msg = (char*)lang_pctrans (nd->name, sd);
     else
         msg = nd->name;
-*/
     if (strlen(str) + strlen(msg) > 450)
         return false;
 
@@ -179,9 +176,7 @@ BUILDIN(getItemLink)
     if (sd)
     {
         if (i_data)
-// +++ after restore lang support need translate here
-//            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
-            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
+            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
         else if (item_id > 0)
             sprintf(item_name, "[@@%u|Unknown Item@@]", (unsigned)item_id);
         else
@@ -190,9 +185,7 @@ BUILDIN(getItemLink)
     else
     {
         if (i_data)
-// +++ after restore lang support need translate here
-//            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
-            sprintf(item_name, "[%s]", i_data->jname);
+            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
         else
             sprintf(item_name, "[Unknown Item]");
     }
@@ -241,9 +234,7 @@ BUILDIN(requestLang)
         int lng = -1;
         if (*sd->npc_str)
         {
-            lng = 3;
-// +++ after restore lang support need translate here
-//            lng = lang_getId(sd->npc_str);
+            lng = lang_getId(sd->npc_str);
         }
         script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(lng), script_getref(st,2));
         st->state = RUN;
