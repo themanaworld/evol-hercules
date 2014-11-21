@@ -87,6 +87,7 @@ HPExport void plugin_init (void)
     addHookPre("npc->checknear", enpc_checknear);
     addHookPre("clif->quest_send_list", eclif_quest_send_list);
     addHookPre("clif->quest_add", eclif_quest_add);
+    addHookPre("clif->charnameack", eclif_charnameack);
 
     langScriptId = script->add_str("Lang");
 }

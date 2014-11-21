@@ -63,7 +63,7 @@ libevol_login_la_LDFLAGS = ${SHARED_LDFLAGS}
 libevol_login_la_CFLAGS = ${SHARED_CFLAGS}
 libevol_map_la_SOURCES = ${MAP_SRC}
 libevol_map_la_LDFLAGS = ${SHARED_LDFLAGS}
-libevol_map_la_CFLAGS = ${SHARED_CFLAGS}
+libevol_map_la_CFLAGS = ${SHARED_CFLAGS} -Wno-strict-aliasing
 
 all-local: libevol_char.la libevol_login.la libevol_map.la
 	@cp .libs/*.so ../../../../plugins || cp .libs/*.so ../../../plugins || cp .libs/*.so ../../../server-code/plugins || cp .libs/*.so ../../server-code/plugins

@@ -6,5 +6,6 @@
 
 void eclif_quest_send_list(struct map_session_data *sd);
 void eclif_quest_add(struct map_session_data *sd, struct quest *qd);
+void eclif_charnameack(int *fdPtr, struct block_list *bl);
 
 #endif  // EVOL_MAP_CLIF

@@ -10,10 +10,13 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../common/cbasetypes.h"
+#include "../../../map/npc.h"
 #include "../../../map/pc.h"
 #include "../../../map/quest.h"
 
 #include "map/clif.h"
+#include "map/lang.h"
 
 void eclif_quest_send_list(struct map_session_data *sd)
 {
@@ -44,8 +47,6 @@ void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
     hookStop();
     int fd = sd->fd;
-    int i;
-    struct mob_db *monster;
     struct quest_db *qi = quest->db(qd->quest_id);
 
     WFIFOHEAD(fd, packet_len(0x2b3));
@@ -57,4 +58,42 @@ void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
     WFIFOW(fd, 15) = 0;
 
     WFIFOSET(fd, 107);
+}
+
+void eclif_charnameack(int *fdPtr, struct block_list *bl)
+{
+    if (!bl)
+    {
+        hookStop();
+        return;
+    }
+    if (bl->type == BL_NPC)
+    {
+        hookStop();
+        int fd = *fdPtr;
+        struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+        const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
+        const int len = 8 + strlen(tr) + 1;
+        // if no recipient specified just update nearby clients
+        if (fd == 0)
+        {
+            char *buf;
+            CREATE(buf, char, len);
+            WBUFW(buf, 0) = 0xB01;
+            WBUFW(buf, 2) = len;
+            WBUFL(buf, 4) = bl->id;
+            memcpy(WBUFP(buf, 8), tr, len);
+            clif->send(buf, len, bl, AREA);
+            aFree(buf);
+        }
+        else
+        {
+            WFIFOHEAD(fd, len);
+            WFIFOW(fd, 0) = 0xB01;
+            WFIFOW(fd, 2) = len;
+            WFIFOL(fd, 4) = bl->id;
+            memcpy(WFIFOP(fd, 8), tr, len);
+            WFIFOSET(fd, len);
+        }
+    }
 }
