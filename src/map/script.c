@@ -31,6 +31,12 @@ BUILDIN(l)
     return true;
 }
 
+BUILDIN(lg)
+{
+    format_sub(st, 2);
+    return true;
+}
+
 BUILDIN(getClientVersion)
 {
     getDataReturn(0);

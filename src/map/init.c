@@ -66,6 +66,7 @@ HPExport void plugin_init (void)
     addScriptCommand("shop", "s", shop);
     addScriptCommand("getitemlink", "s", getItemLink);
     addScriptCommand("l", "s*", l);
+    addScriptCommand("lg", "s*", lg);
     addScriptCommandDeprecated("getlang", "", getLang);
     addScriptCommandDeprecated("setlang", "i", setLang);
     addScriptCommand("requestlang", "v", requestLang);

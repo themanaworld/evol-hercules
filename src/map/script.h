@@ -5,6 +5,7 @@
 #define EVOL_MAP_SCRIPT
 
 BUILDIN(l);
+BUILDIN(lg);
 BUILDIN(getClientVersion);
 BUILDIN(getLang);
 BUILDIN(setLang);
