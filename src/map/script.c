@@ -18,6 +18,7 @@
 #include "../../../map/quest.h"
 
 #include "map/script.h"
+#include "map/clif.h"
 #include "map/lang.h"
 #include "map/scriptdefines.h"
 #include "map/send.h"
