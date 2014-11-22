@@ -85,6 +85,8 @@ HPExport void plugin_init (void)
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
+    addHookPre("pc->equipitem_pos", epc_equipitem_pos);
+    addHookPre("pc->unequipitem_pos", epc_unequipitem_pos);
     addHookPre("npc->checknear", enpc_checknear);
     addHookPre("clif->quest_send_list", eclif_quest_send_list);
     addHookPre("clif->quest_add", eclif_quest_add);
