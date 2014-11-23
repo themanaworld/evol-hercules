@@ -81,6 +81,7 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
     equipPos2(EQP_COSTUME_HEAD_MID, 14);
     equipPos2(EQP_COSTUME_HEAD_LOW, 15);
     equipPos2(EQP_COSTUME_GARMENT, 16);
+    equipPos2(EQP_ARMOR, 17);
     //skipping SHADOW slots
 }
 
@@ -111,11 +112,14 @@ void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr)
     unequipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);
     unequipPos(EQP_HEAD_MID, head_mid, LOOK_HEAD_MID);
     unequipPos(EQP_GARMENT, robe, LOOK_ROBE);
-    //skip EQP_ARMOR
     unequipPos2(EQP_SHOES, LOOK_SHOES);
     unequipPos2(EQP_COSTUME_HEAD_TOP, 13);
     unequipPos2(EQP_COSTUME_HEAD_MID, 14);
     unequipPos2(EQP_COSTUME_HEAD_LOW, 15);
     unequipPos2(EQP_COSTUME_GARMENT, 16);
+    unequipPos2(EQP_ARMOR, 17);
     //skipping SHADOW slots
 }
+
+#undef unequipPos
+#undef unequipPos2

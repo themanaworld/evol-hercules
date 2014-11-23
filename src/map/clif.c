@@ -121,12 +121,12 @@ static void eclif_send_additional_slots(struct map_session_data* sd, struct map_
     equipPos(EQI_HEAD_TOP, LOOK_HEAD_TOP);
     equipPos(EQI_HEAD_MID, LOOK_HEAD_MID);
     equipPos(EQI_GARMENT, LOOK_ROBE);
-    //skip EQI_ARMOR
     equipPos(EQI_SHOES, LOOK_SHOES);
     equipPos(EQI_COSTUME_TOP, 13);
     equipPos(EQI_COSTUME_MID, 14);
     equipPos(EQI_COSTUME_LOW, 15);
     equipPos(EQI_COSTUME_GARMENT, 16);
+    equipPos(EQI_ARMOR, 17);
     //skipping SHADOW slots
 }
 
@@ -138,4 +138,9 @@ void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list 
         eclif_send_additional_slots(sd, (struct map_session_data *)bl);
         eclif_send_additional_slots((struct map_session_data *)bl, sd);
     }
+}
+
+void eclif_authok_post(struct map_session_data *sd)
+{
+    eclif_send_additional_slots(sd, sd);
 }

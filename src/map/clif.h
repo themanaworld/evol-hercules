@@ -8,5 +8,6 @@ void eclif_quest_send_list(struct map_session_data *sd);
 void eclif_quest_add(struct map_session_data *sd, struct quest *qd);
 void eclif_charnameack(int *fdPtr, struct block_list *bl);
 void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list *bl);
+void eclif_authok_post(struct map_session_data *sd);
 
 #endif  // EVOL_MAP_CLIF
