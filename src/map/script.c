@@ -382,3 +382,43 @@ BUILDIN(rif)
 
     return true;
 }
+
+BUILDIN(countItemColor)
+{
+    int nameid, i;
+    int count = 0;
+    struct item_data* id = NULL;
+
+    TBL_PC* sd = script->rid2sd(st);
+    if (!sd)
+        return true;
+
+    if (script_isstringtype(st, 2))
+    {
+        // item name
+        id = itemdb->search_name(script_getstr(st, 2));
+    }
+    else
+    {
+        // item id
+        id = itemdb->exists(script_getnum(st, 2));
+    }
+
+    if (id == NULL)
+    {
+        ShowError("buildin_countitem: Invalid item '%s'.\n", script_getstr(st,2));  // returns string, regardless of what it was
+        script_pushint(st,0);
+        return false;
+    }
+
+    nameid = id->nameid;
+
+    for(i = 0; i < MAX_INVENTORY; i++)
+    {
+        if(sd->status.inventory[i].nameid == nameid)
+            count += sd->status.inventory[i].amount;
+    }
+
+    script_pushint(st, count);
+    return true;
+}

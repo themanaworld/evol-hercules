@@ -21,5 +21,6 @@ BUILDIN(setq);
 BUILDIN(getNpcDir);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
+BUILDIN(countItemColor);
 
 #endif  // EVOL_MAP_SCRIPT
