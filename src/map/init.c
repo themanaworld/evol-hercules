@@ -92,6 +92,8 @@ HPExport void plugin_init (void)
     addHookPre("clif->quest_add", eclif_quest_add);
     addHookPre("clif->charnameack", eclif_charnameack);
 
+    addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
+
     langScriptId = script->add_str("Lang");
 }
 

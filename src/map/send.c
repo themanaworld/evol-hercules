@@ -68,3 +68,14 @@ void send_local_message(int fd, struct block_list* bl, const char* msg)
     safestrncpy((char*)WFIFOP(fd, 8), msg, msg_len);
     WFIFOSET (fd, msg_len + 8);
 }
+
+void send_changelook(int fd, int id, int type, int val)
+{
+    WFIFOHEAD (fd, 11);
+    WFIFOW (fd, 0) = 0x1d7;
+    WFIFOL (fd, 2) = id;
+    WFIFOB (fd, 6) = type;
+    WFIFOW (fd, 7) = val;
+    WFIFOW (fd, 9) = 0;
+    WFIFOSET (fd, 11);
+}

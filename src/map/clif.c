@@ -17,6 +17,7 @@
 
 #include "map/clif.h"
 #include "map/lang.h"
+#include "map/send.h"
 
 void eclif_quest_send_list(struct map_session_data *sd)
 {
@@ -95,5 +96,46 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             memcpy(WFIFOP(fd, 8), tr, len);
             WFIFOSET(fd, len);
         }
+    }
+}
+
+#define equipPos(index, field) \
+    equip = sd->equip_index[index]; \
+    if (equip >= 0) \
+    { \
+        item = sd->inventory_data[equip]; \
+        if (item && item->look) \
+            send_changelook(fd, id, field, item->look); \
+    }
+
+static void eclif_send_additional_slots(struct map_session_data* sd, struct map_session_data* sd2)
+{
+    int f;
+    const int id = sd->bl.id;
+    const int fd = sd2->fd;
+
+    struct item_data *item;
+    short equip;
+
+    equipPos(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
+    equipPos(EQI_HEAD_TOP, LOOK_HEAD_TOP);
+    equipPos(EQI_HEAD_MID, LOOK_HEAD_MID);
+    equipPos(EQI_GARMENT, LOOK_ROBE);
+    //skip EQI_ARMOR
+    equipPos(EQI_SHOES, LOOK_SHOES);
+    equipPos(EQI_COSTUME_TOP, 13);
+    equipPos(EQI_COSTUME_MID, 14);
+    equipPos(EQI_COSTUME_LOW, 15);
+    equipPos(EQI_COSTUME_GARMENT, 16);
+    //skipping SHADOW slots
+}
+
+void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list *bl)
+{
+    // need replace it to _post
+    if (bl->type == BL_PC)
+    {
+        eclif_send_additional_slots(sd, (struct map_session_data *)bl);
+        eclif_send_additional_slots((struct map_session_data *)bl, sd);
     }
 }
