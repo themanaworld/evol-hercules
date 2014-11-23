@@ -355,3 +355,30 @@ BUILDIN(setNpcDir)
 
     return true;
 }
+
+BUILDIN(rif)
+{
+    char *str = 0;
+    if (script_getnum(st, 2))
+    {
+        str = script_getstr(st, 3);
+        if (str)
+            script_pushstr(st, aStrdup(str));
+        else
+            script_pushconststr(st, (unsigned char *)"");
+    }
+    else if (script_hasdata(st, 4))
+    {
+        str = script_getstr(st, 4);
+        if (str)
+            script_pushstr(st, aStrdup(str));
+        else
+            script_pushconststr(st, (unsigned char *)"");
+    }
+    else
+    {
+        script_pushconststr(st, (unsigned char *)"");
+    }
+
+    return true;
+}

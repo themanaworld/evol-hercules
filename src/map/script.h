@@ -20,5 +20,6 @@ BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(getNpcDir);
 BUILDIN(setNpcDir);
+BUILDIN(rif);
 
 #endif  // EVOL_MAP_SCRIPT
