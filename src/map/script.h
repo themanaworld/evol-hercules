@@ -19,5 +19,6 @@ BUILDIN(requestLang);
 BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(getNpcDir);
+BUILDIN(setNpcDir);
 
 #endif  // EVOL_MAP_SCRIPT

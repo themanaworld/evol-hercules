@@ -323,3 +323,35 @@ BUILDIN(getNpcDir)
 
     return true;
 }
+
+BUILDIN(setNpcDir)
+{
+    int newdir;
+    struct npc_data *nd = 0;
+
+    if (script_hasdata(st, 3))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+        newdir = script_getnum(st, 3);
+    }
+    else if (script_hasdata(st, 2))
+    {
+        if (!st->oid)
+            return false;
+
+        nd = (struct npc_data *) map->id2bl (st->oid);
+        newdir = script_getnum(st, 2);
+    }
+    if (!nd)
+        return false;
+
+    if (newdir < 0)
+        newdir = 0;
+    else if (newdir > 7)
+        newdir = 7;
+
+    nd->dir = newdir;
+    npc->enable (nd->name, 1);
+
+    return true;
+}

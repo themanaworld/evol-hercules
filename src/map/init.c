@@ -73,7 +73,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("getnpcdir", "*", getNpcDir);
-    addScriptCommand("setnpcdir", "*", dummy);
+    addScriptCommand("setnpcdir", "*", setNpcDir);
     addScriptCommand("rif", "is*", dummyStr);
     addScriptCommand("countitemcolor", "*", dummyInt);
     addScriptCommandDeprecated("getclientversion", "", getClientVersion);
