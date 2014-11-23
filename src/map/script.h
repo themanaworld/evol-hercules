@@ -18,5 +18,6 @@ BUILDIN(getItemLink);
 BUILDIN(requestLang);
 BUILDIN(getq);
 BUILDIN(setq);
+BUILDIN(getNpcDir);
 
 #endif  // EVOL_MAP_SCRIPT
