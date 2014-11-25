@@ -144,6 +144,10 @@ HPExport void server_preinit (void)
     mapit = GET_SYMBOL("mapit");
     mapindex = GET_SYMBOL("mapindex");
 
+    mapindex->default_map = "000-1";
+    mapindex->default_x = 80;
+    mapindex->default_y = 109;
+
     addHookPre("quest->read_db", equest_read_db);
 }
 
