@@ -36,7 +36,7 @@ void do_init_langs (void)
 
 void do_final_langs(void)
 {
-    db_clear(translate_db);
+    db_destroy(translate_db);
 }
 
 static int langsdb_readlangs (void)
@@ -59,6 +59,7 @@ static int langsdb_readlangs (void)
         lang_langs[lang_num] = aStrdup (text);
         lang_num ++;
     }
+    fclose(fp);
     return 0;
 }
 
