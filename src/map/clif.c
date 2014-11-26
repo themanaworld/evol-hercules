@@ -110,7 +110,6 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
 
 static void eclif_send_additional_slots(struct map_session_data* sd, struct map_session_data* sd2)
 {
-    int f;
     const int id = sd->bl.id;
     const int fd = sd2->fd;
 

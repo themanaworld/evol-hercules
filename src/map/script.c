@@ -337,14 +337,14 @@ BUILDIN(setNpcDir)
 
 BUILDIN(rif)
 {
-    char *str = 0;
+    const char *str = 0;
     if (script_getnum(st, 2))
     {
         str = script_getstr(st, 3);
         if (str)
             script_pushstr(st, aStrdup(str));
         else
-            script_pushconststr(st, (unsigned char *)"");
+            script_pushconststr(st, (char *)"");
     }
     else if (script_hasdata(st, 4))
     {
@@ -352,11 +352,11 @@ BUILDIN(rif)
         if (str)
             script_pushstr(st, aStrdup(str));
         else
-            script_pushconststr(st, (unsigned char *)"");
+            script_pushconststr(st, (char *)"");
     }
     else
     {
-        script_pushconststr(st, (unsigned char *)"");
+        script_pushconststr(st, (char *)"");
     }
 
     return true;

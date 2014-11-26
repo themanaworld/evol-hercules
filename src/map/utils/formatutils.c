@@ -87,7 +87,7 @@ int format_sub(struct script_state* st, int translate)
         char *tmp = strstr(ptr, "@@");
         if (!tmp)
             break;
-        char *item = script_getstr(st, idx);
+        const char *item = script_getstr(st, idx);
         int len = strlen(item);
         if (len > 50)
             break;

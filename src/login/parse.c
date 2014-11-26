@@ -36,7 +36,9 @@ void login_parse_version(int fd)
     send_server_version(fd);
 }
 
-int elogin_parse_client_login_pre(int *fdPtr, struct login_session_data* sd, const char *const ip)
+int elogin_parse_client_login_pre(int *fdPtr,
+                                  struct login_session_data* sd __attribute__ ((unused)),
+                                  const char *const ip __attribute__ ((unused)))
 {
     int fd = *fdPtr;
     uint16 command = RFIFOW(fd,0);
@@ -65,7 +67,7 @@ int elogin_parse_client_login_pre(int *fdPtr, struct login_session_data* sd, con
     return 0;
 }
 
-int elogin_parse_client_login2(int fd)
+void elogin_parse_client_login2(int fd)
 {
     char username[NAME_LENGTH];
     char password[PASSWD_LEN];
@@ -79,7 +81,7 @@ int elogin_parse_client_login2(int fd)
     if (len < 2 || !username[len - 2] == '_' || !memchr("FfMm", username[len - 1], 4))
     {
         login->login_error(fd, 3);
-        return 1;
+        return;
     }
 
     safestrncpy(password, (const char*)RFIFOP(fd, 26), NAME_LENGTH);
@@ -102,7 +104,7 @@ int elogin_parse_client_login2(int fd)
     {
         ShowNotice("Attempt to create an e-mail REFUSED - e-mail is invalid (ip: %s)\n", ip);
         login->login_error(fd, 11);
-        return 1;
+        return;
     }
 
     result = login->mmo_auth(sd, false);
@@ -130,5 +132,5 @@ int elogin_parse_client_login2(int fd)
         login->auth_failed(sd, result);
     }
 
-    return 0;
+    return;
 }

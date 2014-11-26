@@ -6,6 +6,6 @@
 
 void login_parse_version(int fd);
 int elogin_parse_client_login_pre(int *fd, struct login_session_data* sd, const char *const ip);
-int elogin_parse_client_login2(int fd);
+void elogin_parse_client_login2(int fd);
 
 #endif  // EVOL_LOGIN_PARSE
