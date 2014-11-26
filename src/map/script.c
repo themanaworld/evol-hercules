@@ -38,27 +38,6 @@ BUILDIN(lg)
     return true;
 }
 
-BUILDIN(getClientVersion)
-{
-    getDataReturn(0);
-    script_pushint(st, data->clientVersion);
-    return true;
-}
-
-BUILDIN(getLang)
-{
-    getDataReturn(0);
-    script_pushint(st, data->language);
-    return true;
-}
-
-BUILDIN(setLang)
-{
-    getData();
-    data->language = script_getnum(st, 2);
-    return true;
-}
-
 BUILDIN(setCamNpc)
 {
     getSD();

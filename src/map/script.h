@@ -6,9 +6,6 @@
 
 BUILDIN(l);
 BUILDIN(lg);
-BUILDIN(getClientVersion);
-BUILDIN(getLang);
-BUILDIN(setLang);
 BUILDIN(setCamNpc);
 BUILDIN(restoreCam);
 BUILDIN(npcTalk3);

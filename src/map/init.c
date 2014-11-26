@@ -67,8 +67,6 @@ HPExport void plugin_init (void)
     addScriptCommand("getitemlink", "s", getItemLink);
     addScriptCommand("l", "s*", l);
     addScriptCommand("lg", "s*", lg);
-    addScriptCommandDeprecated("getlang", "", getLang);
-    addScriptCommandDeprecated("setlang", "i", setLang);
     addScriptCommand("requestlang", "v", requestLang);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
@@ -76,7 +74,6 @@ HPExport void plugin_init (void)
     addScriptCommand("setnpcdir", "*", setNpcDir);
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("countitemcolor", "v*", countItemColor);
-    addScriptCommandDeprecated("getclientversion", "", getClientVersion);
     // must be replaced to misceffect
     addScriptCommand("misceffect2", "i*", dummy);
 
