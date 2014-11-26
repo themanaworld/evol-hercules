@@ -16,8 +16,6 @@ LOGIN_SRC = login/config.c \
 
 MAP_SRC = map/clif.c \
     map/clif.h \
-    map/dummy.c \
-    map/dummy.h \
     map/init.c \
     map/lang.c \
     map/lang.h \

@@ -35,7 +35,6 @@
 
 #include "common/interfaces.h"
 #include "map/clif.h"
-#include "map/dummy.h"
 #include "map/lang.h"
 #include "map/npc.h"
 #include "map/parse.h"
