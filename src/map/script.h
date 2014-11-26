@@ -19,5 +19,6 @@ BUILDIN(getNpcDir);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
 BUILDIN(countItemColor);
+BUILDIN(miscEffect);
 
 #endif  // EVOL_MAP_SCRIPT

@@ -74,8 +74,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setnpcdir", "*", setNpcDir);
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("countitemcolor", "v*", countItemColor);
-    // must be replaced to misceffect
-    addScriptCommand("misceffect2", "i*", dummy);
+    addScriptCommand("misceffect", "i*", miscEffect);
 
     do_init_langs();
 
