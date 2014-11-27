@@ -83,6 +83,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->equipitem_pos", epc_equipitem_pos);
     addHookPre("pc->unequipitem_pos", epc_unequipitem_pos);
     addHookPre("npc->checknear", enpc_checknear);
+    addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("clif->quest_send_list", eclif_quest_send_list);
     addHookPre("clif->quest_add", eclif_quest_add);
     addHookPre("clif->charnameack", eclif_charnameack);
