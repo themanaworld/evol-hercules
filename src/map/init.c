@@ -87,6 +87,9 @@ HPExport void plugin_init (void)
     addHookPre("clif->quest_send_list", eclif_quest_send_list);
     addHookPre("clif->quest_add", eclif_quest_add);
     addHookPre("clif->charnameack", eclif_charnameack);
+    addHookPre("clif->sendlook", eclif_sendlook);
+    addHookPre("clif->send", eclif_send);
+    addHookPre("clif->set_unit_idle", eclif_set_unit_idle);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);

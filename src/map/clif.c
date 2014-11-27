@@ -17,6 +17,8 @@
 
 #include "map/clif.h"
 #include "map/lang.h"
+#include "map/mapd.h"
+#include "map/mapdext.h"
 #include "map/send.h"
 
 void eclif_quest_send_list(struct map_session_data *sd)
@@ -115,6 +117,9 @@ static void eclif_send_additional_slots(struct map_session_data* sd, struct map_
 
     struct item_data *item;
     short equip;
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    if (data->invisible)
+        return;
 
     equipPos(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
     equipPos(EQI_HEAD_TOP, LOOK_HEAD_TOP);
@@ -131,7 +136,6 @@ static void eclif_send_additional_slots(struct map_session_data* sd, struct map_
 
 void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list *bl)
 {
-    // need replace it to _post
     if (bl->type == BL_PC)
     {
         eclif_send_additional_slots(sd, (struct map_session_data *)bl);
@@ -142,4 +146,36 @@ void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list 
 void eclif_authok_post(struct map_session_data *sd)
 {
     eclif_send_additional_slots(sd, sd);
+}
+
+void eclif_handle_invisible_map(struct block_list *bl, enum send_target target)
+{
+    if (!bl || bl->type != BL_PC)
+        return;
+    struct MapdExt *data = mapd_get(bl->m);
+    if (data->invisible)
+        hookStop();
+}
+
+void eclif_sendlook(struct block_list *bl, int *id, int *type, int *val, int *val2, enum send_target *target)
+{
+    if (*target == SELF)
+        return;
+    eclif_handle_invisible_map(bl, *target);
+}
+
+bool eclif_send(const void* buf, int *len, struct block_list* bl, enum send_target *type)
+{
+    if (*type == SELF)
+        return;
+    eclif_handle_invisible_map(bl, *type);
+    return true;
+}
+
+void eclif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enum send_target *target)
+{
+    if (tsd && bl && bl->id == tsd->bl.id && *target == SELF)
+        return;
+
+    eclif_handle_invisible_map(bl, *target);
 }
