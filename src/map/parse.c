@@ -12,7 +12,7 @@
 #include "../../../common/strlib.h"
 
 #include "map/parse.h"
-#include "map/session.h"
+#include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
 void map_parse_version(int fd)

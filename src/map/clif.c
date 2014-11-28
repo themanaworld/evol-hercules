@@ -17,9 +17,9 @@
 
 #include "map/clif.h"
 #include "map/lang.h"
-#include "map/mapd.h"
 #include "map/send.h"
-#include "map/session.h"
+#include "map/data/mapd.h"
+#include "map/data/session.h"
 #include "map/struct/mapdext.h"
 #include "map/struct/sessionext.h"
 

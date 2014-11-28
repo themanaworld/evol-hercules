@@ -12,7 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../map/pc.h"
 
-#include "map/session.h"
+#include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
 struct SessionExt *session_get(int fd)

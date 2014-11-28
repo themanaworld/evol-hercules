@@ -12,7 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../map/map.h"
 
-#include "map/mapd.h"
+#include "map/data/mapd.h"
 #include "map/struct/mapdext.h"
 
 struct MapdExt *mapd_get(int m)

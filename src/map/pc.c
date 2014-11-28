@@ -14,7 +14,7 @@
 #include "../../../map/pc.h"
 
 #include "map/pc.h"
-#include "map/session.h"
+#include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
 int langScriptId;

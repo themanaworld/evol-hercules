@@ -14,7 +14,7 @@
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
 
-#include "map/mapd.h"
+#include "map/data/mapd.h"
 #include "map/struct/mapdext.h"
 #include "map/npc.h"
 
