@@ -506,3 +506,31 @@ BUILDIN(removeMapMask)
         send_mapmask_brodcast(m, mapData->mask);
     return true;
 }
+
+BUILDIN(getNpcClass)
+{
+    struct npc_data *nd = 0;
+
+    if (script_hasdata(st, 2))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+    }
+    if (!nd && !st->oid)
+    {
+        script_pushint(st, -1);
+        return false;
+    }
+
+    if (!nd)
+        nd = (struct npc_data *) map->id2bl(st->oid);
+
+    if (!nd)
+    {
+        script_pushint(st, -1);
+        return false;
+    }
+
+    script_pushint(st, (int)nd->class_);
+
+    return true;
+}

@@ -24,5 +24,6 @@ BUILDIN(setMapMask);
 BUILDIN(getMapMask);
 BUILDIN(addMapMask);
 BUILDIN(removeMapMask);
+BUILDIN(getNpcClass);
 
 #endif  // EVOL_MAP_SCRIPT
