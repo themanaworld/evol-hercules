@@ -20,6 +20,8 @@
 #include "map/mapd.h"
 #include "map/mapdext.h"
 #include "map/send.h"
+#include "map/session.h"
+#include "map/sessionext.h"
 
 void eclif_quest_send_list(struct map_session_data *sd)
 {
@@ -145,7 +147,20 @@ void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list 
 
 void eclif_authok_post(struct map_session_data *sd)
 {
+    if (!sd)
+        return;
+
     eclif_send_additional_slots(sd, sd);
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    int mask = data ? data->mask : 1;
+    send_mapmask(sd->fd, mask);
+}
+
+void eclif_changemap_post(struct map_session_data *sd, short *m, int *x, int *y)
+{
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    int mask = data ? data->mask : 1;
+    send_mapmask(sd->fd, mask);
 }
 
 void eclif_handle_invisible_map(struct block_list *bl, enum send_target target)
@@ -178,4 +193,24 @@ void eclif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, en
         return;
 
     eclif_handle_invisible_map(bl, *target);
+}
+
+int eclif_send_actual(int *fd, void *buf, int *len)
+{
+    if (*len >= 2)
+    {
+        const int packet = RBUFW (buf, 0);
+        if (packet == 0xb02)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 3)
+            {   // not sending 0xb02 to old clients
+                hookStop();
+                return 0;
+            }
+        }
+    }
+    return 0;
 }

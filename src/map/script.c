@@ -445,7 +445,10 @@ BUILDIN(setMapMask)
     getMapData(m);
 
     const int val = script_getnum(st, 3);
+    const unsigned int old = mapData->mask;
     mapData->mask = val;
+    if (old != mapData->mask)
+        send_mapmask_brodcast(m, mapData->mask);
     return true;
 }
 
@@ -478,7 +481,11 @@ BUILDIN(addMapMask)
         return false;
     getMapData(m);
     const int val = script_getnum(st, 3);
+    const unsigned int old = mapData->mask;
     mapData->mask |= val;
+    if (old != mapData->mask)
+        send_mapmask_brodcast(m, mapData->mask);
+
     return true;
 }
 
@@ -492,7 +499,10 @@ BUILDIN(removeMapMask)
         return false;
     getMapData(m);
     const int val = script_getnum(st, 3);
+    const unsigned int old = mapData->mask;
     mapData->mask |= val;
     mapData->mask ^= val;
+    if (old != mapData->mask)
+        send_mapmask_brodcast(m, mapData->mask);
     return true;
 }

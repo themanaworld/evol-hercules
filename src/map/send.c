@@ -79,3 +79,24 @@ void send_changelook(int fd, int id, int type, int val)
     WFIFOW (fd, 9) = 0;
     WFIFOSET (fd, 11);
 }
+
+void send_mapmask(int fd, int mask)
+{
+    WFIFOHEAD (fd, 10);
+    WFIFOW (fd, 0) = 0xb02;
+    WFIFOL (fd, 2) = mask;
+    WFIFOL (fd, 6) = 0;
+    WFIFOSET (fd, 10);
+}
+
+void send_mapmask_brodcast(const int map, const int mask)
+{
+    struct block_list bl;
+    char buf[10];
+
+    bl.m = map;
+    WBUFW (buf, 0) = 0xb02;
+    WBUFL (buf, 2) = mask;
+    WBUFL (buf, 6) = 0;
+    clif->send(buf, 10, &bl, ALL_SAMEMAP);
+}
