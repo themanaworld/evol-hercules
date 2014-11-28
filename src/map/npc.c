@@ -60,7 +60,7 @@ void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char
         if (data)
             data->invisible = true;
     }
-    if (!strcmpi(w3, "mask"))
+    else if (!strcmpi(w3, "mask"))
     {
         int16 m = map->mapname2mapid(name);
         struct MapdExt *data = mapd_get(m);
