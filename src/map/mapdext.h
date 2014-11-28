@@ -6,6 +6,7 @@
 
 struct MapdExt
 {
+    unsigned int mask;
     bool invisible;
 };
 

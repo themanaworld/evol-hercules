@@ -4,7 +4,7 @@
 #ifndef EVOL_MAP_SCRIPTDEFINES
 #define EVOL_MAP_SCRIPTDEFINES
 
-#define getDataReturn(def) \
+#define getSessionDataReturn(def) \
     if (!st->rid) \
     { \
         script_pushint(st, def); \
@@ -18,13 +18,26 @@
     } \
     struct SessionExt *data = session_get(sd->fd)
 
-#define getData() \
+#define getSessionData() \
     if (!st->rid) \
         return true; \
     TBL_PC *sd = script->rid2sd(st); \
     if (!sd) \
         return true; \
     struct SessionExt *data = session_get(sd->fd)
+
+#define getMapData(m) \
+        struct MapdExt *mapData = mapd_get(m); \
+        if (!mapData) \
+            return true;
+
+#define getMapDataReturn(m, def) \
+        struct MapdExt *mapData = mapd_get(m); \
+        if (!mapData) \
+        { \
+            script_pushint(st, def); \
+            return true; \
+        }
 
 #define getSD() \
     TBL_PC *sd = script->rid2sd(st); \

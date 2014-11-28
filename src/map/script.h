@@ -20,5 +20,9 @@ BUILDIN(setNpcDir);
 BUILDIN(rif);
 BUILDIN(countItemColor);
 BUILDIN(miscEffect);
+BUILDIN(setMapMask);
+BUILDIN(getMapMask);
+BUILDIN(addMapMask);
+BUILDIN(removeMapMask);
 
 #endif  // EVOL_MAP_SCRIPT

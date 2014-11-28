@@ -74,6 +74,10 @@ HPExport void plugin_init (void)
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("countitemcolor", "v*", countItemColor);
     addScriptCommand("misceffect", "i*", miscEffect);
+    addScriptCommand("setmapmask", "si", setMapMask);
+    addScriptCommand("addmapmask", "si", addMapMask);
+    addScriptCommand("removemapmask", "si", removeMapMask);
+    addScriptCommand("getmapmask", "s", getMapMask);
 
     do_init_langs();
 

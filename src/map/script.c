@@ -20,6 +20,8 @@
 #include "map/script.h"
 #include "map/clif.h"
 #include "map/lang.h"
+#include "map/mapd.h"
+#include "map/mapdext.h"
 #include "map/scriptdefines.h"
 #include "map/send.h"
 #include "map/session.h"
@@ -429,5 +431,68 @@ BUILDIN(miscEffect)
     }
     if (bl)
         clif->specialeffect(bl, type, AREA);
+    return true;
+}
+
+BUILDIN(setMapMask)
+{
+    const char *const mapName = script_getstr(st, 2);
+    if (!mapName)
+        return true;
+    const int m = map->mapname2mapid(mapName);
+    if (m < 0)
+        return false;
+    getMapData(m);
+
+    const int val = script_getnum(st, 3);
+    mapData->mask = val;
+    return true;
+}
+
+BUILDIN(getMapMask)
+{
+    const char *const mapName = script_getstr(st, 2);
+    if (!mapName)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    const int m = map->mapname2mapid(mapName);
+    if (m < 0)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+    getMapDataReturn(m, 0);
+    script_pushint(st, mapData->mask);
+    return true;
+}
+
+BUILDIN(addMapMask)
+{
+    const char *const mapName = script_getstr(st, 2);
+    if (!mapName)
+        return true;
+    const int m = map->mapname2mapid(mapName);
+    if (m < 0)
+        return false;
+    getMapData(m);
+    const int val = script_getnum(st, 3);
+    mapData->mask |= val;
+    return true;
+}
+
+BUILDIN(removeMapMask)
+{
+    const char *const mapName = script_getstr(st, 2);
+    if (!mapName)
+        return true;
+    const int m = map->mapname2mapid(mapName);
+    if (m < 0)
+        return false;
+    getMapData(m);
+    const int val = script_getnum(st, 3);
+    mapData->mask |= val;
+    mapData->mask ^= val;
     return true;
 }
