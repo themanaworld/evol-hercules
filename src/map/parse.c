@@ -13,7 +13,7 @@
 
 #include "map/parse.h"
 #include "map/session.h"
-#include "map/sessionext.h"
+#include "map/struct/sessionext.h"
 
 void map_parse_version(int fd)
 {

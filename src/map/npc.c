@@ -15,7 +15,7 @@
 #include "../../../map/pc.h"
 
 #include "map/mapd.h"
-#include "map/mapdext.h"
+#include "map/struct/mapdext.h"
 #include "map/npc.h"
 
 struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* bl)

@@ -15,7 +15,7 @@
 
 #include "map/lang.h"
 #include "map/session.h"
-#include "map/sessionext.h"
+#include "map/struct/sessionext.h"
 
 #define MAX_LANGS 100
 

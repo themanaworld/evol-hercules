@@ -13,7 +13,7 @@
 #include "../../../map/map.h"
 
 #include "map/mapd.h"
-#include "map/mapdext.h"
+#include "map/struct/mapdext.h"
 
 struct MapdExt *mapd_get(int m)
 {

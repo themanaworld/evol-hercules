@@ -15,7 +15,7 @@
 
 #include "map/pc.h"
 #include "map/session.h"
-#include "map/sessionext.h"
+#include "map/struct/sessionext.h"
 
 int langScriptId;
 

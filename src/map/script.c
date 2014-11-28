@@ -21,11 +21,11 @@
 #include "map/clif.h"
 #include "map/lang.h"
 #include "map/mapd.h"
-#include "map/mapdext.h"
 #include "map/scriptdefines.h"
 #include "map/send.h"
 #include "map/session.h"
-#include "map/sessionext.h"
+#include "map/struct/mapdext.h"
+#include "map/struct/sessionext.h"
 #include "map/utils/formatutils.h"
 
 BUILDIN(l)

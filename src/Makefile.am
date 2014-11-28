@@ -21,7 +21,6 @@ MAP_SRC = map/clif.c \
     map/lang.h \
     map/mapd.c \
     map/mapd.h \
-    map/mapdext.h \
     map/npc.c \
     map/npc.h \
     map/parse.c \
@@ -37,7 +36,8 @@ MAP_SRC = map/clif.c \
     map/send.h \
     map/session.c \
     map/session.h \
-    map/sessionext.h \
+    map/struct/mapdext.h \
+    map/struct/sessionext.h \
     map/utils/formatutils.c \
     map/utils/formatutils.h \
     common/interfaces.c \

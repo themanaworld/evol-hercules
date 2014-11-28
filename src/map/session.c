@@ -13,7 +13,7 @@
 #include "../../../map/pc.h"
 
 #include "map/session.h"
-#include "map/sessionext.h"
+#include "map/struct/sessionext.h"
 
 struct SessionExt *session_get(int fd)
 {
