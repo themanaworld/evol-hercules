@@ -79,6 +79,7 @@ HPExport void plugin_init (void)
     addScriptCommand("removemapmask", "si", removeMapMask);
     addScriptCommand("getmapmask", "s", getMapMask);
     addScriptCommand("getnpcclass", "*", getNpcClass);
+    addScriptCommand("setnpcsex", "*", setNpcSex);
 
     do_init_langs();
 

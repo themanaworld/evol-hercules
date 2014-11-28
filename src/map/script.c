@@ -16,6 +16,7 @@
 #include "../../../map/pc.h"
 #include "../../../map/script.h"
 #include "../../../map/quest.h"
+#include "../../../map/unit.h"
 
 #include "map/script.h"
 #include "map/clif.h"
@@ -533,4 +534,41 @@ BUILDIN(getNpcClass)
     script_pushint(st, (int)nd->class_);
 
     return true;
+}
+
+BUILDIN(setNpcSex)
+{
+    struct npc_data *nd = NULL;
+    int sex = 0;
+    if (script_hasdata(st, 3))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+        sex = script_getnum(st, 3);
+    }
+    else if (script_hasdata(st, 2))
+    {
+        sex = script_getnum(st, 2);
+    }
+    else
+    {
+        return false;
+    }
+
+    if (!nd && !st->oid)
+    {
+        return false;
+    }
+
+    if (!nd)
+        nd = (struct npc_data *) map->id2bl(st->oid);
+
+    if (!nd || !nd->vd)
+    {
+        script_pushint(st, -1);
+        return false;
+    }
+
+    clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
+    nd->vd->sex = sex;
+    clif->spawn(&nd->bl);
 }

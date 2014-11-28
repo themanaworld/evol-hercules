@@ -25,5 +25,6 @@ BUILDIN(getMapMask);
 BUILDIN(addMapMask);
 BUILDIN(removeMapMask);
 BUILDIN(getNpcClass);
+BUILDIN(setNpcSex);
 
 #endif  // EVOL_MAP_SCRIPT
