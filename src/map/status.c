@@ -10,28 +10,24 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/map.h"
 #include "../../../map/npc.h"
+#include "../../../map/status.h"
 
 #include "map/data/npcd.h"
 #include "map/struct/npcdext.h"
 
-struct NpcdExt *npcd_get(struct npc_data *nd)
+void estatus_set_viewdata_post(struct block_list *bl, int *class_)
 {
-    struct NpcdExt *data = getFromNPCD(nd, 0);
-    if (!data)
+    if (!bl)
+        return;
+    if (bl->type != BL_NPC)
+        return;
+    TBL_NPC *const npc = (TBL_NPC*)bl;
+    struct NpcdExt *data = npcd_get(npc);
+    if (data && data->init == false && npc->vd)
     {
-        data = npcd_create();
-        addToNPCD(nd, data, 0, true);
+        data->init = true;
+        npc->vd->sex = 3;
     }
-    return data;
-}
-
-struct NpcdExt *npcd_create(void)
-{
-    struct NpcdExt *data = NULL;
-    CREATE(data, struct NpcdExt, 1);
-    if (!data)
-        return NULL;
-    data->init = false;
-    return data;
 }

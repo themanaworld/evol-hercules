@@ -32,8 +32,11 @@ MAP_SRC = map/clif.c \
     map/scriptdefines.h \
     map/send.c \
     map/send.h \
+    map/status.c \
+    map/status.h \
     map/data/mapd.c \
     map/data/mapd.h \
+    map/data/npcd.c \
     map/data/npcd.h \
     map/data/session.c \
     map/data/session.h \

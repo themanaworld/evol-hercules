@@ -38,9 +38,10 @@
 #include "map/lang.h"
 #include "map/npc.h"
 #include "map/parse.h"
-#include "map/script.h"
 #include "map/pc.h"
 #include "map/quest.h"
+#include "map/script.h"
+#include "map/status.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -101,6 +102,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
     addHookPost("clif->changemap", eclif_changemap_post);
+    addHookPost("status->set_viewdata", estatus_set_viewdata_post);
 
     langScriptId = script->add_str("Lang");
 }

@@ -6,6 +6,7 @@
 
 struct NpcdExt
 {
+    bool init;
 };
 
 #endif  // EVOL_MAP_NPCDEXT
