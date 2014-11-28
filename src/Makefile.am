@@ -34,9 +34,11 @@ MAP_SRC = map/clif.c \
     map/send.h \
     map/data/mapd.c \
     map/data/mapd.h \
+    map/data/npcd.h \
     map/data/session.c \
     map/data/session.h \
     map/struct/mapdext.h \
+    map/struct/npcdext.h \
     map/struct/sessionext.h \
     map/utils/formatutils.c \
     map/utils/formatutils.h \
