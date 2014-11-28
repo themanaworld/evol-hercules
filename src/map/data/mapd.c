@@ -33,7 +33,7 @@ struct MapdExt *mapd_create(void)
     CREATE(data, struct MapdExt, 1);
     if (!data)
         return NULL;
-    data->mask = 0;
+    data->mask = 1;
     data->invisible = false;
     return data;
 }
