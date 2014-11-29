@@ -27,6 +27,8 @@
 #include "../../../char/mapif.h"
 
 #include "common/interfaces.h"
+#include "char/char.h"
+#include "char/config.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -40,8 +42,6 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-    interfaces_init_common();
-
     chr = GET_SYMBOL("chr");
     geoip = GET_SYMBOL("geoip");
     inter_auction = GET_SYMBOL("inter_auction");
@@ -57,10 +57,15 @@ HPExport void plugin_init (void)
     inter = GET_SYMBOL("inter");
     loginif = GET_SYMBOL("loginif");
     mapif = GET_SYMBOL("mapif");
+
+    addHookPre("chr->parse_char_login_map_server", echar_parse_char_login_map_server);
 }
 
 HPExport void server_preinit (void)
 {
+    interfaces_init_common();
+
+    addCharInterConf("inter_server_ip", config_inter_server_ip);
 }
 
 HPExport void server_online (void)

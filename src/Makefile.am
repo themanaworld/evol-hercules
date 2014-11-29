@@ -1,6 +1,10 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-CHAR_SRC = char/init.c \
+CHAR_SRC = char/char.c \
+    char/char.h \
+    char/config.c \
+    char/config.h \
+    char/init.c \
     common/interfaces.c \
     common/interfaces.h
 
