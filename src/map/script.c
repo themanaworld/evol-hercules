@@ -276,7 +276,7 @@ BUILDIN(requestItem)
         sd->state.menu_or_input = 1;
         st->state = RERUNLINE;
 
-        // send lang request
+        // send item request
         send_npccommand(script->rid2sd(st), st->oid, 10);
     }
     else
@@ -293,6 +293,59 @@ BUILDIN(requestItem)
             return false;
 
         script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(item), script_getref(st,2));
+        st->state = RUN;
+    }
+    return true;
+}
+
+BUILDIN(requestItems)
+{
+    getSD();
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestitem: not a variable\n");
+        script->reportdata(data);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+
+    if (!is_string_variable(name))
+        return false;
+
+    int count = 1;
+
+    if (script_hasdata(st, 3))
+    {
+        count = script_getnum(st, 3);
+        if (count < 0)
+            count = 1;
+    }
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send item request with limit count
+        send_npccommand2(script->rid2sd (st), st->oid, 10, count, 0, 0);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        if (!sd->npc_str)
+            return false;
+
+        script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st, 2));
         st->state = RUN;
     }
     return true;

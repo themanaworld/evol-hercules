@@ -16,6 +16,7 @@ BUILDIN(shop);
 BUILDIN(getItemLink);
 BUILDIN(requestLang);
 BUILDIN(requestItem);
+BUILDIN(requestItems);
 BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(getNpcDir);
