@@ -15,7 +15,9 @@
 #include "../../../map/pc.h"
 
 #include "map/data/mapd.h"
+#include "map/data/npcd.h"
 #include "map/struct/mapdext.h"
+#include "map/struct/npcdext.h"
 #include "map/npc.h"
 
 struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* bl)
@@ -39,11 +41,27 @@ struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* 
     if (nd->class_ < 0) //Class-less npc, enable click from anywhere.
         return nd;
 
-    if (bl->m != sd->bl.m ||
-        bl->x < sd->bl.x - AREA_SIZE - 1 || bl->x > sd->bl.x + AREA_SIZE + 1 ||
-        bl->y < sd->bl.y - AREA_SIZE - 1 || bl->y > sd->bl.y + AREA_SIZE + 1)
+    const int npcX = bl->x;
+    const int npcY = bl->y;
+    const int x = sd->bl.x;
+    const int y = sd->bl.y;
+
+    if (bl->m != sd->bl.m
+        || npcX < x - AREA_SIZE - 1 || npcX > x + AREA_SIZE + 1
+        || npcY < y - AREA_SIZE - 1 || npcY > y + AREA_SIZE + 1)
     {
         return NULL;
+    }
+
+    struct NpcdExt *data = npcd_get(nd);
+    if (data)
+    {
+        const int size = data->areaSize;
+        if (npcX < x - size || npcX > x + size
+            || npcY < y - size || npcY > y + size)
+        {
+            return NULL;
+        }
     }
 
     return nd;

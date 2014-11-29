@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/battle.h"
 #include "../../../map/npc.h"
 
 #include "map/data/npcd.h"
@@ -33,5 +34,6 @@ struct NpcdExt *npcd_create(void)
     if (!data)
         return NULL;
     data->init = false;
+    data->areaSize = AREA_SIZE;
     return data;
 }

@@ -6,6 +6,7 @@
 
 struct NpcdExt
 {
+    int areaSize;
     bool init;
 };
 
