@@ -571,4 +571,64 @@ BUILDIN(setNpcSex)
     clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
     nd->vd->sex = sex;
     clif->spawn(&nd->bl);
+    return true;
+}
+
+BUILDIN(setPcSit)
+{
+    TBL_PC *sd = NULL;
+    int state = 0;
+
+    if (script_hasdata(st, 3))
+    {
+        sd = map->nick2sd (script_getstr(st, 2));
+        state = script_getnum(st, 3);
+    }
+    else if (script_hasdata(st, 2))
+    {
+        sd = script->rid2sd(st);
+        state = script_getnum(st, 2);
+    }
+    else
+    {
+        return false;
+    }
+    if (!sd)
+        return false;
+
+    if (state < 0)
+        state = 0;
+    if (state > 1)
+        state = 1;
+
+    if (!state)
+    {
+        if (pc_issit(sd))
+        {
+            pc->setstand(sd);
+            clif->standing(&sd->bl);
+        }
+    }
+    else if (!pc_issit (sd))
+    {
+        sd->state.dead_sit = 2;
+        sd->vd.dead_sit = 2;
+        clif->sitting(&sd->bl);
+    }
+    return true;
+}
+
+BUILDIN(getPcSit)
+{
+    TBL_PC *sd = NULL;
+
+    if (script_hasdata(st, 2))
+        sd = map->nick2sd (script_getstr(st, 2));
+    else
+        sd = script->rid2sd(st);
+    if (!sd)
+        script_pushint(st, -1);
+    else
+        script_pushint(st, pc_issit (sd));
+    return true;
 }
