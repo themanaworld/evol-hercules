@@ -34,5 +34,6 @@ BUILDIN(setNpcDistance);
 BUILDIN(showAvatar);
 BUILDIN(setAvatarDir);
 BUILDIN(setAvatarAction);
+BUILDIN(clear);
 
 #endif  // EVOL_MAP_SCRIPT

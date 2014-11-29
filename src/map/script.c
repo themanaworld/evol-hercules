@@ -693,3 +693,9 @@ BUILDIN(setAvatarAction)
     send_npccommand2(script->rid2sd (st), st->oid, 8, script_getnum(st, 2), 0, 0);
     return true;
 }
+
+BUILDIN(clear)
+{
+    send_npccommand(script->rid2sd (st), st->oid, 9);
+    return true;
+}

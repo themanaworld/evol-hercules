@@ -89,6 +89,7 @@ HPExport void plugin_init (void)
     addScriptCommand("showavatar", "*", showAvatar);
     addScriptCommand("setavatardir", "i", setAvatarDir);
     addScriptCommand("setavataraction", "i", setAvatarAction);
+    addScriptCommand("clear", "", clear);
 
     do_init_langs();
 
