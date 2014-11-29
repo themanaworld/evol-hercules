@@ -35,12 +35,14 @@ HPExport void plugin_init (void)
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
     addPacket(0x027c, 95, elogin_parse_client_login2, hpParse_Login);
     addHookPre("login->parse_client_login", elogin_parse_client_login_pre);
+    addHookPre("login->parse_request_connection", elogin_parse_request_connection);
 }
 
 HPExport void server_preinit (void)
 {
     iMalloc = GET_SYMBOL("iMalloc");
     addLoginConf("update_server", config_update_server);
+    addLoginConf("inter_server_ip", config_inter_server_ip);
 }
 
 HPExport void server_online (void)
