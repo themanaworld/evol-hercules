@@ -7,6 +7,7 @@
 BUILDIN(l);
 BUILDIN(lg);
 BUILDIN(setCamNpc);
+BUILDIN(setCam);
 BUILDIN(restoreCam);
 BUILDIN(npcTalk3);
 BUILDIN(closeDialog);
