@@ -664,3 +664,32 @@ BUILDIN(setNpcDistance)
     data->areaSize = script_getnum(st, 2);
     return true;
 }
+
+BUILDIN(showAvatar)
+{
+    int id = 0;
+    if (script_hasdata(st, 2))
+        id = script_getnum(st, 2);
+
+    send_npccommand2(script->rid2sd (st), st->oid, 6, id, 0, 0);
+    return true;
+}
+
+BUILDIN(setAvatarDir)
+{
+    int newdir = script_getnum(st, 2);
+
+    if (newdir < 0)
+        newdir = 0;
+    else if (newdir > 7)
+        newdir = 7;
+
+    send_npccommand2(script->rid2sd (st), st->oid, 7, newdir, 0, 0);
+    return true;
+}
+
+BUILDIN(setAvatarAction)
+{
+    send_npccommand2(script->rid2sd (st), st->oid, 8, script_getnum(st, 2), 0, 0);
+    return true;
+}

@@ -31,5 +31,8 @@ BUILDIN(setNpcSex);
 BUILDIN(setPcSit);
 BUILDIN(getPcSit);
 BUILDIN(setNpcDistance);
+BUILDIN(showAvatar);
+BUILDIN(setAvatarDir);
+BUILDIN(setAvatarAction);
 
 #endif  // EVOL_MAP_SCRIPT

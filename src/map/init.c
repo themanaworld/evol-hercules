@@ -86,6 +86,9 @@ HPExport void plugin_init (void)
     addScriptCommand("setnpcdistance", "i", setNpcDistance);
     addScriptCommand("setpcsit", "*", setPcSit);
     addScriptCommand("getpcsit", "*", getPcSit);
+    addScriptCommand("showavatar", "*", showAvatar);
+    addScriptCommand("setavatardir", "i", setAvatarDir);
+    addScriptCommand("setavataraction", "i", setAvatarAction);
 
     do_init_langs();
 
