@@ -13,6 +13,7 @@
 #include "../../../login/account.h"
 #include "../../../login/login.h"
 
+#include "common/ip.h"
 #include "login/config.h"
 #include "login/parse.h"
 #include "login/send.h"
@@ -140,7 +141,7 @@ void elogin_parse_request_connection(int *fd, struct login_session_data* sd, con
 {
     if (!inter_server_ip || !ip)
         return;
-    if (!strstr(inter_server_ip, ip))
+    if (!checkAllowedIp(inter_server_ip, ip))
     {
         hookStop();
         login->char_server_connection_status(*fd, sd, 3);
