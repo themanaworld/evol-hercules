@@ -82,6 +82,14 @@ BUILDIN(setCam)
     return true;
 }
 
+BUILDIN(moveCam)
+{
+    send_npccommand2(script->rid2sd (st), st->oid, 4, 0,
+        script_getnum(st, 2), script_getnum(st, 3));
+
+    return true;
+}
+
 BUILDIN(restoreCam)
 {
     getSD();

@@ -61,6 +61,7 @@ HPExport void plugin_init (void)
 
     addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("setcam", "ii", setCam);
+    addScriptCommand("movecam", "ii", moveCam);
     addScriptCommand("restorecam", "", restoreCam);
     addScriptCommand("npctalk3", "s", npcTalk3);
     addScriptCommand("closedialog", "", closeDialog);
