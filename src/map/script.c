@@ -24,8 +24,10 @@
 #include "map/scriptdefines.h"
 #include "map/send.h"
 #include "map/data/mapd.h"
+#include "map/data/npcd.h"
 #include "map/data/session.h"
 #include "map/struct/mapdext.h"
+#include "map/struct/npcdext.h"
 #include "map/struct/sessionext.h"
 #include "map/utils/formatutils.h"
 
@@ -646,5 +648,19 @@ BUILDIN(getPcSit)
         script_pushint(st, -1);
     else
         script_pushint(st, pc_issit (sd));
+    return true;
+}
+
+BUILDIN(setNpcDistance)
+{
+    struct npc_data *nd = (struct npc_data *) map->id2bl (st->oid);
+    if (!nd)
+        return false;
+
+    struct NpcdExt *data = npcd_get(nd);
+    if (!data)
+        return false;
+
+    data->areaSize = script_getnum(st, 2);
     return true;
 }

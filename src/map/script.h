@@ -30,5 +30,6 @@ BUILDIN(getNpcClass);
 BUILDIN(setNpcSex);
 BUILDIN(setPcSit);
 BUILDIN(getPcSit);
+BUILDIN(setNpcDistance);
 
 #endif  // EVOL_MAP_SCRIPT
