@@ -104,6 +104,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
     addHookPost("clif->changemap", eclif_changemap_post);
+    addHookPost("clif->set_unit_idle", eclif_set_unit_idle_post);
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
 
     langScriptId = script->add_str("Lang");

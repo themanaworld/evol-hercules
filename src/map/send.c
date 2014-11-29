@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/mob.h"
 #include "../../../map/pc.h"
 
 #include "map/send.h"
@@ -99,4 +100,22 @@ void send_mapmask_brodcast(const int map, const int mask)
     WBUFL (buf, 2) = mask;
     WBUFL (buf, 6) = 0;
     clif->send(buf, 10, &bl, ALL_SAMEMAP);
+}
+
+void send_mob_info(struct block_list* bl1, struct block_list* bl2,
+                   enum send_target target)
+{
+    char buf[12];
+
+    if (bl1->type != BL_MOB)
+        return;
+
+    struct mob_data *md = (struct mob_data *)bl1;
+
+    WBUFW (buf, 0) = 0xb03;
+    WBUFW (buf, 2) = 12; // len
+    WBUFL (buf, 4) = md->bl.id;
+    WBUFL (buf, 8) = md->status.rhw.range;
+
+    clif->send(&buf, sizeof(buf), bl2, target);
 }

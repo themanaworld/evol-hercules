@@ -10,5 +10,6 @@ void send_local_message(int fd, struct block_list* bl, const char* msg);
 void send_changelook(int fd, int id, int type, int val);
 void send_mapmask(int fd, int mask);
 void send_mapmask_brodcast(const int map, const int mask);
+void send_mob_info(struct block_list* bl1, struct block_list* bl2, enum send_target target);
 
 #endif  // EVOL_MAP_PC

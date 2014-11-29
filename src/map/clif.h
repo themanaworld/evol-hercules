@@ -17,5 +17,7 @@ int eclif_send_actual(int *fd, void *buf, int *len);
 
 void eclif_authok_post(struct map_session_data *sd);
 void eclif_changemap_post(struct map_session_data *sd, short *m, int *x, int *y);
+void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *tsd,
+                              enum send_target *target);
 
 #endif  // EVOL_MAP_CLIF

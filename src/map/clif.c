@@ -200,17 +200,27 @@ int eclif_send_actual(int *fd, void *buf, int *len)
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
-        if (packet == 0xb02)
+        if (packet == 0xb02 || packet == 0xb03)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
                 return 0;
             if (data->clientVersion < 3)
-            {   // not sending 0xb02 to old clients
+            {   // not sending new packets to old clients
                 hookStop();
                 return 0;
             }
         }
     }
     return 0;
+}
+
+void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *tsd,
+                              enum send_target *target)
+{
+    if (!bl || !tsd)
+        return;
+
+    if (bl->type == BL_MOB && tsd)
+        send_mob_info(bl, tsd ? &tsd->bl : bl, *target);
 }
