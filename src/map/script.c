@@ -249,6 +249,55 @@ BUILDIN(requestLang)
     return true;
 }
 
+BUILDIN(requestItem)
+{
+    getSD();
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestitem: not a variable\n");
+        script->reportdata(data);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+
+    if (is_string_variable(name))
+        return false;
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send lang request
+        send_npccommand(script->rid2sd(st), st->oid, 10);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        int item = 0;
+
+        if (!sd->npc_str)
+            return false;
+
+        if (sscanf (sd->npc_str, "%5d", &item) < 1)
+            return false;
+
+        script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(item), script_getref(st,2));
+        st->state = RUN;
+    }
+    return true;
+}
+
 BUILDIN(setq)
 {
     int i;

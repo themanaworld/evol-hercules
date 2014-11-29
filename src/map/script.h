@@ -15,6 +15,7 @@ BUILDIN(closeDialog);
 BUILDIN(shop);
 BUILDIN(getItemLink);
 BUILDIN(requestLang);
+BUILDIN(requestItem);
 BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(getNpcDir);

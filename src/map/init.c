@@ -70,6 +70,7 @@ HPExport void plugin_init (void)
     addScriptCommand("l", "s*", l);
     addScriptCommand("lg", "s*", lg);
     addScriptCommand("requestlang", "v", requestLang);
+    addScriptCommand("requestitem", "v", requestItem);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("getnpcdir", "*", getNpcDir);
