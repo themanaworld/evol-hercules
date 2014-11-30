@@ -201,7 +201,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
-        if (packet >= 0xb02 && packet <= 0xb05)
+        if (packet >= 0xb02 && packet <= 0xb10)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)

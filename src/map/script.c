@@ -801,3 +801,17 @@ BUILDIN(clear)
     send_npccommand(script->rid2sd (st), st->oid, 9);
     return true;
 }
+
+BUILDIN(changeMusic)
+{
+    const char *const mapName = script_getstr(st, 2);
+    const char *const music = script_getstr(st, 3);
+    if (!music || !mapName)
+        return 0;
+    const int m = map->mapname2mapid(mapName);
+    if (m < 0)
+        return false;
+
+    send_changemusic_brodcast(m, music);
+    return true;
+}

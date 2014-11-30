@@ -150,3 +150,19 @@ void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_targ
     clif->send(buf, i, tbl, target);
     aFree(buf);
 }
+
+void send_changemusic_brodcast(const int map, const char *music)
+{
+    if (!music)
+        return;
+
+    struct block_list bl;
+    const int sz = strlen (music) + 5;
+    char buf[sz];
+
+    bl.m = map;
+    WBUFW (buf, 0) = 0xb05;
+    WBUFW (buf, 2) = sz;
+    strcpy ((char *)WBUFP (buf, 4), music);
+    clif->send (buf, sz, &bl, ALL_SAMEMAP);
+}

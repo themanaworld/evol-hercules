@@ -92,6 +92,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setavatardir", "i", setAvatarDir);
     addScriptCommand("setavataraction", "i", setAvatarAction);
     addScriptCommand("clear", "", clear);
+    addScriptCommand("changemusic", "ss", changeMusic);
 
     do_init_langs();
 

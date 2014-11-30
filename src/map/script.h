@@ -37,5 +37,6 @@ BUILDIN(showAvatar);
 BUILDIN(setAvatarDir);
 BUILDIN(setAvatarAction);
 BUILDIN(clear);
+BUILDIN(changeMusic);
 
 #endif  // EVOL_MAP_SCRIPT
