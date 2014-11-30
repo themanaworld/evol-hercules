@@ -14,7 +14,9 @@
 #include "../../../map/pc.h"
 
 #include "map/pc.h"
+#include "map/data/mapd.h"
 #include "map/data/session.h"
+#include "map/struct/mapdext.h"
 #include "map/struct/sessionext.h"
 
 int langScriptId;
@@ -122,3 +124,21 @@ void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr)
 
 #undef unequipPos
 #undef unequipPos2
+
+bool epc_can_attack (struct map_session_data *sd, int *target_id)
+{
+    if (!sd)
+        return false;
+
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    if (!data)
+        return true;
+    if (data->flag.nopve)
+    {
+        if (map->id2md(*target_id))
+        {
+            hookStop();
+            return false;
+        }
+    }
+}

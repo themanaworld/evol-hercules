@@ -85,6 +85,13 @@ void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char
         if (data)
             data->mask = atoi(w4);
     }
+    else if (!strcmpi(w3, "nopve"))
+    {
+        int16 m = map->mapname2mapid(name);
+        struct MapdExt *data = mapd_get(m);
+        if (data)
+            data->flag.nopve = 1;
+    }
     else
     {
         ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));

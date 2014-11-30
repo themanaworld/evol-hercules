@@ -35,5 +35,6 @@ struct MapdExt *mapd_create(void)
         return NULL;
     data->mask = 1;
     data->invisible = false;
+    data->flag.nopve = 0;
     return data;
 }

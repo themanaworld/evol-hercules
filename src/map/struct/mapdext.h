@@ -8,6 +8,10 @@ struct MapdExt
 {
     unsigned int mask;
     bool invisible;
+    struct MapdExtFlag
+    {
+        unsigned nopve : 1;
+    } flag;
 };
 
 #endif  // EVOL_MAP_MAPDEXT

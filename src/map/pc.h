@@ -17,4 +17,6 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
 
 void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr);
 
+bool epc_can_attack (struct map_session_data *sd, int *target_id);
+
 #endif  // EVOL_MAP_PC
