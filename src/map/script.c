@@ -815,3 +815,16 @@ BUILDIN(changeMusic)
     send_changemusic_brodcast(m, music);
     return true;
 }
+
+BUILDIN(setNpcDialogTitle)
+{
+    const char *const name = script_getstr(st, 2);
+    if (!name)
+        return false;
+    struct map_session_data *sd = script->rid2sd (st);
+    if (!sd)
+        return false;
+
+    send_changenpc_title(sd, st->oid, name);
+    return true;
+}

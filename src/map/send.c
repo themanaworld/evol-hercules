@@ -166,3 +166,20 @@ void send_changemusic_brodcast(const int map, const char *music)
     strcpy ((char *)WBUFP (buf, 4), music);
     clif->send (buf, sz, &bl, ALL_SAMEMAP);
 }
+
+void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name)
+{
+    if (!sd || !name)
+        return;
+
+    const int fd = sd->fd;
+    const int len = strlen (name);
+    const int sz = len + 5 + 4 + 2;
+    WFIFOHEAD (fd, sz);
+    WFIFOW (fd, 0) = 0xb06;
+    WFIFOW (fd, 2) = sz;
+    WFIFOL (fd, 4) = npcId;
+    WFIFOW (fd, 8) = len;
+    strcpy (WFIFOP (fd, 10), name);
+    WFIFOSET (fd, sz);
+}

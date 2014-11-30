@@ -13,5 +13,6 @@ void send_mapmask_brodcast(const int map, const int mask);
 void send_mob_info(struct block_list* bl1, struct block_list* bl2, enum send_target target);
 void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_target target);
 void send_changemusic_brodcast(const int map, const char *music);
+void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name);
 
 #endif  // EVOL_MAP_PC

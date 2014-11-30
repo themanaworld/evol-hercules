@@ -38,5 +38,6 @@ BUILDIN(setAvatarDir);
 BUILDIN(setAvatarAction);
 BUILDIN(clear);
 BUILDIN(changeMusic);
+BUILDIN(setNpcDialogTitle);
 
 #endif  // EVOL_MAP_SCRIPT

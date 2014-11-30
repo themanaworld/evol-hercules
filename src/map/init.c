@@ -93,6 +93,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setavataraction", "i", setAvatarAction);
     addScriptCommand("clear", "", clear);
     addScriptCommand("changemusic", "ss", changeMusic);
+    addScriptCommand("setnpcdialogtitle", "s", setNpcDialogTitle);
 
     do_init_langs();
 
