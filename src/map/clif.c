@@ -78,7 +78,8 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
         int fd = *fdPtr;
         struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
-        const int len = 8 + strlen(tr) + 1;
+        const int trLen = strlen(tr);
+        const int len = 8 + trLen + 1;
         // if no recipient specified just update nearby clients
         if (fd == 0)
         {
@@ -87,7 +88,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             WBUFW(buf, 0) = 0xB01;
             WBUFW(buf, 2) = len;
             WBUFL(buf, 4) = bl->id;
-            memcpy(WBUFP(buf, 8), tr, len);
+            memcpy(WBUFP(buf, 8), tr, trLen);
             clif->send(buf, len, bl, AREA);
             aFree(buf);
         }
@@ -97,7 +98,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             WFIFOW(fd, 0) = 0xB01;
             WFIFOW(fd, 2) = len;
             WFIFOL(fd, 4) = bl->id;
-            memcpy(WFIFOP(fd, 8), tr, len);
+            memcpy(WFIFOP(fd, 8), tr, trLen);
             WFIFOSET(fd, len);
         }
     }
@@ -182,7 +183,7 @@ void eclif_sendlook(struct block_list *bl, int *id, int *type, int *val, int *va
 bool eclif_send(const void* buf, int *len, struct block_list* bl, enum send_target *type)
 {
     if (*type == SELF)
-        return;
+        return true;
     eclif_handle_invisible_map(bl, *type);
     return true;
 }
@@ -200,13 +201,14 @@ int eclif_send_actual(int *fd, void *buf, int *len)
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
-        if (packet == 0xb02 || packet == 0xb03)
+        if (packet >= 0xb02 && packet <= 0xb05)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
                 return 0;
             if (data->clientVersion < 3)
             {   // not sending new packets to old clients
+                ShowWarning("skip packet %d\n", packet);
                 hookStop();
                 return 0;
             }
@@ -223,4 +225,15 @@ void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *ts
 
     if (bl->type == BL_MOB && tsd)
         send_mob_info(bl, tsd ? &tsd->bl : bl, *target);
+}
+
+void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,
+                            struct unit_data* ud, enum send_target *target)
+{
+    send_advmoving(ud, tsd ? &tsd->bl : bl, *target);
+}
+
+void eclif_move(struct unit_data *ud)
+{
+    send_advmoving(ud, ud->bl,  AREA_WOS);
 }

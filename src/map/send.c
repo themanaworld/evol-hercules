@@ -12,6 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../map/mob.h"
 #include "../../../map/pc.h"
+#include "../../../map/unit.h"
 
 #include "map/send.h"
 
@@ -118,4 +119,34 @@ void send_mob_info(struct block_list* bl1, struct block_list* bl2,
     WBUFL (buf, 8) = md->status.rhw.range;
 
     clif->send(&buf, sizeof(buf), bl2, target);
+}
+
+void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_target target)
+{
+    if (!ud)
+        return;
+
+    struct block_list *bl = ud->bl;
+
+    if (ud->walkpath.path_len <= ud->walkpath.path_pos)
+        return;
+    const bool haveMoves = (ud->walkpath.path_len > ud->walkpath.path_pos);
+
+    int i = 14;
+    const int len = ud->walkpath.path_len - ud->walkpath.path_pos;
+    if (haveMoves)
+        i += len;
+
+    char *buf;
+    CREATE(buf, char, i);
+    WBUFW (buf, 0) = 0xb04;
+    WBUFW (buf, 2) = i;
+    WBUFL (buf, 4) = bl->id;
+    WBUFW (buf, 8) = status->get_speed(bl);
+    WBUFW (buf, 10) = bl->x;
+    WBUFW (buf, 12) = bl->y;
+    if (haveMoves)
+        memcpy(buf + 14, ud->walkpath.path + ud->walkpath.path_pos, len);
+    clif->send(buf, i, tbl, target);
+    aFree(buf);
 }

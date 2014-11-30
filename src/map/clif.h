@@ -19,5 +19,8 @@ void eclif_authok_post(struct map_session_data *sd);
 void eclif_changemap_post(struct map_session_data *sd, short *m, int *x, int *y);
 void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *tsd,
                               enum send_target *target);
+void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,
+                            struct unit_data* ud, enum send_target *target);
+void eclif_move(struct unit_data *ud);
 
 #endif  // EVOL_MAP_CLIF
