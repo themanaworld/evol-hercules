@@ -7,6 +7,7 @@
 
 #include "../../../common/HPMi.h"
 #include "../../../common/malloc.h"
+#include "../../../common/mapindex.h"
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
@@ -64,6 +65,7 @@ HPExport void plugin_init (void)
 HPExport void server_preinit (void)
 {
     interfaces_init_common();
+    mapindex = GET_SYMBOL("mapindex");
 
     setDefaultMap();
 
