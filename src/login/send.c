@@ -29,10 +29,10 @@ void send_update_host(int fd)
 {
     if (!update_server)
         return;
-    const int sz = 4 + strlen(update_server);
+    const int sz = strlen(update_server);
     WFIFOHEAD(fd, sz);
     WFIFOW(fd, 0) = 0x63;
-    WFIFOW(fd, 2) = sz;
+    WFIFOW(fd, 2) = sz + 4;
     memcpy(WFIFOP (fd, 4), update_server, sz);
-    WFIFOSET(fd, sz);
+    WFIFOSET(fd, sz + 4);
 }
