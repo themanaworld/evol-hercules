@@ -12,7 +12,7 @@
 #include "../../../common/strlib.h"
 #include "../../../login/login.h"
 
-#include "common/interfaces.h"
+#include "common/init.h"
 #include "login/config.h"
 #include "login/parse.h"
 

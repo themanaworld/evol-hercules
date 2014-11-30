@@ -5,8 +5,8 @@ CHAR_SRC = char/char.c \
     char/config.c \
     char/config.h \
     char/init.c \
-    common/interfaces.c \
-    common/interfaces.h \
+    common/init.c \
+    common/init.h \
     common/ip.c \
     common/ip.h
 
@@ -17,8 +17,8 @@ LOGIN_SRC = login/config.c \
     login/parse.h \
     login/send.c \
     login/send.h \
-    common/interfaces.c \
-    common/interfaces.h \
+    common/init.c \
+    common/init.h \
     common/ip.c \
     common/ip.h
 
@@ -53,8 +53,8 @@ MAP_SRC = map/clif.c \
     map/struct/sessionext.h \
     map/utils/formatutils.c \
     map/utils/formatutils.h \
-    common/interfaces.c \
-    common/interfaces.h
+    common/init.c \
+    common/init.h
 
 SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined

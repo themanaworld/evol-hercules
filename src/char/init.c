@@ -26,7 +26,7 @@
 #include "../../../char/loginif.h"
 #include "../../../char/mapif.h"
 
-#include "common/interfaces.h"
+#include "common/init.h"
 #include "char/char.h"
 #include "char/config.h"
 
@@ -64,6 +64,8 @@ HPExport void plugin_init (void)
 HPExport void server_preinit (void)
 {
     interfaces_init_common();
+
+    setDefaultMap();
 
     addCharInterConf("inter_server_ip", config_inter_server_ip);
 }

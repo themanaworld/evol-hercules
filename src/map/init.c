@@ -33,7 +33,7 @@
 #include "../../../map/trade.h"
 #include "../../../map/quest.h"
 
-#include "common/interfaces.h"
+#include "common/init.h"
 #include "map/clif.h"
 #include "map/lang.h"
 #include "map/npc.h"
@@ -170,9 +170,7 @@ HPExport void server_preinit (void)
     mapit = GET_SYMBOL("mapit");
     mapindex = GET_SYMBOL("mapindex");
 
-    mapindex->default_map = "000-1";
-    mapindex->default_x = 80;
-    mapindex->default_y = 109;
+    setDefaultMap();
 
     addHookPre("quest->read_db", equest_read_db);
 }
