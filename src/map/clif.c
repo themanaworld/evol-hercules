@@ -79,7 +79,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
         struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
         const int trLen = strlen(tr);
-        const int len = 8 + trLen + 1;
+        const int len = 8 + trLen;
         // if no recipient specified just update nearby clients
         if (fd == 0)
         {
