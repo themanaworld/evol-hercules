@@ -85,7 +85,6 @@ HPExport void plugin_init (void)
     addScriptCommand("getmapmask", "s", getMapMask);
     addScriptCommand("getnpcclass", "*", getNpcClass);
     addScriptCommand("setnpcsex", "*", setNpcSex);
-    addScriptCommand("setnpcdistance", "i", setNpcDistance);
     addScriptCommand("setpcsit", "*", setPcSit);
     addScriptCommand("getpcsit", "*", getPcSit);
     addScriptCommand("showavatar", "*", showAvatar);

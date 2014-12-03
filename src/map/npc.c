@@ -24,8 +24,6 @@ struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* 
 {
     struct npc_data *nd;
 
-    hookStop();
-
     if (!sd)
         return NULL;
 
@@ -36,32 +34,9 @@ struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* 
     nd = (TBL_NPC*)bl;
 
     if (sd->npc_id == bl->id)
-        return nd;
-
-    if (nd->class_ < 0) //Class-less npc, enable click from anywhere.
-        return nd;
-
-    const int npcX = bl->x;
-    const int npcY = bl->y;
-    const int x = sd->bl.x;
-    const int y = sd->bl.y;
-
-    if (bl->m != sd->bl.m
-        || npcX < x - AREA_SIZE - 1 || npcX > x + AREA_SIZE + 1
-        || npcY < y - AREA_SIZE - 1 || npcY > y + AREA_SIZE + 1)
     {
-        return NULL;
-    }
-
-    struct NpcdExt *data = npcd_get(nd);
-    if (data)
-    {
-        const int size = data->areaSize;
-        if (npcX < x - size || npcX > x + size
-            || npcY < y - size || npcY > y + size)
-        {
-            return NULL;
-        }
+        hookStop();
+        return nd;
     }
 
     return nd;

@@ -753,20 +753,6 @@ BUILDIN(getPcSit)
     return true;
 }
 
-BUILDIN(setNpcDistance)
-{
-    struct npc_data *nd = (struct npc_data *) map->id2bl (st->oid);
-    if (!nd)
-        return false;
-
-    struct NpcdExt *data = npcd_get(nd);
-    if (!data)
-        return false;
-
-    data->areaSize = script_getnum(st, 2);
-    return true;
-}
-
 BUILDIN(showAvatar)
 {
     int id = 0;

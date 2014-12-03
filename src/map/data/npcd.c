@@ -34,6 +34,5 @@ struct NpcdExt *npcd_create(void)
     if (!data)
         return NULL;
     data->init = false;
-    data->areaSize = AREA_SIZE;
     return data;
 }
