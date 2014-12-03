@@ -74,11 +74,11 @@ void map_parse_join_channel(int fd)
                     if (g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id)))
                     {
                         if (!(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-                            clif->chsys_join(sg->channel,sd);
+                            clif->chsys_join(sg->channel, sd);
                     }
                 }
             }
-            clif->chsys_join(channel,sd);
+            clif->chsys_join(channel, sd);
             res = 1;
         }
         else
@@ -90,3 +90,44 @@ void map_parse_join_channel(int fd)
     send_join_ack(fd, name, res);
 }
 
+void map_parse_part_channel(int fd)
+{
+    char name[24];
+    char *p;
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    int k;
+    if (!sd)
+        return;
+
+    safestrncpy(name, RFIFOP(fd, 2), 24);
+    if (name[0] == '#')
+        p = name + 1;
+    else
+        p = name;
+
+    for (k = 0; k < sd->channel_count; k ++)
+    {
+        if (strcmpi(p, sd->channels[k]->name) == 0)
+            break;
+    }
+
+    if (sd->channels[k]->type == hChSys_ALLY)
+    {
+        do
+        {
+            for (k = 0; k < sd->channel_count; k++)
+            {
+                if (sd->channels[k]->type == hChSys_ALLY)
+                {
+                    clif->chsys_left(sd->channels[k],sd);
+                    break;
+                }
+            }
+        }
+        while (k != sd->channel_count);
+    }
+    else
+    {
+        clif->chsys_left(sd->channels[k],sd);
+    }
+}
