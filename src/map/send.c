@@ -183,3 +183,12 @@ void send_changenpc_title (struct map_session_data *sd, const int npcId, const c
     strcpy (WFIFOP (fd, 10), name);
     WFIFOSET (fd, sz);
 }
+
+void send_join_ack(int fd, const char *const name, int flag)
+{
+    WFIFOHEAD (fd, 27);
+    WFIFOW (fd, 0) = 0xb08;
+    safestrncpy (WFIFOP (fd, 2), name, 24);
+    WFIFOB (fd, 26) = flag;
+    WFIFOSET (fd, 27);
+}
