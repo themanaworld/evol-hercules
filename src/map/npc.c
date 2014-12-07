@@ -20,28 +20,6 @@
 #include "map/struct/npcdext.h"
 #include "map/npc.h"
 
-struct npc_data* enpc_checknear(struct map_session_data* sd, struct block_list* bl)
-{
-    struct npc_data *nd;
-
-    if (!sd)
-        return NULL;
-
-    if (bl == NULL)
-        return NULL;
-    if (bl->type != BL_NPC)
-        return NULL;
-    nd = (TBL_NPC*)bl;
-
-    if (sd->npc_id == bl->id)
-    {
-        hookStop();
-        return nd;
-    }
-
-    return nd;
-}
-
 void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char* start,
                                 const char* buffer, const char* filepath, int *retval)
 {
