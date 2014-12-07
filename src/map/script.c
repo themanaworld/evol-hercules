@@ -398,34 +398,6 @@ BUILDIN(getq)
     return true;
 }
 
-BUILDIN(getNpcDir)
-{
-    struct npc_data *nd = 0;
-
-    if (script_hasdata(st, 2))
-    {
-        nd = npc->name2id (script_getstr(st, 2));
-    }
-    if (!nd && !st->oid)
-    {
-        script_pushint(st, -1);
-        return true;
-    }
-
-    if (!nd)
-        nd = (struct npc_data *) map->id2bl (st->oid);
-
-    if (!nd)
-    {
-        script_pushint(st, -1);
-        return true;
-    }
-
-    script_pushint(st, (int)nd->dir);
-
-    return true;
-}
-
 BUILDIN(setNpcDir)
 {
     int newdir;

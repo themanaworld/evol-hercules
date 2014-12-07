@@ -19,7 +19,6 @@ BUILDIN(requestItem);
 BUILDIN(requestItems);
 BUILDIN(getq);
 BUILDIN(setq);
-BUILDIN(getNpcDir);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
 BUILDIN(countItemColor);

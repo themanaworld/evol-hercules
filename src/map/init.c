@@ -74,7 +74,6 @@ HPExport void plugin_init (void)
     addScriptCommand("requestitems", "v*", requestItems);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
-    addScriptCommand("getnpcdir", "*", getNpcDir);
     addScriptCommand("setnpcdir", "*", setNpcDir);
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("countitemcolor", "v*", countItemColor);
