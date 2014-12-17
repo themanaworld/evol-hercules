@@ -27,7 +27,6 @@ BUILDIN(setMapMask);
 BUILDIN(getMapMask);
 BUILDIN(addMapMask);
 BUILDIN(removeMapMask);
-BUILDIN(getNpcClass);
 BUILDIN(setNpcSex);
 BUILDIN(showAvatar);
 BUILDIN(setAvatarDir);
