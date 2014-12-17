@@ -25,6 +25,8 @@ LOGIN_SRC = login/config.c \
 MAP_SRC = map/clif.c \
     map/clif.h \
     map/init.c \
+    map/itemdb.c \
+    map/itemdb.h \
     map/lang.c \
     map/lang.h \
     map/npc.c \
