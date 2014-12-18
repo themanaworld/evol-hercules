@@ -37,6 +37,7 @@
 #include "map/clif.h"
 #include "map/itemdb.h"
 #include "map/lang.h"
+#include "map/map.h"
 #include "map/npc.h"
 #include "map/parse.h"
 #include "map/pc.h"
@@ -119,6 +120,7 @@ HPExport void plugin_init (void)
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
+    addHookPost("map->addflooritem", emap_addflooritem_post);
 
     langScriptId = script->add_str("Lang");
 }

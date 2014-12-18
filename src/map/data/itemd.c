@@ -16,6 +16,15 @@
 #include "map/data/itemd.h"
 #include "map/struct/itemdext.h"
 
+struct ItemdExt *itemd_get_by_item(struct item *item)
+{
+    if (!item)
+        return NULL;
+    const int nameid = item->nameid;
+    struct item_data *item_data = itemdb->exists(nameid);
+    return itemd_get(item_data);
+}
+
 struct ItemdExt *itemd_get(struct item_data *item)
 {
     if (!item)
