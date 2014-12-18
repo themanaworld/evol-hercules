@@ -46,6 +46,8 @@ MAP_SRC = map/clif.c \
     map/send.h \
     map/status.c \
     map/status.h \
+    map/unit.c \
+    map/unit.h \
     map/data/itemd.c \
     map/data/itemd.h \
     map/data/mapd.c \

@@ -39,6 +39,7 @@
 #include "map/lang.h"
 #include "map/map.h"
 #include "map/npc.h"
+#include "map/unit.h"
 #include "map/parse.h"
 #include "map/pc.h"
 #include "map/quest.h"
@@ -112,6 +113,7 @@ HPExport void plugin_init (void)
     addHookPre("clif->send_actual", eclif_send_actual);
     addHookPre("itemdb->is_item_usable", eitemdb_is_item_usable);
     addHookPre("itemdb->readdb_additional_fields", eitemdb_readdb_additional_fields);
+    addHookPre("unit->can_move", eunit_can_move);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
