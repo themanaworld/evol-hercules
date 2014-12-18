@@ -6,4 +6,6 @@
 
 bool eitemdb_is_item_usable(struct item_data *item);
 
+void eitemdb_readdb_additional_fields(int *itemid, config_setting_t *it, int *n, const char *source);
+
 #endif  // EVOL_MAP_ITEMDB

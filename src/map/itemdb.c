@@ -15,14 +15,30 @@
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
 
-#include "map/data/mapd.h"
-#include "map/data/npcd.h"
-#include "map/struct/mapdext.h"
-#include "map/struct/npcdext.h"
+#include "map/data/itemd.h"
+#include "map/struct/itemdext.h"
 #include "map/npc.h"
 
 bool eitemdb_is_item_usable(struct item_data *item)
 {
     hookStop();
     return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH || item->type == IT_PETEGG;
+}
+
+void eitemdb_readdb_additional_fields(int *itemid,
+                                      config_setting_t *it,
+                                      int *n __attribute__ ((unused)),
+                                      const char *source __attribute__ ((unused)))
+{
+    hookStop();
+    struct item_data *item = itemdb->exists(*itemid);
+    int i32 = 0;
+    if (!item)
+        return;
+    struct ItemdExt *data = itemd_get(item);
+    if (!data)
+        return;
+
+    if (libconfig->setting_lookup_int(it, "FloorLifeTime", &i32) && i32 >= 0)
+        data->floorLifeTime = i32;
 }

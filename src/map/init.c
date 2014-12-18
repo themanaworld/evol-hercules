@@ -110,6 +110,7 @@ HPExport void plugin_init (void)
     addHookPre("clif->set_unit_idle", eclif_set_unit_idle);
     addHookPre("clif->send_actual", eclif_send_actual);
     addHookPre("itemdb->is_item_usable", eitemdb_is_item_usable);
+    addHookPre("itemdb->readdb_additional_fields", eitemdb_readdb_additional_fields);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
