@@ -25,7 +25,6 @@
 
 void eclif_quest_send_list(struct map_session_data *sd)
 {
-    hookStop();
     int fd = sd->fd;
     int i;
     int info_len = 15;
@@ -46,11 +45,11 @@ void eclif_quest_send_list(struct map_session_data *sd)
     }
 
     WFIFOSET(fd, len);
+    hookStop();
 }
 
 void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
-    hookStop();
     int fd = sd->fd;
     struct quest_db *qi = quest->db(qd->quest_id);
 
@@ -63,6 +62,7 @@ void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
     WFIFOW(fd, 15) = 0;
 
     WFIFOSET(fd, 107);
+    hookStop();
 }
 
 void eclif_charnameack(int *fdPtr, struct block_list *bl)
@@ -74,7 +74,6 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
     }
     if (bl->type == BL_NPC)
     {
-        hookStop();
         int fd = *fdPtr;
         struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
@@ -101,6 +100,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             memcpy(WFIFOP(fd, 8), tr, trLen);
             WFIFOSET(fd, len);
         }
+        hookStop();
     }
 }
 

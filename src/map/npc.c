@@ -23,7 +23,6 @@
 void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char* start,
                                 const char* buffer, const char* filepath, int *retval)
 {
-    hookStop();
     if (!strcmpi(w3, "invisible"))
     {
         int16 m = map->mapname2mapid(name);
@@ -51,6 +50,7 @@ void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char
         if (retval)
             *retval = EXIT_FAILURE;
     }
+    hookStop();
 }
 
 int enpc_buysellsel(struct map_session_data* sd, int *id, int *type)

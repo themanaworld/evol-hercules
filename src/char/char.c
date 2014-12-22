@@ -26,8 +26,8 @@ void echar_parse_char_login_map_server(int *fd)
     const char *const ip = ip2str(ipl, NULL);
     if (!checkAllowedIp(inter_server_ip, ip))
     {
-        hookStop();
         ShowNotice("Connection of the map-server from ip %s REFUSED.\n", ip);
         chr->login_map_server_ack(*fd, 3);
+        hookStop();
     }
 }

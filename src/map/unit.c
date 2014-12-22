@@ -26,16 +26,21 @@ int eunit_can_move(struct block_list *bl)
     struct unit_data *ud;
     struct status_change *sc;
 
-    hookStop();
 
     if (!bl)
+    {
+        hookStop();
         return 0;
+    }
     ud = unit->bl2ud(bl);
     sc = status->get_sc(bl);
     sd = BL_CAST(BL_PC, bl);
 
     if (!ud)
+    {
+        hookStop();
         return 0;
+    }
 
     if (ud->skilltimer != INVALID_TIMER
         && ud->skill_id != LG_EXEEDBREAK
@@ -43,17 +48,22 @@ int eunit_can_move(struct block_list *bl)
         || !pc->checkskill(sd, SA_FREECAST)
         || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
     {
+        hookStop();
         return 0; // prevent moving while casting
     }
 
     if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
+    {
+        hookStop();
         return 0;
+    }
 
     if (sd && (
         sd->state.vending ||
         sd->state.buyingstore ||
         sd->state.blockedmove))
     {
+        hookStop();
         return 0; //Can't move
     }
 
@@ -99,6 +109,7 @@ int eunit_can_move(struct block_list *bl)
                     || (sc->data[SC_DANCING]->val1&0xFFFF) == CG_MOONLIT
                     || (sc->data[SC_DANCING]->val1&0xFFFF) == CG_HERMODE))))
         {
+            hookStop();
             return 0;
         }
         if (sc->opt1 > 0
@@ -107,11 +118,13 @@ int eunit_can_move(struct block_list *bl)
             && !(sc->opt1 == OPT1_CRYSTALIZE
             && bl->type == BL_MOB))
         {
+            hookStop();
             return 0;
         }
 
         if ((sc->option & OPTION_HIDE) && (!sd || pc->checkskill(sd, RG_TUNNELDRIVE) <= 0))
         {
+            hookStop();
             return 0;
         }
     }
@@ -124,9 +137,11 @@ int eunit_can_move(struct block_list *bl)
            || (!(md->status.mode&MD_BOSS) && battle->bc->mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))))
         {
            md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
+            hookStop();
            return 0;
         }
     }
 
+    hookStop();
     return 1;
 }

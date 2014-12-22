@@ -25,8 +25,8 @@ int epc_readparam_pre(struct map_session_data* sd, int *type)
 {
     if (*type == Const_ClientVersion)
     {
-        hookStop();
         struct SessionExt *data = session_get_bysd(sd);
+        hookStop();
         if (!data)
             return 0;
         return data->clientVersion;
@@ -51,22 +51,22 @@ int epc_setregistry(struct map_session_data *sd, int64 *reg, int *val)
 #define equipPos(mask, field, lookf) \
     if (pos & mask) \
     { \
-        hookStop(); \
         if (id) \
             sd->status.field = id->look; \
         else \
             sd->status.field = 0; \
         clif->changelook(&sd->bl, lookf, sd->status.field); \
+        hookStop(); \
     }
 
 #define equipPos2(mask, lookf) \
     if (pos & mask) \
     { \
-        hookStop(); \
         if (id) \
             clif->changelook(&sd->bl, lookf, id->look); \
         else \
             clif->changelook(&sd->bl, lookf, 0); \
+        hookStop(); \
     }
 
 void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *posPtr)
@@ -93,16 +93,16 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
 #define unequipPos(mask, field, lookf) \
     if (pos & mask) \
     { \
-        hookStop(); \
         sd->status.field = 0; \
         clif->changelook(&sd->bl, lookf, sd->status.field); \
+        hookStop(); \
     }
 
 #define unequipPos2(mask, lookf) \
     if (pos & mask) \
     { \
-        hookStop(); \
         clif->changelook(&sd->bl, lookf, 0); \
+        hookStop(); \
     }
 
 void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr)
@@ -141,4 +141,5 @@ bool epc_can_attack (struct map_session_data *sd, int *target_id)
             return false;
         }
     }
+    return true;
 }

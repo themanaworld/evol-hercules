@@ -30,15 +30,21 @@ void eitemdb_readdb_additional_fields(int *itemid,
                                       int *n __attribute__ ((unused)),
                                       const char *source __attribute__ ((unused)))
 {
-    hookStop();
     struct item_data *item = itemdb->exists(*itemid);
     int i32 = 0;
     if (!item)
+    {
+        hookStop();
         return;
+    }
     struct ItemdExt *data = itemd_get(item);
     if (!data)
+    {
+        hookStop();
         return;
+    }
 
     if (libconfig->setting_lookup_int(it, "FloorLifeTime", &i32) && i32 >= 0)
         data->floorLifeTime = i32;
+    hookStop();
 }

@@ -16,7 +16,6 @@
 
 int equest_read_db(void)
 {
-    hookStop();
     FILE *fp;
     char line[1024];
     int i, count = 0;
@@ -24,12 +23,15 @@ int equest_read_db(void)
     struct quest_db entry;
 
     sprintf(line, "%s/quest_db.txt", map->db_path);
-    if ((fp=fopen(line,"r"))==NULL) {
+    if ((fp = fopen(line, "r")) == NULL)
+    {
         ShowError("can't read %s\n", line);
+        hookStop();
         return -1;
     }
 
-    while (fgets(line, sizeof(line), fp)) {
+    while (fgets(line, sizeof(line), fp))
+    {
         if (line[0]=='/' && line[1]=='/')
             continue;
         memset(str,0,sizeof(str));
@@ -77,5 +79,6 @@ int equest_read_db(void)
     }
     fclose(fp);
     ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, "quest_db.txt");
+    hookStop();
     return 0;
 }
