@@ -105,7 +105,9 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
         hookStop(); \
     }
 
-void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr)
+void epc_unequipitem_pos(struct map_session_data *sd,
+                         int *nPtr __attribute__ ((unused)),
+                         int *posPtr)
 {
     int pos = *posPtr;
 

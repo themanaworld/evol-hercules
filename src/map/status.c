@@ -17,7 +17,8 @@
 #include "map/data/npcd.h"
 #include "map/struct/npcdext.h"
 
-void estatus_set_viewdata_post(struct block_list *bl, int *class_)
+void estatus_set_viewdata_post(struct block_list *bl,
+                               int *class_  __attribute__ ((unused)))
 {
     if (!bl)
         return;

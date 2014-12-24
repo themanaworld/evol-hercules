@@ -157,14 +157,15 @@ void eclif_authok_post(struct map_session_data *sd)
     send_mapmask(sd->fd, mask);
 }
 
-void eclif_changemap_post(struct map_session_data *sd, short *m, int *x, int *y)
+void eclif_changemap_post(struct map_session_data *sd, short *m,
+                          int *x __attribute__ ((unused)), int *y __attribute__ ((unused)))
 {
-    struct MapdExt *data = mapd_get(sd->bl.m);
+    struct MapdExt *data = mapd_get(*m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);
 }
 
-void eclif_handle_invisible_map(struct block_list *bl, enum send_target target)
+void eclif_handle_invisible_map(struct block_list *bl, enum send_target target __attribute__ ((unused)))
 {
     if (!bl || bl->type != BL_PC)
         return;
@@ -173,14 +174,22 @@ void eclif_handle_invisible_map(struct block_list *bl, enum send_target target)
         hookStop();
 }
 
-void eclif_sendlook(struct block_list *bl, int *id, int *type, int *val, int *val2, enum send_target *target)
+void eclif_sendlook(struct block_list *bl,
+                    int *id __attribute__ ((unused)),
+                    int *type __attribute__ ((unused)),
+                    int *val __attribute__ ((unused)),
+                    int *val2 __attribute__ ((unused)),
+                    enum send_target *target)
 {
     if (*target == SELF)
         return;
     eclif_handle_invisible_map(bl, *target);
 }
 
-bool eclif_send(const void* buf, int *len, struct block_list* bl, enum send_target *type)
+bool eclif_send(const void* buf __attribute__ ((unused)),
+                int *len __attribute__ ((unused)),
+                struct block_list* bl,
+                enum send_target *type)
 {
     if (*type == SELF)
         return true;

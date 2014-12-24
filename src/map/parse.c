@@ -14,6 +14,7 @@
 #include "../../../map/pc.h"
 
 #include "map/parse.h"
+#include "map/send.h"
 #include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
@@ -33,7 +34,7 @@ void map_parse_join_channel(int fd)
     if (!sd)
         return;
 
-    safestrncpy(name, RFIFOP(fd, 2), 24);
+    safestrncpy(name, (char*)RFIFOP(fd, 2), 24);
     if (name[0] == '#')
         p = name + 1;
     else
@@ -99,7 +100,7 @@ void map_parse_part_channel(int fd)
     if (!sd)
         return;
 
-    safestrncpy(name, RFIFOP(fd, 2), 24);
+    safestrncpy(name, (char*)RFIFOP(fd, 2), 24);
     if (name[0] == '#')
         p = name + 1;
     else
