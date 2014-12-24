@@ -37,7 +37,8 @@ int emap_addflooritem_post(int retVal,
         if (data)
             timeout = data->floorLifeTime;
         timer->delete(fitem->cleartimer, map->clearflooritem_timer);
-        fitem->cleartimer = timer->add(timer->gettick() + timeout, map->clearflooritem_timer, fitem->bl.id, 0);
+        if (timeout >= 0)
+            fitem->cleartimer = timer->add(timer->gettick() + timeout, map->clearflooritem_timer, fitem->bl.id, 0);
     }
     return retVal;
 }
