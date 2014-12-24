@@ -14,8 +14,10 @@
 #include "../../../map/pc.h"
 
 #include "map/pc.h"
+#include "map/data/itemd.h"
 #include "map/data/mapd.h"
 #include "map/data/session.h"
+#include "map/struct/itemdext.h"
 #include "map/struct/mapdext.h"
 #include "map/struct/sessionext.h"
 
@@ -144,4 +146,22 @@ bool epc_can_attack (struct map_session_data *sd, int *target_id)
         }
     }
     return true;
+}
+
+int epc_takeitem(struct map_session_data *sd __attribute__ ((unused)),
+                 struct flooritem_data *fitem)
+{
+    if (!fitem)
+        return 0;
+
+    struct ItemdExt *data = itemd_get_by_item(&fitem->item_data);
+    if (!data)
+        return 1;
+
+    if (!data->allowPickup)
+    {
+        hookStop();
+        return 0;
+    }
+    return 1;
 }
