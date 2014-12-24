@@ -44,7 +44,12 @@ void eitemdb_readdb_additional_fields(int *itemid,
         return;
     }
 
+    config_setting_t *t = NULL;
+
     if (libconfig->setting_lookup_int(it, "FloorLifeTime", &i32) && i32 >= 0)
         data->floorLifeTime = i32;
+    if ((t = libconfig->setting_get_member(it, "AllowPickup")))
+        data->allowPickup = libconfig->setting_get_bool(t) ? 1 : 0;
+
     hookStop();
 }

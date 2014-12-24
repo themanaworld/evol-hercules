@@ -7,6 +7,7 @@
 struct ItemdExt
 {
     int floorLifeTime;
+    bool allowPickup;
 };
 
 #endif  // EVOL_MAP_ITEMDEXT
