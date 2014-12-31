@@ -699,3 +699,15 @@ BUILDIN(setNpcDialogTitle)
     send_changenpc_title(sd, st->oid, name);
     return true;
 }
+
+BUILDIN(getMapName)
+{
+    TBL_PC *sd = script->rid2sd(st);
+    if (!sd || sd->bl.m == -1)
+    {
+        script_pushstr(st, aStrdup(""));
+        return 1;
+    }
+    script_pushstr(st, aStrdup(map->list[sd->bl.m].name));
+    return 0;
+}

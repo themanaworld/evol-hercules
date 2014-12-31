@@ -34,5 +34,6 @@ BUILDIN(setAvatarAction);
 BUILDIN(clear);
 BUILDIN(changeMusic);
 BUILDIN(setNpcDialogTitle);
+BUILDIN(getMapName);
 
 #endif  // EVOL_MAP_SCRIPT

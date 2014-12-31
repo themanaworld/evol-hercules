@@ -92,6 +92,8 @@ HPExport void plugin_init (void)
     addScriptCommand("clear", "", clear);
     addScriptCommand("changemusic", "ss", changeMusic);
     addScriptCommand("setnpcdialogtitle", "s", setNpcDialogTitle);
+    addScriptCommand("getmapname", "", getMapName);
+
 
     do_init_langs();
 
