@@ -706,8 +706,33 @@ BUILDIN(getMapName)
     if (!sd || sd->bl.m == -1)
     {
         script_pushstr(st, aStrdup(""));
-        return 1;
+        return false;
     }
     script_pushstr(st, aStrdup(map->list[sd->bl.m].name));
-    return 0;
+    return true;
+}
+
+BUILDIN(unequipById)
+{
+    int nameid = 0;
+    int i;
+    struct item_data *item_data;
+    TBL_PC *sd = script->rid2sd(st);
+
+    if (sd == NULL)
+        return false;
+
+    nameid = script_getnum(st, 2);
+    if((item_data = itemdb->exists(nameid)) == NULL)
+        return false;
+    for (i = 0; i < EQI_MAX; i++)
+    {
+        const int idx = sd->equip_index[i];
+        if (idx >= 0)
+        {
+            if (sd->status.inventory[idx].nameid == nameid)
+                pc->unequipitem(sd, idx, 1 | 2);
+        }
+    }
+    return true;
 }

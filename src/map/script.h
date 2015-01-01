@@ -35,5 +35,6 @@ BUILDIN(clear);
 BUILDIN(changeMusic);
 BUILDIN(setNpcDialogTitle);
 BUILDIN(getMapName);
+BUILDIN(unequipById);
 
 #endif  // EVOL_MAP_SCRIPT
