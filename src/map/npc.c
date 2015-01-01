@@ -111,3 +111,9 @@ int enpc_buysellsel(struct map_session_data* sd, int *id, int *type)
     return 0;
 }
 
+bool enpc_db_checkid(int *idPtr)
+{
+    const int id = *idPtr;
+    hookStop();
+    return ((id >= 46 && id < MAX_NPC_CLASS) || id == HIDDEN_WARP_CLASS || id == INVISIBLE_CLASS || (id > MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END));
+}

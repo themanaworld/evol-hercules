@@ -9,4 +9,6 @@ void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char
 
 int enpc_buysellsel(struct map_session_data* sd, int *id, int *type);
 
+bool enpc_db_checkid(int *idPtr);
+
 #endif  // EVOL_MAP_NPC
