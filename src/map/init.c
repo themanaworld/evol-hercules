@@ -94,7 +94,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setnpcdialogtitle", "s", setNpcDialogTitle);
     addScriptCommand("getmapname", "", getMapName);
     addScriptCommand("unequipbyid", "i", unequipById);
-
+    addScriptCommand("ispcdead", "", isPcDead);
 
     do_init_langs();
 

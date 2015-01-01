@@ -736,3 +736,14 @@ BUILDIN(unequipById)
     }
     return true;
 }
+
+BUILDIN(isPcDead)
+{
+    TBL_PC *sd = script->rid2sd(st);
+
+    if (sd == NULL)
+        return false;
+
+    script_pushint(st, pc_isdead(sd) ? 1 : 0);
+    return true;
+}
