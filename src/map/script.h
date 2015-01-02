@@ -37,5 +37,6 @@ BUILDIN(setNpcDialogTitle);
 BUILDIN(getMapName);
 BUILDIN(unequipById);
 BUILDIN(isPcDead);
+BUILDIN(areaTimer);
 
 #endif  // EVOL_MAP_SCRIPT

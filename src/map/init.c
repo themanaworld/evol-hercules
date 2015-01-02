@@ -95,6 +95,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getmapname", "", getMapName);
     addScriptCommand("unequipbyid", "i", unequipById);
     addScriptCommand("ispcdead", "", isPcDead);
+    addScriptCommand("areatimer", "siiiii*", areaTimer);
 
     do_init_langs();
 
