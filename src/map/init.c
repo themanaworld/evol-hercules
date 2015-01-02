@@ -96,6 +96,7 @@ HPExport void plugin_init (void)
     addScriptCommand("unequipbyid", "i", unequipById);
     addScriptCommand("ispcdead", "", isPcDead);
     addScriptCommand("areatimer", "siiiii*", areaTimer);
+    addScriptCommand("getareadropitem", "siiiiv*", getAreaDropItem);
 
     do_init_langs();
 

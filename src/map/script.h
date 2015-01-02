@@ -38,5 +38,6 @@ BUILDIN(getMapName);
 BUILDIN(unequipById);
 BUILDIN(isPcDead);
 BUILDIN(areaTimer);
+BUILDIN(getAreaDropItem);
 
 #endif  // EVOL_MAP_SCRIPT

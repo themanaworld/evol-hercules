@@ -784,3 +784,62 @@ BUILDIN(areaTimer)
 
     return true;
 }
+
+static int buildin_getareadropitem_sub_del(struct block_list *bl, va_list ap)
+{
+    const int item = va_arg(ap, int);
+    int *const amount = va_arg(ap, int *);
+    struct flooritem_data *drop = (struct flooritem_data *)bl;
+
+    if (drop->item_data.nameid == item)
+    {
+        (*amount) += drop->item_data.amount;
+        map->clearflooritem(&drop->bl);
+    }
+
+    return 0;
+}
+
+BUILDIN(getAreaDropItem)
+{
+    const char *const str = script_getstr(st, 2);
+    int16 m;
+    int x0 = script_getnum(st, 3);
+    int y0 = script_getnum(st, 4);
+    int x1 = script_getnum(st, 5);
+    int y1 = script_getnum(st, 6);
+    int item;
+    int amount = 0;
+
+    if (script_isstringtype(st, 7))
+    {
+        const char *name = script_getstr(st, 7);
+        struct item_data *item_data = itemdb->search_name(name);
+        item = UNKNOWN_ITEM_ID;
+        if (item_data)
+            item = item_data->nameid;
+    }
+    else
+    {
+        item = script_getnum(st, 7);
+    }
+
+    if ((m = map->mapname2mapid(str)) < 0)
+    {
+        script_pushint(st, -1);
+        return true;
+    }
+
+    if (script_hasdata(st, 8) && script_getnum(st, 8))
+    {
+        map->foreachinarea(buildin_getareadropitem_sub_del,
+            m, x0, y0, x1, y1, BL_ITEM, item, &amount);
+    }
+    else
+    {
+        map->foreachinarea(script->buildin_getareadropitem_sub,
+            m, x0, y0, x1, y1, BL_ITEM, item, &amount);
+    }
+    script_pushint(st, amount);
+    return true;
+}
