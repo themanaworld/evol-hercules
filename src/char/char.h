@@ -6,4 +6,6 @@
 
 void echar_parse_char_login_map_server(int *fd);
 
+void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd);
+
 #endif  // EVOL_CHAR_CHAR

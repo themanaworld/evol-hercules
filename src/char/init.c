@@ -60,6 +60,7 @@ HPExport void plugin_init (void)
     mapif = GET_SYMBOL("mapif");
 
     addHookPre("chr->parse_char_login_map_server", echar_parse_char_login_map_server);
+    addHookPre("chr->parse_char_create_new_char", echar_parse_char_create_new_char);
 }
 
 HPExport void server_preinit (void)
