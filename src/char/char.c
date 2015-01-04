@@ -48,6 +48,12 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         chr->mmo_char_fromsql(result, &char_dat, false); //Only the short data is needed.
 
         const uint16 race = RFIFOW(fd, 31);
+        if (race > max_char_class)
+        {
+            chr->creation_failed(fd, 10);
+            hookStop();
+            return;
+        }
         char_dat.class_ = race;
         chr->mmo_char_tosql(result, &char_dat);
 
