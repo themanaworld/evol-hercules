@@ -36,20 +36,25 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
 {
     // ignore char creation disable option
     const int fd = *fdPtr;
+    uint16 race = 0;
+    uint8 sex = 0;
 
-    const uint16 race = RFIFOW(fd, 31);
-    if (race > max_char_class)
+    if (sd->version >= 4)
     {
-        chr->creation_failed(fd, 10);
-        hookStop();
-        return;
-    }
-    const uint8 sex = RFIFOB(fd, 33);
-    if (sex > 1 && sex != 99)
-    {
-        chr->creation_failed(fd, 11);
-        hookStop();
-        return;
+        race = RFIFOW(fd, 31);
+        if (race > max_char_class)
+        {
+            chr->creation_failed(fd, 10);
+            hookStop();
+            return;
+        }
+        sex = RFIFOB(fd, 33);
+        if (sex > 1 && sex != 99)
+        {
+            chr->creation_failed(fd, 11);
+            hookStop();
+            return;
+        }
     }
 
     const int result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29));
@@ -63,16 +68,21 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         struct mmo_charstatus char_dat;
         chr->mmo_char_fromsql(result, &char_dat, false); //Only the short data is needed.
 
-        char_dat.class_ = race;
-        char_dat.sex = sex;
+        if (sd->version >= 4)
+        {
+            char_dat.class_ = race;
+            char_dat.sex = sex;
 
-        chr->mmo_char_tosql(result, &char_dat);
-
+            chr->mmo_char_tosql(result, &char_dat);
+        }
         chr->creation_ok(fd, &char_dat);
 
         // add new entry to the chars list
         sd->found_char[char_dat.slot] = result; // the char_id of the new char
     }
-    RFIFOSKIP(fd, 31 + 3);
+    if (sd->version >= 4)
+        RFIFOSKIP(fd, 31 + 3);
+    else
+        RFIFOSKIP(fd, 31);
     hookStop();
 }
