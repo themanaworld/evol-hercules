@@ -42,9 +42,10 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
     if (sd->version >= 4)
     {
         race = RFIFOW(fd, 31);
-        if (race > max_char_class)
+        if (race < min_char_class || race > max_char_class)
         {
             chr->creation_failed(fd, 10);
+            RFIFOSKIP(fd, 31 + 3);
             hookStop();
             return;
         }
@@ -52,6 +53,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         if (sex > 1 && sex != 99)
         {
             chr->creation_failed(fd, 11);
+            RFIFOSKIP(fd, 31 + 3);
             hookStop();
             return;
         }
