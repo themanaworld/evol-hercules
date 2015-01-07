@@ -71,6 +71,7 @@ HPExport void server_preinit (void)
     setDefaultMap();
 
     addCharInterConf("inter_server_ip", config_inter_server_ip);
+    addCharConf("min_char_class", config_min_char_class);
     addCharConf("max_char_class", config_max_char_class);
 }
 

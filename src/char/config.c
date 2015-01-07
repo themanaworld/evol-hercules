@@ -14,6 +14,7 @@
 #include "char/config.h"
 
 char *inter_server_ip = NULL;
+int min_char_class = 0;
 int max_char_class = 0;
 
 void config_inter_server_ip(const char *val)
@@ -27,6 +28,11 @@ void config_inter_server_ip(const char *val)
     strcat(buf, val);
     strcat(buf, ",");
     inter_server_ip = aStrdup(buf);
+}
+
+void config_min_char_class(const char *val)
+{
+    min_char_class = atoi(val);
 }
 
 void config_max_char_class(const char *val)
