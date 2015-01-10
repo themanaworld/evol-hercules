@@ -158,13 +158,15 @@ void send_changemusic_brodcast(const int map, const char *music)
 
     struct block_list bl;
     const int sz = strlen (music) + 5;
-    char buf[sz];
+    char *buf;
 
+    CREATE(buf, char, sz);
     bl.m = map;
     WBUFW (buf, 0) = 0xb05;
     WBUFW (buf, 2) = sz;
     strcpy ((char *)WBUFP (buf, 4), music);
     clif->send (buf, sz, &bl, ALL_SAMEMAP);
+    aFree(buf);
 }
 
 void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name)
