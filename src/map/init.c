@@ -41,6 +41,7 @@
 #include "map/npc.h"
 #include "map/unit.h"
 #include "map/parse.h"
+#include "map/permission.h"
 #include "map/pc.h"
 #include "map/quest.h"
 #include "map/script.h"
@@ -184,6 +185,7 @@ HPExport void server_preinit (void)
     setDefaultMap();
 
     addHookPre("quest->read_db", equest_read_db);
+    addGroupPermission("send_gm_flag", permission_send_gm_flag);
 }
 
 HPExport void server_online (void)

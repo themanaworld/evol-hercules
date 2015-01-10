@@ -15,6 +15,9 @@
 #include "../../../map/unit.h"
 
 #include "map/send.h"
+#include "map/permission.h"
+#include "map/data/session.h"
+#include "map/struct/sessionext.h"
 
 void send_npccommand (struct map_session_data *sd, int npcId, int cmd)
 {
@@ -117,6 +120,34 @@ void send_mob_info(struct block_list* bl1, struct block_list* bl2,
     WBUFW (buf, 2) = 12; // len
     WBUFL (buf, 4) = md->bl.id;
     WBUFL (buf, 8) = md->status.rhw.range;
+
+    clif->send(&buf, sizeof(buf), bl2, target);
+}
+
+void send_pc_info(struct block_list* bl1,
+                  struct block_list* bl2,
+                  enum send_target target)
+{
+    char buf[12];
+
+    if (bl1->type != BL_PC)
+        return;
+
+    struct map_session_data *sd = (struct map_session_data *)bl1;
+
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 4)
+        return;
+
+    WBUFW (buf, 0) = 0xb0a;
+    WBUFW (buf, 2) = 12; // len
+    WBUFL (buf, 4) = sd->bl.id;
+    if (pc_has_permission(sd, permission_send_gm_flag))
+        WBUFL (buf, 8) = sd->group_id;
+    else
+        WBUFL (buf, 8) = 0;
 
     clif->send(&buf, sizeof(buf), bl2, target);
 }

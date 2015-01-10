@@ -37,6 +37,8 @@ MAP_SRC = map/clif.c \
     map/parse.h \
     map/pc.c \
     map/pc.h \
+    map/permission.c \
+    map/permission.h \
     map/quest.c \
     map/quest.h \
     map/script.c \

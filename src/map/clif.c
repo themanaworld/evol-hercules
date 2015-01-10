@@ -152,6 +152,7 @@ void eclif_authok_post(struct map_session_data *sd)
         return;
 
     eclif_send_additional_slots(sd, sd);
+    send_pc_info(sd, sd, SELF);
     struct MapdExt *data = mapd_get(sd->bl.m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);
@@ -232,8 +233,10 @@ void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *ts
     if (!bl || !tsd)
         return;
 
-    if (bl->type == BL_MOB && tsd)
-        send_mob_info(bl, tsd ? &tsd->bl : bl, *target);
+    if (bl->type == BL_MOB)
+        send_mob_info(bl, &tsd->bl, *target);
+    else if (bl->type == BL_PC)
+        send_pc_info(bl, &tsd->bl, *target);
 }
 
 void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,
