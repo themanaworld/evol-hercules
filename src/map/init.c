@@ -109,11 +109,6 @@ HPExport void plugin_init (void)
     addHookPre("pc->unequipitem_pos", epc_unequipitem_pos);
     addHookPre("pc->can_attack", epc_can_attack);
     addHookPre("pc->takeitem", epc_takeitem);
-    addHookPre("pc->class2idx", epc_class2idx);
-    addHookPre("pc->jobid2mapid", epc_jobid2mapid);
-    addHookPre("pc->mapid2jobid", epc_mapid2jobid);
-    addHookPre("pc->db_checkid", epc_db_checkid);
-    addHookPre("pc->calc_skilltree_normalize_job", epc_calc_skilltree_normalize_job);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("npc->buysellsel", enpc_buysellsel);
     addHookPre("npc->db_checkid", enpc_db_checkid);

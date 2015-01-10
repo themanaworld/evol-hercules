@@ -21,14 +21,4 @@ bool epc_can_attack (struct map_session_data *sd, int *target_id);
 
 int epc_takeitem(struct map_session_data *sd, struct flooritem_data *fitem);
 
-int epc_class2idx(int *classPtr);
-
-int epc_jobid2mapid(unsigned short *b_class);
-
-int epc_mapid2jobid(unsigned short *class_, int *sex);
-
-bool epc_db_checkid(unsigned int *class_);
-
-int epc_calc_skilltree_normalize_job(struct map_session_data *sd);
-
 #endif  // EVOL_MAP_PC
