@@ -1,0 +1,9 @@
+*.filters
+*.sdf
+*.suo
+/Debug
+/Release
+/evolchar/
+/evollogin/
+/evolmap/
+/evolplugin/
