@@ -61,6 +61,7 @@ HPExport void plugin_init (void)
 
     addHookPre("chr->parse_char_login_map_server", echar_parse_char_login_map_server);
     addHookPre("chr->parse_char_create_new_char", echar_parse_char_create_new_char);
+    addHookPre("chr->creation_failed", echar_creation_failed);
 }
 
 HPExport void server_preinit (void)

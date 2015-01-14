@@ -44,7 +44,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         race = RFIFOW(fd, 31);
         if (race < min_char_class || race > max_char_class)
         {
-            chr->creation_failed(fd, 10);
+            chr->creation_failed(fd, -10);
             RFIFOSKIP(fd, 31 + 3);
             hookStop();
             return;
@@ -52,7 +52,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         sex = RFIFOB(fd, 33);
         if (sex > 1 && sex != 99)
         {
-            chr->creation_failed(fd, 11);
+            chr->creation_failed(fd, -11);
             RFIFOSKIP(fd, 31 + 3);
             hookStop();
             return;
@@ -86,5 +86,33 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         RFIFOSKIP(fd, 31 + 3);
     else
         RFIFOSKIP(fd, 31);
+    hookStop();
+}
+
+void echar_creation_failed(int *fdPtr, int *result)
+{
+    const int fd = *fdPtr;
+    WFIFOHEAD(fd, 3);
+    WFIFOW(fd, 0) = 0x6e;
+    /* Others I found [Ind] */
+    /* 0x02 = Symbols in Character Names are forbidden */
+    /* 0x03 = You are not eligible to open the Character Slot. */
+    /* 0x0B = This service is only available for premium users.  */
+    switch (*result)
+    {
+        case -1: WFIFOB(fd, 2) = 0x00; break; // 'Charname already exists'
+        case -2: WFIFOB(fd, 2) = 0xFF; break; // 'Char creation denied'
+        case -3: WFIFOB(fd, 2) = 0x01; break; // 'You are underaged'
+        case -4: WFIFOB(fd, 2) = 0x03; break; // 'You are not eligible to open the Character Slot.'
+        case -5: WFIFOB(fd, 2) = 0x02; break; // 'Symbols in Character Names are forbidden'
+        case -10: WFIFOB(fd, 2) = 0x50; break; // Wrong class
+        case -11: WFIFOB(fd, 2) = 0x51; break; // Wrong sex
+
+        default:
+            ShowWarning("chr->parse_char: Unknown result received from chr->make_new_char_sql: %d!\n", *result);
+            WFIFOB(fd,2) = 0xFF;
+            break;
+    }
+    WFIFOSET(fd,3);
     hookStop();
 }
