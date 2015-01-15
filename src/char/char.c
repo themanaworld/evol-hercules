@@ -37,6 +37,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
     // ignore char creation disable option
     const int fd = *fdPtr;
     uint16 race = 0;
+    uint16 look = 0;
     uint8 sex = 0;
 
     if (sd->version >= 4)
@@ -45,7 +46,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         if (race < min_char_class || race > max_char_class)
         {
             chr->creation_failed(fd, -10);
-            RFIFOSKIP(fd, 31 + 3);
+            RFIFOSKIP(fd, 31 + 5);
             hookStop();
             return;
         }
@@ -53,10 +54,11 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         if (sex > 1 && sex != 99)
         {
             chr->creation_failed(fd, -11);
-            RFIFOSKIP(fd, 31 + 3);
+            RFIFOSKIP(fd, 31 + 5);
             hookStop();
             return;
         }
+        look = RFIFOW(fd, 34);
     }
 
     const int result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29));
@@ -74,6 +76,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         {
             char_dat.class_ = race;
             char_dat.sex = sex;
+            char_dat.clothes_color = look;
 
             chr->mmo_char_tosql(result, &char_dat);
         }
@@ -83,7 +86,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         sd->found_char[char_dat.slot] = result; // the char_id of the new char
     }
     if (sd->version >= 4)
-        RFIFOSKIP(fd, 31 + 3);
+        RFIFOSKIP(fd, 31 + 5);
     else
         RFIFOSKIP(fd, 31);
     hookStop();
