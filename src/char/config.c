@@ -16,6 +16,8 @@
 char *inter_server_ip = NULL;
 int min_char_class = 0;
 int max_char_class = 0;
+int min_look = 0;
+int max_look = 0;
 
 void config_inter_server_ip(const char *val)
 {
@@ -38,6 +40,16 @@ void config_min_char_class(const char *val)
 void config_max_char_class(const char *val)
 {
     max_char_class = atoi(val);
+}
+
+void config_min_look(const char *val)
+{
+    min_look = atoi(val);
+}
+
+void config_max_look(const char *val)
+{
+    max_look = atoi(val);
 }
 
 void config_final(void)

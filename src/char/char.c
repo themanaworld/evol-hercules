@@ -59,6 +59,13 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
             return;
         }
         look = RFIFOW(fd, 34);
+        if (look < min_look || look > max_look)
+        {
+            chr->creation_failed(fd, -12);
+            RFIFOSKIP(fd, 31 + 5);
+            hookStop();
+            return;
+        }
     }
 
     const int result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29));
@@ -110,6 +117,7 @@ void echar_creation_failed(int *fdPtr, int *result)
         case -5: WFIFOB(fd, 2) = 0x02; break; // 'Symbols in Character Names are forbidden'
         case -10: WFIFOB(fd, 2) = 0x50; break; // Wrong class
         case -11: WFIFOB(fd, 2) = 0x51; break; // Wrong sex
+        case -12: WFIFOB(fd, 2) = 0x52; break; // Wrong look
 
         default:
             ShowWarning("chr->parse_char: Unknown result received from chr->make_new_char_sql: %d!\n", *result);

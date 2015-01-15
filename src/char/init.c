@@ -74,6 +74,8 @@ HPExport void server_preinit (void)
     addCharInterConf("inter_server_ip", config_inter_server_ip);
     addCharConf("min_char_class", config_min_char_class);
     addCharConf("max_char_class", config_max_char_class);
+    addCharConf("min_cloth_color", config_min_look);
+    addCharConf("max_cloth_color", config_max_look);
 }
 
 HPExport void server_online (void)
