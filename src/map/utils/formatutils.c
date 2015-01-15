@@ -56,18 +56,31 @@ int format_sub(struct script_state* st, int translate)
     }
 
     char *line = (char *) aCalloc (550, sizeof (char));
+    int idx = 3;
     if (sd)
     {
         if (translate == 2)
         {
-            char *buf = aCalloc (strlen(script_getstr(st, 2)) + 3, sizeof(char));
-            strcpy (buf, script_getstr(st, 2));
+            char *str = NULL;
+            char *buf = NULL;
             if (sd->status.sex)
+            {
+                str = script_getstr(st, 3);
+                buf = aCalloc (strlen(str) + 3, sizeof(char));
+                strcpy (buf, str);
                 strcat (buf, "#1");
+            }
             else
+            {
+                str = script_getstr(st, 2);
+                buf = aCalloc (strlen(str) + 3, sizeof(char));
+                strcpy (buf, str);
                 strcat (buf, "#0");
+            }
+	    ShowWarning("going to translate: %s\n", buf);
             strcpy(line, lang_pctrans(buf, sd));
             aFree (buf);
+            idx = 4;
         }
         else
         {
@@ -80,7 +93,6 @@ int format_sub(struct script_state* st, int translate)
     }
 
     char *ptr = line;
-    int idx = 3;
     int sz = strlen(line);
     while (script_hasdata(st, idx))
     {
