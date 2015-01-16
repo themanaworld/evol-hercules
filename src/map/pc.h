@@ -21,4 +21,6 @@ bool epc_can_attack (struct map_session_data *sd, int *target_id);
 
 int epc_takeitem(struct map_session_data *sd, struct flooritem_data *fitem);
 
+void epc_validate_levels(void);
+
 #endif  // EVOL_MAP_PC

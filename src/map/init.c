@@ -110,6 +110,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->unequipitem_pos", epc_unequipitem_pos);
     addHookPre("pc->can_attack", epc_can_attack);
     addHookPre("pc->takeitem", epc_takeitem);
+    addHookPre("pc->validate_levels", epc_validate_levels);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("npc->buysellsel", enpc_buysellsel);
     addHookPre("npc->db_checkid", enpc_db_checkid);

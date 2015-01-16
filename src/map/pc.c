@@ -165,3 +165,19 @@ int epc_takeitem(struct map_session_data *sd __attribute__ ((unused)),
     }
     return 1;
 }
+
+void epc_validate_levels(void)
+{
+    int i;
+    for (i = 0; i < 7; i++) {
+        if (!pc->db_checkid(i)) continue;
+        if (i == JOB_WEDDING || i == JOB_XMAS || i == JOB_SUMMER)
+            continue; //Classes that do not need exp tables.
+        int j = pc->class2idx(i);
+        if (!pc->max_level[j][0])
+            ShowWarning("Class %d does not has a base exp table.\n", i);
+        if (!pc->max_level[j][1])
+            ShowWarning("Class %d does not has a job exp table.\n", i);
+    }
+    hookStop();
+}
