@@ -61,7 +61,7 @@ int format_sub(struct script_state* st, int translate)
     {
         if (translate == 2)
         {
-            char *str = NULL;
+            const char *str = NULL;
             char *buf = NULL;
             if (sd->status.sex)
             {
@@ -77,7 +77,6 @@ int format_sub(struct script_state* st, int translate)
                 strcpy (buf, str);
                 strcat (buf, "#0");
             }
-	    ShowWarning("going to translate: %s\n", buf);
             strcpy(line, lang_pctrans(buf, sd));
             aFree (buf);
             idx = 4;

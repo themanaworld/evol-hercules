@@ -152,7 +152,7 @@ void eclif_authok_post(struct map_session_data *sd)
         return;
 
     eclif_send_additional_slots(sd, sd);
-    send_pc_info(sd, sd, SELF);
+    send_pc_info(&sd->bl, &sd->bl, SELF);
     struct MapdExt *data = mapd_get(sd->bl.m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);
