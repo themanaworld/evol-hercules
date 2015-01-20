@@ -139,6 +139,14 @@ void send_pc_info(struct block_list* bl1,
     if (!data)
         return;
 
+    struct map_session_data *tsd = (struct map_session_data *)bl2;
+    if (tsd)
+    {
+        struct SessionExt *tdata = session_get_bysd(tsd);
+        if (!tdata || tdata->clientVersion < 4)
+            return;
+    }
+
     WBUFW (buf, 0) = 0xb0a;
     WBUFW (buf, 2) = 12; // len
     WBUFL (buf, 4) = sd->bl.id;
@@ -156,6 +164,14 @@ void send_npc_info(struct block_list* bl1,
 {
     if (!bl1 || bl1->type != BL_NPC)
         return;
+
+    struct map_session_data *tsd = (struct map_session_data *)bl2;
+    if (tsd)
+    {
+        struct SessionExt *tdata = session_get_bysd(tsd);
+        if (!tdata || tdata->clientVersion < 5)
+            return;
+    }
 
     TBL_NPC *const nd = (TBL_NPC*)bl1;
 
