@@ -218,7 +218,31 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             if (data->clientVersion < 3)
             {   // not sending new packets to old clients
-                ShowWarning("skip packet %d\n", packet);
+//                ShowWarning("skip packet %d\n", packet);
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet >= 0xb03 && packet <= 0xb0a)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 4)
+            {   // not sending new packets to old clients
+//                ShowWarning("skip packet %d\n", packet);
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0xb0b)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 5)
+            {   // not sending new packets to old clients
+//                ShowWarning("skip packet %d\n", packet);
                 hookStop();
                 return 0;
             }
@@ -237,6 +261,8 @@ void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *ts
         send_mob_info(bl, &tsd->bl, *target);
     else if (bl->type == BL_PC)
         send_pc_info(bl, &tsd->bl, *target);
+    else if (bl->type == BL_NPC)
+        send_npc_info(bl, &tsd->bl, *target);
 }
 
 void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,

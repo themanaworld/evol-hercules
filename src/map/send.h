@@ -18,5 +18,8 @@ void send_join_ack(int fd, const char *const name, int flag);
 void send_pc_info(struct block_list* bl1,
                   struct block_list* bl2,
                   enum send_target target);
+void send_npc_info(struct block_list* bl1,
+                   struct block_list* bl2,
+                   enum send_target target);
 
 #endif  // EVOL_MAP_PC

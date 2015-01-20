@@ -11,6 +11,7 @@
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
 #include "../../../map/mob.h"
+#include "../../../map/npc.h"
 #include "../../../map/pc.h"
 #include "../../../map/unit.h"
 
@@ -134,11 +135,8 @@ void send_pc_info(struct block_list* bl1,
         return;
 
     struct map_session_data *sd = (struct map_session_data *)bl1;
-
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
-        return;
-    if (data->clientVersion < 4)
         return;
 
     WBUFW (buf, 0) = 0xb0a;
@@ -148,6 +146,24 @@ void send_pc_info(struct block_list* bl1,
         WBUFL (buf, 8) = sd->group_id;
     else
         WBUFL (buf, 8) = 0;
+
+    clif->send(&buf, sizeof(buf), bl2, target);
+}
+
+void send_npc_info(struct block_list* bl1,
+                   struct block_list* bl2,
+                   enum send_target target)
+{
+    if (!bl1 || bl1->type != BL_NPC)
+        return;
+
+    TBL_NPC *const nd = (TBL_NPC*)bl1;
+
+    char buf[12];
+    WBUFW (buf, 0) = 0xb0b;
+    WBUFW (buf, 2) = 12; // len
+    WBUFL (buf, 4) = nd->bl.id;
+    WBUFL (buf, 8) = nd->area_size;
 
     clif->send(&buf, sizeof(buf), bl2, target);
 }
