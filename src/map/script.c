@@ -131,7 +131,10 @@ BUILDIN(npcTalk3)
     if (nd)
     {
         char message[500];
-        strcpy (message, msg);
+        char name[500];
+        strcpy (name, msg);
+        strtok(name, "#");
+        strcpy (message, name);
         strcat (message, " : ");
         strcat (message, str);
         send_local_message (sd->fd, &(nd->bl), message);
