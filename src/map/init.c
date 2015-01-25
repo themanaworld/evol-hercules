@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/channel.h"
 #include "../../../map/chat.h"
 #include "../../../map/chrif.h"
 #include "../../../map/clif.h"
@@ -182,10 +183,11 @@ HPExport void server_preinit (void)
     libpcre = GET_SYMBOL("libpcre");
     mapit = GET_SYMBOL("mapit");
     mapindex = GET_SYMBOL("mapindex");
+    channel = GET_SYMBOL("channel");
 
     setDefaultMap();
 
-    addHookPre("quest->read_db", equest_read_db);
+    addHookPre("quest->read_db_sub", equest_read_db_sub);
     addGroupPermission("send_gm_flag", permission_send_gm_flag);
 }
 

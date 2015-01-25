@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/channel.h"
 #include "../../../map/clif.h"
 #include "../../../map/pc.h"
 
@@ -28,7 +29,6 @@ void map_parse_join_channel(int fd)
 {
     char name[24];
     char *p;
-    struct hChSysCh *channel = NULL;
     struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
     int res = 0;
     if (!sd)
@@ -40,52 +40,16 @@ void map_parse_join_channel(int fd)
     else
         p = name;
 
-    if (clif->hChSys->local && strcmpi(p, clif->hChSys->local_name) == 0)
-    {
-        if (!map->list[sd->bl.m].channel)
-            clif->chsys_mjoin(sd);
-        channel = map->list[sd->bl.m].channel;
-        res = 1;
-    }
-    else if (clif->hChSys->ally && sd->status.guild_id && strcmpi(p, clif->hChSys->ally_name) == 0)
-    {
-        struct guild *g = sd->guild;
-        if (g)
-            channel = g->channel;
-    }
-    if (!res && (channel || (channel = strdb_get(clif->channel_db,p ))))
+    struct channel_data *chan = channel->search(p, sd);
+
+    if (chan)
     {
         int k;
-        for (k = 0; k < sd->channel_count; k++)
-        {
-            if (sd->channels[k] == channel)
-                break;
-        }
-        if (k < sd->channel_count)
-        {
-            res = 2;
-        }
-        else if (channel->pass[0] == '\0' && !(channel->banned && idb_exists(channel->banned, sd->status.account_id)))
-        {
-            if (channel->type == hChSys_ALLY)
-            {
-                struct guild *g = sd->guild, *sg = NULL;
-                for (k = 0; k < MAX_GUILDALLIANCE; k++)
-                {
-                    if (g->alliance[k].opposition == 0 && g->alliance[k].guild_id && (sg = guild->search(g->alliance[k].guild_id)))
-                    {
-                        if (!(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id)))
-                            clif->chsys_join(sg->channel, sd);
-                    }
-                }
-            }
-            clif->chsys_join(channel, sd);
+        ARR_FIND(0, sd->channel_count, k, sd->channels[k] == chan);
+        if (k < sd->channel_count || channel->join(chan, sd, NULL, true) == HCS_STATUS_OK)
             res = 1;
-        }
         else
-        {
             res = 0;
-        }
     }
 
     send_join_ack(fd, name, res);
@@ -112,15 +76,15 @@ void map_parse_part_channel(int fd)
             break;
     }
 
-    if (sd->channels[k]->type == hChSys_ALLY)
+    if (sd->channels[k]->type == HCS_TYPE_ALLY)
     {
         do
         {
             for (k = 0; k < sd->channel_count; k++)
             {
-                if (sd->channels[k]->type == hChSys_ALLY)
+                if (sd->channels[k]->type == HCS_TYPE_ALLY)
                 {
-                    clif->chsys_left(sd->channels[k],sd);
+                    channel->leave(sd->channels[k], sd);
                     break;
                 }
             }
@@ -129,6 +93,6 @@ void map_parse_part_channel(int fd)
     }
     else
     {
-        clif->chsys_left(sd->channels[k],sd);
+        channel->leave(sd->channels[k], sd);
     }
 }
