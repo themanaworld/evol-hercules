@@ -34,6 +34,7 @@
 #include "../../../map/trade.h"
 #include "../../../map/quest.h"
 
+#include "common/config.h"
 #include "common/init.h"
 #include "map/clif.h"
 #include "map/itemdb.h"
@@ -186,6 +187,9 @@ HPExport void server_preinit (void)
     channel = GET_SYMBOL("channel");
 
     setDefaultMap();
+    addMapInterConf("default_map", config_default_map);
+    addMapInterConf("default_x", config_default_x);
+    addMapInterConf("default_y", config_default_y);
 
     addHookPre("quest->read_db_sub", equest_read_db_sub);
     addGroupPermission("send_gm_flag", permission_send_gm_flag);

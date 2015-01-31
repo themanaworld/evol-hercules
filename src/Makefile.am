@@ -5,6 +5,8 @@ CHAR_SRC = char/char.c \
     char/config.c \
     char/config.h \
     char/init.c \
+    common/config.c \
+    common/config.h \
     common/init.c \
     common/init.h \
     common/ip.c \
@@ -17,6 +19,8 @@ LOGIN_SRC = login/config.c \
     login/parse.h \
     login/send.c \
     login/send.h \
+    common/config.c \
+    common/config.h \
     common/init.c \
     common/init.h \
     common/ip.c \
@@ -64,6 +68,8 @@ MAP_SRC = map/clif.c \
     map/struct/sessionext.h \
     map/utils/formatutils.c \
     map/utils/formatutils.h \
+    common/config.c \
+    common/config.h \
     common/init.c \
     common/init.h
 

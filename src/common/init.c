@@ -32,7 +32,7 @@ void interfaces_init_common(void)
 
 void setDefaultMap(void)
 {
-    mapindex->default_map = "000-1";
+    mapindex->default_map = aStrdup("000-1");
     mapindex->default_x = 80;
     mapindex->default_y = 109;
 }

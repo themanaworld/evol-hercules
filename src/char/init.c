@@ -27,6 +27,7 @@
 #include "../../../char/loginif.h"
 #include "../../../char/mapif.h"
 
+#include "common/config.h"
 #include "common/init.h"
 #include "char/char.h"
 #include "char/config.h"
@@ -70,6 +71,9 @@ HPExport void server_preinit (void)
     mapindex = GET_SYMBOL("mapindex");
 
     setDefaultMap();
+    addMapInterConf("default_map", config_default_map);
+    addMapInterConf("default_x", config_default_x);
+    addMapInterConf("default_y", config_default_y);
 
     addCharInterConf("inter_server_ip", config_inter_server_ip);
     addCharConf("min_char_class", config_min_char_class);
