@@ -58,12 +58,26 @@ BUILDIN(setCamNpc)
     else
     {
         if (!st->oid)
+        {
+            ShowWarning("npc not attached\n");
+            script->reportsrc(st);
             return false;
+        }
 
         nd = (struct npc_data *) map->id2bl (st->oid);
     }
-    if (!nd || sd->bl.m != nd->bl.m)
+    if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
         return false;
+    }
+    if (sd->bl.m != nd->bl.m)
+    {
+        ShowWarning("npc and player located in other maps\n");
+        script->reportsrc(st);
+        return false;
+    }
 
     if (script_hasdata(st, 3) && script_hasdata(st, 4))
     {
@@ -119,14 +133,22 @@ BUILDIN(npcTalk3)
     }
 
     if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
         return false;
+    }
 
     if (sd)
         msg = (char*)lang_pctrans (nd->name, sd);
     else
         msg = nd->name;
     if (strlen(str) + strlen(msg) > 450)
+    {
+        ShowWarning("text message too big\n");
+        script->reportsrc(st);
         return false;
+    }
 
     if (nd)
     {
@@ -155,7 +177,11 @@ BUILDIN(shop)
     getSD();
     struct npc_data *nd = npc->name2id (script_getstr(st, 2));
     if (!nd)
+    {
+        ShowWarning("shop npc not found\n");
+        script->reportsrc(st);
         return false;
+    }
 
     st->state = sd->state.dialog == 1 ? CLOSE : END;
     clif->scriptclose(sd, st->oid);
@@ -216,7 +242,7 @@ BUILDIN(requestLang)
     if (!data_isreference(data))
     {
         ShowError("script:requestlang: not a variable\n");
-        script->reportdata(data);
+        script->reportsrc(st);
         st->state = END;
         return false;
     }
@@ -224,7 +250,11 @@ BUILDIN(requestLang)
     name = reference_getname(data);
 
     if (is_string_variable(name))
+    {
+        ShowError("script:requestlang: not a variable\n");
+        script->reportsrc(st);
         return false;
+    }
 
     if (!sd->state.menu_or_input)
     {
@@ -263,7 +293,7 @@ BUILDIN(requestItem)
     if (!data_isreference(data))
     {
         ShowError("script:requestitem: not a variable\n");
-        script->reportdata(data);
+        script->reportsrc(st);
         st->state = END;
         return false;
     }
@@ -271,7 +301,11 @@ BUILDIN(requestItem)
     name = reference_getname(data);
 
     if (is_string_variable(name))
+    {
+        ShowError("script:requestlang: not a variable\n");
+        script->reportsrc(st);
         return false;
+    }
 
     if (!sd->state.menu_or_input)
     {
@@ -290,10 +324,18 @@ BUILDIN(requestItem)
         int item = 0;
 
         if (!sd->npc_str)
+        {
+            ShowWarning("npc string not found\n");
+            script->reportsrc(st);
             return false;
+        }
 
         if (sscanf (sd->npc_str, "%5d", &item) < 1)
+        {
+            ShowWarning("input data is not item id\n");
+            script->reportsrc(st);
             return false;
+        }
 
         script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(item), script_getref(st,2));
         st->state = RUN;
@@ -312,7 +354,7 @@ BUILDIN(requestItems)
     if (!data_isreference(data))
     {
         ShowError("script:requestitem: not a variable\n");
-        script->reportdata(data);
+        script->reportsrc(st);
         st->state = END;
         return false;
     }
@@ -320,7 +362,11 @@ BUILDIN(requestItems)
     name = reference_getname(data);
 
     if (!is_string_variable(name))
+    {
+        ShowWarning("parameter is not variable\n");
+        script->reportsrc(st);
         return false;
+    }
 
     int count = 1;
 
@@ -346,7 +392,11 @@ BUILDIN(requestItems)
         sd->state.menu_or_input = 0;
 
         if (!sd->npc_str)
+        {
+            ShowWarning("npc string not found\n");
+            script->reportsrc(st);
             return false;
+        }
 
         script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st, 2));
         st->state = RUN;
@@ -368,6 +418,7 @@ BUILDIN(setq)
     if (i == sd->num_quests)
     {
         ShowError("Quest with id=%d not found\n", quest_id);
+        script->reportsrc(st);
         return false;
     }
 
@@ -395,7 +446,7 @@ BUILDIN(getq)
     if (i == sd->num_quests)
     {
         script_pushint(st, 0);
-        return false;
+        return true;
     }
     script_pushint(st, sd->quest_log[i].count[0]);
     return true;
@@ -414,13 +465,21 @@ BUILDIN(setNpcDir)
     else if (script_hasdata(st, 2))
     {
         if (!st->oid)
+        {
+            ShowWarning("npc not found\n");
+            script->reportsrc(st);
             return false;
+        }
 
         nd = (struct npc_data *) map->id2bl (st->oid);
         newdir = script_getnum(st, 2);
     }
     if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
         return false;
+    }
 
     if (newdir < 0)
         newdir = 0;
@@ -468,7 +527,11 @@ BUILDIN(countItemColor)
 
     TBL_PC* sd = script->rid2sd(st);
     if (!sd)
-        return true;
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
+        return false;
+    }
 
     if (script_isstringtype(st, 2))
     {
@@ -484,6 +547,7 @@ BUILDIN(countItemColor)
     if (id == NULL)
     {
         ShowError("buildin_countitem: Invalid item '%s'.\n", script_getstr(st,2));  // returns string, regardless of what it was
+        script->reportsrc(st);
         script_pushint(st,0);
         return false;
     }
@@ -534,10 +598,18 @@ BUILDIN(setMapMask)
 {
     const char *const mapName = script_getstr(st, 2);
     if (!mapName)
-        return true;
+    {
+        ShowWarning("invalid map name\n");
+        script->reportsrc(st);
+        return false;
+    }
     const int m = map->mapname2mapid(mapName);
     if (m < 0)
+    {
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
+    }
     getMapData(m);
 
     const int val = script_getnum(st, 3);
@@ -554,12 +626,16 @@ BUILDIN(getMapMask)
     if (!mapName)
     {
         script_pushint(st, 0);
-        return true;
+        ShowWarning("invalid map name\n");
+        script->reportsrc(st);
+        return false;
     }
     const int m = map->mapname2mapid(mapName);
     if (m < 0)
     {
         script_pushint(st, 0);
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
     }
     getMapDataReturn(m, 0);
@@ -571,10 +647,18 @@ BUILDIN(addMapMask)
 {
     const char *const mapName = script_getstr(st, 2);
     if (!mapName)
-        return true;
+    {
+        ShowWarning("invalid map name\n");
+        script->reportsrc(st);
+        return false;
+    }
     const int m = map->mapname2mapid(mapName);
     if (m < 0)
+    {
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
+    }
     getMapData(m);
     const int val = script_getnum(st, 3);
     const unsigned int old = mapData->mask;
@@ -589,10 +673,18 @@ BUILDIN(removeMapMask)
 {
     const char *const mapName = script_getstr(st, 2);
     if (!mapName)
+    {
+        ShowWarning("invalid map name\n");
+        script->reportsrc(st);
         return true;
+    }
     const int m = map->mapname2mapid(mapName);
     if (m < 0)
+    {
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
+    }
     getMapData(m);
     const int val = script_getnum(st, 3);
     const unsigned int old = mapData->mask;
@@ -618,11 +710,15 @@ BUILDIN(setNpcSex)
     }
     else
     {
+        ShowWarning("no parameters provided\n");
+        script->reportsrc(st);
         return false;
     }
 
     if (!nd && !st->oid)
     {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
         return false;
     }
 
@@ -631,7 +727,8 @@ BUILDIN(setNpcSex)
 
     if (!nd || !nd->vd)
     {
-        script_pushint(st, -1);
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
         return false;
     }
 
@@ -680,11 +777,25 @@ BUILDIN(changeMusic)
 {
     const char *const mapName = script_getstr(st, 2);
     const char *const music = script_getstr(st, 3);
-    if (!music || !mapName)
-        return 0;
+    if (!music)
+    {
+        ShowWarning("invalid music file\n");
+        script->reportsrc(st);
+        return false;
+    }
+    if (!mapName)
+    {
+        ShowWarning("invalid map file\n");
+        script->reportsrc(st);
+        return false;
+    }
     const int m = map->mapname2mapid(mapName);
     if (m < 0)
+    {
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
+    }
 
     send_changemusic_brodcast(m, music);
     return true;
@@ -694,10 +805,18 @@ BUILDIN(setNpcDialogTitle)
 {
     const char *const name = script_getstr(st, 2);
     if (!name)
+    {
+        ShowWarning("invalid window title\n");
+        script->reportsrc(st);
         return false;
+    }
     struct map_session_data *sd = script->rid2sd (st);
     if (!sd)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
         return false;
+    }
 
     send_changenpc_title(sd, st->oid, name);
     return true;
@@ -706,9 +825,18 @@ BUILDIN(setNpcDialogTitle)
 BUILDIN(getMapName)
 {
     TBL_PC *sd = script->rid2sd(st);
-    if (!sd || sd->bl.m == -1)
+    if (!sd)
     {
         script_pushstr(st, aStrdup(""));
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
+        return false;
+    }
+    if (sd->bl.m == -1)
+    {
+        script_pushstr(st, aStrdup(""));
+        ShowWarning("invalid map\n");
+        script->reportsrc(st);
         return false;
     }
     script_pushstr(st, aStrdup(map->list[sd->bl.m].name));
@@ -723,11 +851,19 @@ BUILDIN(unequipById)
     TBL_PC *sd = script->rid2sd(st);
 
     if (sd == NULL)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
         return false;
+    }
 
     nameid = script_getnum(st, 2);
     if((item_data = itemdb->exists(nameid)) == NULL)
+    {
+        ShowWarning("item %d not found\n", nameid);
+        script->reportsrc(st);
         return false;
+    }
     for (i = 0; i < EQI_MAX; i++)
     {
         const int idx = sd->equip_index[i];
@@ -745,7 +881,11 @@ BUILDIN(isPcDead)
     TBL_PC *sd = script->rid2sd(st);
 
     if (sd == NULL)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
         return false;
+    }
 
     script_pushint(st, pc_isdead(sd) ? 1 : 0);
     return true;
@@ -781,7 +921,11 @@ BUILDIN(areaTimer)
     int m;
 
     if ((m = map->mapname2mapid(mapname)) < 0)
+    {
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
         return false;
+    }
 
     map->foreachinarea(areatimer_sub, m, x1, y1, x2, y2, BL_PC, time, eventName);
 
@@ -830,7 +974,9 @@ BUILDIN(getAreaDropItem)
     if ((m = map->mapname2mapid(str)) < 0)
     {
         script_pushint(st, -1);
-        return true;
+        ShowWarning("map not found\n");
+        script->reportsrc(st);
+        return false;
     }
 
     if (script_hasdata(st, 8) && script_getnum(st, 8))
