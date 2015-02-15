@@ -35,6 +35,8 @@ MAP_SRC = map/clif.c \
     map/lang.h \
     map/map.c \
     map/map.h \
+    map/mob.c \
+    map/mob.h \
     map/npc.c \
     map/npc.h \
     map/parse.c \
