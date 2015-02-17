@@ -108,3 +108,19 @@ void map_parse_pet_say(int fd)
     safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
     send_pet_say(sd, message);
 }
+
+void map_parse_pet_emote(int fd)
+{
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd)
+        return;
+    const time_t t = time(NULL);
+    if (sd->emotionlasttime + 1 >= t)
+    { // not more than 1 per second
+        sd->emotionlasttime = t;
+        return;
+    }
+
+    sd->emotionlasttime = t;
+    send_pet_emote(sd, RFIFOB(fd, 2));
+}

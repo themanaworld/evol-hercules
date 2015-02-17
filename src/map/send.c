@@ -274,3 +274,11 @@ void send_pet_say(struct map_session_data *sd, const char *const message)
     buf[len - 1] = 0;
     clif->GlobalMessage(&sd->pd->bl, buf);
 }
+
+void send_pet_emote(struct map_session_data *sd, const int emote)
+{
+    if (!sd || !sd->pd)
+        return;
+
+    clif->emotion(&sd->pd->bl, emote);
+}
