@@ -21,5 +21,6 @@ void send_pc_info(struct block_list* bl1,
 void send_npc_info(struct block_list* bl1,
                    struct block_list* bl2,
                    enum send_target target);
+void send_pet_say(struct map_session_data *sd, const char *const message);
 
 #endif  // EVOL_MAP_PC

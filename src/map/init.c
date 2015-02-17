@@ -107,6 +107,7 @@ HPExport void plugin_init (void)
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addPacket(0xb07, 26, map_parse_join_channel, hpClif_Parse);
     addPacket(0xb09, 26, map_parse_part_channel, hpClif_Parse);
+    addPacket(0xb0c, -1, map_parse_pet_say, hpClif_Parse);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
     addHookPre("pc->equipitem_pos", epc_equipitem_pos);

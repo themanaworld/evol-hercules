@@ -21,7 +21,7 @@ void send_server_version(int fd)
     WFIFOW(fd, 0) = 0x7531;
     WFIFOW(fd, 2) = 4 + 8;
     WFIFOL(fd, 4) = 0;  // unused
-    WFIFOL(fd, 8) = 4;  // server version
+    WFIFOL(fd, 8) = 5;  // server version
     WFIFOSET(fd, WFIFOW(fd,2));
 }
 

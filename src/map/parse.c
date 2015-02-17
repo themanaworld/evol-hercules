@@ -96,3 +96,15 @@ void map_parse_part_channel(int fd)
         channel->leave(sd->channels[k], sd);
     }
 }
+
+void map_parse_pet_say(int fd)
+{
+    char message[500];
+
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    const int len = RFIFOW(fd, 2);
+    if (len > 500 || len < 6)
+        return;
+    safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
+    send_pet_say(sd, message);
+}

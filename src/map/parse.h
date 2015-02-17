@@ -7,5 +7,6 @@
 void map_parse_version(int fd);
 void map_parse_join_channel(int fd);
 void map_parse_part_channel(int fd);
+void map_parse_pet_say(int fd);
 
 #endif  // EVOL_MAP_PARSE

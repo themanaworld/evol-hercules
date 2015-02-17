@@ -10,9 +10,11 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../map/clif.h"
 #include "../../../map/mob.h"
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
+#include "../../../map/pet.h"
 #include "../../../map/unit.h"
 
 #include "map/send.h"
@@ -256,4 +258,19 @@ void send_join_ack(int fd, const char *const name, int flag)
     safestrncpy ((char*)WFIFOP (fd, 2), name, 24);
     WFIFOB (fd, 26) = flag;
     WFIFOSET (fd, 27);
+}
+
+void send_pet_say(struct map_session_data *sd, const char *const message)
+{
+    if (!sd || !sd->pd)
+        return;
+
+    const char *const name = sd->pd->pet.name;
+    const int len = 24 + 4 + strlen(message);
+    char *buf = NULL;
+    CREATE(buf, char, len);
+
+    snprintf(buf, len, "%s : %s", name, message);
+    buf[len - 1] = 0;
+    clif->GlobalMessage(&sd->pd->bl, buf);
 }
