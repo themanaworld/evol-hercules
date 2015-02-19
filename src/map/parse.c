@@ -124,3 +124,9 @@ void map_parse_pet_emote(int fd)
     sd->emotionlasttime = t;
     send_pet_emote(sd, RFIFOB(fd, 2));
 }
+
+void map_parse_set_status(int fd)
+{
+    struct SessionExt *data = session_get(fd);
+    data->state = RFIFOB(fd, 2);
+}
