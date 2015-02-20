@@ -16,6 +16,7 @@
 
 #include "map/parse.h"
 #include "map/send.h"
+#include "map/map.h"
 #include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
@@ -129,4 +130,9 @@ void map_parse_set_status(int fd)
 {
     struct SessionExt *data = session_get(fd);
     data->state = RFIFOB(fd, 2);
+}
+
+void map_parse_get_online_list(int fd)
+{
+    emap_online_list(fd);
 }

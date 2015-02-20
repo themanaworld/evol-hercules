@@ -6,6 +6,7 @@
 
 struct SessionExt
 {
+    time_t onlinelistlasttime;
     int clientVersion;
     int language;
     uint8 state;

@@ -43,5 +43,6 @@ struct SessionExt *session_create(void)
     data->clientVersion = 0;
     data->language = 0;
     data->state = 0;
+    data->onlinelistlasttime = 0;
     return data;
 }

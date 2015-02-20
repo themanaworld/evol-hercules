@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../../common/db.h"
 #include "../../../common/HPMi.h"
 #include "../../../common/malloc.h"
 #include "../../../common/mmo.h"
@@ -14,9 +15,14 @@
 #include "../../../map/battle.h"
 #include "../../../map/itemdb.h"
 #include "../../../map/map.h"
+#include "../../../map/pc.h"
 
+#include "map/permission.h"
+#include "map/send.h"
 #include "map/data/itemd.h"
+#include "map/data/session.h"
 #include "map/struct/itemdext.h"
+#include "map/struct/sessionext.h"
 
 int emap_addflooritem_post(int retVal,
                            struct item *item,
@@ -41,4 +47,66 @@ int emap_addflooritem_post(int retVal,
             fitem->cleartimer = timer->add(timer->gettick() + timeout, map->clearflooritem_timer, fitem->bl.id, 0);
     }
     return retVal;
+}
+
+void emap_online_list(int fd)
+{
+    char *buf = aCalloc (1, 20000);
+    char *ptr = buf;
+    struct map_session_data* sd;
+
+
+    struct SessionExt *data1 = session_get(fd);
+    const time_t t = time(NULL);
+    if (data1->onlinelistlasttime + 15 >= t)
+    { // not more than 1 per 15 seconds
+        data1->onlinelistlasttime = t;
+        return;
+    }
+
+    data1->onlinelistlasttime = t;
+
+    DBIterator* iter = db_iterator(map->pc_db);
+
+    for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter))
+    {
+        if (!sd)
+            continue;
+
+        if (ptr - buf > 19500)
+            break;
+
+        struct SessionExt *data = session_get_bysd(sd);
+        // need skip invisible players
+
+        uint8 state = data->state;
+        if (sd->status.sex == 1)
+            state |= 128;
+        else
+            state = (state | 128) ^ 128;
+
+        if (pc_has_permission(sd, permission_send_gm_flag))
+            state |= 64;
+        else
+            state = (state | 64) ^ 64;
+
+        *ptr = state;
+        ptr ++;
+
+        *ptr = sd->status.base_level;
+        ptr ++;
+
+        // need permissions what allow show version. now show always
+        *ptr = data->clientVersion;
+        ptr ++;
+
+        strcpy(ptr, sd->status.name);
+        ptr += strlen(sd->status.name);
+        *ptr = 0;
+        ptr ++;
+
+    }
+    dbi_destroy(iter);
+    send_online_list(fd, buf, ptr - buf);
+    aFree(buf);
 }

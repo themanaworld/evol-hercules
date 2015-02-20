@@ -273,6 +273,7 @@ void send_pet_say(struct map_session_data *sd, const char *const message)
     snprintf(buf, len, "%s : %s", name, message);
     buf[len - 1] = 0;
     clif->GlobalMessage(&sd->pd->bl, buf);
+    aFree(buf);
 }
 
 void send_pet_emote(struct map_session_data *sd, const int emote)
@@ -281,4 +282,15 @@ void send_pet_emote(struct map_session_data *sd, const int emote)
         return;
 
     clif->emotion(&sd->pd->bl, emote);
+}
+
+void send_online_list(int fd, const char *buf, unsigned size)
+{
+    const unsigned int len = size + 4 + 1;
+    WFIFOHEAD (fd, len);
+    WFIFOW (fd, 0) = 0xb10;
+    WFIFOW (fd, 2) = len;
+    memcpy (WFIFOP (fd, 4), buf, size);
+    WFIFOB (fd, size + 4) = 0;
+    WFIFOSET (fd, len);
 }
