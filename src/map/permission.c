@@ -15,3 +15,4 @@
 #include "../../../map/status.h"
 
 unsigned int permission_send_gm_flag = UINT_MAX - 1;
+unsigned int permission_show_client_version_flag = UINT_MAX - 2;

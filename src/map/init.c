@@ -200,6 +200,7 @@ HPExport void server_preinit (void)
 
     addHookPre("quest->read_db_sub", equest_read_db_sub);
     addGroupPermission("send_gm_flag", permission_send_gm_flag);
+    addGroupPermission("show_client_version", permission_show_client_version_flag);
 }
 
 HPExport void server_online (void)

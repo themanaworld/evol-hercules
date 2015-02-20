@@ -55,7 +55,6 @@ void emap_online_list(int fd)
     char *ptr = buf;
     struct map_session_data* sd;
 
-
     struct SessionExt *data1 = session_get(fd);
     const time_t t = time(NULL);
     if (data1->onlinelistlasttime + 15 >= t)
@@ -64,6 +63,8 @@ void emap_online_list(int fd)
         return;
     }
 
+    struct map_session_data* ssd = (struct map_session_data*)session[fd]->session_data;
+    const bool showVersion = pc_has_permission(ssd, permission_show_client_version_flag);
     data1->onlinelistlasttime = t;
 
     DBIterator* iter = db_iterator(map->pc_db);
@@ -96,8 +97,10 @@ void emap_online_list(int fd)
         *ptr = sd->status.base_level;
         ptr ++;
 
-        // need permissions what allow show version. now show always
-        *ptr = data->clientVersion;
+        if (showVersion)
+            *ptr = data->clientVersion;
+        else
+            *ptr = 0;
         ptr ++;
 
         strcpy(ptr, sd->status.name);

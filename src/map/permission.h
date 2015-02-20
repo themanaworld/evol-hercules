@@ -5,5 +5,6 @@
 #define EVOL_MAP_PERMISSION
 
 extern unsigned int permission_send_gm_flag;
+extern unsigned int permission_show_client_version_flag;
 
 #endif  // EVOL_MAP_PERMISSION
