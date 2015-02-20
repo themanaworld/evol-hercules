@@ -199,7 +199,7 @@ HPExport void server_preinit (void)
     addMapInterConf("default_y", config_default_y);
 
     addHookPre("quest->read_db_sub", equest_read_db_sub);
-    addGroupPermission("send_gm_flag", permission_send_gm_flag);
+    addGroupPermission("send_gm", permission_send_gm_flag);
     addGroupPermission("show_client_version", permission_show_client_version_flag);
 }
 
