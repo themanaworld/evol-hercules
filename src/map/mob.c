@@ -18,10 +18,16 @@
 int emob_deleteslave_sub(struct block_list *bl, va_list ap)
 {
     if (!bl)
+    {
+        hookStop();
         return 0;
+    }
     struct mob_data *md = (struct mob_data *)bl;
     if (!md)
+    {
+        hookStop();
         return 0;
+    }
 
     const int id = va_arg(ap, int);
     if (md->master_id > 0 && md->master_id == id)
@@ -37,5 +43,6 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
         }
     }
 
+    hookStop();
     return 0;
 }
