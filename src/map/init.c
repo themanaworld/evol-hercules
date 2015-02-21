@@ -133,6 +133,7 @@ HPExport void plugin_init (void)
     addHookPre("itemdb->is_item_usable", eitemdb_is_item_usable);
     addHookPre("itemdb->readdb_additional_fields", eitemdb_readdb_additional_fields);
     addHookPre("unit->can_move", eunit_can_move);
+    addHookPre("unit->walktoxy", eunit_walktoxy);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);

@@ -145,3 +145,14 @@ int eunit_can_move(struct block_list *bl)
     hookStop();
     return 1;
 }
+
+int eunit_walktoxy(struct block_list *bl  __attribute__ ((unused)),
+                   short *x  __attribute__ ((unused)),
+                   short *y  __attribute__ ((unused)),
+                   int *flagPtr)
+{
+    // reset flag "Search for an unoccupied cell and cancel if none available"
+    // this reduce CPU usage and allow mobs to walk on each other.
+    if ((*flagPtr)&8)
+        *flagPtr = ((*flagPtr) | 8) ^ 8;
+}

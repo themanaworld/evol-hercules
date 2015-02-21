@@ -5,5 +5,6 @@
 #define EVOL_MAP_UNIT
 
 int eunit_can_move(struct block_list *bl);
+int eunit_walktoxy(struct block_list *bl, short *x, short *y, int *flagPtr);
 
 #endif  // EVOL_MAP_UNIT
