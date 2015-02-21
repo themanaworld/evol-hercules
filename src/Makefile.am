@@ -87,6 +87,10 @@ if ENABLE_STATIC
 SHARED_CFLAGS += "-static-libgcc"
 endif
 
+if ENABLE_GPROF
+SHARED_CFLAGS += "-pg"
+endif
+
 lib_LTLIBRARIES = libevol_char.la libevol_login.la libevol_map.la
 libevol_char_la_SOURCES = ${CHAR_SRC}
 libevol_char_la_LDFLAGS = ${SHARED_LDFLAGS}

@@ -15,6 +15,8 @@ if [[ "${CMD}" == "default" ]]; then
     ../configure --enable-sanitize
 elif [[ "${CMD}" == "old" ]]; then
     ../configure
+elif [[ "${CMD}" == "gprof" ]]; then
+    ../configure --enable-gprof
 fi
 make -j3
 export RET=$?
