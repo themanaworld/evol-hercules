@@ -266,11 +266,11 @@ void send_pet_say(struct map_session_data *sd, const char *const message)
         return;
 
     const char *const name = sd->pd->pet.name;
-    const int len = 24 + 4 + strlen(message);
+    const int len = 24 + 7 + strlen(message);
     char *buf = NULL;
     CREATE(buf, char, len);
 
-    snprintf(buf, len, "%s : %s", name, message);
+    snprintf(buf, len, "%s's %s : %s", sd->status.name, name, message);
     buf[len - 1] = 0;
     clif->GlobalMessage(&sd->pd->bl, buf);
     aFree(buf);
