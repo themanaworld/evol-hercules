@@ -13,6 +13,8 @@
 #include "../../../map/channel.h"
 #include "../../../map/clif.h"
 #include "../../../map/pc.h"
+#include "../../../map/pet.h"
+#include "../../../map/unit.h"
 
 #include "map/parse.h"
 #include "map/send.h"
@@ -135,4 +137,17 @@ void map_parse_set_status(int fd)
 void map_parse_get_online_list(int fd)
 {
     emap_online_list(fd);
+}
+
+void map_parse_pet_move(int fd)
+{
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd || !sd->pd)
+        return;
+    short x = RFIFOW(fd, 6);
+    short y = RFIFOW(fd, 8);
+
+    struct block_list *pdBl = &sd->pd->bl;
+    if (map->getcell(pdBl->m, x, y, CELL_CHKPASS))
+        unit->walktoxy(pdBl, x, y, 0);
 }
