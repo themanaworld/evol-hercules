@@ -151,3 +151,11 @@ void map_parse_pet_move(int fd)
     if (map->getcell(pdBl->m, x, y, CELL_CHKPASS))
         unit->walktoxy(pdBl, x, y, 0);
 }
+
+void map_parse_pet_dir(int fd)
+{
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd || !sd->pd)
+        return;
+    unit->setdir(&sd->pd->bl, RFIFOB(fd, 8));
+}
