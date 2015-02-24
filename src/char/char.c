@@ -40,6 +40,9 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
     uint16 look = 0;
     uint8 sex = 0;
 
+    if (!sd)
+        return;
+
     if (sd->version >= 4)
     {
         race = RFIFOW(fd, 31);
