@@ -91,6 +91,8 @@ void elogin_parse_client_login2(int fd)
     clienttype = RFIFOB(fd, 50);
 
     struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+    if (!sd)
+        return;
 
     char ip[16];
     uint32 ipl = session[fd]->client_addr;
