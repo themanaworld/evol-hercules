@@ -52,6 +52,8 @@ MAP_SRC = map/clif.c \
     map/scriptdefines.h \
     map/send.c \
     map/send.h \
+    map/skill.c \
+    map/skill.h \
     map/status.c \
     map/status.h \
     map/unit.c \

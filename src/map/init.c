@@ -48,6 +48,7 @@
 #include "map/pc.h"
 #include "map/quest.h"
 #include "map/script.h"
+#include "map/skill.h"
 #include "map/status.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -145,6 +146,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
+    addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
 
     langScriptId = script->add_str("Lang");
 }
