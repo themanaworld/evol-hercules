@@ -30,7 +30,7 @@ void send_update_host(int fd)
     if (!update_server)
         return;
     const int sz = strlen(update_server);
-    WFIFOHEAD(fd, sz);
+    WFIFOHEAD(fd, sz + 4);
     WFIFOW(fd, 0) = 0x63;
     WFIFOW(fd, 2) = sz + 4;
     memcpy(WFIFOP (fd, 4), update_server, sz);

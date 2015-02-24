@@ -72,14 +72,13 @@ void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
         return;
     }
 
-    WFIFOHEAD(fd, packet_len(0x2b3));
+    WFIFOHEAD(fd, 107);
     WFIFOW(fd, 0) = 0x2b3;
     WFIFOL(fd, 2) = qd->quest_id;
     WFIFOB(fd, 6) = qd->count[0]; // was state;
     WFIFOB(fd, 7) = qd->time - qi->time;
     WFIFOL(fd, 11) = qd->time;
     WFIFOW(fd, 15) = 0;
-
     WFIFOSET(fd, 107);
     hookStop();
 }
