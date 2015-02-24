@@ -79,6 +79,9 @@ void map_parse_part_channel(int fd)
             break;
     }
 
+    if (k == sd->channel_count)
+        return;
+
     if (sd->channels[k]->type == HCS_TYPE_ALLY)
     {
         do
