@@ -25,6 +25,12 @@
 
 void eclif_quest_send_list(struct map_session_data *sd)
 {
+    if (!sd)
+    {
+        hookStop();
+        return;
+    }
+
     int fd = sd->fd;
     int i;
     int info_len = 15;
@@ -37,6 +43,8 @@ void eclif_quest_send_list(struct map_session_data *sd)
     for (i = 0; i < sd->avail_quests; i++ )
     {
         struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
+        if (!qi)
+            continue;
         WFIFOL(fd, i * info_len + 8) = sd->quest_log[i].quest_id;
         WFIFOB(fd, i * info_len + 12) = sd->quest_log[i].count[0]; // was state
         WFIFOL(fd, i * info_len + 13) = sd->quest_log[i].time - qi->time;
@@ -50,8 +58,19 @@ void eclif_quest_send_list(struct map_session_data *sd)
 
 void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
 {
+    if (!sd)
+    {
+        hookStop();
+        return;
+    }
     int fd = sd->fd;
     struct quest_db *qi = quest->db(qd->quest_id);
+
+    if (!qi)
+    {
+        hookStop();
+        return;
+    }
 
     WFIFOHEAD(fd, packet_len(0x2b3));
     WFIFOW(fd, 0) = 0x2b3;
@@ -76,6 +95,11 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
     {
         int fd = *fdPtr;
         struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+        if (!sd)
+        {
+            hookStop();
+            return;
+        }
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
         const int trLen = strlen(tr);
         const int len = 8 + trLen;
@@ -115,13 +139,16 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
 
 static void eclif_send_additional_slots(struct map_session_data* sd, struct map_session_data* sd2)
 {
+    if (!sd || !sd2)
+        return;
+
     const int id = sd->bl.id;
     const int fd = sd2->fd;
 
     struct item_data *item;
     short equip;
     struct MapdExt *data = mapd_get(sd->bl.m);
-    if (data->invisible)
+    if (!data || data->invisible)
         return;
 
     equipPos(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
@@ -139,6 +166,8 @@ static void eclif_send_additional_slots(struct map_session_data* sd, struct map_
 
 void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list *bl)
 {
+    if (!bl)
+        return;
     if (bl->type == BL_PC)
     {
         eclif_send_additional_slots(sd, (struct map_session_data *)bl);
@@ -161,6 +190,8 @@ void eclif_authok_post(struct map_session_data *sd)
 void eclif_changemap_post(struct map_session_data *sd, short *m,
                           int *x __attribute__ ((unused)), int *y __attribute__ ((unused)))
 {
+    if (!sd)
+        return;
     struct MapdExt *data = mapd_get(*m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);
@@ -171,7 +202,7 @@ void eclif_handle_invisible_map(struct block_list *bl, enum send_target target _
     if (!bl || bl->type != BL_PC)
         return;
     struct MapdExt *data = mapd_get(bl->m);
-    if (data->invisible)
+    if (data && data->invisible)
         hookStop();
 }
 

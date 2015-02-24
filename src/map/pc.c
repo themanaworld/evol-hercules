@@ -75,6 +75,9 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
 {
     int pos = *posPtr;
 
+    if (!id)
+        return;
+
     equipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);
     equipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);
     equipPos(EQP_HEAD_MID, head_mid, LOOK_HEAD_MID);
@@ -111,6 +114,9 @@ void epc_unequipitem_pos(struct map_session_data *sd,
                          int *nPtr __attribute__ ((unused)),
                          int *posPtr)
 {
+    if (!sd)
+        return;
+
     int pos = *posPtr;
 
     unequipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);

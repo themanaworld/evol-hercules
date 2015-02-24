@@ -57,10 +57,10 @@ void send_npccommand2 (struct map_session_data *sd, int npcId, int cmd, int id, 
 
 void send_local_message(int fd, struct block_list* bl, const char* msg)
 {
+    if (!msg || !bl)
+        return;
     unsigned short msg_len = strlen(msg) + 1;
     uint8 buf[256];
-    if (!bl)
-        return;
 
     int len = sizeof(buf) - 8;
     if (msg_len > len)
@@ -112,11 +112,10 @@ void send_mapmask_brodcast(const int map, const int mask)
 void send_mob_info(struct block_list* bl1, struct block_list* bl2,
                    enum send_target target)
 {
-    char buf[12];
-
-    if (bl1->type != BL_MOB)
+    if (!bl1 || bl1->type != BL_MOB)
         return;
 
+    char buf[12];
     struct mob_data *md = (struct mob_data *)bl1;
 
     WBUFW (buf, 0) = 0xb03;
@@ -131,11 +130,10 @@ void send_pc_info(struct block_list* bl1,
                   struct block_list* bl2,
                   enum send_target target)
 {
-    char buf[12];
-
-    if (bl1->type != BL_PC)
+    if (!bl1 || bl1->type != BL_PC)
         return;
 
+    char buf[12];
     struct map_session_data *sd = (struct map_session_data *)bl1;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
@@ -253,6 +251,9 @@ void send_changenpc_title (struct map_session_data *sd, const int npcId, const c
 
 void send_join_ack(int fd, const char *const name, int flag)
 {
+    if (!name)
+        return;
+
     WFIFOHEAD (fd, 27);
     WFIFOW (fd, 0) = 0xb08;
     safestrncpy ((char*)WFIFOP (fd, 2), name, 24);
@@ -262,7 +263,7 @@ void send_join_ack(int fd, const char *const name, int flag)
 
 void send_pet_say(struct map_session_data *sd, const char *const message)
 {
-    if (!sd || !sd->pd)
+    if (!sd || !sd->pd || !message)
         return;
 
     const char *const name = sd->pd->pet.name;
@@ -286,6 +287,8 @@ void send_pet_emote(struct map_session_data *sd, const int emote)
 
 void send_online_list(int fd, const char *buf, unsigned size)
 {
+    if (!buf)
+        return;
     const unsigned int len = size + 4 + 1;
     WFIFOHEAD (fd, len);
     WFIFOW (fd, 0) = 0xb10;

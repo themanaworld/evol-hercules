@@ -139,10 +139,24 @@ BUILDIN(npcTalk3)
         return false;
     }
 
+    if (!str)
+    {
+        ShowWarning("error in string\n");
+        script->reportsrc(st);
+        return false;
+    }
+
     if (sd)
         msg = (char*)lang_pctrans (nd->name, sd);
     else
         msg = nd->name;
+
+    if (!msg)
+    {
+        ShowWarning("error in string\n");
+        script->reportsrc(st);
+        return false;
+    }
     if (strlen(str) + strlen(msg) > 450)
     {
         ShowWarning("text message too big\n");
@@ -273,9 +287,7 @@ BUILDIN(requestLang)
 
         int lng = -1;
         if (*sd->npc_str)
-        {
             lng = lang_getId(sd->npc_str);
-        }
         script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(lng), script_getref(st,2));
         st->state = RUN;
     }
@@ -934,6 +946,9 @@ BUILDIN(areaTimer)
 
 static int buildin_getareadropitem_sub_del(struct block_list *bl, va_list ap)
 {
+    if (!bl)
+        return 0;
+
     const int item = va_arg(ap, int);
     int *const amount = va_arg(ap, int *);
     struct flooritem_data *drop = (struct flooritem_data *)bl;

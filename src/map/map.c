@@ -36,7 +36,7 @@ int emap_addflooritem_post(int retVal,
                            int *flags __attribute__ ((unused)))
 {
     struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, retVal);
-    if (fitem->cleartimer != INVALID_TIMER)
+    if (fitem && fitem->cleartimer != INVALID_TIMER)
     {
         int timeout = battle->bc->flooritem_lifetime;
         struct ItemdExt *data = itemd_get_by_item(item);
@@ -56,6 +56,9 @@ void emap_online_list(int fd)
     struct map_session_data* sd;
 
     struct SessionExt *data1 = session_get(fd);
+    if (!data1)
+        return;
+
     const time_t t = time(NULL);
     if (data1->onlinelistlasttime + 15 >= t)
     { // not more than 1 per 15 seconds
@@ -64,6 +67,9 @@ void emap_online_list(int fd)
     }
 
     struct map_session_data* ssd = (struct map_session_data*)session[fd]->session_data;
+    if (!ssd)
+        return;
+
     const bool showVersion = pc_has_permission(ssd, permission_show_client_version_flag);
     data1->onlinelistlasttime = t;
 
@@ -78,6 +84,9 @@ void emap_online_list(int fd)
             break;
 
         struct SessionExt *data = session_get_bysd(sd);
+        if (!data)
+            continue;
+
         // need skip invisible players
 
         uint8 state = data->state;

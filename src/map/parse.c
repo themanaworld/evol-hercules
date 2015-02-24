@@ -25,6 +25,8 @@
 void map_parse_version(int fd)
 {
     struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
     data->clientVersion = RFIFOL(fd, 2);
 }
 
@@ -134,6 +136,8 @@ void map_parse_pet_emote(int fd)
 void map_parse_set_status(int fd)
 {
     struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
     data->state = RFIFOB(fd, 2);
 }
 

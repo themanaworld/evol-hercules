@@ -26,7 +26,6 @@ int eunit_can_move(struct block_list *bl)
     struct unit_data *ud;
     struct status_change *sc;
 
-
     if (!bl)
     {
         hookStop();
@@ -136,9 +135,9 @@ int eunit_can_move(struct block_list *bl)
         if(md && ((md->status.mode&MD_BOSS && battle->bc->boss_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))
            || (!(md->status.mode&MD_BOSS) && battle->bc->mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))))
         {
-           md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
+            md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
             hookStop();
-           return 0;
+            return 0;
         }
     }
 

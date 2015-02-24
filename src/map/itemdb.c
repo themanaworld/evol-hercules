@@ -22,6 +22,8 @@
 bool eitemdb_is_item_usable(struct item_data *item)
 {
     hookStop();
+    if (!item)
+        return false;
     return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH || item->type == IT_PETEGG;
 }
 
