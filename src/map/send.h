@@ -21,7 +21,10 @@ void send_pc_info(struct block_list* bl1,
 void send_npc_info(struct block_list* bl1,
                    struct block_list* bl2,
                    enum send_target target);
-void send_pet_say(struct map_session_data *sd, const char *const message);
+void send_slave_say(struct map_session_data *sd,
+                    struct block_list *bl,
+                    const char *const name,
+                    const char *const message);
 void send_pet_emote(struct map_session_data *sd, const int emote);
 void send_online_list(int fd, const char *buf, unsigned size);
 

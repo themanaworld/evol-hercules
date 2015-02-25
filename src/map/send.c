@@ -261,19 +261,18 @@ void send_join_ack(int fd, const char *const name, int flag)
     WFIFOSET (fd, 27);
 }
 
-void send_pet_say(struct map_session_data *sd, const char *const message)
+void send_slave_say(struct map_session_data *sd,
+                    struct block_list *bl,
+                    const char *const name,
+                    const char *const message)
 {
-    if (!sd || !sd->pd || !message)
-        return;
-
-    const char *const name = sd->pd->pet.name;
     const int len = 24 + 7 + strlen(message);
     char *buf = NULL;
     CREATE(buf, char, len);
 
     snprintf(buf, len, "%s's %s : %s", sd->status.name, name, message);
     buf[len - 1] = 0;
-    clif->GlobalMessage(&sd->pd->bl, buf);
+    clif->GlobalMessage(bl, buf);
     aFree(buf);
 }
 

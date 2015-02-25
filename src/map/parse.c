@@ -12,6 +12,8 @@
 #include "../../../common/strlib.h"
 #include "../../../map/channel.h"
 #include "../../../map/clif.h"
+#include "../../../map/homunculus.h"
+#include "../../../map/mercenary.h"
 #include "../../../map/pc.h"
 #include "../../../map/pet.h"
 #include "../../../map/unit.h"
@@ -110,11 +112,14 @@ void map_parse_pet_say(int fd)
     char message[500];
 
     struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd || !sd->pd)
+        return;
+
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
         return;
     safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
-    send_pet_say(sd, message);
+    send_slave_say(sd, &sd->pd->bl, sd->pd->pet.name, message);
 }
 
 void map_parse_pet_emote(int fd)
@@ -165,4 +170,19 @@ void map_parse_pet_dir(int fd)
     if (!sd || !sd->pd)
         return;
     unit->setdir(&sd->pd->bl, RFIFOB(fd, 8));
+}
+
+void map_parse_homun_say(int fd)
+{
+    char message[500];
+
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    const int len = RFIFOW(fd, 2);
+    if (len > 500 || len < 6)
+        return;
+    safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
+    if (sd->md && sd->md->db)
+        send_slave_say(sd, &sd->md->bl, sd->md->db->name, message);
+    else if (sd->hd && homun_alive(sd->hd))
+        send_slave_say(sd, &sd->hd->bl, sd->hd->homunculus.name, message);
 }
