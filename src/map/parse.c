@@ -205,3 +205,14 @@ void map_parse_homun_emote(int fd)
     else if (sd->hd && homun_alive(sd->hd))
         clif->emotion(&sd->hd->bl, RFIFOB(fd, 2));
 }
+
+void map_parse_homun_dir(int fd)
+{
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd || !sd->pd)
+        return;
+    if (sd->md && sd->md->db)
+        unit->setdir(&sd->md->bl, RFIFOB(fd, 8));
+    else if (sd->hd && homun_alive(sd->hd))
+        unit->setdir(&sd->hd->bl, RFIFOB(fd, 8));
+}
