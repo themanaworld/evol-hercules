@@ -14,5 +14,6 @@ void map_parse_get_online_list(int fd);
 void map_parse_pet_move(int fd);
 void map_parse_pet_dir(int fd);
 void map_parse_homun_say(int fd);
+void map_parse_homun_emote(int fd);
 
 #endif  // EVOL_MAP_PARSE

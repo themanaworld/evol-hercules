@@ -276,14 +276,6 @@ void send_slave_say(struct map_session_data *sd,
     aFree(buf);
 }
 
-void send_pet_emote(struct map_session_data *sd, const int emote)
-{
-    if (!sd || !sd->pd)
-        return;
-
-    clif->emotion(&sd->pd->bl, emote);
-}
-
 void send_online_list(int fd, const char *buf, unsigned size)
 {
     if (!buf)

@@ -125,7 +125,7 @@ void map_parse_pet_say(int fd)
 void map_parse_pet_emote(int fd)
 {
     struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
-    if (!sd)
+    if (!sd || !sd->pd)
         return;
     const time_t t = time(NULL);
     if (sd->emotionlasttime + 1 >= t)
@@ -135,7 +135,7 @@ void map_parse_pet_emote(int fd)
     }
 
     sd->emotionlasttime = t;
-    send_pet_emote(sd, RFIFOB(fd, 2));
+    clif->emotion(&sd->pd->bl, RFIFOB(fd, 2));
 }
 
 void map_parse_set_status(int fd)
@@ -185,4 +185,23 @@ void map_parse_homun_say(int fd)
         send_slave_say(sd, &sd->md->bl, sd->md->db->name, message);
     else if (sd->hd && homun_alive(sd->hd))
         send_slave_say(sd, &sd->hd->bl, sd->hd->homunculus.name, message);
+}
+
+void map_parse_homun_emote(int fd)
+{
+    struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+    if (!sd)
+        return;
+    const time_t t = time(NULL);
+    if (sd->emotionlasttime + 1 >= t)
+    { // not more than 1 per second
+        sd->emotionlasttime = t;
+        return;
+    }
+
+    sd->emotionlasttime = t;
+    if (sd->md && sd->md->db)
+        clif->emotion(&sd->md->bl, RFIFOB(fd, 2));
+    else if (sd->hd && homun_alive(sd->hd))
+        clif->emotion(&sd->hd->bl, RFIFOB(fd, 2));
 }

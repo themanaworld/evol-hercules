@@ -25,7 +25,6 @@ void send_slave_say(struct map_session_data *sd,
                     struct block_list *bl,
                     const char *const name,
                     const char *const message);
-void send_pet_emote(struct map_session_data *sd, const int emote);
 void send_online_list(int fd, const char *buf, unsigned size);
 
 #endif  // EVOL_MAP_PC
