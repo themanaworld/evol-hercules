@@ -14,6 +14,7 @@
 
 #include "common/init.h"
 #include "login/config.h"
+#include "login/login.h"
 #include "login/parse.h"
 
 #include "../../../common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -36,6 +37,7 @@ HPExport void plugin_init (void)
     addPacket(0x027c, 95, elogin_parse_client_login2, hpParse_Login);
     addHookPre("login->parse_client_login", elogin_parse_client_login_pre);
     addHookPre("login->parse_request_connection", elogin_parse_request_connection);
+    addHookPre("login->check_password", elogin_check_password);
 }
 
 HPExport void server_preinit (void)

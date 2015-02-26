@@ -15,6 +15,12 @@ CHAR_SRC = char/char.c \
 LOGIN_SRC = login/config.c \
     login/config.h \
     login/init.c \
+    login/login.c \
+    login/login.h \
+    login/md5calc.c \
+    login/md5calc.h \
+    login/mt_rand.c \
+    login/mt_rand.h \
     login/parse.c \
     login/parse.h \
     login/send.c \
