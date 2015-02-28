@@ -6,5 +6,6 @@
 
 void interfaces_init_common(void);
 void setDefaultMap(void);
+void commonClean(void);
 
 #endif  // EVOL_COMMON_INTERFACES

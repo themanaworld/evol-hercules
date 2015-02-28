@@ -36,3 +36,9 @@ void setDefaultMap(void)
     mapindex->default_x = 80;
     mapindex->default_y = 109;
 }
+
+void commonClean(void)
+{
+    aFree(mapindex->default_map);
+    mapindex->default_map = NULL;
+}
