@@ -57,19 +57,25 @@ void emap_online_list(int fd)
 
     struct SessionExt *data1 = session_get(fd);
     if (!data1)
+    {
+        aFree(buf);
         return;
+    }
 
     const time_t t = time(NULL);
     if (data1->onlinelistlasttime + 15 >= t)
     { // not more than 1 per 15 seconds
         data1->onlinelistlasttime = t;
+        aFree(buf);
         return;
     }
 
     struct map_session_data* ssd = (struct map_session_data*)session[fd]->session_data;
     if (!ssd)
+    {
+        aFree(buf);
         return;
-
+    }
 
     const bool showVersion = pc_has_permission(ssd, permission_show_client_version_flag);
     const int gpoupLevel = pc_get_group_level(ssd);
