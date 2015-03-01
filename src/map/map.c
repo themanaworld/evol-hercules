@@ -70,7 +70,9 @@ void emap_online_list(int fd)
     if (!ssd)
         return;
 
+
     const bool showVersion = pc_has_permission(ssd, permission_show_client_version_flag);
+    const int gpoupLevel = pc_get_group_level(ssd);
     data1->onlinelistlasttime = t;
 
     DBIterator* iter = db_iterator(map->pc_db);
@@ -83,11 +85,12 @@ void emap_online_list(int fd)
         if (ptr - buf > 19500)
             break;
 
+        if (pc_isinvisible(sd) && gpoupLevel < pc_get_group_level(sd))
+            continue;
+
         struct SessionExt *data = session_get_bysd(sd);
         if (!data)
             continue;
-
-        // need skip invisible players
 
         uint8 state = data->state;
         if (sd->status.sex == 1)
