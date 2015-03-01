@@ -55,15 +55,18 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
 
     if (!libconfig->setting_lookup_int(cs, "Id", &quest_id)) {
         ShowWarning("quest_read_db: Missing id in \"%s\", entry #%d, skipping.\n", source, n);
+        hookStop();
         return NULL;
     }
     if (quest_id < 0 || quest_id >= MAX_QUEST_DB) {
         ShowWarning("quest_read_db: Invalid quest ID '%d' in \"%s\", entry #%d (min: 0, max: %d), skipping.\n", quest_id, source, n, MAX_QUEST_DB);
+        hookStop();
         return NULL;
     }
 
     if (!libconfig->setting_lookup_string(cs, "Name", &str) || !*str) {
         ShowWarning("quest_read_db_sub: Missing Name in quest %d of \"%s\", skipping.\n", quest_id, source);
+        hookStop();
         return NULL;
     }
 
@@ -124,5 +127,6 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
             entry->dropitem[entry->dropitem_count-1].rate = rate;
         }
     }
+    hookStop();
     return entry;
 }
