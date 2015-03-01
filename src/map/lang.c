@@ -34,9 +34,26 @@ void do_init_langs (void)
     langsdb_readdb ();
 }
 
+static int delete_lang_sub(DBKey key __attribute__ ((unused)),
+                           DBData *data,
+                           va_list args __attribute__ ((unused)))
+{
+    int f;
+    char **strings = DB->data2ptr(data);
+    for (f = 0; f < lang_num; f ++)
+    {
+        aFree(strings[f]);
+        strings[f] = NULL;
+    }
+    return 0;
+}
+
 void do_final_langs(void)
 {
-    db_destroy(translate_db);
+    translate_db->destroy(translate_db, delete_lang_sub);
+    int f;
+    for (f = 0; f < lang_num; f ++)
+        aFree(lang_langs[f]);
 }
 
 static int langsdb_readlangs (void)
@@ -123,10 +140,12 @@ static int langsdb_readdb (void)
                 strcpy (strings[0], line1);
                 strdb_put(translate_db, aStrdup (line1), strings);
             }
-
-            sz = strlen(line2) + 1;
-            strings[i] = aCalloc (sz < 24 ? 24 : sz, sizeof(char));
-            strcpy (strings[i], line2);
+            else
+            {
+                sz = strlen(line2) + 1;
+                strings[i] = aCalloc (sz < 24 ? 24 : sz, sizeof(char));
+                strcpy (strings[i], line2);
+            }
 
             *line1 = 0;
             *line2 = 0;
