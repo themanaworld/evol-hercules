@@ -298,10 +298,14 @@ void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *ts
 void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,
                             struct unit_data* ud, enum send_target *target)
 {
-    send_advmoving(ud, tsd ? &tsd->bl : bl, *target);
+    struct map_session_data *sd = BL_CAST(BL_PC, ud->bl);
+    if (!sd || !pc_isinvisible(sd))
+        send_advmoving(ud, tsd ? &tsd->bl : bl, *target);
 }
 
 void eclif_move(struct unit_data *ud)
 {
-    send_advmoving(ud, ud->bl,  AREA_WOS);
+    struct map_session_data *sd = BL_CAST(BL_PC, ud->bl);
+    if (!sd || !pc_isinvisible(sd))
+        send_advmoving(ud, ud->bl, AREA_WOS);
 }
