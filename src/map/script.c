@@ -225,7 +225,14 @@ BUILDIN(getItemLink)
 
     if (sd)
     {
-        if (i_data)
+        int version = 0;
+        struct SessionExt *data = session_get_bysd(sd);
+        if (data)
+            version = data->clientVersion;
+
+        if (i_data && version >= 7)
+            sprintf(item_name, "[@@%u|@@]", (unsigned)i_data->nameid);
+        else if (i_data)
             sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
         else if (item_id > 0)
             sprintf(item_name, "[@@%u|Unknown Item@@]", (unsigned)item_id);
