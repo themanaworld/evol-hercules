@@ -39,5 +39,6 @@ BUILDIN(unequipById);
 BUILDIN(isPcDead);
 BUILDIN(areaTimer);
 BUILDIN(getAreaDropItem);
+BUILDIN(setMount);
 
 #endif  // EVOL_MAP_SCRIPT
