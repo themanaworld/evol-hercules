@@ -131,7 +131,7 @@ int eunit_can_move(struct block_list *bl)
     // Icewall walk block special trapped monster mode
     if(bl->type == BL_MOB)
     {
-        struct mob_data *md = BL_CAST(BL_MOB, bl);
+        TBL_MOB *md = BL_CAST(BL_MOB, bl);
         if(md && ((md->status.mode&MD_BOSS && battle->bc->boss_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))
            || (!(md->status.mode&MD_BOSS) && battle->bc->mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))))
         {

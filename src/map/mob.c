@@ -22,7 +22,7 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
         hookStop();
         return 0;
     }
-    struct mob_data *md = (struct mob_data *)bl;
+    TBL_MOB *md = (TBL_MOB *)bl;
     if (!md)
     {
         hookStop();

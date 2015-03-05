@@ -116,7 +116,7 @@ void send_mob_info(struct block_list* bl1, struct block_list* bl2,
         return;
 
     char buf[12];
-    struct mob_data *md = (struct mob_data *)bl1;
+    TBL_MOB *md = (TBL_MOB *)bl1;
 
     WBUFW (buf, 0) = 0xb03;
     WBUFW (buf, 2) = 12; // len
