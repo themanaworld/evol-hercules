@@ -46,7 +46,7 @@ BUILDIN(lg)
 BUILDIN(setCamNpc)
 {
     getSD();
-    struct npc_data *nd = NULL;
+    TBL_NPC *nd = NULL;
 
     int x = 0;
     int y = 0;
@@ -64,7 +64,7 @@ BUILDIN(setCamNpc)
             return false;
         }
 
-        nd = (struct npc_data *) map->id2bl (st->oid);
+        nd = (TBL_NPC *) map->id2bl (st->oid);
     }
     if (!nd)
     {
@@ -117,7 +117,7 @@ BUILDIN(npcTalk3)
 {
     const char *str;
     char *msg;
-    struct npc_data *nd = NULL;
+    TBL_NPC *nd = NULL;
 
     getSD();
 
@@ -128,7 +128,7 @@ BUILDIN(npcTalk3)
     }
     else
     {
-        nd = (struct npc_data *) map->id2bl (st->oid);
+        nd = (TBL_NPC *) map->id2bl (st->oid);
         str = script_getstr(st, 2);
     }
 
@@ -189,7 +189,7 @@ BUILDIN(closeDialog)
 BUILDIN(shop)
 {
     getSD();
-    struct npc_data *nd = npc->name2id (script_getstr(st, 2));
+    TBL_NPC *nd = npc->name2id (script_getstr(st, 2));
     if (!nd)
     {
         ShowWarning("shop npc not found\n");
@@ -474,7 +474,7 @@ BUILDIN(getq)
 BUILDIN(setNpcDir)
 {
     int newdir;
-    struct npc_data *nd = 0;
+    TBL_NPC *nd = 0;
 
     if (script_hasdata(st, 3))
     {
@@ -490,7 +490,7 @@ BUILDIN(setNpcDir)
             return false;
         }
 
-        nd = (struct npc_data *) map->id2bl (st->oid);
+        nd = (TBL_NPC *) map->id2bl (st->oid);
         newdir = script_getnum(st, 2);
     }
     if (!nd)
@@ -716,7 +716,7 @@ BUILDIN(removeMapMask)
 
 BUILDIN(setNpcSex)
 {
-    struct npc_data *nd = NULL;
+    TBL_NPC *nd = NULL;
     int sex = 0;
     if (script_hasdata(st, 3))
     {
@@ -742,7 +742,7 @@ BUILDIN(setNpcSex)
     }
 
     if (!nd)
-        nd = (struct npc_data *) map->id2bl(st->oid);
+        nd = (TBL_NPC *) map->id2bl(st->oid);
 
     if (!nd || !nd->vd)
     {

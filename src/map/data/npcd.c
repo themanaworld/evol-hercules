@@ -16,7 +16,7 @@
 #include "map/data/npcd.h"
 #include "map/struct/npcdext.h"
 
-struct NpcdExt *npcd_get(struct npc_data *nd)
+struct NpcdExt *npcd_get(TBL_NPC *nd)
 {
     struct NpcdExt *data = getFromNPCD(nd, 0);
     if (!data)

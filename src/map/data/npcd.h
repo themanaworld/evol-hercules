@@ -6,7 +6,7 @@
 
 struct NpcdExt;
 
-struct NpcdExt *npcd_get(struct npc_data *nd);
+struct NpcdExt *npcd_get(TBL_NPC *nd);
 struct NpcdExt *npcd_create(void);
 
 #endif  // EVOL_MAP_NPCD

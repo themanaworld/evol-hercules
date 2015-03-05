@@ -55,7 +55,7 @@ void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char
 
 int enpc_buysellsel(TBL_PC* sd, int *id, int *type)
 {
-    struct npc_data *nd;
+    TBL_NPC *nd;
 
     if (!sd)
         return 1;
