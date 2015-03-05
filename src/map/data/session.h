@@ -7,7 +7,7 @@
 struct SessionExt;
 
 struct SessionExt *session_get(int fd);
-struct SessionExt *session_get_bysd(struct map_session_data *sd);
+struct SessionExt *session_get_bysd(TBL_PC *sd);
 struct SessionExt *session_create(void);
 
 #endif  // EVOL_MAP_SESSION

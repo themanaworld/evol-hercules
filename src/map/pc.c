@@ -23,7 +23,7 @@
 
 int langScriptId;
 
-int epc_readparam_pre(struct map_session_data* sd, int *type)
+int epc_readparam_pre(TBL_PC* sd, int *type)
 {
     if (*type == Const_ClientVersion)
     {
@@ -36,7 +36,7 @@ int epc_readparam_pre(struct map_session_data* sd, int *type)
     return 0;
 }
 
-int epc_setregistry(struct map_session_data *sd, int64 *reg, int *val)
+int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
 {
     if (*reg == langScriptId)
     {
@@ -71,7 +71,7 @@ int epc_setregistry(struct map_session_data *sd, int64 *reg, int *val)
         hookStop(); \
     }
 
-void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *posPtr)
+void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *posPtr)
 {
     int pos = *posPtr;
 
@@ -110,7 +110,7 @@ void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *p
         hookStop(); \
     }
 
-void epc_unequipitem_pos(struct map_session_data *sd,
+void epc_unequipitem_pos(TBL_PC *sd,
                          int *nPtr __attribute__ ((unused)),
                          int *posPtr)
 {
@@ -135,7 +135,7 @@ void epc_unequipitem_pos(struct map_session_data *sd,
 #undef unequipPos
 #undef unequipPos2
 
-bool epc_can_attack (struct map_session_data *sd, int *target_id)
+bool epc_can_attack (TBL_PC *sd, int *target_id)
 {
     if (!sd)
         return false;
@@ -154,7 +154,7 @@ bool epc_can_attack (struct map_session_data *sd, int *target_id)
     return true;
 }
 
-int epc_takeitem(struct map_session_data *sd __attribute__ ((unused)),
+int epc_takeitem(TBL_PC *sd __attribute__ ((unused)),
                  struct flooritem_data *fitem)
 {
     if (!fitem)

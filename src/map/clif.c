@@ -23,7 +23,7 @@
 #include "map/struct/mapdext.h"
 #include "map/struct/sessionext.h"
 
-void eclif_quest_send_list(struct map_session_data *sd)
+void eclif_quest_send_list(TBL_PC *sd)
 {
     if (!sd)
     {
@@ -56,7 +56,7 @@ void eclif_quest_send_list(struct map_session_data *sd)
     hookStop();
 }
 
-void eclif_quest_add(struct map_session_data *sd, struct quest *qd)
+void eclif_quest_add(TBL_PC *sd, struct quest *qd)
 {
     if (!sd)
     {
@@ -93,7 +93,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
     if (bl->type == BL_NPC)
     {
         int fd = *fdPtr;
-        struct map_session_data* sd = (struct map_session_data*)session[fd]->session_data;
+        TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
         if (!sd)
         {
             hookStop();
@@ -136,7 +136,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             send_changelook(fd, id, field, item->look); \
     }
 
-static void eclif_send_additional_slots(struct map_session_data* sd, struct map_session_data* sd2)
+static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
 {
     if (!sd || !sd2)
         return;
@@ -163,18 +163,18 @@ static void eclif_send_additional_slots(struct map_session_data* sd, struct map_
     //skipping SHADOW slots
 }
 
-void eclif_getareachar_unit_post(struct map_session_data* sd, struct block_list *bl)
+void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
 {
     if (!bl)
         return;
     if (bl->type == BL_PC)
     {
-        eclif_send_additional_slots(sd, (struct map_session_data *)bl);
-        eclif_send_additional_slots((struct map_session_data *)bl, sd);
+        eclif_send_additional_slots(sd, (TBL_PC *)bl);
+        eclif_send_additional_slots((TBL_PC *)bl, sd);
     }
 }
 
-void eclif_authok_post(struct map_session_data *sd)
+void eclif_authok_post(TBL_PC *sd)
 {
     if (!sd)
         return;
@@ -186,7 +186,7 @@ void eclif_authok_post(struct map_session_data *sd)
     send_mapmask(sd->fd, mask);
 }
 
-void eclif_changemap_post(struct map_session_data *sd, short *m,
+void eclif_changemap_post(TBL_PC *sd, short *m,
                           int *x __attribute__ ((unused)), int *y __attribute__ ((unused)))
 {
     if (!sd)
@@ -228,7 +228,7 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
     return true;
 }
 
-void eclif_set_unit_idle(struct block_list* bl, struct map_session_data *tsd, enum send_target *target)
+void eclif_set_unit_idle(struct block_list* bl, TBL_PC *tsd, enum send_target *target)
 {
     if (tsd && bl && bl->id == tsd->bl.id && *target == SELF)
         return;
@@ -281,7 +281,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
     return 0;
 }
 
-void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *tsd,
+void eclif_set_unit_idle_post(struct block_list* bl, TBL_PC *tsd,
                               enum send_target *target)
 {
     if (!bl || !tsd)
@@ -295,17 +295,17 @@ void eclif_set_unit_idle_post(struct block_list* bl, struct map_session_data *ts
         send_npc_info(bl, &tsd->bl, *target);
 }
 
-void eclif_set_unit_walking(struct block_list* bl, struct map_session_data *tsd,
+void eclif_set_unit_walking(struct block_list* bl, TBL_PC *tsd,
                             struct unit_data* ud, enum send_target *target)
 {
-    struct map_session_data *sd = BL_CAST(BL_PC, ud->bl);
+    TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))
         send_advmoving(ud, tsd ? &tsd->bl : bl, *target);
 }
 
 void eclif_move(struct unit_data *ud)
 {
-    struct map_session_data *sd = BL_CAST(BL_PC, ud->bl);
+    TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))
         send_advmoving(ud, ud->bl, AREA_WOS);
 }

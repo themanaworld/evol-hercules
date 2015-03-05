@@ -22,7 +22,7 @@
 #include "map/data/session.h"
 #include "map/struct/sessionext.h"
 
-void send_npccommand (struct map_session_data *sd, int npcId, int cmd)
+void send_npccommand (TBL_PC *sd, int npcId, int cmd)
 {
     if (!sd)
         return;
@@ -39,7 +39,7 @@ void send_npccommand (struct map_session_data *sd, int npcId, int cmd)
 }
 
 // 0 - get client lang
-void send_npccommand2 (struct map_session_data *sd, int npcId, int cmd, int id, int x, int y)
+void send_npccommand2 (TBL_PC *sd, int npcId, int cmd, int id, int x, int y)
 {
     if (!sd)
         return;
@@ -134,12 +134,12 @@ void send_pc_info(struct block_list* bl1,
         return;
 
     char buf[12];
-    struct map_session_data *sd = (struct map_session_data *)bl1;
+    TBL_PC *sd = (TBL_PC *)bl1;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
         return;
 
-    struct map_session_data *tsd = (struct map_session_data *)bl2;
+    TBL_PC *tsd = (TBL_PC *)bl2;
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
@@ -165,7 +165,7 @@ void send_npc_info(struct block_list* bl1,
     if (!bl1 || bl1->type != BL_NPC)
         return;
 
-    struct map_session_data *tsd = (struct map_session_data *)bl2;
+    TBL_PC *tsd = (TBL_PC *)bl2;
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
@@ -232,7 +232,7 @@ void send_changemusic_brodcast(const int map, const char *music)
     aFree(buf);
 }
 
-void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name)
+void send_changenpc_title (TBL_PC *sd, const int npcId, const char *name)
 {
     if (!sd || !name)
         return;
@@ -261,7 +261,7 @@ void send_join_ack(int fd, const char *const name, int flag)
     WFIFOSET (fd, 27);
 }
 
-void send_slave_say(struct map_session_data *sd,
+void send_slave_say(TBL_PC *sd,
                     struct block_list *bl,
                     const char *const name,
                     const char *const message)

@@ -53,7 +53,7 @@ void emap_online_list(int fd)
 {
     char *buf = aCalloc (1, 20000);
     char *ptr = buf;
-    struct map_session_data* sd;
+    TBL_PC* sd;
 
     struct SessionExt *data1 = session_get(fd);
     if (!data1)
@@ -70,7 +70,7 @@ void emap_online_list(int fd)
         return;
     }
 
-    struct map_session_data* ssd = (struct map_session_data*)session[fd]->session_data;
+    TBL_PC* ssd = (TBL_PC*)session[fd]->session_data;
     if (!ssd)
     {
         aFree(buf);

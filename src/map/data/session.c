@@ -26,7 +26,7 @@ struct SessionExt *session_get(int fd)
     return data;
 }
 
-struct SessionExt *session_get_bysd(struct map_session_data *sd)
+struct SessionExt *session_get_bysd(TBL_PC *sd)
 {
     if (!sd)
         return NULL;

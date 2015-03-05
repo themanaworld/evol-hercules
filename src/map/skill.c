@@ -17,7 +17,7 @@
 #include "../../../map/script.h"
 
 int eskill_check_condition_castend_post(int retVal,
-                                        struct map_session_data* sd,
+                                        TBL_PC* sd,
                                         uint16 *skill_id,
                                         uint16 *skill_lv)
 {

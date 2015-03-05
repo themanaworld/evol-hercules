@@ -9,17 +9,17 @@ enum VarConst
     Const_ClientVersion = 10000
 };
 
-int epc_readparam_pre(struct map_session_data* sd, int *type);
+int epc_readparam_pre(TBL_PC* sd, int *type);
 
-int epc_setregistry(struct map_session_data *sd, int64 *reg, int *val);
+int epc_setregistry(TBL_PC *sd, int64 *reg, int *val);
 
-void epc_equipitem_pos(struct map_session_data *sd, struct item_data *id, int *posPtr);
+void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *posPtr);
 
-void epc_unequipitem_pos(struct map_session_data *sd, int *nPtr, int *posPtr);
+void epc_unequipitem_pos(TBL_PC *sd, int *nPtr, int *posPtr);
 
-bool epc_can_attack (struct map_session_data *sd, int *target_id);
+bool epc_can_attack (TBL_PC *sd, int *target_id);
 
-int epc_takeitem(struct map_session_data *sd, struct flooritem_data *fitem);
+int epc_takeitem(TBL_PC *sd, struct flooritem_data *fitem);
 
 void epc_validate_levels(void);
 

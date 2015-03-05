@@ -22,7 +22,7 @@
 
 int eunit_can_move(struct block_list *bl)
 {
-    struct map_session_data *sd;
+    TBL_PC *sd;
     struct unit_data *ud;
     struct status_change *sc;
 

@@ -829,7 +829,7 @@ BUILDIN(setNpcDialogTitle)
         script->reportsrc(st);
         return false;
     }
-    struct map_session_data *sd = script->rid2sd (st);
+    TBL_PC *sd = script->rid2sd (st);
     if (!sd)
     {
         ShowWarning("player not attached\n");
