@@ -35,7 +35,7 @@ int emap_addflooritem_post(int retVal,
                            int *third_charid __attribute__ ((unused)),
                            int *flags __attribute__ ((unused)))
 {
-    struct flooritem_data* fitem = (struct flooritem_data*)idb_get(map->id_db, retVal);
+    TBL_ITEM* fitem = (TBL_ITEM*)idb_get(map->id_db, retVal);
     if (fitem && fitem->cleartimer != INVALID_TIMER)
     {
         int timeout = battle->bc->flooritem_lifetime;

@@ -155,7 +155,7 @@ bool epc_can_attack (TBL_PC *sd, int *target_id)
 }
 
 int epc_takeitem(TBL_PC *sd __attribute__ ((unused)),
-                 struct flooritem_data *fitem)
+                 TBL_ITEM *fitem)
 {
     if (!fitem)
         return 0;

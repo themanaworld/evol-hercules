@@ -958,7 +958,7 @@ static int buildin_getareadropitem_sub_del(struct block_list *bl, va_list ap)
 
     const int item = va_arg(ap, int);
     int *const amount = va_arg(ap, int *);
-    struct flooritem_data *drop = (struct flooritem_data *)bl;
+    TBL_ITEM *drop = (TBL_ITEM *)bl;
 
     if (drop->item_data.nameid == item)
     {

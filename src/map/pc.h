@@ -19,7 +19,7 @@ void epc_unequipitem_pos(TBL_PC *sd, int *nPtr, int *posPtr);
 
 bool epc_can_attack (TBL_PC *sd, int *target_id);
 
-int epc_takeitem(TBL_PC *sd, struct flooritem_data *fitem);
+int epc_takeitem(TBL_PC *sd, TBL_ITEM *fitem);
 
 void epc_validate_levels(void);
 
