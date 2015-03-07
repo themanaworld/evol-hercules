@@ -32,7 +32,9 @@ LOGIN_SRC = login/config.c \
     common/ip.c \
     common/ip.h
 
-MAP_SRC = map/clif.c \
+MAP_SRC = map/atcommand.c \
+    map/atcommand.h \
+    map/clif.c \
     map/clif.h \
     map/init.c \
     map/itemdb.c \

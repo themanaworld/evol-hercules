@@ -36,6 +36,7 @@
 
 #include "common/config.h"
 #include "common/init.h"
+#include "map/atcommand.h"
 #include "map/clif.h"
 #include "map/itemdb.h"
 #include "map/lang.h"
@@ -119,6 +120,8 @@ HPExport void plugin_init (void)
     addPacket(0xb14, 3, map_parse_homun_emote, hpClif_Parse);
     addPacket(0xb15, 9, map_parse_homun_dir, hpClif_Parse);
 
+    addHookPre("atcommand->msgfd", eatcommand_msgfd);
+    addHookPre("atcommand->msgsd", eatcommand_msgsd);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
     addHookPre("pc->equipitem_pos", epc_equipitem_pos);
