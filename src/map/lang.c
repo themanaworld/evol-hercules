@@ -137,7 +137,7 @@ static int langsdb_readdb (void)
                 strings = aCalloc (lang_num, sizeof(int*));
                 sz = strlen(line1) + 1;
                 strings[0] = aCalloc (sz < 24 ? 24 : sz, sizeof(char));
-                strcpy (strings[0], line1);
+                strcpy (strings[0], line2);
                 strdb_put(translate_db, aStrdup (line1), strings);
             }
             else
