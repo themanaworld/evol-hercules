@@ -20,7 +20,23 @@ const char* eatcommand_msgsd(struct map_session_data *sd, int *msgPtr)
 {
     const int msg_number = *msgPtr;
     if (!(msg_number >= 0 && msg_number < MAX_MSG))
+    {
+        hookStop();
         return "??";
+    }
+    if (*msgPtr == 1435)
+    {
+        hookStop();
+        // service message, must be not translated
+        return "You're now in the '#%s' channel for '%s'";
+    }
+    else if (*msgPtr == 1403)
+    {
+        hookStop();
+        // service message, must be not translated
+        return "You're now in the '#%s' channel for '-'";
+    }
+    hookStop();
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
 }
 
@@ -30,6 +46,10 @@ const char* eatcommand_msgfd(int *fdPtr, int *msgPtr)
     const int fd = *fdPtr;
     struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
     if (!(msg_number >= 0 && msg_number < MAX_MSG))
+    {
+        hookStop();
         return "??";
+    }
+    hookStop();
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
 }
