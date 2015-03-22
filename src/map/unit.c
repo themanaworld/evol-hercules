@@ -154,5 +154,10 @@ int eunit_walktoxy(struct block_list *bl  __attribute__ ((unused)),
     // this reduce CPU usage and allow mobs to walk on each other.
     if ((*flagPtr)&8)
         *flagPtr = ((*flagPtr) | 8) ^ 8;
+
+    TBL_PC *sd = BL_CAST(BL_PC, bl);
+    if (sd && pc_issit(sd))
+        pc->setstand(sd);
+
     return 1;
 }
