@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../common/timer.h"
 #include "../../../char/char.h"
 
 #include "common/ip.h"
@@ -128,5 +129,31 @@ void echar_creation_failed(int *fdPtr, int *result)
             break;
     }
     WFIFOSET(fd,3);
+    hookStop();
+}
+
+void echar_parse_char_ping(int *fdPtr)
+{
+    const int fd = *fdPtr;
+    RFIFOSKIP(fd, 6);
+
+    struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+    if (!sd)
+    {
+        hookStop();
+        return;
+    }
+    struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, sd->account_id);
+    if (!character)
+    {
+        hookStop();
+        return;
+    }
+
+    if (character->waiting_disconnect != INVALID_TIMER)
+    {
+        timer->delete(character->waiting_disconnect, chr->waiting_disconnect);
+        character->waiting_disconnect = timer->add(timer->gettick() + 30000, chr->waiting_disconnect, character->account_id, 0);
+    }
     hookStop();
 }

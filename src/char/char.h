@@ -10,4 +10,6 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd);
 
 void echar_creation_failed(int *fdPtr, int *result);
 
+void echar_parse_char_ping(int *fdPtr);
+
 #endif  // EVOL_CHAR_CHAR
