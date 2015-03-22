@@ -38,6 +38,7 @@ HPExport void plugin_init (void)
     addHookPre("login->parse_client_login", elogin_parse_client_login_pre);
     addHookPre("login->parse_request_connection", elogin_parse_request_connection);
     addHookPre("login->check_password", elogin_check_password);
+    addHookPre("login->parse_ping", elogin_parse_ping);
 }
 
 HPExport void server_preinit (void)

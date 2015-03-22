@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../common/timer.h"
 #include "../../../login/account.h"
 #include "../../../login/login.h"
 
@@ -149,4 +150,26 @@ void elogin_parse_request_connection(int *fd, struct login_session_data* sd, con
         login->char_server_connection_status(*fd, sd, 3);
         ShowNotice("Connection of the char-server from ip %s REFUSED.\n", ip);
     }
+}
+
+void elogin_parse_ping(int *fd, struct login_session_data* sd)
+{
+    RFIFOSKIP(*fd, 26);
+    if (!sd)
+    {
+        hookStop();
+        return;
+    }
+    struct online_login_data* data = (struct online_login_data*)idb_get(login->online_db, sd->account_id);
+    if (data == NULL)
+    {
+        hookStop();
+        return;
+    }
+    if (data->waiting_disconnect != INVALID_TIMER)
+    {
+        timer->delete(data->waiting_disconnect, login->waiting_disconnect_timer);
+        data->waiting_disconnect = timer->add(timer->gettick() + 30000, login->waiting_disconnect_timer, sd->account_id, 0);
+    }
+    hookStop();
 }
