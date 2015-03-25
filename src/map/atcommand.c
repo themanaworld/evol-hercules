@@ -12,7 +12,10 @@
 #include "../../../common/strlib.h"
 #include "../../../common/timer.h"
 #include "../../../map/atcommand.h"
+#include "../../../map/clif.h"
 #include "../../../map/map.h"
+#include "../../../map/pc.h"
+#include "../../../map/skill.h"
 #include "map/atcommand.h"
 #include "map/lang.h"
 
@@ -52,4 +55,30 @@ const char* eatcommand_msgfd(int *fdPtr, int *msgPtr)
     }
     hookStop();
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
+}
+
+ACMD2(setSkill)
+{
+    int skill_id = 0;
+    int skill_level = 0;
+
+    if (!message || !*message || sscanf(message, "%5d %2d", &skill_id, &skill_level) < 2)
+    {
+        const char* text = info->help;
+
+        if (text)
+            clif->messageln (fd, text);
+
+        return false;
+    }
+    if (!skill->get_index(skill_id))
+    {
+        clif->message(fd, msg_fd(fd,198)); // This skill number doesn't exist.
+        return false;
+    }
+
+    pc->skill(sd, skill_id, skill_level, 0);
+    clif->message(fd, msg_fd(fd,70)); // You have learned the skill.
+
+    return true;
 }

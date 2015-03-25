@@ -68,6 +68,8 @@ HPExport void plugin_init (void)
 {
 //    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
 
+    addAtcommand("setskill", setSkill);
+
     addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("setcam", "ii", setCam);
     addScriptCommand("movecam", "ii", moveCam);
