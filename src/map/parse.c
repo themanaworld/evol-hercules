@@ -177,6 +177,8 @@ void map_parse_homun_say(int fd)
     char message[500];
 
     TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    if (!sd)
+        return;
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
         return;
