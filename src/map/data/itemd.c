@@ -47,5 +47,11 @@ struct ItemdExt *itemd_create(void)
         return NULL;
     data->floorLifeTime = battle->bc->flooritem_lifetime;
     data->allowPickup = true;
+    data->requiredStr = 0;
+    data->requiredAgi = 0;
+    data->requiredVit = 0;
+    data->requiredInt = 0;
+    data->requiredDex = 0;
+    data->requiredLuk = 0;
     return data;
 }

@@ -7,6 +7,12 @@
 struct ItemdExt
 {
     int floorLifeTime;
+    int requiredStr;
+    int requiredAgi;
+    int requiredVit;
+    int requiredInt;
+    int requiredDex;
+    int requiredLuk;
     bool allowPickup;
 };
 

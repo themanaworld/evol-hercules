@@ -198,6 +198,20 @@ int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr)
 
         if (n < 0 || n >= MAX_INVENTORY)
             return 0;
+
+        struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
+        if (!data)
+            return 1;
+
+        if (sd->battle_status.str < data->requiredStr ||
+            sd->battle_status.agi < data->requiredAgi ||
+            sd->battle_status.vit < data->requiredVit ||
+            sd->battle_status.int_ < data->requiredInt ||
+            sd->battle_status.dex < data->requiredDex ||
+            sd->battle_status.luk < data->requiredLuk)
+        {
+            return 0;
+        }
     }
     return retVal;
 }

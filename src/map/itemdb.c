@@ -52,6 +52,18 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->floorLifeTime = i32;
     if ((t = libconfig->setting_get_member(it, "AllowPickup")))
         data->allowPickup = libconfig->setting_get_bool(t) ? 1 : 0;
+    if (libconfig->setting_lookup_int(it, "RequiredStr", &i32) && i32 >= 0)
+        data->requiredStr = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredAgi", &i32) && i32 >= 0)
+        data->requiredAgi = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredVit", &i32) && i32 >= 0)
+        data->requiredVit = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredInt", &i32) && i32 >= 0)
+        data->requiredInt = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredDex", &i32) && i32 >= 0)
+        data->requiredDex = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredLuk", &i32) && i32 >= 0)
+        data->requiredLuk = i32;
 
     hookStop();
 }
