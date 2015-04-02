@@ -18,6 +18,8 @@ struct ItemdExt
     int requiredAtk;
     int requiredMAtkMin;
     int requiredMAtkMax;
+    int requiredDef;
+    int requiredMDef;
     bool allowPickup;
 };
 

@@ -74,6 +74,10 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->requiredMAtkMin = i32;
     if (libconfig->setting_lookup_int(it, "RequiredMAtkMax", &i32) && i32 >= 0)
         data->requiredMAtkMax = i32;
+    if (libconfig->setting_lookup_int(it, "requiredDef", &i32) && i32 >= 0)
+        data->requiredDef = i32;
+    if (libconfig->setting_lookup_int(it, "requiredMDef", &i32) && i32 >= 0)
+        data->requiredMDef = i32;
 
     hookStop();
 }

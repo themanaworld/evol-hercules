@@ -58,5 +58,7 @@ struct ItemdExt *itemd_create(void)
     data->requiredAtk = 0;
     data->requiredMAtkMin = 0;
     data->requiredMAtkMax = 0;
+    data->requiredDef = 0;
+    data->requiredMDef = 0;
     return data;
 }

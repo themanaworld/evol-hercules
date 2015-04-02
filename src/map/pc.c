@@ -214,6 +214,8 @@ int epc_isuseequip_post(int retVal, struct map_session_data *sd, int *nPtr)
             sd->battle_status.batk < data->requiredAtk ||
             sd->battle_status.matk_min < data->requiredMAtkMin ||
             sd->battle_status.matk_max < data->requiredMAtkMax ||
+            sd->battle_status.def < data->requiredDef ||
+            sd->battle_status.mdef < data->requiredMDef ||
         )
         {
             return 0;
