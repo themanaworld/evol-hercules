@@ -187,3 +187,17 @@ void epc_validate_levels(void)
     }
     hookStop();
 }
+
+int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr)
+{
+    const int n = *nPtr;
+    if (retVal)
+    {
+        if (!sd)
+            return 0;
+
+        if (n < 0 || n >= MAX_INVENTORY)
+            return 0;
+    }
+    return retVal;
+}

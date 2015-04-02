@@ -156,6 +156,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
     addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
+    addHookPost("pc->isequip", epc_isequip_post);
 
     langScriptId = script->add_str("Lang");
 }

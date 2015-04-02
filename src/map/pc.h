@@ -23,4 +23,6 @@ int epc_takeitem(TBL_PC *sd, TBL_ITEM *fitem);
 
 void epc_validate_levels(void);
 
+int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr);
+
 #endif  // EVOL_MAP_PC
