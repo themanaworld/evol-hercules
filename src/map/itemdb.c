@@ -64,6 +64,16 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->requiredDex = i32;
     if (libconfig->setting_lookup_int(it, "RequiredLuk", &i32) && i32 >= 0)
         data->requiredLuk = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredMaxHp", &i32) && i32 >= 0)
+        data->requiredMaxHp = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredMaxSp", &i32) && i32 >= 0)
+        data->requiredMaxSp = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredAtk", &i32) && i32 >= 0)
+        data->requiredAtk = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredMAtkMin", &i32) && i32 >= 0)
+        data->requiredMAtkMin = i32;
+    if (libconfig->setting_lookup_int(it, "RequiredMAtkMax", &i32) && i32 >= 0)
+        data->requiredMAtkMax = i32;
 
     hookStop();
 }

@@ -208,7 +208,13 @@ int epc_isuseequip_post(int retVal, struct map_session_data *sd, int *nPtr)
             sd->battle_status.vit < data->requiredVit ||
             sd->battle_status.int_ < data->requiredInt ||
             sd->battle_status.dex < data->requiredDex ||
-            sd->battle_status.luk < data->requiredLuk)
+            sd->battle_status.luk < data->requiredLuk ||
+            sd->battle_status.maHp < data->requiredMaxHp ||
+            sd->battle_status.maSp < data->requiredMaxSp ||
+            sd->battle_status.batk < data->requiredAtk ||
+            sd->battle_status.matk_min < data->requiredMAtkMin ||
+            sd->battle_status.matk_max < data->requiredMAtkMax ||
+        )
         {
             return 0;
         }
