@@ -62,5 +62,7 @@ struct ItemdExt *itemd_create(void)
     data->requiredMDef = 0;
     data->useEffect = -1;
     data->useFailEffect = -1;
+    data->unequipEffect = -1;
+    data->unequipFailEffect = -1;
     return data;
 }

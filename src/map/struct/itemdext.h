@@ -24,6 +24,8 @@ struct ItemdExt
 
     int useEffect;
     int useFailEffect;
+    int unequipEffect;
+    int unequipFailEffect;
 
     bool allowPickup;
 };

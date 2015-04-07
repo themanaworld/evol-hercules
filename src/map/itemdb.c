@@ -74,14 +74,18 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->requiredMAtkMin = i32;
     if (libconfig->setting_lookup_int(it, "RequiredMAtkMax", &i32) && i32 >= 0)
         data->requiredMAtkMax = i32;
-    if (libconfig->setting_lookup_int(it, "requiredDef", &i32) && i32 >= 0)
+    if (libconfig->setting_lookup_int(it, "RequiredDef", &i32) && i32 >= 0)
         data->requiredDef = i32;
-    if (libconfig->setting_lookup_int(it, "requiredMDef", &i32) && i32 >= 0)
+    if (libconfig->setting_lookup_int(it, "RequiredMDef", &i32) && i32 >= 0)
         data->requiredMDef = i32;
 
-    if (itemdb->lookup_const(it, "useEffect", &i32))
+    if (itemdb->lookup_const(it, "UseEffect", &i32))
         data->useEffect = i32;
-    if (itemdb->lookup_const(it, "useFailEffect", &i32))
+    if (itemdb->lookup_const(it, "UseFailEffect", &i32))
         data->useFailEffect = i32;
+    if (itemdb->lookup_const(it, "UnequipEffect", &i32))
+        data->unequipEffect = i32;
+    if (itemdb->lookup_const(it, "UnequipFailEffect", &i32))
+        data->unequipFailEffect = i32;
     hookStop();
 }

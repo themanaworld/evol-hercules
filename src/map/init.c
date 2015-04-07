@@ -159,6 +159,8 @@ HPExport void plugin_init (void)
     addHookPost("pc->isequip", epc_isuseequip_post);
     addHookPost("pc->isUseitem", epc_isuseequip_post);
     addHookPost("pc->useitem", epc_useitem_post);
+    addHookPost("pc->equipitem", epc_equipitem_post);
+    addHookPost("pc->unequipitem", epc_unequipitem_post);
 
     langScriptId = script->add_str("Lang");
 }

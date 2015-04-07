@@ -242,3 +242,40 @@ int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr)
         clif->specialeffect(&sd->bl, effect, AREA);
     return retVal;
 }
+
+static void equippost_effect(struct map_session_data *const sd, const int n, const bool retVal, const bool equip)
+{
+    if (!sd)
+        return;
+
+    if (n < 0 || n >= MAX_INVENTORY)
+        return;
+
+    struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
+    if (!data)
+        return;
+
+    int effect;
+    if (equip)
+        effect = retVal ? data->useEffect : data->useFailEffect;
+    else
+        effect = retVal ? data->unequipEffect : data->unequipFailEffect;
+
+    if (effect != -1)
+        clif->specialeffect(&sd->bl, effect, AREA);
+    return;
+}
+
+int epc_equipitem_post(int retVal, struct map_session_data *sd,
+                       int *nPtr, int *data __attribute__ ((unused)))
+{
+    equippost_effect(sd, *nPtr, retVal, true);
+    return retVal;
+}
+
+int epc_unequipitem_post(int retVal, struct map_session_data *sd,
+                         int *nPtr, int *data __attribute__ ((unused)))
+{
+    equippost_effect(sd, *nPtr, retVal, false);
+    return retVal;
+}

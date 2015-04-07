@@ -27,4 +27,10 @@ int epc_isuseequip_post(int retVal, struct map_session_data *sd, int *nPtr);
 
 int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr);
 
+int epc_equipitem_post(int retVal, struct map_session_data *sd,
+                       int *nPtr, int *data);
+
+int epc_unequipitem_post(int retVal, struct map_session_data *sd,
+                         int *nPtr, int *data);
+
 #endif  // EVOL_MAP_PC
