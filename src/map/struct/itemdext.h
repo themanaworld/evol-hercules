@@ -7,6 +7,7 @@
 struct ItemdExt
 {
     int floorLifeTime;
+
     int requiredStr;
     int requiredAgi;
     int requiredVit;
@@ -20,6 +21,10 @@ struct ItemdExt
     int requiredMAtkMax;
     int requiredDef;
     int requiredMDef;
+
+    int useEffect;
+    int useFailEffect;
+
     bool allowPickup;
 };
 

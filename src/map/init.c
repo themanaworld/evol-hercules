@@ -158,6 +158,7 @@ HPExport void plugin_init (void)
     addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
     addHookPost("pc->isequip", epc_isuseequip_post);
     addHookPost("pc->isUseitem", epc_isuseequip_post);
+    addHookPost("pc->useitem", epc_useitem_post);
 
     langScriptId = script->add_str("Lang");
 }

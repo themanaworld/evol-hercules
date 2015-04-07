@@ -79,5 +79,9 @@ void eitemdb_readdb_additional_fields(int *itemid,
     if (libconfig->setting_lookup_int(it, "requiredMDef", &i32) && i32 >= 0)
         data->requiredMDef = i32;
 
+    if (itemdb->lookup_const(it, "useEffect", &i32))
+        data->useEffect = i32;
+    if (itemdb->lookup_const(it, "useFailEffect", &i32))
+        data->useFailEffect = i32;
     hookStop();
 }

@@ -201,7 +201,7 @@ int epc_isuseequip_post(int retVal, struct map_session_data *sd, int *nPtr)
 
         struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
         if (!data)
-            return 1;
+            return retVal;
 
         if (sd->battle_status.str < data->requiredStr ||
             sd->battle_status.agi < data->requiredAgi ||
@@ -221,5 +221,24 @@ int epc_isuseequip_post(int retVal, struct map_session_data *sd, int *nPtr)
             return 0;
         }
     }
+    return retVal;
+}
+
+int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr)
+{
+    const int n = *nPtr;
+    if (!sd)
+        return retVal;
+
+    if (n < 0 || n >= MAX_INVENTORY)
+        return retVal;
+
+    struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
+    if (!data)
+        return retVal;
+
+    const int effect = retVal ? data->useEffect : data->useFailEffect;
+    if (effect != -1)
+        clif->specialeffect(&sd->bl, effect, AREA);
     return retVal;
 }
