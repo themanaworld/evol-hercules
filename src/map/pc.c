@@ -279,3 +279,15 @@ int epc_unequipitem_post(int retVal, struct map_session_data *sd,
     equippost_effect(sd, *nPtr, retVal, false);
     return retVal;
 }
+
+int epc_check_job_name(const char *name)
+{
+    int val = -1;
+    if (script->get_constant(name, &val))
+    {
+        hookStop();
+        return val;
+    }
+    hookStop();
+    return -1;
+}

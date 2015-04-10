@@ -131,6 +131,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->can_attack", epc_can_attack);
     addHookPre("pc->takeitem", epc_takeitem);
     addHookPre("pc->validate_levels", epc_validate_levels);
+    addHookPre("pc->check_job_name", epc_check_job_name);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("npc->buysellsel", enpc_buysellsel);

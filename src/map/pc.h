@@ -33,4 +33,6 @@ int epc_equipitem_post(int retVal, struct map_session_data *sd,
 int epc_unequipitem_post(int retVal, struct map_session_data *sd,
                          int *nPtr, int *data);
 
+int epc_check_job_name(const char *name);
+
 #endif  // EVOL_MAP_PC
