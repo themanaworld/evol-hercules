@@ -21,7 +21,7 @@ void send_server_version(int fd)
     WFIFOW(fd, 0) = 0x7531;
     WFIFOW(fd, 2) = 4 + 8;
     WFIFOL(fd, 4) = 0;  // unused
-    WFIFOL(fd, 8) = 5;  // server version
+    WFIFOL(fd, 8) = 6;  // server version
     WFIFOSET(fd, WFIFOW(fd,2));
 }
 
@@ -35,4 +35,13 @@ void send_update_host(int fd)
     WFIFOW(fd, 2) = sz + 4;
     memcpy(WFIFOP (fd, 4), update_server, sz);
     WFIFOSET(fd, sz + 4);
+}
+
+void send_char_password_change_ack(int fd, int accoundId, char status)
+{
+    WFIFOHEAD(fd, 7);
+    WFIFOW(fd, 0) = 0x5001;
+    WFIFOL(fd, 2) = accoundId;
+    WFIFOB(fd, 6) = status;
+    WFIFOSET(fd, 7);
 }

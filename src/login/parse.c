@@ -16,6 +16,7 @@
 
 #include "common/ip.h"
 #include "login/config.h"
+#include "login/md5calc.h"
 #include "login/parse.h"
 #include "login/send.h"
 
@@ -172,4 +173,38 @@ void elogin_parse_ping(int *fd, struct login_session_data* sd)
         data->waiting_disconnect = timer->add(timer->gettick() + 30000, login->waiting_disconnect_timer, sd->account_id, 0);
     }
     hookStop();
+}
+
+void elogin_parse_change_paassword(int fd)
+{
+    char actual_pass[24], new_pass[24];
+    int  status = 0;
+    struct mmo_account acc;
+    const int accountId = RFIFOL (fd, 2);
+
+    memcpy (actual_pass, RFIFOP (fd, 6), 24);
+    actual_pass[23] = '\0';
+    memcpy (new_pass, RFIFOP (fd, 30), 24);
+    new_pass[23] = '\0';
+
+    if (!login->accounts->load_num(login->accounts, &acc, accountId))
+    {
+        // account not found
+        send_char_password_change_ack(fd, accountId, 0);
+        return;
+    }
+
+    if (!strcmp(actual_pass, acc.pass) || pass_ok(actual_pass, acc.pass))
+    {
+        // changed ok
+        status = 1;
+        safestrncpy(acc.pass, new_pass, sizeof(acc.pass));
+        login->accounts->save(login->accounts, &acc);
+    }
+    else
+    {
+        // wrong password
+        status = 2;
+    }
+    send_char_password_change_ack(fd, accountId, status);
 }

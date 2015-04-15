@@ -60,6 +60,9 @@ HPExport void plugin_init (void)
     loginif = GET_SYMBOL("loginif");
     mapif = GET_SYMBOL("mapif");
 
+    addPacket(0x0061, 50, echar_parse_change_paassword, hpParse_Char);
+    addPacket(0x5001, 7, echar_parse_login_password_change_ack, hpParse_FromLogin);
+
     addHookPre("chr->parse_char_login_map_server", echar_parse_char_login_map_server);
     addHookPre("chr->parse_char_create_new_char", echar_parse_char_create_new_char);
     //addHookPre("chr->parse_char_ping", echar_parse_char_ping);

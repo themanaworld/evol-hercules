@@ -157,3 +157,35 @@ void echar_parse_char_ping(int *fdPtr)
     }
     hookStop();
 }
+
+void echar_parse_change_paassword(int fd)
+{
+    if (chr->login_fd < 0)
+        return;
+    struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+    if (!sd)
+        return;
+    WFIFOHEAD(chr->login_fd, 54);
+    WFIFOW(chr->login_fd, 0) = 0x5000;
+    WFIFOL(chr->login_fd, 2) = sd->account_id;
+    memcpy (WFIFOP (chr->login_fd, 6), RFIFOP (fd, 2), 24);
+    memcpy (WFIFOP (chr->login_fd, 30), RFIFOP (fd, 26), 24);
+    WFIFOSET(chr->login_fd, 54);
+}
+
+void echar_parse_login_password_change_ack(int charFd)
+{
+    struct char_session_data* sd = NULL;
+    const int accountId = RFIFOL(charFd, 2);
+    const int status = RFIFOB(charFd, 6);
+
+    int fd = -1;
+    ARR_FIND( 0, sockt->fd_max, fd, session[fd] && (sd = (struct char_session_data*)session[fd]->session_data) && sd->auth && sd->account_id == accountId );
+    if (fd < sockt->fd_max && fd >= 0)
+    {
+        WFIFOHEAD(fd, 3);
+        WFIFOW(fd, 0) = 0x62;
+        WFIFOB(fd, 2) = status;
+        WFIFOSET(fd, 3);
+    }
+}

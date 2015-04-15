@@ -6,5 +6,6 @@
 
 void send_server_version();
 void send_update_host(int fd);
+void send_char_password_change_ack(int fd, int accoundId, char status);
 
 #endif  // EVOL_LOGIN_SEND

@@ -12,4 +12,8 @@ void echar_creation_failed(int *fdPtr, int *result);
 
 void echar_parse_char_ping(int *fdPtr);
 
+void echar_parse_change_paassword(int fd);
+
+void echar_parse_login_password_change_ack(int charFd);
+
 #endif  // EVOL_CHAR_CHAR
