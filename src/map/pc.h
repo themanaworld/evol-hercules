@@ -35,4 +35,8 @@ int epc_unequipitem_post(int retVal, struct map_session_data *sd,
 
 int epc_check_job_name(const char *name);
 
+int epc_setnewpc(int retVal, struct map_session_data *sd,
+                 int *account_id, int *char_id, int *login_id1,
+                 unsigned int *client_tick, int *sex, int *fd);
+
 #endif  // EVOL_MAP_PC

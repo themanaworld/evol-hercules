@@ -291,3 +291,19 @@ int epc_check_job_name(const char *name)
     hookStop();
     return -1;
 }
+
+int epc_setnewpc(int retVal, struct map_session_data *sd,
+                 int *account_id __attribute__ ((unused)),
+                 int *char_id __attribute__ ((unused)),
+                 int *login_id1 __attribute__ ((unused)),
+                 unsigned int *client_tick  __attribute__ ((unused)),
+                 int *sex __attribute__ ((unused)),
+                 int *fd __attribute__ ((unused)))
+{
+    if (sd)
+    {
+        sd->battle_status.speed = 150;
+        sd->base_status.speed = 150;
+    }
+    return retVal;
+}

@@ -13,6 +13,7 @@
 #include "../../../map/itemdb.h"
 #include "../../../map/map.h"
 #include "../../../map/npc.h"
+#include "../../../map/pc.h"
 #include "../../../map/status.h"
 
 #include "map/data/npcd.h"
@@ -51,4 +52,19 @@ void estatus_read_job_db_sub(int *idxPtr,
     const int idx = *idxPtr;
     if (itemdb->lookup_const(jdb, "MoveSpeed", &i32))
         class_move_speed[idx] = i32;
+}
+
+int estatus_calc_pc_(int retVal,
+                     struct map_session_data *sd,
+                     enum e_status_calc_opt *opt __attribute__ ((unused)))
+{
+    if (!sd)
+        return retVal;
+
+    if (!sd->state.permanent_speed)
+    {
+        const int idx = pc->class2idx(sd->status.class_);
+        sd->base_status.speed = class_move_speed[idx];
+    }
+    return retVal;
 }
