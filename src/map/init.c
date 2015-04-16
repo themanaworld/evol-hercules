@@ -68,6 +68,8 @@ HPExport void plugin_init (void)
 {
 //    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
 
+    status_init();
+
     addAtcommand("setskill", setSkill);
 
     addScriptCommand("setcamnpc", "*", setCamNpc);
@@ -153,6 +155,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->changemap", eclif_changemap_post);
     addHookPost("clif->set_unit_idle", eclif_set_unit_idle_post);
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
+    addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
