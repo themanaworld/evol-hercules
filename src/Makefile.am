@@ -41,6 +41,8 @@ MAP_SRC = map/atcommand.c \
     map/itemdb.h \
     map/lang.c \
     map/lang.h \
+    map/mail.c \
+    map/mail.h \
     map/map.c \
     map/map.h \
     map/mob.c \

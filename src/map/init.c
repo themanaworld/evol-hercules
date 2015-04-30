@@ -40,6 +40,7 @@
 #include "map/clif.h"
 #include "map/itemdb.h"
 #include "map/lang.h"
+#include "map/mail.h"
 #include "map/map.h"
 #include "map/mob.h"
 #include "map/npc.h"
@@ -149,6 +150,7 @@ HPExport void plugin_init (void)
     addHookPre("itemdb->readdb_additional_fields", eitemdb_readdb_additional_fields);
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
+    addHookPre("mail->invalid_operation", email_invalid_operation);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
