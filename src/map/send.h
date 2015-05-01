@@ -26,5 +26,6 @@ void send_slave_say(TBL_PC *sd,
                     const char *const name,
                     const char *const message);
 void send_online_list(int fd, const char *buf, unsigned size);
+void send_client_command(TBL_PC *sd, const char *const command);
 
 #endif  // EVOL_MAP_PC

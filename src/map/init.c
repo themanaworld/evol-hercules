@@ -109,6 +109,7 @@ HPExport void plugin_init (void)
     addScriptCommand("areatimer", "siiiii*", areaTimer);
     addScriptCommand("getareadropitem", "siiiiv*", getAreaDropItem);
     addScriptCommand("setmount", "?", setMount);
+    addScriptCommand("clientcommand", "s", clientCommand);
 
     do_init_langs();
 

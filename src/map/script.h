@@ -40,5 +40,6 @@ BUILDIN(isPcDead);
 BUILDIN(areaTimer);
 BUILDIN(getAreaDropItem);
 BUILDIN(setMount);
+BUILDIN(clientCommand);
 
 #endif  // EVOL_MAP_SCRIPT

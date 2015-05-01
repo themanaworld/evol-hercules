@@ -288,3 +288,18 @@ void send_online_list(int fd, const char *buf, unsigned size)
     WFIFOB (fd, size + 4) = 0;
     WFIFOSET (fd, len);
 }
+
+void send_client_command(TBL_PC *sd, const char *const command)
+{
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data || data->clientVersion < 8)
+        return;
+
+    const unsigned int len = strlen(command);
+    const int fd = sd->fd;
+    WFIFOHEAD (fd, len);
+    WFIFOW (fd, 0) = 0xb16;
+    WFIFOW (fd, 2) = len + 4;
+    memcpy (WFIFOP (fd, 4), command, len);
+    WFIFOSET (fd, len + 4);
+}

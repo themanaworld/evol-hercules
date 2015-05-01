@@ -1097,3 +1097,24 @@ BUILDIN(setMount)
 
     return true;
 }
+
+BUILDIN(clientCommand)
+{
+    TBL_PC* sd = script->rid2sd(st);
+
+    if (sd == NULL)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
+        return false;
+    }
+    const char *const command = script_getstr(st, 2);
+    if (!command)
+    {
+        ShowWarning("invalid client command\n");
+        script->reportsrc(st);
+        return false;
+    }
+    send_client_command(sd, command);
+    return true;
+}
