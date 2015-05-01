@@ -91,8 +91,21 @@ SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_SANITIZE
-SHARED_CFLAGS += -fsanitize=address
-SHARED_LDFLAGS += -lasan
+#skip -fsanitize=alignment
+SHARED_CFLAGS += -fsanitize=address \
+-fsanitize=shift -fsanitize=integer-divide-by-zero -fsanitize=unreachable \
+-fsanitize=vla-bound -fsanitize=null -fsanitize=return \
+-fsanitize=signed-integer-overflow -fsanitize=bounds \
+-fsanitize=object-size -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow \
+-fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool \
+-fsanitize=enum -fsanitize=vptr
+SHARED_LDFLAGS += -lasan -lubsan -fsanitize=address \
+-fsanitize=shift -fsanitize=integer-divide-by-zero -fsanitize=unreachable \
+-fsanitize=vla-bound -fsanitize=null -fsanitize=return \
+-fsanitize=signed-integer-overflow -fsanitize=bounds \
+-fsanitize=object-size -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow \
+-fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool \
+-fsanitize=enum -fsanitize=vptr
 endif
 
 if ENABLE_STATIC
