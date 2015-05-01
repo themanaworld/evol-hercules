@@ -82,7 +82,7 @@ void elogin_parse_client_login2(int fd)
     safestrncpy(username, (const char*)RFIFOP(fd, 2), NAME_LENGTH);
 
     int len = strnlen(username, NAME_LENGTH);
-    if (len < 2 || !username[len - 2] == '_' || !memchr("FfMm", username[len - 1], 4))
+    if (len < 2 || !(username[len - 2] == '_') || !memchr("FfMm", username[len - 1], 4))
     {
         login->login_error(fd, 3);
         return;

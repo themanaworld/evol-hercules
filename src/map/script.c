@@ -456,7 +456,7 @@ BUILDIN(getq)
     getSDReturn(0);
 
     int quest_id = script_getnum(st, 2);
-    if (!quest->check(sd, quest_id, HAVEQUEST) < 0)
+    if (quest->check(sd, quest_id, HAVEQUEST) < 0)
     {
         script_pushint(st, 0);
         return true;
