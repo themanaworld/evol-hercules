@@ -11,6 +11,7 @@
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
 #include "../../../common/cbasetypes.h"
+#include "../../../map/mob.h"
 #include "../../../map/npc.h"
 #include "../../../map/pc.h"
 #include "../../../map/quest.h"
@@ -102,6 +103,69 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
         const int trLen = strlen(tr);
         const int len = 8 + trLen;
+        // if no recipient specified just update nearby clients
+        if (fd == 0)
+        {
+            char *buf;
+            CREATE(buf, char, len);
+            WBUFW(buf, 0) = 0xB01;
+            WBUFW(buf, 2) = len;
+            WBUFL(buf, 4) = bl->id;
+            memcpy(WBUFP(buf, 8), tr, trLen);
+            clif->send(buf, len, bl, AREA);
+            aFree(buf);
+        }
+        else
+        {
+            WFIFOHEAD(fd, len);
+            WFIFOW(fd, 0) = 0xB01;
+            WFIFOW(fd, 2) = len;
+            WFIFOL(fd, 4) = bl->id;
+            memcpy(WFIFOP(fd, 8), tr, trLen);
+            WFIFOSET(fd, len);
+        }
+        hookStop();
+    }
+    else if (bl->type == BL_MOB)
+    {
+        struct mob_data *md = (struct mob_data *)bl;
+        if (!md)
+        {
+            hookStop();
+            return;
+        }
+        if (md->guardian_data && md->guardian_data->g)
+            return; // allow default code to work
+        int fd = *fdPtr;
+        TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+        if (!sd)
+        {
+            hookStop();
+            return;
+        }
+
+        char tmpBuf[25];
+        char *ptr = tmpBuf;
+        memcpy(tmpBuf, md->name, 24);
+        tmpBuf[24] = 0;
+        for (int f = 23; f > 1; f --)
+        {
+            if (tmpBuf[f] == ' ')
+                tmpBuf[f] = 0;
+            else
+                break;
+        }
+        for (int f = 0; f < 24; f ++)
+        {
+            if (*ptr == ' ')
+                ptr ++;
+            else
+                break;
+        }
+        const char *tr = lang_pctrans(ptr, sd);
+        const int trLen = strlen(tr);
+        const int len = 8 + trLen;
+
         // if no recipient specified just update nearby clients
         if (fd == 0)
         {
