@@ -110,6 +110,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getareadropitem", "siiiiv*", getAreaDropItem);
     addScriptCommand("setmount", "?", setMount);
     addScriptCommand("clientcommand", "s", clientCommand);
+    addScriptCommand("isunitwalking", "?", isUnitWalking);
 
     do_init_langs();
 

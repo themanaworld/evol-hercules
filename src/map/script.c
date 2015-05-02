@@ -10,6 +10,7 @@
 #include "../../../common/mmo.h"
 #include "../../../common/socket.h"
 #include "../../../common/strlib.h"
+#include "../../../common/timer.h"
 #include "../../../map/chrif.h"
 #include "../../../map/clif.h"
 #include "../../../map/npc.h"
@@ -1116,5 +1117,32 @@ BUILDIN(clientCommand)
         return false;
     }
     send_client_command(sd, command);
+    return true;
+}
+
+BUILDIN(isUnitWalking)
+{
+    int id = 0;
+    if (script_hasdata(st, 2))
+        id = script_getnum(st, 2);
+    else
+        id = st->oid;
+    struct block_list *bl = map->id2bl(id);
+    if (!bl)
+    {
+        ShowWarning("invalid unit id\n");
+        script->reportsrc(st);
+        script_pushint(st, 0);
+        return false;
+    }
+    struct unit_data *ud = unit->bl2ud(bl);
+    if (!ud)
+    {
+        ShowWarning("invalid unit data\n");
+        script->reportsrc(st);
+        script_pushint(st, 0);
+        return false;
+    }
+    script_pushint(st, ud->walktimer != INVALID_TIMER);
     return true;
 }

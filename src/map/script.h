@@ -41,5 +41,6 @@ BUILDIN(areaTimer);
 BUILDIN(getAreaDropItem);
 BUILDIN(setMount);
 BUILDIN(clientCommand);
+BUILDIN(isUnitWalking);
 
 #endif  // EVOL_MAP_SCRIPT
