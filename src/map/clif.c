@@ -146,16 +146,17 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
 
         char tmpBuf[25];
         char *ptr = tmpBuf;
+        int f;
         memcpy(tmpBuf, md->name, 24);
         tmpBuf[24] = 0;
-        for (int f = 23; f > 1; f --)
+        for (f = 23; f > 1; f --)
         {
             if (tmpBuf[f] == ' ')
                 tmpBuf[f] = 0;
             else
                 break;
         }
-        for (int f = 0; f < 24; f ++)
+        for (f = 0; f < 24; f ++)
         {
             if (*ptr == ' ')
                 ptr ++;
