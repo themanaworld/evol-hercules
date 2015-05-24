@@ -115,5 +115,13 @@ bool enpc_db_checkid(int *idPtr)
 {
     const int id = *idPtr;
     hookStop();
-    return ((id >= 46 && id < MAX_NPC_CLASS) || id == HIDDEN_WARP_CLASS || id == INVISIBLE_CLASS || (id > MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END));
+
+    if (id == HIDDEN_WARP_CLASS || id == INVISIBLE_CLASS) // Special IDs not included in the valid ranges
+        return true;
+    if (id >= 45 && id < MAX_NPC_CLASS) // Second subrange
+        return true;
+    if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
+        return true;
+    // Anything else is invalid
+    return false;
 }
