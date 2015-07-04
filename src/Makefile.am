@@ -8,9 +8,7 @@ CHAR_SRC = echar/char.c \
     ecommon/config.c \
     ecommon/config.h \
     ecommon/init.c \
-    ecommon/init.h \
-    ecommon/ip.c \
-    ecommon/ip.h
+    ecommon/init.h
 
 LOGIN_SRC = elogin/config.c \
     elogin/config.h \
@@ -28,9 +26,7 @@ LOGIN_SRC = elogin/config.c \
     ecommon/config.c \
     ecommon/config.h \
     ecommon/init.c \
-    ecommon/init.h \
-    ecommon/ip.c \
-    ecommon/ip.h
+    ecommon/init.h
 
 MAP_SRC = emap/atcommand.c \
     emap/atcommand.h \

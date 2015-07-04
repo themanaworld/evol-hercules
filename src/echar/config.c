@@ -13,24 +13,10 @@
 
 #include "echar/config.h"
 
-char *inter_server_ip = NULL;
 int min_char_class = 0;
 int max_char_class = 0;
 int min_look = 0;
 int max_look = 0;
-
-void config_inter_server_ip(const char *val)
-{
-    char buf[1000];
-
-    if (strlen(val) > 900)
-        return;
-
-    strcpy(buf, ",");
-    strcat(buf, val);
-    strcat(buf, ",");
-    inter_server_ip = aStrdup(buf);
-}
 
 void config_min_char_class(const char *val)
 {
@@ -54,6 +40,4 @@ void config_max_look(const char *val)
 
 void config_final(void)
 {
-    if (inter_server_ip)
-        aFree(inter_server_ip);
 }

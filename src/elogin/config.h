@@ -6,9 +6,7 @@
 
 void config_update_server(const char *val);
 void config_final(void);
-void config_inter_server_ip(const char *val);
 
 extern char *update_server;
-extern char *inter_server_ip;
 
 #endif  // EVOL_LOGIN_CONFIG

@@ -14,7 +14,6 @@
 #include "login/account.h"
 #include "login/login.h"
 
-#include "ecommon/ip.h"
 #include "elogin/config.h"
 #include "elogin/md5calc.h"
 #include "elogin/parse.h"
@@ -139,18 +138,6 @@ void elogin_parse_client_login2(int fd)
     }
 
     return;
-}
-
-void elogin_parse_request_connection(int *fd, struct login_session_data* sd, const char *const ip)
-{
-    if (!inter_server_ip || !ip)
-        return;
-    if (!checkAllowedIp(inter_server_ip, ip))
-    {
-        hookStop();
-        login->char_server_connection_status(*fd, sd, 3);
-        ShowNotice("Connection of the char-server from ip %s REFUSED.\n", ip);
-    }
 }
 
 void elogin_parse_ping(int *fd, struct login_session_data* sd)

@@ -13,25 +13,8 @@
 #include "common/timer.h"
 #include "char/char.h"
 
-#include "ecommon/ip.h"
 #include "echar/char.h"
 #include "echar/config.h"
-
-void echar_parse_char_login_map_server(int *fd)
-{
-    if (!inter_server_ip)
-        return;
-
-    const uint32 ipl = session[*fd]->client_addr;
-
-    const char *const ip = ip2str(ipl, NULL);
-    if (!checkAllowedIp(inter_server_ip, ip))
-    {
-        ShowNotice("Connection of the map-server from ip %s REFUSED.\n", ip);
-        chr->login_map_server_ack(*fd, 3);
-        hookStop();
-    }
-}
 
 void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
 {

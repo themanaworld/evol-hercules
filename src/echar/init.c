@@ -63,9 +63,7 @@ HPExport void plugin_init (void)
     addPacket(0x0061, 50, echar_parse_change_paassword, hpParse_Char);
     addPacket(0x5001, 7, echar_parse_login_password_change_ack, hpParse_FromLogin);
 
-    addHookPre("chr->parse_char_login_map_server", echar_parse_char_login_map_server);
     addHookPre("chr->parse_char_create_new_char", echar_parse_char_create_new_char);
-    //addHookPre("chr->parse_char_ping", echar_parse_char_ping);
     addHookPre("chr->creation_failed", echar_creation_failed);
 }
 
@@ -79,7 +77,6 @@ HPExport void server_preinit (void)
     addMapInterConf("default_x", config_default_x);
     addMapInterConf("default_y", config_default_y);
 
-    addCharInterConf("inter_server_ip", config_inter_server_ip);
     addCharConf("min_char_class", config_min_char_class);
     addCharConf("max_char_class", config_max_char_class);
     addCharConf("min_cloth_color", config_min_look);
