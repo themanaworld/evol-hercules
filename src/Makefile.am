@@ -1,93 +1,93 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-CHAR_SRC = char/char.c \
-    char/char.h \
-    char/config.c \
-    char/config.h \
-    char/init.c \
-    common/config.c \
-    common/config.h \
-    common/init.c \
-    common/init.h \
-    common/ip.c \
-    common/ip.h
+CHAR_SRC = echar/char.c \
+    echar/char.h \
+    echar/config.c \
+    echar/config.h \
+    echar/init.c \
+    ecommon/config.c \
+    ecommon/config.h \
+    ecommon/init.c \
+    ecommon/init.h \
+    ecommon/ip.c \
+    ecommon/ip.h
 
-LOGIN_SRC = login/config.c \
-    login/config.h \
-    login/init.c \
-    login/login.c \
-    login/login.h \
-    login/md5calc.c \
-    login/md5calc.h \
-    login/mt_rand.c \
-    login/mt_rand.h \
-    login/parse.c \
-    login/parse.h \
-    login/send.c \
-    login/send.h \
-    common/config.c \
-    common/config.h \
-    common/init.c \
-    common/init.h \
-    common/ip.c \
-    common/ip.h
+LOGIN_SRC = elogin/config.c \
+    elogin/config.h \
+    elogin/init.c \
+    elogin/login.c \
+    elogin/login.h \
+    elogin/md5calc.c \
+    elogin/md5calc.h \
+    elogin/mt_rand.c \
+    elogin/mt_rand.h \
+    elogin/parse.c \
+    elogin/parse.h \
+    elogin/send.c \
+    elogin/send.h \
+    ecommon/config.c \
+    ecommon/config.h \
+    ecommon/init.c \
+    ecommon/init.h \
+    ecommon/ip.c \
+    ecommon/ip.h
 
-MAP_SRC = map/atcommand.c \
-    map/atcommand.h \
-    map/clif.c \
-    map/clif.h \
-    map/init.c \
-    map/itemdb.c \
-    map/itemdb.h \
-    map/lang.c \
-    map/lang.h \
-    map/mail.c \
-    map/mail.h \
-    map/map.c \
-    map/map.h \
-    map/mob.c \
-    map/mob.h \
-    map/npc.c \
-    map/npc.h \
-    map/parse.c \
-    map/parse.h \
-    map/pc.c \
-    map/pc.h \
-    map/permission.c \
-    map/permission.h \
-    map/quest.c \
-    map/quest.h \
-    map/script.c \
-    map/script.h \
-    map/scriptdefines.h \
-    map/send.c \
-    map/send.h \
-    map/skill.c \
-    map/skill.h \
-    map/status.c \
-    map/status.h \
-    map/unit.c \
-    map/unit.h \
-    map/data/itemd.c \
-    map/data/itemd.h \
-    map/data/mapd.c \
-    map/data/mapd.h \
-    map/data/npcd.c \
-    map/data/npcd.h \
-    map/data/session.c \
-    map/data/session.h \
-    map/struct/itemdext.h \
-    map/struct/mapdext.h \
-    map/struct/npcdext.h \
-    map/struct/sessionext.h \
-    map/utils/formatutils.c \
-    map/utils/formatutils.h \
-    common/config.c \
-    common/config.h \
-    common/init.c \
-    common/init.h
+MAP_SRC = emap/atcommand.c \
+    emap/atcommand.h \
+    emap/clif.c \
+    emap/clif.h \
+    emap/init.c \
+    emap/itemdb.c \
+    emap/itemdb.h \
+    emap/lang.c \
+    emap/lang.h \
+    emap/mail.c \
+    emap/mail.h \
+    emap/map.c \
+    emap/map.h \
+    emap/mob.c \
+    emap/mob.h \
+    emap/npc.c \
+    emap/npc.h \
+    emap/parse.c \
+    emap/parse.h \
+    emap/pc.c \
+    emap/pc.h \
+    emap/permission.c \
+    emap/permission.h \
+    emap/quest.c \
+    emap/quest.h \
+    emap/script.c \
+    emap/script.h \
+    emap/scriptdefines.h \
+    emap/send.c \
+    emap/send.h \
+    emap/skill.c \
+    emap/skill.h \
+    emap/status.c \
+    emap/status.h \
+    emap/unit.c \
+    emap/unit.h \
+    emap/data/itemd.c \
+    emap/data/itemd.h \
+    emap/data/mapd.c \
+    emap/data/mapd.h \
+    emap/data/npcd.c \
+    emap/data/npcd.h \
+    emap/data/session.c \
+    emap/data/session.h \
+    emap/struct/itemdext.h \
+    emap/struct/mapdext.h \
+    emap/struct/npcdext.h \
+    emap/struct/sessionext.h \
+    emap/utils/formatutils.c \
+    emap/utils/formatutils.h \
+    ecommon/config.c \
+    ecommon/config.h \
+    ecommon/init.c \
+    ecommon/init.h
 
-SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT
+SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_SANITIZE
