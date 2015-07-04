@@ -87,7 +87,8 @@ MAP_SRC = emap/atcommand.c \
     ecommon/init.c \
     ecommon/init.h
 
-SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty
+SHARED_CFLAGS = -pipe -ffast-math -Wall -Wextra -Wno-sign-compare \
+    -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty -DPACKETVER=20150000
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_SANITIZE
