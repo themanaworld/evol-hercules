@@ -375,3 +375,9 @@ void eclif_move(struct unit_data *ud)
     if (!sd || !pc_isinvisible(sd))
         send_advmoving(ud, ud->bl, AREA_WOS);
 }
+
+void eclif_parse_LoadEndAck_pre(int *fdPtr __attribute__ ((unused)),
+                                struct map_session_data *sd)
+{
+    sd->state.warp_clean = 0;
+}
