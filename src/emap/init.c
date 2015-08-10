@@ -1,15 +1,19 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "common/HPMi.h"
 #include "common/malloc.h"
+#include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/timer.h"
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
@@ -68,8 +72,6 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
-//    HPM_map_add_group_permission = GET_SYMBOL("addGroupPermission");
-
     status_init();
 
     addAtcommand("setskill", setSkill);
@@ -184,49 +186,6 @@ HPExport void plugin_init (void)
 HPExport void server_preinit (void)
 {
     interfaces_init_common();
-
-    atcommand = GET_SYMBOL("atcommand");
-    battle = GET_SYMBOL("battle");
-    bg = GET_SYMBOL("battlegrounds");
-    buyingstore = GET_SYMBOL("buyingstore");
-    clif = GET_SYMBOL("clif");
-    chrif = GET_SYMBOL("chrif");
-    guild = GET_SYMBOL("guild");
-    gstorage = GET_SYMBOL("gstorage");
-    homun = GET_SYMBOL("homun");
-    map = GET_SYMBOL("map");
-    ircbot = GET_SYMBOL("ircbot");
-    itemdb = GET_SYMBOL("itemdb");
-    logs = GET_SYMBOL("logs");
-    mail = GET_SYMBOL("mail");
-    instance = GET_SYMBOL("instance");
-    script = GET_SYMBOL("script");
-    searchstore = GET_SYMBOL("searchstore");
-    skill = GET_SYMBOL("skill");
-    vending = GET_SYMBOL("vending");
-    pc = GET_SYMBOL("pc");
-    pcg = GET_SYMBOL("pc_groups");
-    party = GET_SYMBOL("party");
-    storage = GET_SYMBOL("storage");
-    trade = GET_SYMBOL("trade");
-    status = GET_SYMBOL("status");
-    chat = GET_SYMBOL("chat");
-    duel = GET_SYMBOL("duel");
-    elemental = GET_SYMBOL("elemental");
-    intif = GET_SYMBOL("intif");
-    mercenary = GET_SYMBOL("mercenary");
-    mob = GET_SYMBOL("mob");
-    unit = GET_SYMBOL("unit");
-    npc = GET_SYMBOL("npc");
-    mapreg = GET_SYMBOL("mapreg");
-    pet = GET_SYMBOL("pet");
-    path = GET_SYMBOL("path");
-    quest = GET_SYMBOL("quest");
-    npc_chat = GET_SYMBOL("npc_chat");
-    libpcre = GET_SYMBOL("libpcre");
-    mapit = GET_SYMBOL("mapit");
-    mapindex = GET_SYMBOL("mapindex");
-    channel = GET_SYMBOL("channel");
 
     setDefaultMap();
     addMapInterConf("default_map", config_default_map);

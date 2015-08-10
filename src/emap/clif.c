@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -95,7 +97,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
     if (bl->type == BL_NPC)
     {
         int fd = *fdPtr;
-        TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+        TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
         if (!sd)
         {
             hookStop();
@@ -138,7 +140,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
         if (md->guardian_data && md->guardian_data->g)
             return; // allow default code to work
         int fd = *fdPtr;
-        TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+        TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
         if (!sd)
         {
             hookStop();

@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +49,7 @@ const char* eatcommand_msgfd(int *fdPtr, int *msgPtr)
 {
     const int msg_number = *msgPtr;
     const int fd = *fdPtr;
-    struct map_session_data *sd = session_isValid(fd) ? session[fd]->session_data : NULL;
+    struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
     if (!(msg_number >= 0 && msg_number < MAX_MSG))
     {
         hookStop();

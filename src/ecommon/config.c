@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

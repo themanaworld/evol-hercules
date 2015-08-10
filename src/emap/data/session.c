@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,11 +19,11 @@
 
 struct SessionExt *session_get(int fd)
 {
-    struct SessionExt *data = getFromSession(session[fd], 0);
+    struct SessionExt *data = getFromSession(sockt->session[fd], 0);
     if (!data)
     {
         data = session_create();
-        addToSession(session[fd], data, 0, true);
+        addToSession(sockt->session[fd], data, 0, true);
     }
     return data;
 }

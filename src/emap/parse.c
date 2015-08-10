@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,7 +38,7 @@ void map_parse_join_channel(int fd)
 {
     char name[24];
     char *p;
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     int res = 0;
     if (!sd)
         return;
@@ -66,7 +68,7 @@ void map_parse_part_channel(int fd)
 {
     char name[24];
     char *p;
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     int k;
     if (!sd)
         return;
@@ -111,7 +113,7 @@ void map_parse_pet_say(int fd)
 {
     char message[500];
 
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd)
         return;
 
@@ -124,7 +126,7 @@ void map_parse_pet_say(int fd)
 
 void map_parse_pet_emote(int fd)
 {
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd)
         return;
     const time_t t = time(NULL);
@@ -153,7 +155,7 @@ void map_parse_get_online_list(int fd)
 
 void map_parse_pet_move(int fd)
 {
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd)
         return;
     short x = RFIFOW(fd, 6);
@@ -166,7 +168,7 @@ void map_parse_pet_move(int fd)
 
 void map_parse_pet_dir(int fd)
 {
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd)
         return;
     unit->setdir(&sd->pd->bl, RFIFOB(fd, 8));
@@ -176,7 +178,7 @@ void map_parse_homun_say(int fd)
 {
     char message[500];
 
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd)
         return;
     const int len = RFIFOW(fd, 2);
@@ -191,7 +193,7 @@ void map_parse_homun_say(int fd)
 
 void map_parse_homun_emote(int fd)
 {
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd)
         return;
     const time_t t = time(NULL);
@@ -210,7 +212,7 @@ void map_parse_homun_emote(int fd)
 
 void map_parse_homun_dir(int fd)
 {
-    TBL_PC* sd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd)
         return;
     if (sd->md && sd->md->db)

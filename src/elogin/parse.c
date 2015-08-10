@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +25,7 @@ int clientVersion = 0;
 
 void login_parse_version(int fd)
 {
-    struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+    struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
     if (!sd)
         return;
 
@@ -67,7 +69,7 @@ int elogin_parse_client_login_pre(int *fdPtr,
         return 1;
     }
 
-    short *ptr = RFIFOP(fd, 2);
+    short *ptr = (short*)RFIFOP(fd, 2);
     if (*ptr == 20)
         *ptr = clientVersion;
     return 0;
@@ -77,7 +79,7 @@ int elogin_parse_client_login_post(int retVal, int *fdPtr,
                                    struct login_session_data* sd,
                                    const char *const ip __attribute__ ((unused)))
 {
-    sd = (struct login_session_data*)session[*fdPtr]->session_data;
+    sd = (struct login_session_data*)sockt->session[*fdPtr]->session_data;
     if (sd)
         sd->version = clientVersion;
     return retVal;
@@ -104,13 +106,13 @@ void elogin_parse_client_login2(int fd)
     safestrncpy(email, (const char*)RFIFOP(fd, 51), 40);
     clienttype = RFIFOB(fd, 50);
 
-    struct login_session_data* sd = (struct login_session_data*)session[fd]->session_data;
+    struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;
     if (!sd)
         return;
 
     char ip[16];
-    uint32 ipl = session[fd]->client_addr;
-    ip2str(ipl, ip);
+    uint32 ipl = sockt->session[fd]->client_addr;
+    sockt->ip2str(ipl, ip);
     sd->clienttype = clienttype;
     sd->version = clientVersion;
     sd->passwdenc = 0;

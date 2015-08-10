@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,7 +99,7 @@ void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint
 
 void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl)
 {
-    sd = (struct char_session_data*)session[*fdPtr]->session_data;
+    sd = (struct char_session_data*)sockt->session[*fdPtr]->session_data;
     if (sd)
         sd->version = tmpVersion;
 }
@@ -136,7 +138,7 @@ void echar_parse_char_ping(int *fdPtr)
     const int fd = *fdPtr;
     RFIFOSKIP(fd, 6);
 
-    struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+    struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
     if (!sd)
     {
         hookStop();
@@ -161,7 +163,7 @@ void echar_parse_change_paassword(int fd)
 {
     if (chr->login_fd < 0)
         return;
-    struct char_session_data* sd = (struct char_session_data*)session[fd]->session_data;
+    struct char_session_data* sd = (struct char_session_data*)sockt->session[fd]->session_data;
     if (!sd)
         return;
     WFIFOHEAD(chr->login_fd, 54);
@@ -179,7 +181,7 @@ void echar_parse_login_password_change_ack(int charFd)
     const int status = RFIFOB(charFd, 6);
 
     int fd = -1;
-    ARR_FIND( 0, sockt->fd_max, fd, session[fd] && (sd = (struct char_session_data*)session[fd]->session_data) && sd->auth && sd->account_id == accountId );
+    ARR_FIND( 0, sockt->fd_max, fd, sockt->session[fd] && (sd = (struct char_session_data*)sockt->session[fd]->session_data) && sd->auth && sd->account_id == accountId );
     if (fd < sockt->fd_max && fd >= 0)
     {
         WFIFOHEAD(fd, 3);

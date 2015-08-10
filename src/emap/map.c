@@ -1,6 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 Evol developers
 
+#include "common/hercules.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,7 +72,7 @@ void emap_online_list(int fd)
         return;
     }
 
-    TBL_PC* ssd = (TBL_PC*)session[fd]->session_data;
+    TBL_PC* ssd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!ssd)
     {
         aFree(buf);
