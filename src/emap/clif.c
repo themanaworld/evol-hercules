@@ -199,7 +199,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
     { \
         item = sd->inventory_data[equip]; \
         if (item && item->look) \
-            send_changelook(fd, id, field, item->look); \
+            send_changelook(sd, sd2, fd, id, field, item->look, 0, item, equip); \
     }
 
 static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
@@ -343,6 +343,28 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
+        if (packet == 0x1d7)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion >= 9)
+            {   // not sending old packets to new clients
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0xb17)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 9)
+            {   // not sending new packets to old clients
+                hookStop();
+                return 0;
+            }
+        }
     }
     return 0;
 }
@@ -380,4 +402,121 @@ void eclif_parse_LoadEndAck_pre(int *fdPtr __attribute__ ((unused)),
                                 struct map_session_data *sd)
 {
     sd->state.warp_clean = 0;
+}
+
+void eclif_changelook2(struct block_list *bl, int type, int val,
+                       struct item_data *id, int n)
+{
+    struct map_session_data* sd;
+    struct status_change* sc;
+    struct view_data* vd;
+    enum send_target target = AREA;
+    int val2 = 0;
+    if (!bl)
+        return;
+
+    sd = BL_CAST(BL_PC, bl);
+    sc = status->get_sc(bl);
+    vd = status->get_viewdata(bl);
+
+    if (vd)
+    {
+        switch(type)
+        {
+            case LOOK_WEAPON:
+                if (sd)
+                {
+                    clif->get_weapon_view(sd, &vd->weapon, &vd->shield);
+                    val = vd->weapon;
+                }
+                else
+                {
+                    vd->weapon = val;
+                }
+                break;
+
+            case LOOK_SHIELD:
+                if (sd)
+                {
+                    clif->get_weapon_view(sd, &vd->weapon, &vd->shield);
+                    val = vd->shield;
+                }
+                else
+                {
+                    vd->shield = val;
+                }
+                break;
+            case LOOK_BASE:
+                if (!sd)
+                    break;
+
+                if (val == INVISIBLE_CLASS) /* nothing to change look */
+                    return;
+
+                if (sd->sc.option & OPTION_COSTUME)
+                    vd->weapon = vd->shield = 0;
+
+//                if (!vd->cloth_color)
+//                    break;
+            break;
+            case LOOK_HAIR:
+                vd->hair_style = val;
+            break;
+            case LOOK_HEAD_BOTTOM:
+                vd->head_bottom = val;
+            break;
+            case LOOK_HEAD_TOP:
+                vd->head_top = val;
+            break;
+            case LOOK_HEAD_MID:
+                vd->head_mid = val;
+            break;
+            case LOOK_HAIR_COLOR:
+                vd->hair_color = val;
+            break;
+            case LOOK_CLOTHES_COLOR:
+                vd->cloth_color = val;
+            break;
+            case LOOK_SHOES:
+//                if (sd) {
+//                    int n;
+//                    if((n = sd->equip_index[2]) >= 0 && sd->inventory_data[n]) {
+//                        if(sd->inventory_data[n]->view_id > 0)
+//                            val = sd->inventory_data[n]->view_id;
+//                        else
+//                            val = sd->status.inventory[n].nameid;
+//                    } else
+//                        val = 0;
+//                }
+            break;
+            case LOOK_BODY:
+            case LOOK_FLOOR:
+                // unknown purpose
+            break;
+            case LOOK_ROBE:
+                vd->robe = val;
+            break;
+        }
+    }
+
+    // prevent leaking the presence of GM-hidden objects
+    if (sc && sc->option&OPTION_INVISIBLE && !( bl->type == BL_PC && ((TBL_PC*)bl)->disguise != -1))
+        target = SELF;
+    if (type == LOOK_WEAPON || type == LOOK_SHIELD)
+    {
+        if (!vd)
+            return;
+        type = LOOK_WEAPON;
+        val = vd->weapon;
+        val2 = vd->shield;
+    }
+    if ((bl->type == BL_PC && ((TBL_PC*)bl)->disguise != -1))
+    {
+        send_changelook2(sd, bl, bl->id, type, val, val2, id, n, AREA_WOS);
+        send_changelook2(sd, bl, -bl->id, type, val, val2, id, n, SELF);
+    }
+    else
+    {
+        send_changelook2(sd, bl, bl->id, type, val, val2, id, n, target);
+    }
 }

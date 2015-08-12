@@ -13,7 +13,7 @@ int epc_readparam_pre(TBL_PC* sd, int *type);
 
 int epc_setregistry(TBL_PC *sd, int64 *reg, int *val);
 
-void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *posPtr);
+void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr);
 
 void epc_unequipitem_pos(TBL_PC *sd, int *nPtr, int *posPtr);
 

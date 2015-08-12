@@ -10,9 +10,11 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/timer.h"
 #include "map/itemdb.h"
 #include "map/pc.h"
 
+#include "emap/clif.h"
 #include "emap/pc.h"
 #include "emap/data/itemd.h"
 #include "emap/data/mapd.h"
@@ -51,38 +53,100 @@ int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
 }
 
 #define equipPos(mask, field, lookf) \
-    if (pos & mask) \
+    if (pos & (mask)) \
     { \
         if (id) \
             sd->status.field = id->look; \
         else \
             sd->status.field = 0; \
-        clif->changelook(&sd->bl, lookf, sd->status.field); \
-        hookStop(); \
+        eclif_changelook2(&sd->bl, lookf, sd->status.field, id, n); \
     }
 
 #define equipPos2(mask, lookf) \
-    if (pos & mask) \
+    if (pos & (mask)) \
     { \
         if (id) \
-            clif->changelook(&sd->bl, lookf, id->look); \
+            eclif_changelook2(&sd->bl, lookf, id->look, id, n); \
         else \
-            clif->changelook(&sd->bl, lookf, 0); \
-        hookStop(); \
+            eclif_changelook2(&sd->bl, lookf, 0, id, n); \
     }
 
-void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *posPtr)
+void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
 {
+    const int n = *nPtr;
     int pos = *posPtr;
+
+    hookStop();
 
     if (!id)
         return;
+
+    if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON))
+    {
+        if(id)
+        {
+            sd->weapontype1 = id->look;
+        }
+        else
+        {
+            sd->weapontype1 = 0;
+        }
+        pc->calcweapontype(sd);
+        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.weapon, id, n);
+        if (sd->status.weapon)
+        {
+            for (int i = 0; i < id->slot; i++ )
+            {
+                struct item_data *data;
+                if (!sd->status.inventory[n].card[i])
+                    continue;
+                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+                {
+                    ShowWarning("equip: for pos %d card %d\n", LOOK_WEAPON, data->nameid);
+                }
+            }
+        }
+    }
+    if (pos & (EQP_HAND_L|EQP_SHADOW_SHIELD))
+    {
+        if (id)
+        {
+            if(id->type == IT_WEAPON)
+            {
+                sd->status.shield = 0;
+                sd->weapontype2 = id->look;
+            }
+            else if (id->type == IT_ARMOR)
+            {
+                sd->status.shield = id->look;
+                sd->weapontype2 = 0;
+            }
+        }
+        else
+        {
+            sd->status.shield = sd->weapontype2 = 0;
+        }
+        pc->calcweapontype(sd);
+        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.shield, id, n);
+        if (sd->status.shield)
+        {
+            for (int i = 0; i < id->slot; i++ )
+            {
+                struct item_data *data;
+                if (!sd->status.inventory[n].card[i])
+                    continue;
+                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+                {
+                    ShowWarning("equip: for pos %d card %d\n", LOOK_SHIELD, data->nameid);
+                }
+            }
+        }
+    }
 
     equipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);
     equipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);
     equipPos(EQP_HEAD_MID, head_mid, LOOK_HEAD_MID);
     equipPos(EQP_GARMENT, robe, LOOK_ROBE);
-    //skip EQP_ARMOR
     equipPos2(EQP_SHOES, LOOK_SHOES);
     equipPos2(EQP_COSTUME_HEAD_TOP, 13);
     equipPos2(EQP_COSTUME_HEAD_MID, 14);
@@ -90,34 +154,50 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *posPtr)
     equipPos2(EQP_COSTUME_GARMENT, 16);
     equipPos2(EQP_ARMOR, 17);
     //skipping SHADOW slots
+
 }
 
 #undef equipPos
 #undef equipPos2
 
 #define unequipPos(mask, field, lookf) \
-    if (pos & mask) \
+    if (pos & (mask)) \
     { \
         sd->status.field = 0; \
-        clif->changelook(&sd->bl, lookf, sd->status.field); \
-        hookStop(); \
+        eclif_changelook2(&sd->bl, lookf, sd->status.field, 0, n); \
     }
 
 #define unequipPos2(mask, lookf) \
-    if (pos & mask) \
-    { \
-        clif->changelook(&sd->bl, lookf, 0); \
-        hookStop(); \
-    }
+    if (pos & (mask)) \
+        eclif_changelook2(&sd->bl, lookf, 0, 0, n);
 
 void epc_unequipitem_pos(TBL_PC *sd,
-                         int *nPtr __attribute__ ((unused)),
+                         int *nPtr,
                          int *posPtr)
 {
     if (!sd)
         return;
 
+    hookStop();
+
+    const int n = *nPtr;
     int pos = *posPtr;
+
+    if (pos & EQP_HAND_R)
+    {
+        sd->weapontype1 = 0;
+        sd->status.weapon = sd->weapontype2;
+        pc->calcweapontype(sd);
+        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.weapon, 0, n);
+        if (!battle->bc->dancing_weaponswitch_fix)
+            status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER);
+    }
+    if (pos & EQP_HAND_L)
+    {
+        sd->status.shield = sd->weapontype2 = 0;
+        pc->calcweapontype(sd);
+        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.shield, 0, n);
+    }
 
     unequipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);
     unequipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);

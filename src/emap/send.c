@@ -77,15 +77,56 @@ void send_local_message(int fd, struct block_list* bl, const char* msg)
     WFIFOSET (fd, msg_len + 8);
 }
 
-void send_changelook(int fd, int id, int type, int val)
+void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, int fd,
+                     int id, int type, int val, int val2,
+                     struct item_data *data, int n)
 {
-    WFIFOHEAD (fd, 11);
-    WFIFOW (fd, 0) = 0x1d7;
-    WFIFOL (fd, 2) = id;
-    WFIFOB (fd, 6) = type;
-    WFIFOW (fd, 7) = val;
-    WFIFOW (fd, 9) = 0;
-    WFIFOSET (fd, 11);
+    struct SessionExt *tdata = session_get_bysd(sd2);
+    if (!tdata || tdata->clientVersion < 9)
+    {
+        WFIFOHEAD (fd, 11);
+        WFIFOW (fd, 0) = 0x1d7;
+        WFIFOL (fd, 2) = id;
+        WFIFOB (fd, 6) = type;
+        WFIFOW (fd, 7) = val;
+        WFIFOW (fd, 9) = val2;
+        WFIFOSET (fd, 11);
+    }
+    else
+    {
+        WFIFOHEAD (fd, 19);
+        WFIFOW (fd, 0) = 0xb17;
+        WFIFOL (fd, 2) = id;
+        WFIFOB (fd, 6) = type;
+        WFIFOW (fd, 7) = val;
+        WFIFOW (fd, 9) = val2;
+        if (data)
+        {
+            //ShowWarning("equip: for type %d\n", type);
+            for (int i = 0; i < data->slot; i++ )
+            {
+                struct item_data *data;
+                if (!sd->status.inventory[n].card[i])
+                    continue;
+                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+                {
+                    //ShowWarning("card %d\n", data->nameid);
+                    WFIFOW (fd, 11 + i * 2) = data->nameid;
+                }
+            }
+            for (int i = data->slot; i < MAX_SLOTS; i ++)
+                WFIFOW (fd, 11 + i * 2) = 0;
+        }
+        else
+        {
+            //ShowWarning("unequip: for type %d\n", type);
+            WFIFOW (fd, 11) = 0;
+            WFIFOW (fd, 13) = 0;
+            WFIFOW (fd, 15) = 0;
+            WFIFOW (fd, 17) = 0;
+        }
+        WFIFOSET (fd, 19);
+    }
 }
 
 void send_mapmask(int fd, int mask)
@@ -302,4 +343,43 @@ void send_client_command(TBL_PC *sd, const char *const command)
     WFIFOW (fd, 2) = len + 4;
     memcpy (WFIFOP (fd, 4), command, len);
     WFIFOSET (fd, len + 4);
+}
+
+void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id, int type, int val, int val2,
+                      struct item_data *data, int n, enum send_target target)
+{
+    unsigned char buf[32];
+    WBUFW(buf, 0) = 0x1d7;
+    WBUFL(buf, 2) = id;
+    WBUFB(buf, 6) = type;
+    WBUFW(buf, 7) = val;
+    WBUFW(buf, 9) = val2;
+    clif->send(buf, 11, bl, target);
+    WBUFW(buf, 0) = 0xb17;
+    if (data)
+    {
+        //ShowWarning("equip: for type %d\n", type);
+        for (int i = 0; i < data->slot; i++ )
+        {
+            struct item_data *data;
+            if (!sd->status.inventory[n].card[i])
+                continue;
+            if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+            {
+                //ShowWarning("card %d\n", data->nameid);
+                WBUFW(buf, 11 + i * 2) = data->nameid;
+            }
+        }
+        for (int i = data->slot; i < MAX_SLOTS; i ++)
+            WBUFW(buf, 11 + i * 2) = 0;
+    }
+    else
+    {
+        //ShowWarning("unequip: for type %d\n", type);
+        WBUFW(buf, 11) = 0;
+        WBUFW(buf, 13) = 0;
+        WBUFW(buf, 15) = 0;
+        WBUFW(buf, 17) = 0;
+    }
+    clif->send(buf, 19, bl, target);
 }
