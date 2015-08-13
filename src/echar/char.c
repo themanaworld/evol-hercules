@@ -7,11 +7,13 @@
 
 #include "common/HPMi.h"
 #include "common/malloc.h"
+#include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "char/char.h"
+#include "char/inter.h"
 
 #include "echar/char.h"
 #include "echar/config.h"
@@ -171,4 +173,129 @@ void echar_parse_login_password_change_ack(int charFd)
         WFIFOB(fd, 2) = status;
         WFIFOSET(fd, 3);
     }
+}
+
+void echar_mmo_char_send099d(int *fdPtr, struct char_session_data *sd)
+{
+    send_additional_slots(*fdPtr, sd);
+}
+
+int echar_mmo_char_send_characters(int retVal, int *fdPtr, struct char_session_data* sd)
+{
+    send_additional_slots(*fdPtr, sd);
+    return retVal;
+}
+
+void send_additional_slots(int fd, struct char_session_data* sd)
+{
+    int char_id;
+    int name_id;
+    int slot;
+    short card0;
+    short card1;
+    short card2;
+    short card3;
+
+    if (sd->version < 9)
+        return;
+
+    SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
+    if (stmt == NULL)
+    {
+        SqlStmt_ShowDebug(stmt);
+        return;
+    }
+
+    if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT "
+        "inventory.char_id, inventory.nameid, inventory.equip, "
+        "inventory.card0, inventory.card1, inventory.card2, inventory.card3 "
+        "FROM `char` "
+        "LEFT JOIN inventory ON inventory.char_id = `char`.char_id "
+        "WHERE account_id = '%d' AND equip <> 0 AND amount > 0 ORDER BY inventory.char_id", sd->account_id)
+        || SQL_ERROR == SQL->StmtExecute(stmt)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,   &char_id, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT,   &name_id, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_INT,   &slot, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_SHORT, &card0, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_SHORT, &card1, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_SHORT, &card2, 0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_SHORT, &card3, 0, NULL, NULL))
+    {
+        SqlStmt_ShowDebug(stmt);
+        SQL->StmtFree(stmt);
+        return;
+    }
+
+    while (SQL_SUCCESS == SQL->StmtNextRow(stmt))
+    {
+        int type = 2;
+        switch (slot)
+        {
+            case 0:
+                type = 0;
+                break;
+            case EQP_HEAD_LOW:
+                type = 3;
+                break;
+            case EQP_HAND_R:
+                type = 2;
+                break;
+            case EQP_GARMENT:
+                type = 12;
+                break;
+            case EQP_ACC_L:     // not implimented
+                type = 0;
+                break;
+            case EQP_ARMOR:
+                type = 17;
+                break;
+            case EQP_HAND_L:    // not implimented
+                type = 0;
+                break;
+            case EQP_SHOES:
+                type = 9;
+                break;
+            case EQP_ACC_R:     // not implimented
+                type = 0;
+                break;
+            case EQP_HEAD_TOP:
+                type = 4;
+                break;
+            case EQP_HEAD_MID:
+                type = 5;
+                break;
+            case EQP_COSTUME_HEAD_TOP:
+                type = 13;
+                break;
+            case EQP_COSTUME_HEAD_MID:
+                type = 14;
+                break;
+            case EQP_COSTUME_HEAD_LOW:
+                type = 15;
+                break;
+            case EQP_COSTUME_GARMENT:
+                type = 16;
+                break;
+            dafault:
+                ShowWarning("unknown equip for char %d, item %d, slot %d, cards %d,%d,%d,%d\n", char_id, name_id, slot, (int)card0, (int)card1, (int)card2, (int)card3);
+                type = 0;
+                break;
+        }
+
+        WFIFOHEAD (fd, 19);
+        WFIFOW (fd, 0) = 0xb17;
+        WFIFOL (fd, 2) = char_id;
+        WFIFOB (fd, 6) = (unsigned char)type;
+        WFIFOW (fd, 7) = name_id;
+        WFIFOW (fd, 9) = 0;
+        WFIFOW (fd, 11) = card0;
+        WFIFOW (fd, 13) = card1;
+        WFIFOW (fd, 15) = card2;
+        WFIFOW (fd, 17) = card3;
+        WFIFOSET (fd, 19);
+
+        //ShowWarning("char %d, item %d, slot %d->%d, cards %d,%d,%d,%d\n", char_id, name_id, slot, type, (int)card0, (int)card1, (int)card2, (int)card3);
+    }
+
+    SQL->StmtFree(stmt);
 }

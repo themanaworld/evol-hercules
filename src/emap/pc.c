@@ -93,19 +93,6 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
         }
         pc->calcweapontype(sd);
         eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.weapon, id, n);
-        if (sd->status.weapon)
-        {
-            for (int i = 0; i < id->slot; i++ )
-            {
-                struct item_data *data;
-                if (!sd->status.inventory[n].card[i])
-                    continue;
-                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
-                {
-                    ShowWarning("equip: for pos %d card %d\n", LOOK_WEAPON, data->nameid);
-                }
-            }
-        }
     }
     if (pos & (EQP_HAND_L|EQP_SHADOW_SHIELD))
     {
@@ -128,19 +115,6 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
         }
         pc->calcweapontype(sd);
         eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.shield, id, n);
-        if (sd->status.shield)
-        {
-            for (int i = 0; i < id->slot; i++ )
-            {
-                struct item_data *data;
-                if (!sd->status.inventory[n].card[i])
-                    continue;
-                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
-                {
-                    ShowWarning("equip: for pos %d card %d\n", LOOK_SHIELD, data->nameid);
-                }
-            }
-        }
     }
 
     equipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);

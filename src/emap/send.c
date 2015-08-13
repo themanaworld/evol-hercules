@@ -82,6 +82,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
                      struct item_data *data, int n)
 {
     struct SessionExt *tdata = session_get_bysd(sd2);
+    //ShowWarning("equip: for type %d = %d\n", type, val);
     if (!tdata || tdata->clientVersion < 9)
     {
         WFIFOHEAD (fd, 11);
@@ -102,7 +103,6 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
         WFIFOW (fd, 9) = val2;
         if (data)
         {
-            //ShowWarning("equip: for type %d\n", type);
             for (int i = 0; i < data->slot; i++ )
             {
                 struct item_data *data;
@@ -348,6 +348,7 @@ void send_client_command(TBL_PC *sd, const char *const command)
 void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id, int type, int val, int val2,
                       struct item_data *data, int n, enum send_target target)
 {
+    //ShowWarning("equip: for type %d = %d\n", type, val);
     unsigned char buf[32];
     WBUFW(buf, 0) = 0x1d7;
     WBUFL(buf, 2) = id;

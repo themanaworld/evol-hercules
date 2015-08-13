@@ -14,4 +14,16 @@ void echar_parse_change_paassword(int fd);
 
 void echar_parse_login_password_change_ack(int charFd);
 
+void echar_mmo_char_send099d_post(int *fdPtr, struct char_session_data *sd);
+
+int echar_mmo_char_send_characters_post(int retVal, int *fdPtr, struct char_session_data *sd);
+
+int echar_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf);
+
+void echar_mmo_char_send099d(int *fdPtr, struct char_session_data *sd);
+
+int echar_mmo_char_send_characters(int retVal, int *fdPtr, struct char_session_data* sd);
+
+void send_additional_slots(int fd, struct char_session_data* sd);
+
 #endif  // EVOL_CHAR_CHAR
