@@ -88,6 +88,20 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
     hookStop();
 }
 
+static int tmpVersion = 0;
+
+void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint32 *ipl)
+{
+    tmpVersion = RFIFOW(*fdPtr, 14);
+}
+
+void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl)
+{
+    sd = (struct char_session_data*)session[*fdPtr]->session_data;
+    if (sd)
+        sd->version = tmpVersion;
+}
+
 void echar_creation_failed(int *fdPtr, int *result)
 {
     const int fd = *fdPtr;

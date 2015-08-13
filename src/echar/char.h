@@ -26,4 +26,8 @@ int echar_mmo_char_send_characters(int retVal, int *fdPtr, struct char_session_d
 
 void send_additional_slots(int fd, struct char_session_data* sd);
 
+void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint32 *ipl);
+
+void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl);
+
 #endif  // EVOL_CHAR_CHAR

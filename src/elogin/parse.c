@@ -67,7 +67,20 @@ int elogin_parse_client_login_pre(int *fdPtr,
         return 1;
     }
 
+    short *ptr = RFIFOP(fd, 2);
+    if (*ptr == 20)
+        *ptr = clientVersion;
     return 0;
+}
+
+int elogin_parse_client_login_post(int retVal, int *fdPtr,
+                                   struct login_session_data* sd,
+                                   const char *const ip __attribute__ ((unused)))
+{
+    sd = (struct login_session_data*)session[*fdPtr]->session_data;
+    if (sd)
+        sd->version = clientVersion;
+    return retVal;
 }
 
 void elogin_parse_client_login2(int fd)
