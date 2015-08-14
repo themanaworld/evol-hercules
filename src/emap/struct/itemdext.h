@@ -28,6 +28,7 @@ struct ItemdExt
     int unequipFailEffect;
 
     bool allowPickup;
+    bool charmItem;
 };
 
 #endif  // EVOL_MAP_ITEMDEXT

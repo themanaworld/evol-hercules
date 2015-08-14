@@ -361,3 +361,59 @@ int epc_setnewpc(int retVal, struct map_session_data *sd,
     }
     return retVal;
 }
+
+int epc_additem_post(int retVal, struct map_session_data *sd,
+                     struct item *item_data,
+                     int *amountPtr __attribute__ ((unused)),
+                     e_log_pick_type *log_type __attribute__ ((unused)))
+{
+    if (!retVal)
+    {
+        struct ItemdExt *data = itemd_get_by_item(item_data);
+        if (data && data->charmItem)
+            status_calc_pc(sd, SCO_NONE);
+    }
+    return retVal;
+}
+
+static bool calcPc = false;
+
+int epc_delitem_pre(struct map_session_data *sd,
+                    int *nPtr, int *amountPtr,
+                    int *typePtr __attribute__ ((unused)),
+                    short *reasonPtr __attribute__ ((unused)),
+                    e_log_pick_type *log_type __attribute__ ((unused)))
+{
+    if (!sd)
+        return 1;
+    const int n = *nPtr;
+    const int amount = *amountPtr;
+
+    if (sd->status.inventory[n].nameid == 0 ||
+        amount <= 0 ||
+        sd->status.inventory[n].amount < amount ||
+        sd->inventory_data[n] == NULL)
+    {
+        return 1;
+    }
+
+    struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
+    if (data && data->charmItem)
+        calcPc = true;
+
+    return 0;
+}
+
+int epc_delitem_post(int retVal,
+                     struct map_session_data *sd,
+                     int *nPtr __attribute__ ((unused)),
+                     int *amountPtr __attribute__ ((unused)),
+                     int *typePtr __attribute__ ((unused)),
+                     short *reasonPtr __attribute__ ((unused)),
+                     e_log_pick_type *log_type __attribute__ ((unused)))
+{
+    if (!retVal && calcPc && sd)
+        status_calc_pc(sd, SCO_NONE);
+    calcPc = false;
+    return retVal;
+}

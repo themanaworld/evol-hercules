@@ -138,6 +138,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->takeitem", epc_takeitem);
     addHookPre("pc->validate_levels", epc_validate_levels);
     addHookPre("pc->check_job_name", epc_check_job_name);
+    addHookPre("pc->delitem", epc_delitem_pre);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("npc->buysellsel", enpc_buysellsel);
@@ -155,6 +156,7 @@ HPExport void plugin_init (void)
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
     addHookPre("mail->invalid_operation", email_invalid_operation);
+    addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
     addHookPost("clif->authok", eclif_authok_post);
@@ -167,12 +169,14 @@ HPExport void plugin_init (void)
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
     addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
+    addHookPost("pc->additem", epc_additem_post);
     addHookPost("pc->isequip", epc_isuseequip_post);
     addHookPost("pc->isUseitem", epc_isuseequip_post);
     addHookPost("pc->useitem", epc_useitem_post);
     addHookPost("pc->equipitem", epc_equipitem_post);
     addHookPost("pc->unequipitem", epc_unequipitem_post);
     addHookPost("pc->setnewpc", epc_setnewpc);
+    addHookPost("pc->delitem", epc_delitem_post);
 
     langScriptId = script->add_str("Lang");
 }

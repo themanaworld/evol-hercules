@@ -64,5 +64,6 @@ struct ItemdExt *itemd_create(void)
     data->useFailEffect = -1;
     data->unequipEffect = -1;
     data->unequipFailEffect = -1;
+    data->charmItem = false;
     return data;
 }

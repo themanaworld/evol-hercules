@@ -39,4 +39,16 @@ int epc_setnewpc(int retVal, struct map_session_data *sd,
                  int *account_id, int *char_id, int *login_id1,
                  unsigned int *client_tick, int *sex, int *fd);
 
+int epc_additem_post(int retVal, struct map_session_data *sd,
+                     struct item *item_data, int *amountPtr,
+                     e_log_pick_type *log_type);
+
+int epc_delitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr,
+                    int *typePtr, short *reasonPtr,
+                    e_log_pick_type *log_type);
+
+int epc_delitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr,
+                     int *typePtr, short *reasonPtr,
+                     e_log_pick_type *log_type);
+
 #endif  // EVOL_MAP_PC

@@ -78,6 +78,8 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->requiredDef = i32;
     if (libconfig->setting_lookup_int(it, "RequiredMDef", &i32) && i32 >= 0)
         data->requiredMDef = i32;
+    if (libconfig->setting_lookup_bool(it, "Charm", &i32) && i32 >= 0)
+        data->charmItem = i32 ? true : false;
 
     if (itemdb->lookup_const(it, "UseEffect", &i32))
         data->useEffect = i32;

@@ -16,7 +16,9 @@
 #include "map/pc.h"
 #include "map/status.h"
 
+#include "emap/data/itemd.h"
 #include "emap/data/npcd.h"
+#include "emap/struct/itemdext.h"
 #include "emap/struct/npcdext.h"
 
 int class_move_speed[CLASS_COUNT];
@@ -67,4 +69,43 @@ int estatus_calc_pc_(int retVal,
         sd->base_status.speed = class_move_speed[idx];
     }
     return retVal;
+}
+
+int estatus_calc_pc_additional(struct map_session_data* sd,
+                               enum e_status_calc_opt *opt __attribute__ ((unused)))
+{
+    hookStop();
+
+    for (int f = 0; f < MAX_INVENTORY; f ++)
+    {
+        struct item_data *const item = sd->inventory_data[f];
+        if (!item)
+            continue;
+
+        struct ItemdExt *data = itemd_get(item);
+        if (!data || !data->charmItem)
+            continue;
+
+        int k;
+        for (k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k ++)
+        {
+            if (map->list[sd->bl.m].zone->disabled_items[k] == item->nameid)
+                break;
+        }
+
+        if (k < map->list[sd->bl.m].zone->disabled_items_count)
+            continue;
+
+        if (!pc->isequip(sd, f))
+            continue;
+
+
+        struct status_data *bstatus = &sd->base_status;
+        bstatus->def += item->def;
+
+        script->run_use_script(sd, item, 0);
+
+        // here can be refine bonuses
+    }
+    return 0;
 }
