@@ -27,5 +27,6 @@ void eclif_parse_LoadEndAck_pre(int *fdPtr,
 void eclif_changelook2(struct block_list *bl, int type, int val,
                        struct item_data *id, int n);
 void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem);
+void eclif_dropflooritem(struct flooritem_data* fitem);
 
 #endif  // EVOL_MAP_CLIF

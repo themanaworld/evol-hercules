@@ -367,6 +367,28 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
+        if (packet == 0x84b)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion >= 10)
+            {   // not sending old packets to new clients
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0xb19)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 10)
+            {   // not sending new packets to old clients
+                hookStop();
+                return 0;
+            }
+        }
     }
     return 0;
 }
@@ -567,4 +589,29 @@ void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *
     WFIFOB(fd, 26) = fitem->subx;
     WFIFOB(fd, 27) = fitem->suby;
     WFIFOSET(fd, 28);
+}
+
+void eclif_dropflooritem(struct flooritem_data* fitem)
+{
+    char buf[28];
+    int view;
+
+    WBUFW(buf, 0) = 0xb19;
+    WBUFL(buf, 2) = fitem->bl.id;
+    if((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
+        WBUFW(buf, 6) = view;
+    else
+        WBUFW(buf, 6) = fitem->item_data.nameid;
+    WBUFB(buf, 8) = itemtype(itemdb_type(fitem->item_data.nameid));
+    WBUFB(buf, 9) = fitem->item_data.identify;
+    WBUFB(buf, 10) = fitem->item_data.attribute;
+    WBUFB(buf, 11) = fitem->item_data.refine;
+    clif->addcards(WBUFP(buf, 12), &fitem->item_data);
+    WBUFW(buf, 20) = fitem->bl.x;
+    WBUFW(buf, 22) = fitem->bl.y;
+    WBUFW(buf, 24) = fitem->item_data.amount;
+    WBUFB(buf, 26) = fitem->subx;
+    WBUFB(buf, 27) = fitem->suby;
+
+    clif->send(&buf, 28, &fitem->bl, AREA);
 }
