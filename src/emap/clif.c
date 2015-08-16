@@ -522,3 +522,49 @@ void eclif_changelook2(struct block_list *bl, int type, int val,
         send_changelook2(sd, bl, bl->id, type, val, val2, id, n, target);
     }
 }
+
+static inline int itemtype(const int type)
+{
+    switch (type)
+    {
+#if PACKETVER >= 20080827
+        case IT_WEAPON:
+            return IT_ARMOR;
+        case IT_ARMOR:
+        case IT_PETARMOR:
+#endif
+        case IT_PETEGG:
+            return IT_WEAPON;
+        default:
+            return type;
+    }
+}
+
+void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem)
+{
+    int view;
+    int fd = sd->fd;
+
+    struct SessionExt *data = session_get(fd);
+    if (!data || data->clientVersion < 10)
+        return;
+    hookStop();
+    WFIFOHEAD(fd, 28);
+    WFIFOW(fd, 0) = 0xb18;
+    WFIFOL(fd, 2) = fitem->bl.id;
+    if((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
+        WFIFOW(fd, 6) = view;
+    else
+        WFIFOW(fd, 6) = fitem->item_data.nameid;
+    WFIFOB(fd, 8) = itemtype(itemdb_type(fitem->item_data.nameid));
+    WFIFOB(fd, 9) = fitem->item_data.identify;
+    WFIFOB(fd, 10) = fitem->item_data.attribute;
+    WFIFOB(fd, 11) = fitem->item_data.refine;
+    clif->addcards(WFIFOP(fd, 12), &fitem->item_data);
+    WFIFOW(fd, 20) = fitem->bl.x;
+    WFIFOW(fd, 22) = fitem->bl.y;
+    WFIFOW(fd, 24) = fitem->item_data.amount;
+    WFIFOB(fd, 26) = fitem->subx;
+    WFIFOB(fd, 27) = fitem->suby;
+    WFIFOSET(fd, 28);
+}
