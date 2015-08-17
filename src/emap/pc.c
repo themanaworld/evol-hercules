@@ -441,7 +441,7 @@ bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
             }
         }
         if (!cardAmountLimit)
-            return retVal;
+            return false;
 
         int cardsAmount = 0;
         const int slots = sd->inventory_data[*idx_equip]->slot;
