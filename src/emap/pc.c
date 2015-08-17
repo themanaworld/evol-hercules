@@ -419,3 +419,40 @@ int epc_delitem_post(int retVal,
     calcPc = false;
     return retVal;
 }
+
+bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
+                                   int *idx_card, int *idx_equip)
+{
+    if (retVal)
+    {
+        struct ItemdExt *data = itemd_get(sd->inventory_data[*idx_equip]);
+        if (!data || !data->allowedCards[0].id) // allow cards if AllowedCards list is empty
+            return retVal;
+
+        const int newCardId = sd->status.inventory[*idx_card].nameid;
+        int cardAmountLimit = 0;
+
+        for (int f = 0; f < 100 && data->allowedCards[f].id; f ++)
+        {
+            if (data->allowedCards[f].id == newCardId)
+            {
+                cardAmountLimit = data->allowedCards[f].amount;
+                break;
+            }
+        }
+        if (!cardAmountLimit)
+            return retVal;
+
+        int cardsAmount = 0;
+        const int slots = sd->inventory_data[*idx_equip]->slot;
+        for (int f = 0; f < slots; f ++)
+        {
+            const int cardId = sd->status.inventory[*idx_equip].card[f];
+            if (cardId == newCardId)
+                cardsAmount ++;
+        }
+        return cardAmountLimit > cardsAmount;
+    }
+    return retVal;
+}
+

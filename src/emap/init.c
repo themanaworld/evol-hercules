@@ -181,6 +181,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->unequipitem", epc_unequipitem_post);
     addHookPost("pc->setnewpc", epc_setnewpc);
     addHookPost("pc->delitem", epc_delitem_post);
+    addHookPost("pc->can_insert_card_into", epc_can_insert_card_into_post);
 
     langScriptId = script->add_str("Lang");
 }
