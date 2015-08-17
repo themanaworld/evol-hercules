@@ -4,6 +4,12 @@
 #ifndef EVOL_MAP_ITEMDEXT
 #define EVOL_MAP_ITEMDEXT
 
+struct ItemCardExt
+{
+    unsigned short id;
+    unsigned short amount;
+};
+
 struct ItemdExt
 {
     int floorLifeTime;
@@ -26,6 +32,8 @@ struct ItemdExt
     int useFailEffect;
     int unequipEffect;
     int unequipFailEffect;
+
+    struct ItemCardExt allowedCards[100];
 
     bool allowPickup;
     bool charmItem;

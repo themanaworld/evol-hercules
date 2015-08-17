@@ -91,5 +91,32 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->unequipEffect = i32;
     if (itemdb->lookup_const(it, "UnequipFailEffect", &i32))
         data->unequipFailEffect = i32;
+
+    config_setting_t *group = libconfig->setting_get_member(it, "AllowCards");
+    if (group)
+    {
+        int idx = 0;
+        config_setting_t *it2 = NULL;
+        int cnt = 0;
+        while ((it2 = libconfig->setting_get_elem(group, idx ++)))
+        {
+            const char *name = config_setting_name(it2);
+            if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
+                continue;
+            const int val = libconfig->setting_get_int(it2);
+            if (name)
+            {
+                data->allowedCards[cnt].id = atoi(name + 2);
+                data->allowedCards[cnt].amount = val;
+            }
+            else
+            {
+                data->allowedCards[cnt].id = val;
+                data->allowedCards[cnt].amount = 1;
+            }
+            cnt ++;
+        }
+    }
+
     hookStop();
 }

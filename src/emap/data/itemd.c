@@ -67,5 +67,6 @@ struct ItemdExt *itemd_create(void)
     data->unequipEffect = -1;
     data->unequipFailEffect = -1;
     data->charmItem = false;
+    memset(&data->allowedCards, 0, sizeof(data->allowedCards));
     return data;
 }
