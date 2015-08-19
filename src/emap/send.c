@@ -84,6 +84,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
                      struct item_data *data, int n)
 {
     struct SessionExt *tdata = session_get_bysd(sd2);
+    int i;
     //ShowWarning("equip: for type %d = %d\n", type, val);
     if (!tdata || tdata->clientVersion < 9)
     {
@@ -105,7 +106,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
         WFIFOW (fd, 9) = val2;
         if (data)
         {
-            for (int i = 0; i < data->slot; i++ )
+            for (i = 0; i < data->slot; i++ )
             {
                 struct item_data *data;
                 if (!sd->status.inventory[n].card[i])
@@ -116,7 +117,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
                     WFIFOW (fd, 11 + i * 2) = data->nameid;
                 }
             }
-            for (int i = data->slot; i < MAX_SLOTS; i ++)
+            for (i = data->slot; i < MAX_SLOTS; i ++)
                 WFIFOW (fd, 11 + i * 2) = 0;
         }
         else
@@ -352,6 +353,8 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
 {
     //ShowWarning("equip: for type %d = %d\n", type, val);
     unsigned char buf[32];
+    int i;
+
     WBUFW(buf, 0) = 0x1d7;
     WBUFL(buf, 2) = id;
     WBUFB(buf, 6) = type;
@@ -362,7 +365,7 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
     if (data)
     {
         //ShowWarning("equip: for type %d\n", type);
-        for (int i = 0; i < data->slot; i++ )
+        for (i = 0; i < data->slot; i++ )
         {
             struct item_data *data;
             if (!sd->status.inventory[n].card[i])
@@ -373,7 +376,7 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
                 WBUFW(buf, 11 + i * 2) = data->nameid;
             }
         }
-        for (int i = data->slot; i < MAX_SLOTS; i ++)
+        for (i = data->slot; i < MAX_SLOTS; i ++)
             WBUFW(buf, 11 + i * 2) = 0;
     }
     else

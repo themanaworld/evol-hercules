@@ -76,9 +76,12 @@ int estatus_calc_pc_(int retVal,
 int estatus_calc_pc_additional(struct map_session_data* sd,
                                enum e_status_calc_opt *opt __attribute__ ((unused)))
 {
+    int f;
+    int k;
+
     hookStop();
 
-    for (int f = 0; f < MAX_INVENTORY; f ++)
+    for (f = 0; f < MAX_INVENTORY; f ++)
     {
         struct item_data *const item = sd->inventory_data[f];
         if (!item)
@@ -88,7 +91,6 @@ int estatus_calc_pc_additional(struct map_session_data* sd,
         if (!data || !data->charmItem)
             continue;
 
-        int k;
         for (k = 0; k < map->list[sd->bl.m].zone->disabled_items_count; k ++)
         {
             if (map->list[sd->bl.m].zone->disabled_items[k] == item->nameid)
