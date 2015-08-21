@@ -1263,3 +1263,20 @@ BUILDIN(isUnitWalking)
     script_pushint(st, ud->walktimer != INVALID_TIMER);
     return true;
 }
+
+BUILDIN(failedRefIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+        return false;
+
+    sd->status.inventory[n].refine = 0;
+    if (sd->status.inventory[n].equip)
+        pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+    clif->refine(sd->fd, 1, n, sd->status.inventory[n].refine);
+    pc->delitem(sd, n, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
+    clif->misceffect(&sd->bl, 2);
+    return true;
+}
