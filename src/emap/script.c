@@ -10,6 +10,7 @@
 #include "common/HPMi.h"
 #include "common/malloc.h"
 #include "common/mmo.h"
+#include "common/utils.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -1277,6 +1278,31 @@ BUILDIN(failedRefIndex)
         pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
     clif->refine(sd->fd, 1, n, sd->status.inventory[n].refine);
     pc->delitem(sd, n, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
+    clif->misceffect(&sd->bl, 2);
+    return true;
+}
+
+BUILDIN(downRefIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+        return false;
+
+    const int down = script_getnum(st, 3);
+
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[n], sd->inventory_data[n]);
+
+    if (sd->status.inventory[n].equip)
+        pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+    sd->status.inventory[n].refine -= down;
+    sd->status.inventory[n].refine = cap_value(sd->status.inventory[n].refine, 0, MAX_REFINE);
+
+    clif->refine(sd->fd, 2, n, sd->status.inventory[n].refine);
+    clif->delitem(sd, n, 1, DELITEM_MATERIALCHANGE);
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n], sd->inventory_data[n]);
+    clif->additem(sd, n, 1, 0);
     clif->misceffect(&sd->bl, 2);
     return true;
 }

@@ -45,5 +45,6 @@ BUILDIN(setMount);
 BUILDIN(clientCommand);
 BUILDIN(isUnitWalking);
 BUILDIN(failedRefIndex);
+BUILDIN(downRefIndex);
 
 #endif  // EVOL_MAP_SCRIPT
