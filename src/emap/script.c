@@ -35,6 +35,11 @@
 #include "emap/struct/sessionext.h"
 #include "emap/utils/formatutils.h"
 
+uint32 MakeDWord(uint16 word0, uint16 word1)
+{
+    return ((uint32)(word0)) | ((uint32)(word1 << 0x10));
+}
+
 BUILDIN(l)
 {
     format_sub(st, 1);
@@ -1304,5 +1309,51 @@ BUILDIN(downRefIndex)
     logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n], sd->inventory_data[n]);
     clif->additem(sd, n, 1, 0);
     clif->misceffect(&sd->bl, 2);
+    return true;
+}
+
+BUILDIN(successRefIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+        return false;
+
+    const int up = script_getnum(st, 3);
+
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[n],sd->inventory_data[n]);
+
+    if (sd->status.inventory[n].refine >= MAX_REFINE)
+        return true;
+
+    sd->status.inventory[n].refine += up;
+    sd->status.inventory[n].refine = cap_value( sd->status.inventory[n].refine, 0, MAX_REFINE);
+    if (sd->status.inventory[n].equip)
+        pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
+    clif->refine(sd->fd, 0, n, sd->status.inventory[n].refine);
+    clif->delitem(sd, n, 1, DELITEM_MATERIALCHANGE);
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n],sd->inventory_data[n]);
+    clif->additem(sd, n, 1, 0);
+    clif->misceffect(&sd->bl, 3);
+
+    if (sd->status.inventory[n].refine == 10 &&
+        sd->status.inventory[n].card[0] == CARD0_FORGE &&
+        sd->status.char_id == (int)MakeDWord(sd->status.inventory[n].card[2], sd->status.inventory[n].card[3]))
+    { // Fame point system [DracoRPG]
+        switch (sd->inventory_data[n]->wlv)
+        {
+            case 1:
+                pc->addfame(sd,1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+                break;
+            case 2:
+                pc->addfame(sd,25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+                break;
+            case 3:
+                pc->addfame(sd,1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+                break;
+        }
+    }
+
     return true;
 }
