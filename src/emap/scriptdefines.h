@@ -18,7 +18,7 @@
     } \
     struct SessionExt *data = session_get(sd->fd)
 
-#define getSessionData() \
+#define getSessionData(data) \
     if (!st->rid) \
         return true; \
     TBL_PC *sd = script->rid2sd(st); \

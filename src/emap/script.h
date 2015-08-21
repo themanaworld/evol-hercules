@@ -17,6 +17,8 @@ BUILDIN(getItemLink);
 BUILDIN(requestLang);
 BUILDIN(requestItem);
 BUILDIN(requestItems);
+BUILDIN(requestItemIndex);
+BUILDIN(requestItemsIndex);
 BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(setNpcDir);

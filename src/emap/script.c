@@ -88,7 +88,7 @@ BUILDIN(setCamNpc)
         y = script_getnum(st, 4);
     }
 
-    send_npccommand2(script->rid2sd (st), st->oid, 2, nd->bl.id, x, y);
+    send_npccommand2(sd, st->oid, 2, nd->bl.id, x, y);
 
     return true;
 }
@@ -185,7 +185,7 @@ BUILDIN(npcTalk3)
 BUILDIN(closeDialog)
 {
     getSD();
-    send_npccommand(script->rid2sd (st), st->oid, 5);
+    send_npccommand(sd, st->oid, 5);
     return true;
 }
 
@@ -287,7 +287,7 @@ BUILDIN(requestLang)
         st->state = RERUNLINE;
 
         // send lang request
-        send_npccommand(script->rid2sd(st), st->oid, 0);
+        send_npccommand(sd, st->oid, 0);
         clif->scriptinputstr(sd, st->oid);
     }
     else
@@ -324,7 +324,7 @@ BUILDIN(requestItem)
 
     if (is_string_variable(name))
     {
-        ShowError("script:requestlang: not a variable\n");
+        ShowError("script:requestitem: not a variable\n");
         script->reportsrc(st);
         return false;
     }
@@ -336,7 +336,7 @@ BUILDIN(requestItem)
         st->state = RERUNLINE;
 
         // send item request
-        send_npccommand(script->rid2sd(st), st->oid, 10);
+        send_npccommand(sd, st->oid, 10);
     }
     else
     {
@@ -406,7 +406,135 @@ BUILDIN(requestItems)
         st->state = RERUNLINE;
 
         // send item request with limit count
-        send_npccommand2(script->rid2sd (st), st->oid, 10, count, 0, 0);
+        send_npccommand2(sd, st->oid, 10, count, 0, 0);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        if (!sd->npc_str)
+        {
+            ShowWarning("npc string not found\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st, 2));
+        st->state = RUN;
+    }
+    return true;
+}
+
+BUILDIN(requestItemIndex)
+{
+    getSessionData(client);
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestitem: not a variable\n");
+        script->reportsrc(st);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+
+    if (is_string_variable(name))
+    {
+        ShowError("script:requestitemindex: not a variable\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send item request
+        if (client || client->clientVersion >= 11)
+            send_npccommand(sd, st->oid, 11);
+        else
+            clif->scriptinputstr(sd, st->oid);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        int item = 0;
+
+        if (!sd->npc_str)
+        {
+            ShowWarning("npc string not found\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        if (sscanf (sd->npc_str, "%5d", &item) < 1)
+        {
+            ShowWarning("input data is not item id\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(item), script_getref(st,2));
+        st->state = RUN;
+    }
+    return true;
+}
+
+BUILDIN(requestItemsIndex)
+{
+    getSessionData(client);
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestitem: not a variable\n");
+        script->reportsrc(st);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+
+    if (!is_string_variable(name))
+    {
+        ShowWarning("parameter is not variable\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    int count = 1;
+
+    if (script_hasdata(st, 3))
+    {
+        count = script_getnum(st, 3);
+        if (count < 0)
+            count = 1;
+    }
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send item request with limit count
+        if (client || client->clientVersion >= 11)
+            send_npccommand2(sd, st->oid, 11, count, 0, 0);
+        else
+            clif->scriptinputstr(sd, st->oid);
     }
     else
     {
@@ -546,14 +674,7 @@ BUILDIN(countItemColor)
     int nameid, i;
     int count = 0;
     struct item_data* id = NULL;
-
-    TBL_PC* sd = script->rid2sd(st);
-    if (!sd)
-    {
-        ShowWarning("player not attached\n");
-        script->reportsrc(st);
-        return false;
-    }
+    getSD();
 
     if (script_isstringtype(st, 2))
     {
@@ -1103,14 +1224,8 @@ BUILDIN(setMount)
 
 BUILDIN(clientCommand)
 {
-    TBL_PC* sd = script->rid2sd(st);
+    getSD();
 
-    if (sd == NULL)
-    {
-        ShowWarning("player not attached\n");
-        script->reportsrc(st);
-        return false;
-    }
     const char *const command = script_getstr(st, 2);
     if (!command)
     {
