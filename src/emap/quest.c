@@ -13,6 +13,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "map/itemdb.h"
+#include "map/script.h"
 #include "map/quest.h"
 
 #include "emap/quest.h"
@@ -71,6 +72,8 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
         hookStop();
         return NULL;
     }
+
+    script->set_constant2(str, quest_id, false);
 
     CREATE(entry, struct quest_db, 1);
     entry->id = quest_id;
