@@ -8,7 +8,8 @@ CHAR_SRC = echar/char.c \
     ecommon/config.c \
     ecommon/config.h \
     ecommon/init.c \
-    ecommon/init.h
+    ecommon/init.h \
+    ecommon/serverversion.h
 
 LOGIN_SRC = elogin/config.c \
     elogin/config.h \
@@ -26,7 +27,8 @@ LOGIN_SRC = elogin/config.c \
     ecommon/config.c \
     ecommon/config.h \
     ecommon/init.c \
-    ecommon/init.h
+    ecommon/init.h \
+    ecommon/serverversion.h
 
 MAP_SRC = emap/atcommand.c \
     emap/atcommand.h \
@@ -81,7 +83,8 @@ MAP_SRC = emap/atcommand.c \
     ecommon/config.c \
     ecommon/config.h \
     ecommon/init.c \
-    ecommon/init.h
+    ecommon/init.h \
+    ecommon/serverversion.h
 
 # need remove -Wno-unused
 

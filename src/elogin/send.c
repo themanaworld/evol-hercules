@@ -14,6 +14,7 @@
 #include "common/strlib.h"
 #include "login/login.h"
 
+#include "ecommon/serverversion.h"
 #include "elogin/config.h"
 #include "elogin/send.h"
 
@@ -21,9 +22,11 @@ void send_server_version(int fd)
 {
     WFIFOHEAD(fd, 4 + 8);
     WFIFOW(fd, 0) = 0x7531;
-    WFIFOW(fd, 2) = 4 + 8;
+    WFIFOW(fd, 2) = 16;
     WFIFOL(fd, 4) = 0;  // unused
-    WFIFOL(fd, 8) = 7;  // server version
+    WFIFOL(fd, 8) = 8;  // plugin version
+    WFIFOL(fd, 12) = serverPacketVersion;  // server packet version
+
     WFIFOSET(fd, WFIFOW(fd,2));
 }
 
