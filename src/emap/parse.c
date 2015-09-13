@@ -55,7 +55,7 @@ void map_parse_join_channel(int fd)
     {
         int k;
         ARR_FIND(0, sd->channel_count, k, sd->channels[k] == chan);
-        if (k < sd->channel_count || channel->join(chan, sd, NULL, true) == HCS_STATUS_OK)
+        if (k < sd->channel_count || channel->join(chan, sd, "", true) == HCS_STATUS_OK)
             res = 1;
         else
             res = 0;
