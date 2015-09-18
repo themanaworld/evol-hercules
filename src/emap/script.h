@@ -47,5 +47,6 @@ BUILDIN(isUnitWalking);
 BUILDIN(failedRefIndex);
 BUILDIN(downRefIndex);
 BUILDIN(successRefIndex);
+BUILDIN(isStr);
 
 #endif  // EVOL_MAP_SCRIPT

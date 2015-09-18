@@ -119,6 +119,7 @@ HPExport void plugin_init (void)
     addScriptCommand("failedrefindex", "i", failedRefIndex);
     addScriptCommand("downrefindex", "ii", downRefIndex);
     addScriptCommand("successrefindex", "ii", successRefIndex);
+    addScriptCommand("isstr", "v", isStr);
 
     do_init_langs();
 

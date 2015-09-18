@@ -1357,3 +1357,18 @@ BUILDIN(successRefIndex)
 
     return true;
 }
+
+// return paramater type
+// 0 - int
+// 1 - string
+// 2 - other
+BUILDIN(isStr)
+{
+    if (script_isinttype(st, 2))
+        script_pushint(st, 0);
+    else if (script_isstringtype(st, 2))
+        script_pushint(st, 1);
+    else
+        script_pushint(st, 2);
+    return true;
+}
