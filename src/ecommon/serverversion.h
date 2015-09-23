@@ -6,6 +6,6 @@
 
 // must be same with version from server build
 
-const int serverPacketVersion = 20150000;
+const int serverPacketVersion = PACKETVER;
 
 #endif  // EVOL_COMMON_SERVERVERSION
