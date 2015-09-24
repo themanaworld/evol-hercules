@@ -162,7 +162,7 @@ void map_parse_pet_move(int fd)
     short y = RFIFOW(fd, 8);
 
     struct block_list *pdBl = &sd->pd->bl;
-    if (map->getcell(pdBl->m, x, y, CELL_CHKPASS))
+    if (map->getcell(pdBl->m, pdBl, x, y, CELL_CHKPASS))
         unit->walktoxy(pdBl, x, y, 0);
 }
 

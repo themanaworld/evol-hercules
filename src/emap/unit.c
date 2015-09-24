@@ -134,8 +134,8 @@ int eunit_can_move(struct block_list *bl)
     if(bl->type == BL_MOB)
     {
         TBL_MOB *md = BL_CAST(BL_MOB, bl);
-        if(md && ((md->status.mode&MD_BOSS && battle->bc->boss_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))
-           || (!(md->status.mode&MD_BOSS) && battle->bc->mob_icewall_walk_block == 1 && map->getcell(bl->m,bl->x,bl->y,CELL_CHKICEWALL))))
+        if(md && ((md->status.mode&MD_BOSS && battle->bc->boss_icewall_walk_block == 1 && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKICEWALL))
+           || (!(md->status.mode&MD_BOSS) && battle->bc->mob_icewall_walk_block == 1 && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKICEWALL))))
         {
             md->walktoxy_fail_count = 1; //Make sure rudeattacked skills are invoked
             hookStop();
