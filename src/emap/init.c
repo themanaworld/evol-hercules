@@ -94,6 +94,9 @@ HPExport void plugin_init (void)
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("setnpcdir", "*", setNpcDir);
+    addScriptCommand("npcsit", "*", npcSit);
+    addScriptCommand("npcstand", "*", npcStand);
+    addScriptCommand("npcwalkto", "ii", npcWalkTo);
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("countitemcolor", "v*", countItemColor);
     addScriptCommand("misceffect", "i*", miscEffect);

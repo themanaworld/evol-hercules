@@ -1372,3 +1372,95 @@ BUILDIN(isStr)
         script_pushint(st, 2);
     return true;
 }
+
+BUILDIN(npcSit)
+{
+    TBL_NPC *nd = NULL;
+
+    if (script_hasdata(st, 2))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+    }
+    else
+    {
+        if (!st->oid)
+        {
+            ShowWarning("npc not attached\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        nd = (TBL_NPC *) map->id2bl (st->oid);
+    }
+    if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+    nd->vd->dead_sit = 2;
+    clif->sitting(&nd->bl);
+    return true;
+}
+
+BUILDIN(npcStand)
+{
+    TBL_NPC *nd = NULL;
+
+    if (script_hasdata(st, 2))
+    {
+        nd = npc->name2id (script_getstr(st, 2));
+    }
+    else
+    {
+        if (!st->oid)
+        {
+            ShowWarning("npc not attached\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        nd = (TBL_NPC *) map->id2bl (st->oid);
+    }
+    if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+    nd->vd->dead_sit = 0;
+    clif->standing(&nd->bl);
+    return true;
+}
+
+BUILDIN(npcWalkTo)
+{
+    struct npc_data *nd = (struct npc_data *)map->id2bl(st->oid);
+    int x = 0, y = 0;
+
+    x = script_getnum(st, 2);
+    y = script_getnum(st, 3);
+
+    if (nd)
+    {
+        unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+        if (!nd->status.hp)
+        {
+            status_calc_npc(nd, SCO_FIRST);
+        }
+        else
+        {
+            status_calc_npc(nd, SCO_NONE);
+        }
+        nd->vd->dead_sit = 0;
+        unit->walktoxy(&nd->bl,x,y,0);
+    }
+    else
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    return true;
+}

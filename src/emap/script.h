@@ -48,5 +48,8 @@ BUILDIN(failedRefIndex);
 BUILDIN(downRefIndex);
 BUILDIN(successRefIndex);
 BUILDIN(isStr);
+BUILDIN(npcSit);
+BUILDIN(npcStand);
+BUILDIN(npcWalkTo);
 
 #endif  // EVOL_MAP_SCRIPT
