@@ -175,10 +175,23 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
 
 void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str)
 {
+    if (!strcmp(name, ".map$"))
+    {
+        ShowWarning("you cant assign '.map$'.\n");
+        script->reportsrc(st);
+        hookStop();
+    }
 }
 
 char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
 {
+    const char *name = reference_getname(data);
+    if (!strcmp(name, ".map$"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return map->list[nd->bl.m].name;
+    }
     return NULL;
 }
 
