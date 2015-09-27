@@ -66,6 +66,11 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
         nd->vd->sex = *val;
         clif->spawn(&nd->bl);
     }
+    else if (!strcmp(name, ".distance"))
+    {
+        getND();
+        nd->area_size = *val;
+    }
 }
 
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -81,7 +86,14 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
     else if (!strcmp(name, ".sex"))
     {
         getNDReturn(0);
+        hookStop();
         return nd->vd->sex;
+    }
+    else if (!strcmp(name, ".distance"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->area_size;
     }
     return 0;
 }
