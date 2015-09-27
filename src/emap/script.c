@@ -71,6 +71,19 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
         getND();
         nd->area_size = *val;
     }
+    else if (!strcmp(name, ".dir"))
+    {
+        getND();
+        int newdir = *val;
+
+        if (newdir < 0)
+            newdir = 0;
+        else if (newdir > 7)
+            newdir = 7;
+
+        nd->dir = newdir;
+        npc->enable(nd->name, 1);
+    }
 }
 
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -94,6 +107,12 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
         getNDReturn(0);
         hookStop();
         return nd->area_size;
+    }
+    else if (!strcmp(name, ".dir"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->dir;
     }
     return 0;
 }
