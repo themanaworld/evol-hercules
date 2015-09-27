@@ -85,4 +85,14 @@
         return false; \
     }
 
+#define getND() \
+    TBL_NPC *nd = map->id2nd(st->oid); \
+    if (!nd) \
+        return; \
+
+#define getNDReturn(def) \
+    TBL_NPC *nd = map->id2nd(st->oid); \
+    if (!nd) \
+        return def; \
+
 #endif  // EVOL_MAP_SCRIPTDEFINES
