@@ -65,11 +65,13 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
         clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
         nd->vd->sex = *val;
         clif->spawn(&nd->bl);
+        hookStop();
     }
     else if (!strcmp(name, ".distance"))
     {
         getND();
         nd->area_size = *val;
+        hookStop();
     }
     else if (!strcmp(name, ".dir"))
     {
@@ -83,16 +85,27 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
 
         nd->dir = newdir;
         npc->enable(nd->name, 1);
+        hookStop();
     }
     else if (!strcmp(name, ".x"))
     {
         ShowWarning("you cant assign '.x'\n");
         script->reportsrc(st);
+        hookStop();
     }
     else if (!strcmp(name, ".y"))
     {
         ShowWarning("you cant assign '.y'.\n");
         script->reportsrc(st);
+        hookStop();
+    }
+    else if (!strcmp(name, ".class"))
+    {
+        getND();
+        int class_ = *val;
+        if (nd->class_ != class_)
+            npc->setclass(nd, class_);
+        hookStop();
     }
 }
 
@@ -135,6 +148,12 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
         getNDReturn(0);
         hookStop();
         return nd->bl.y;
+    }
+    else if (!strcmp(name, ".class"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->class_;
     }
     return 0;
 }
