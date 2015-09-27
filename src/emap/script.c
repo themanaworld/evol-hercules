@@ -35,6 +35,45 @@
 #include "emap/struct/sessionext.h"
 #include "emap/utils/formatutils.h"
 
+#define getExt() \
+    TBL_NPC *nd = map->id2nd(st->oid); \
+    if (!nd) \
+        return; \
+    struct NpcdExt *ext = npcd_get(nd); \
+    if (!ext) \
+        return
+
+#define getExtRet(r) \
+    TBL_NPC *nd = map->id2nd(st->oid); \
+    if (!nd) \
+        return r; \
+    struct NpcdExt *ext = npcd_get(nd); \
+    if (!ext) \
+        return r
+
+void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
+{
+    if (!strcmp(name, ".lang"))
+    {
+        getExt();
+        ext->language = *val;
+        hookStop();
+    }
+}
+
+int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
+{
+    const char *name = reference_getname(data);
+    if (!strcmp(name, ".lang"))
+    {
+        getExtRet(0);
+
+        hookStop();
+        return ext->language;
+    }
+    return 0;
+}
+
 uint32 MakeDWord(uint16 word0, uint16 word1)
 {
     return ((uint32)(word0)) | ((uint32)(word1 << 0x10));

@@ -169,6 +169,9 @@ HPExport void plugin_init (void)
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
     addHookPre("mail->invalid_operation", email_invalid_operation);
+    addHookPre("script->set_reg_npc_num", escript_set_reg_npc_num);
+    addHookPre("script->get_val_npc_num", escript_get_val_npcscope_num);
+    addHookPre("script->get_val_ref_num", escript_get_val_npcscope_num);
     addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);

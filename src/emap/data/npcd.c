@@ -36,5 +36,6 @@ struct NpcdExt *npcd_create(void)
     if (!data)
         return NULL;
     data->init = false;
+    data->language = 0;
     return data;
 }
