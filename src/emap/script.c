@@ -181,6 +181,16 @@ void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *n
         script->reportsrc(st);
         hookStop();
     }
+    else if (!strcmp(name, ".name$"))
+    {
+        getND();
+        npc->setdisplayname(nd, str);
+//      not working because cant sent brodcast with translated npc name. need add for_each function for this.
+//        clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
+//        safestrncpy(nd->name, str, sizeof(nd->name));
+//        clif->spawn(&nd->bl);
+        hookStop();
+    }
 }
 
 char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -191,6 +201,12 @@ char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, st
         getNDReturn(0);
         hookStop();
         return map->list[nd->bl.m].name;
+    }
+    else if (!strcmp(name, ".name$"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->name;
     }
     return NULL;
 }
