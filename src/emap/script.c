@@ -84,6 +84,16 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
         nd->dir = newdir;
         npc->enable(nd->name, 1);
     }
+    else if (!strcmp(name, ".x"))
+    {
+        ShowWarning("you cant assign '.x'\n");
+        script->reportsrc(st);
+    }
+    else if (!strcmp(name, ".y"))
+    {
+        ShowWarning("you cant assign '.y'.\n");
+        script->reportsrc(st);
+    }
 }
 
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -113,6 +123,18 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
         getNDReturn(0);
         hookStop();
         return nd->dir;
+    }
+    else if (!strcmp(name, ".x"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->bl.x;
+    }
+    else if (!strcmp(name, ".y"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->bl.y;
     }
     return 0;
 }
