@@ -107,6 +107,15 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
             npc->setclass(nd, class_);
         hookStop();
     }
+    else if (!strcmp(name, ".speed"))
+    {
+        getND();
+
+        unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+        nd->speed = *val;
+        nd->ud->state.speed_changed = 1;
+        hookStop();
+    }
 }
 
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -154,6 +163,12 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
         getNDReturn(0);
         hookStop();
         return nd->class_;
+    }
+    else if (!strcmp(name, ".speed"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->speed;
     }
     return 0;
 }
