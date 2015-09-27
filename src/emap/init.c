@@ -172,6 +172,9 @@ HPExport void plugin_init (void)
     addHookPre("script->set_reg_npc_num", escript_set_reg_npc_num);
     addHookPre("script->get_val_npc_num", escript_get_val_npcscope_num);
     addHookPre("script->get_val_ref_num", escript_get_val_npcscope_num);
+    addHookPre("script->set_reg_npc_str", escript_set_reg_npc_str);
+    addHookPre("script->get_val_npc_str", escript_get_val_npcscope_str);
+    addHookPre("script->get_val_ref_str", escript_get_val_npcscope_str);
     addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);

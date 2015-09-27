@@ -173,6 +173,15 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
     return 0;
 }
 
+void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str)
+{
+}
+
+char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
+{
+    return NULL;
+}
+
 uint32 MakeDWord(uint16 word0, uint16 word1)
 {
     return ((uint32)(word0)) | ((uint32)(word1 << 0x10));

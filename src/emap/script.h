@@ -6,6 +6,8 @@
 
 void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val);
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data);
+void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str);
+char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data);
 
 BUILDIN(l);
 BUILDIN(lg);
