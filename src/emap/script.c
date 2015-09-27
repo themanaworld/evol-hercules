@@ -916,26 +916,6 @@ BUILDIN(setNpcSex)
         nd = npc->name2id (script_getstr(st, 2));
         sex = script_getnum(st, 3);
     }
-    else if (script_hasdata(st, 2))
-    {
-        sex = script_getnum(st, 2);
-    }
-    else
-    {
-        ShowWarning("no parameters provided\n");
-        script->reportsrc(st);
-        return false;
-    }
-
-    if (!nd && !st->oid)
-    {
-        ShowWarning("npc not found\n");
-        script->reportsrc(st);
-        return false;
-    }
-
-    if (!nd)
-        nd = (TBL_NPC *) map->id2bl(st->oid);
 
     if (!nd || !nd->vd)
     {
