@@ -191,6 +191,12 @@ void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *n
 //        clif->spawn(&nd->bl);
         hookStop();
     }
+    else if (!strcmp(name, ".extname$"))
+    {
+        ShowWarning("you cant assign '.extname$'.\n");
+        script->reportsrc(st);
+        hookStop();
+    }
 }
 
 char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -207,6 +213,12 @@ char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, st
         getNDReturn(0);
         hookStop();
         return nd->name;
+    }
+    else if (!strcmp(name, ".extname$"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->exname;
     }
     return NULL;
 }
