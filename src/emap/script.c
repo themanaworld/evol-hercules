@@ -14,6 +14,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "map/chat.h"
 #include "map/chrif.h"
 #include "map/clif.h"
 #include "map/npc.h"
@@ -1687,5 +1688,38 @@ BUILDIN(setBgTeam)
     }
 
     data->teamId = teamId;
+    return true;
+}
+
+// chatjoin chatId [,char [,password]]
+BUILDIN(chatJoin)
+{
+    int chatId = script_getnum(st, 2);
+    TBL_PC *sd = NULL;
+    const char *password = "";
+    if (script_hasdata(st, 4))
+    {
+        if (script_isstringtype(st, 3))
+            sd = map->nick2sd(script_getstr(st, 3));
+        if (script_isstringtype(st, 4))
+            password = script_getstr(st, 4);
+    }
+    else if (script_hasdata(st, 3))
+    {
+        if (script_isstringtype(st, 3))
+            sd = map->nick2sd(script_getstr(st, 3));
+    }
+    else
+    {
+        sd = script->rid2sd(st);
+    }
+    if (!sd)
+    {
+        ShowWarning("player not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    chat->join(sd, chatId, password);
     return true;
 }

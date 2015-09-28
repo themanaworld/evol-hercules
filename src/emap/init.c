@@ -77,6 +77,7 @@ HPExport void plugin_init (void)
 
     addAtcommand("setskill", setSkill);
 
+    addScriptCommand("chatjoin", "i*", chatJoin);
     addScriptCommand("setcamnpc", "*", setCamNpc);
     addScriptCommand("setcam", "ii", setCam);
     addScriptCommand("movecam", "ii", moveCam);
