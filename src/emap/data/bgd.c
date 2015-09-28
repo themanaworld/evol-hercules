@@ -23,8 +23,13 @@ struct BgdExt *bgd_get(struct battleground_data *bd)
     struct BgdExt *data = getFromBGDATA(bd, 0);
     if (!data)
     {
+        ShowWarning("creating bg\n");
         data = bgd_create();
         addToBGDATA(bd, data, 0, true);
+    }
+    else
+    {
+        ShowWarning("getting bg\n");
     }
     return data;
 }

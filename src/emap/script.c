@@ -27,9 +27,11 @@
 #include "emap/lang.h"
 #include "emap/scriptdefines.h"
 #include "emap/send.h"
+#include "emap/data/bgd.h"
 #include "emap/data/mapd.h"
 #include "emap/data/npcd.h"
 #include "emap/data/session.h"
+#include "emap/struct/bgdext.h"
 #include "emap/struct/mapdext.h"
 #include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
@@ -1667,5 +1669,23 @@ BUILDIN(npcWalkTo)
         return false;
     }
 
+    return true;
+}
+
+BUILDIN(setBgTeam)
+{
+    int bgId = script_getnum(st, 2);
+    int teamId = script_getnum(st, 3);
+
+    struct battleground_data *bgd = bg->team_search(bgId);
+    struct BgdExt *data = bgd_get(bgd);
+    if (!data)
+    {
+        ShowWarning("bettle ground not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    data->teamId = teamId;
     return true;
 }

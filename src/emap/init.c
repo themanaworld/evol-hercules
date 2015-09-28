@@ -42,6 +42,7 @@
 #include "ecommon/config.h"
 #include "ecommon/init.h"
 #include "emap/atcommand.h"
+#include "emap/battleground.h"
 #include "emap/clif.h"
 #include "emap/itemdb.h"
 #include "emap/lang.h"
@@ -123,6 +124,7 @@ HPExport void plugin_init (void)
     addScriptCommand("downrefindex", "ii", downRefIndex);
     addScriptCommand("successrefindex", "ii", successRefIndex);
     addScriptCommand("isstr", "v", isStr);
+    addScriptCommand("setbgteam", "ii", setBgTeam);
 
     do_init_langs();
 
@@ -141,6 +143,8 @@ HPExport void plugin_init (void)
 
     addHookPre("atcommand->msgfd", eatcommand_msgfd);
     addHookPre("atcommand->msgsd", eatcommand_msgsd);
+
+    addHookPre("bg->team_warp", ebg_team_warp);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
     addHookPre("pc->equipitem_pos", epc_equipitem_pos);
@@ -161,6 +165,8 @@ HPExport void plugin_init (void)
     addHookPre("clif->dropflooritem", eclif_dropflooritem);
     addHookPre("clif->sendlook", eclif_sendlook);
     addHookPre("clif->send", eclif_send);
+    addHookPre("clif->sendbgemblem_area", eclif_sendbgemblem_area);
+    addHookPre("clif->sendbgemblem_single", eclif_sendbgemblem_single);
     addHookPre("clif->set_unit_idle", eclif_set_unit_idle);
     addHookPre("clif->send_actual", eclif_send_actual);
     addHookPre("clif->pLoadEndAck", eclif_parse_LoadEndAck_pre);

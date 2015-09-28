@@ -28,5 +28,7 @@ void eclif_changelook2(struct block_list *bl, int type, int val,
                        struct item_data *id, int n);
 void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem);
 void eclif_dropflooritem(struct flooritem_data* fitem);
+void eclif_sendbgemblem_area(struct map_session_data *sd);
+void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd);
 
 #endif  // EVOL_MAP_CLIF

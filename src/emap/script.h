@@ -56,5 +56,6 @@ BUILDIN(isStr);
 BUILDIN(npcSit);
 BUILDIN(npcStand);
 BUILDIN(npcWalkTo);
+BUILDIN(setBgTeam);
 
 #endif  // EVOL_MAP_SCRIPT

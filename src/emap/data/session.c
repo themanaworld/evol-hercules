@@ -46,5 +46,6 @@ struct SessionExt *session_create(void)
     data->language = 0;
     data->state = 0;
     data->onlinelistlasttime = 0;
+    data->teamId = 0;
     return data;
 }

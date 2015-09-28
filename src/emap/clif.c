@@ -389,6 +389,28 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
+        if (packet == 0x2dd)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion >= 12)
+            {   // not sending old packets to new clients
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0xb1a)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 12)
+            {   // not sending new packets to old clients
+                hookStop();
+                return 0;
+            }
+        }
     }
     return 0;
 }
@@ -614,4 +636,38 @@ void eclif_dropflooritem(struct flooritem_data* fitem)
     WBUFB(buf, 27) = fitem->suby;
 
     clif->send(&buf, 28, &fitem->bl, AREA);
+}
+
+void eclif_sendbgemblem_area(struct map_session_data *sd)
+{
+    unsigned char buf[34];
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!sd || !data || data->clientVersion < 12)
+        return;
+
+    WBUFW(buf, 0) = 0xb1a;
+    WBUFL(buf, 2) = sd->bl.id;
+    safestrncpy((char*)WBUFP(buf,6), sd->status.name, NAME_LENGTH); // name don't show in screen.
+    WBUFW(buf, 30) = sd->bg_id;
+    WBUFW(buf, 32) = data->teamId;
+    clif->send(buf, 34, &sd->bl, AREA);
+}
+
+void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
+{
+    int fd = *fdPtr;
+    struct SessionExt *data = session_get_bysd(sd);
+    struct SessionExt *ddata = session_get_bysd(sd);
+    if (!sd || !data || !ddata || ddata->clientVersion < 12)
+        return;
+
+    WFIFOHEAD(fd, 34);
+    WFIFOW(fd, 0) = 0xb1a;
+    WFIFOL(fd, 2) = sd->bl.id;
+    safestrncpy((char*)WFIFOP(fd, 6), sd->status.name, NAME_LENGTH);
+    WFIFOW(fd, 30) = sd->bg_id;
+    WFIFOW(fd, 32) = data->teamId;
+    WFIFOSET(fd, 34);
+    hookStop();
+    return;
 }

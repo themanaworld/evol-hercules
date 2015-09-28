@@ -9,6 +9,7 @@ struct SessionExt
     time_t onlinelistlasttime;
     int clientVersion;
     int language;
+    int teamId;
     uint8 state;
 };
 
