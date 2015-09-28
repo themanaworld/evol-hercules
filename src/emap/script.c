@@ -128,6 +128,13 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
         clif->sitting(&nd->bl);
         hookStop();
     }
+    else if (!strcmp(name, ".stand"))
+    {
+        getND();
+        nd->vd->dead_sit = (*val) ? 0 : 2;
+        clif->sitting(&nd->bl);
+        hookStop();
+    }
 }
 
 int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -193,6 +200,12 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
         getNDReturn(0);
         hookStop();
         return nd->vd->dead_sit == 2 ? 1 : 0;
+    }
+    else if (!strcmp(name, ".stand"))
+    {
+        getNDReturn(0);
+        hookStop();
+        return nd->vd->dead_sit == 0 ? 1 : 0;
     }
     return 0;
 }
