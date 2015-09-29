@@ -58,5 +58,6 @@ BUILDIN(npcStand);
 BUILDIN(npcWalkTo);
 BUILDIN(setBgTeam);
 BUILDIN(chatJoin);
+BUILDIN(checkNpcCell);
 
 #endif  // EVOL_MAP_SCRIPT

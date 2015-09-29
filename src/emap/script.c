@@ -1723,3 +1723,31 @@ BUILDIN(chatJoin)
     chat->join(sd, chatId, password);
     return true;
 }
+
+/// Retrieves the value of the specified flag of the specified cell.
+///
+/// checknpccell("<map name>",<x>,<y>,<type>) -> <bool>
+///
+/// @see cell_chk* constants in const.txt for the types
+BUILDIN(checkNpcCell)
+{
+    int16 m = map->mapname2mapid(script_getstr(st, 2));
+    int16 x = script_getnum(st, 3);
+    int16 y = script_getnum(st, 4);
+    cell_chk type = (cell_chk)script_getnum(st, 5);
+
+    if (m == -1)
+    {
+        ShowWarning("checknpccell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n", script_getstr(st, 2), type, x, y);
+        return true;
+    }
+
+    TBL_NPC *nd = map->id2nd(st->oid);
+    struct block_list *bl = NULL;
+    if (nd)
+        bl = &nd->bl;
+
+    script_pushint(st, map->getcell(m, bl, x, y, type));
+
+    return true;
+}

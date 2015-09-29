@@ -126,6 +126,7 @@ HPExport void plugin_init (void)
     addScriptCommand("successrefindex", "ii", successRefIndex);
     addScriptCommand("isstr", "v", isStr);
     addScriptCommand("setbgteam", "ii", setBgTeam);
+    addScriptCommand("checknpccell", "siii", checkNpcCell);
 
     do_init_langs();
 
