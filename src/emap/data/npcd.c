@@ -37,5 +37,6 @@ struct NpcdExt *npcd_create(void)
         return NULL;
     data->init = false;
     data->language = 0;
+    data->walkMask = 0;
     return data;
 }

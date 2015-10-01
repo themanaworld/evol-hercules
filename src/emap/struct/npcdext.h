@@ -8,6 +8,7 @@ struct NpcdExt
 {
     bool init;
     int language;
+    int walkMask;
 };
 
 #endif  // EVOL_MAP_NPCDEXT
