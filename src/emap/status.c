@@ -58,9 +58,9 @@ void estatus_read_job_db_sub(int *idxPtr,
         class_move_speed[idx] = i32;
 }
 
-int estatus_calc_pc_(int retVal,
-                     struct map_session_data *sd,
-                     enum e_status_calc_opt *opt __attribute__ ((unused)))
+int estatus_calc_pc__post(int retVal,
+                          struct map_session_data *sd,
+                          enum e_status_calc_opt *opt __attribute__ ((unused)))
 {
     if (!sd)
         return retVal;

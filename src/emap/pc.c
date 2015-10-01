@@ -348,13 +348,13 @@ int epc_check_job_name(const char *name)
     return -1;
 }
 
-int epc_setnewpc(int retVal, struct map_session_data *sd,
-                 int *account_id __attribute__ ((unused)),
-                 int *char_id __attribute__ ((unused)),
-                 int *login_id1 __attribute__ ((unused)),
-                 unsigned int *client_tick  __attribute__ ((unused)),
-                 int *sex __attribute__ ((unused)),
-                 int *fd __attribute__ ((unused)))
+int epc_setnewpc_post(int retVal, struct map_session_data *sd,
+                      int *account_id __attribute__ ((unused)),
+                      int *char_id __attribute__ ((unused)),
+                      int *login_id1 __attribute__ ((unused)),
+                      unsigned int *client_tick  __attribute__ ((unused)),
+                      int *sex __attribute__ ((unused)),
+                      int *fd __attribute__ ((unused)))
 {
     if (sd)
     {

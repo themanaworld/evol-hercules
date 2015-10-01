@@ -22,8 +22,6 @@ int echar_mmo_chars_fromsql(struct char_session_data* sd, uint8* buf);
 
 void echar_mmo_char_send099d(int *fdPtr, struct char_session_data *sd);
 
-int echar_mmo_char_send_characters(int retVal, int *fdPtr, struct char_session_data* sd);
-
 void send_additional_slots(int fd, struct char_session_data* sd);
 
 void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint32 *ipl);

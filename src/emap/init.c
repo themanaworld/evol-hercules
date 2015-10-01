@@ -191,7 +191,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->set_unit_idle", eclif_set_unit_idle_post);
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
     addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
-    addHookPost("status->calc_pc_", estatus_calc_pc_);
+    addHookPost("status->calc_pc_", estatus_calc_pc__post);
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
@@ -202,7 +202,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->useitem", epc_useitem_post);
     addHookPost("pc->equipitem", epc_equipitem_post);
     addHookPost("pc->unequipitem", epc_unequipitem_post);
-    addHookPost("pc->setnewpc", epc_setnewpc);
+    addHookPost("pc->setnewpc", epc_setnewpc_post);
     addHookPost("pc->delitem", epc_delitem_post);
     addHookPost("pc->can_insert_card_into", epc_can_insert_card_into_post);
 

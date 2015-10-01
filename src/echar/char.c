@@ -196,7 +196,7 @@ void echar_mmo_char_send099d(int *fdPtr, struct char_session_data *sd)
     send_additional_slots(*fdPtr, sd);
 }
 
-int echar_mmo_char_send_characters(int retVal, int *fdPtr, struct char_session_data* sd)
+int echar_mmo_char_send_characters_post(int retVal, int *fdPtr, struct char_session_data* sd)
 {
     send_additional_slots(*fdPtr, sd);
     return retVal;
