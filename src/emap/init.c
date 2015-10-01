@@ -177,12 +177,12 @@ HPExport void plugin_init (void)
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
     addHookPre("mail->invalid_operation", email_invalid_operation);
-    addHookPre("script->set_reg_npc_num", escript_set_reg_npc_num);
-    addHookPre("script->get_val_npc_num", escript_get_val_npcscope_num);
-    addHookPre("script->get_val_ref_num", escript_get_val_npcscope_num);
-    addHookPre("script->set_reg_npc_str", escript_set_reg_npc_str);
-    addHookPre("script->get_val_npc_str", escript_get_val_npcscope_str);
-    addHookPre("script->get_val_ref_str", escript_get_val_npcscope_str);
+    addHookPre("script->set_reg_npc_num", eset_reg_npcscope_num);
+    addHookPre("script->get_val_npc_num", eget_val_npcscope_num);
+    addHookPre("script->get_val_ref_num", eget_val_npcscope_num);
+    addHookPre("script->set_reg_npc_str", eset_reg_npcscope_str);
+    addHookPre("script->get_val_npc_str", eget_val_npcscope_str);
+    addHookPre("script->get_val_ref_str", eget_val_npcscope_str);
     addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
@@ -197,8 +197,8 @@ HPExport void plugin_init (void)
     addHookPost("map->addflooritem", emap_addflooritem_post);
     addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
     addHookPost("pc->additem", epc_additem_post);
-    addHookPost("pc->isequip", epc_isuseequip_post);
-    addHookPost("pc->isUseitem", epc_isuseequip_post);
+    addHookPost("pc->isequip", epc_isequip_post);
+    addHookPost("pc->isUseitem", epc_isequip_post);
     addHookPost("pc->useitem", epc_useitem_post);
     addHookPost("pc->equipitem", epc_equipitem_post);
     addHookPost("pc->unequipitem", epc_unequipitem_post);

@@ -54,7 +54,7 @@
     if (!ext) \
         return r
 
-void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
+void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
 {
     if (!strcmp(name, ".lang"))
     {
@@ -140,7 +140,7 @@ void escript_set_reg_npc_num(struct script_state* st, struct reg_db *n, int64 *n
     }
 }
 
-int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
+int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
 {
     const char *name = reference_getname(data);
     if (!strcmp(name, ".lang"))
@@ -213,7 +213,7 @@ int escript_get_val_npcscope_num(struct script_state* st, struct reg_db *n, stru
     return 0;
 }
 
-void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str)
+void eset_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str)
 {
     if (!strcmp(name, ".map$"))
     {
@@ -239,7 +239,7 @@ void escript_set_reg_npc_str(struct script_state* st, struct reg_db *n, int64 *n
     }
 }
 
-char *escript_get_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
+char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
 {
     const char *name = reference_getname(data);
     if (!strcmp(name, ".map$"))
