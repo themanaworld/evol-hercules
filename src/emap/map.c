@@ -26,8 +26,8 @@
 #include "emap/struct/itemdext.h"
 #include "emap/struct/sessionext.h"
 
-int emap_addflooritem_post(const struct block_list *bl,
-                           int retVal,
+int emap_addflooritem_post(int retVal,
+                           const struct block_list *bl,
                            struct item *item,
                            int *amount __attribute__ ((unused)),
                            int16 *m __attribute__ ((unused)),
