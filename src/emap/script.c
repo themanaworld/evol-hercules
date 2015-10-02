@@ -138,6 +138,12 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
         clif->sitting(&nd->bl);
         hookStop();
     }
+    else if (!strcmp(name, ".walkmask"))
+    {
+        getExt();
+        ext->walkMask = *val;
+        hookStop();
+    }
 }
 
 int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -146,7 +152,6 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
     if (!strcmp(name, ".lang"))
     {
         getExtRet(0);
-
         hookStop();
         return ext->language;
     }
@@ -209,6 +214,12 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
         getNDReturn(0);
         hookStop();
         return nd->vd->dead_sit == 0 ? 1 : 0;
+    }
+    else if (!strcmp(name, ".walkmask"))
+    {
+        getExtRet(0);
+        hookStop();
+        return ext->walkMask;
     }
     return 0;
 }
