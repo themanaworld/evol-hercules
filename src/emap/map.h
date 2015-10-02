@@ -16,5 +16,11 @@ int emap_addflooritem_post(int retVal,
                            int *third_charid,
                            int *flags);
 void emap_online_list(int fd);
+int emap_getcellp(struct map_data* m,
+                  const struct block_list *bl,
+                  int16 *xPtr, int16 *yPtr,
+                  cell_chk *cellchkPtr);
+struct mapcell emap_gat2cell(int *gatPtr);
+int emap_cell2gat(struct mapcell *cellPtr);
 
 #endif  // EVOL_MAP_MAP

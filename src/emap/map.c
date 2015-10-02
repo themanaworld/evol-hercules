@@ -134,3 +134,82 @@ void emap_online_list(int fd)
     send_online_list(fd, buf, ptr - buf);
     aFree(buf);
 }
+
+int emap_getcellp(struct map_data* m,
+                  const struct block_list *bl,
+                  int16 *xPtr, int16 *yPtr,
+                  cell_chk *cellchkPtr)
+{
+    if (bl)
+    {
+        const cell_chk cellchk = *cellchkPtr;
+        if (cellchk == CELL_CHKWALL ||
+            cellchk == CELL_CHKPASS ||
+            cellchk == CELL_CHKNOPASS ||
+            cellchk == CELL_CHKNOREACH)
+        {
+            if (bl->type == BL_NPC)
+            {
+            }
+        }
+    }
+    return 0;
+}
+
+struct mapcell emap_gat2cell(int *gatPtr)
+{
+    struct mapcell cell;
+    const int gat = *gatPtr;
+
+    memset(&cell, 0, sizeof(struct mapcell));
+
+    switch (gat)
+    {
+        case 0: // walkable ground
+            cell.walkable  = 1;
+            cell.shootable = 1;
+            cell.water     = 0;
+            break;
+        case 1: // wall
+            cell.walkable  = 0;
+            cell.shootable = 0;
+            cell.water     = 0;
+            break;
+        case 2: // air allowed
+            cell.walkable  = 0;
+            cell.shootable = 0;
+            cell.water     = 0;
+            break;
+        case 3: // unwalkable water
+            cell.walkable  = 0;
+            cell.shootable = 1;
+            cell.water     = 1;
+            break;
+        case 4: // sit, walkable ground
+            cell.walkable  = 1;
+            cell.shootable = 1;
+            cell.water     = 0;
+            break;
+        default:
+            ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
+            break;
+    }
+
+    hookStop();
+    return cell;
+}
+
+int emap_cell2gat(struct mapcell *cellPtr)
+{
+    struct mapcell cell = *cellPtr;
+    hookStop();
+    if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0)
+        return 0;
+    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0)
+        return 1;
+    if (cell.walkable == 0 && cell.shootable == 1 && cell.water == 1)
+        return 3;
+
+    ShowWarning("map_cell2gat: cell has no matching gat type\n");
+    return 1;
+}
