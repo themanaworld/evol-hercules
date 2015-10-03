@@ -46,6 +46,7 @@ struct mapcell2
         icewall   : 1,
         noicewall : 1,
 
+        wall      : 1,
         air       : 1;
 
 #ifdef CELL_NOSTACK
@@ -195,7 +196,7 @@ static bool isWalkCell(const struct block_list *bl, struct mapcell2 cell)
     if ((cell.air || cell.water) && walkMask & 0x4)
         return true;
     // wall check
-    if (!cell.walkable && !cell.shootable && walkMask & 0x1)
+    if (cell.wall && walkMask & 0x1)
         return true;
     // other checks
     return false;
@@ -212,7 +213,7 @@ static bool isWallCell(const struct block_list *bl, struct mapcell2 cell)
     if ((cell.air || cell.water) && walkMask & 0x4)
         return false;
     // wall check
-    if (!cell.walkable && !cell.shootable && && walkMask & 0x1)
+    if (cell.wall && walkMask & 0x1)
         return false;
     return true;
 }
@@ -289,30 +290,35 @@ struct mapcell emap_gat2cell(int *gatPtr)
             cell.shootable = 1;
             cell.water     = 0;
             cell.air       = 0;
+            cell.wall      = 0;
             break;
         case 1: // wall
             cell.walkable  = 0;
             cell.shootable = 0;
             cell.water     = 0;
             cell.air       = 0;
+            cell.wall      = 1;
             break;
         case 2: // air allowed
             cell.walkable  = 0;
             cell.shootable = 0;
             cell.water     = 0;
             cell.air       = 1;
+            cell.wall      = 0;
             break;
         case 3: // unwalkable water
             cell.walkable  = 0;
             cell.shootable = 1;
             cell.water     = 1;
             cell.air       = 0;
+            cell.wall      = 0;
             break;
         case 4: // sit, walkable ground
             cell.walkable  = 1;
             cell.shootable = 1;
             cell.water     = 0;
             cell.air       = 0;
+            cell.wall      = 0;
             break;
         default:
             ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
@@ -364,4 +370,5 @@ void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
     cell2->shootable = cell->shootable;
     cell2->water = cell->water;
     cell2->air = cell->air;
+    cell2->wall = cell->wall;
 }
