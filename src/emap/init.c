@@ -180,6 +180,7 @@ HPExport void plugin_init (void)
     addHookPre("map->cell2gat", emap_cell2gat);
     addHookPre("map->gat2cell", emap_gat2cell);
     addHookPre("map->getcellp", emap_getcellp);
+    addHookPre("map->setgatcell", emap_setgatcell);
     addHookPre("script->set_reg_npc_num", eset_reg_npcscope_num);
     addHookPre("script->get_val_npc_num", eget_val_npcscope_num);
     addHookPre("script->get_val_ref_num", eget_val_npcscope_num);

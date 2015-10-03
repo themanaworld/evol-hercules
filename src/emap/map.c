@@ -28,6 +28,31 @@
 #include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
 
+struct mapcell2
+{
+    // terrain flags
+    unsigned char
+        walkable  : 1,
+        shootable : 1,
+        water     : 1;
+
+    // dynamic flags
+    unsigned char
+        npc       : 1,
+        basilica  : 1,
+        landprotector : 1,
+        novending : 1,
+        nochat    : 1,
+        icewall   : 1,
+        noicewall : 1,
+
+        air       : 1;
+
+#ifdef CELL_NOSTACK
+    int cell_bl; //Holds amount of bls in this cell.
+#endif
+};
+
 int emap_addflooritem_post(int retVal,
                            const struct block_list *bl,
                            struct item *item,
@@ -142,6 +167,7 @@ void emap_online_list(int fd)
 // 0000 0x0 - normal
 // 0001 0x1 - wall walk
 // 0010 0x2 - water walk
+// 0100 0x4 - air walk
 
 
 static int getWalkMask(const struct block_list *bl)
@@ -157,13 +183,16 @@ static int getWalkMask(const struct block_list *bl)
     return walkMask;
 }
 
-static bool isWalkCell(const struct block_list *bl, struct mapcell cell)
+static bool isWalkCell(const struct block_list *bl, struct mapcell2 cell)
 {
     if (cell.walkable)
         return true;
     const int walkMask = getWalkMask(bl);
     // water check
     if (cell.water && walkMask & 0x2)
+        return true;
+    // air check
+    if ((cell.air || cell.water) && walkMask & 0x4)
         return true;
     // wall check
     if (!cell.walkable && !cell.shootable && walkMask & 0x1)
@@ -172,7 +201,7 @@ static bool isWalkCell(const struct block_list *bl, struct mapcell cell)
     return false;
 }
 
-static bool isWallCell(const struct block_list *bl, struct mapcell cell)
+static bool isWallCell(const struct block_list *bl, struct mapcell2 cell)
 {
     if (cell.walkable || cell.shootable)
         return false;
@@ -180,11 +209,15 @@ static bool isWallCell(const struct block_list *bl, struct mapcell cell)
     // water check
     if (cell.water && walkMask & 0x2)
         return false;
+    if ((cell.air || cell.water) && walkMask & 0x4)
+        return false;
     // wall check
-    if (!cell.walkable && !cell.shootable && walkMask & 0x1)
+    if (!cell.walkable && !cell.shootable && && walkMask & 0x1)
         return false;
     return true;
 }
+
+#define strangeCast(type, val) *((type*)(&val))
 
 int emap_getcellp(struct map_data* m,
                   const struct block_list *bl,
@@ -199,7 +232,7 @@ int emap_getcellp(struct map_data* m,
         if (x < 0 || x >= m->xs - 1 || y < 0 || y >= m->ys - 1)
             return (cellchk == CELL_CHKNOPASS);
 
-        struct mapcell cell = m->cell[x + y * m->xs];
+        struct mapcell2 cell = strangeCast(struct mapcell2, m->cell[x + y * m->xs]);
 
         if (cellchk == CELL_CHKWALL ||
             cellchk == CELL_CHKPASS ||
@@ -244,7 +277,7 @@ int emap_getcellp(struct map_data* m,
 
 struct mapcell emap_gat2cell(int *gatPtr)
 {
-    struct mapcell cell;
+    struct mapcell2 cell;
     const int gat = *gatPtr;
 
     memset(&cell, 0, sizeof(struct mapcell));
@@ -255,26 +288,31 @@ struct mapcell emap_gat2cell(int *gatPtr)
             cell.walkable  = 1;
             cell.shootable = 1;
             cell.water     = 0;
+            cell.air       = 0;
             break;
         case 1: // wall
             cell.walkable  = 0;
             cell.shootable = 0;
             cell.water     = 0;
+            cell.air       = 0;
             break;
         case 2: // air allowed
             cell.walkable  = 0;
             cell.shootable = 0;
             cell.water     = 0;
+            cell.air       = 1;
             break;
         case 3: // unwalkable water
             cell.walkable  = 0;
             cell.shootable = 1;
             cell.water     = 1;
+            cell.air       = 0;
             break;
         case 4: // sit, walkable ground
             cell.walkable  = 1;
             cell.shootable = 1;
             cell.water     = 0;
+            cell.air       = 0;
             break;
         default:
             ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
@@ -282,20 +320,48 @@ struct mapcell emap_gat2cell(int *gatPtr)
     }
 
     hookStop();
-    return cell;
+    return strangeCast(struct mapcell, cell);
 }
 
 int emap_cell2gat(struct mapcell *cellPtr)
 {
-    struct mapcell cell = *cellPtr;
+    struct mapcell2 cell = *((struct mapcell2*)cellPtr);
     hookStop();
     if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0)
         return 0;
-    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0)
+    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 0)
         return 1;
+    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 1)
+        return 2;
     if (cell.walkable == 0 && cell.shootable == 1 && cell.water == 1)
         return 3;
 
     ShowWarning("map_cell2gat: cell has no matching gat type\n");
     return 1;
+}
+
+void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
+{
+    int j;
+
+    const int16 m = *mPtr;
+    const int16 x = *xPtr;
+    const int16 y = *yPtr;
+    const int gat = *gatPtr;
+
+    if (m < 0 || m >= map->count ||
+        x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
+    {
+        return;
+    }
+
+    j = x + y*map->list[m].xs;
+
+    struct mapcell cell0 = map->gat2cell(gat);
+    struct mapcell2 *cell = (struct mapcell2 *)&cell0;
+    struct mapcell2 *cell2 = (struct mapcell2 *)&map->list[m].cell[j];
+    cell2->walkable = cell->walkable;
+    cell2->shootable = cell->shootable;
+    cell2->water = cell->water;
+    cell2->air = cell->air;
 }

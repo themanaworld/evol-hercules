@@ -22,5 +22,8 @@ int emap_getcellp(struct map_data* m,
                   cell_chk *cellchkPtr);
 struct mapcell emap_gat2cell(int *gatPtr);
 int emap_cell2gat(struct mapcell *cellPtr);
+void emap_setgatcell(int16 *mPtr,
+                     int16 *xPtr, int16 *yPtr,
+                     int *gatPtr);
 
 #endif  // EVOL_MAP_MAP
