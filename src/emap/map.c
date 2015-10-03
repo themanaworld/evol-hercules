@@ -22,8 +22,10 @@
 #include "emap/permission.h"
 #include "emap/send.h"
 #include "emap/data/itemd.h"
+#include "emap/data/npcd.h"
 #include "emap/data/session.h"
 #include "emap/struct/itemdext.h"
+#include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
 
 int emap_addflooritem_post(int retVal,
@@ -135,21 +137,105 @@ void emap_online_list(int fd)
     aFree(buf);
 }
 
+
+// walk mask
+// 0000 0x0 - normal
+// 0001 0x1 - wall walk
+// 0010 0x2 - water walk
+
+
+static int getWalkMask(const struct block_list *bl)
+{
+    int walkMask = 0;
+    if (bl->type == BL_NPC)
+    {
+        TBL_NPC *nd = (TBL_NPC*)bl;
+        struct NpcdExt *ext = npcd_get(nd);
+        if (ext)
+            walkMask = ext->walkMask;
+    }
+    return walkMask;
+}
+
+static bool isWalkCell(const struct block_list *bl, struct mapcell cell)
+{
+    if (cell.walkable)
+        return true;
+    const int walkMask = getWalkMask(bl);
+    // water check
+    if (cell.water && walkMask & 0x2)
+        return true;
+    // wall check
+    if (!cell.walkable && !cell.shootable && walkMask & 0x1)
+        return true;
+    // other checks
+    return false;
+}
+
+static bool isWallCell(const struct block_list *bl, struct mapcell cell)
+{
+    if (cell.walkable || cell.shootable)
+        return false;
+    const int walkMask = getWalkMask(bl);
+    // water check
+    if (cell.water && walkMask & 0x2)
+        return false;
+    // wall check
+    if (!cell.walkable && !cell.shootable && walkMask & 0x1)
+        return false;
+    return true;
+}
+
 int emap_getcellp(struct map_data* m,
                   const struct block_list *bl,
                   int16 *xPtr, int16 *yPtr,
                   cell_chk *cellchkPtr)
 {
-    if (bl)
+    if (bl && m)
     {
+        const int x = *xPtr;
+        const int y = *yPtr;
         const cell_chk cellchk = *cellchkPtr;
+        if (x < 0 || x >= m->xs - 1 || y < 0 || y >= m->ys - 1)
+            return (cellchk == CELL_CHKNOPASS);
+
+        struct mapcell cell = m->cell[x + y * m->xs];
+
         if (cellchk == CELL_CHKWALL ||
             cellchk == CELL_CHKPASS ||
+            cellchk == CELL_CHKREACH ||
             cellchk == CELL_CHKNOPASS ||
             cellchk == CELL_CHKNOREACH)
         {
-            if (bl->type == BL_NPC)
+            bool res;
+            switch (cellchk)
             {
+                case CELL_CHKWALL:
+                    res = isWallCell(bl, cell);
+                    hookStop();
+                    return res;
+                case CELL_CHKPASS:
+                case CELL_CHKREACH:
+                    res = isWalkCell(bl, cell);
+                    hookStop();
+                    return res;
+                case CELL_CHKNOPASS:
+                case CELL_CHKNOREACH:
+                    res = !isWalkCell(bl, cell);
+                    hookStop();
+                    return res;
+                case CELL_GETTYPE:
+                case CELL_CHKWATER:
+                case CELL_CHKCLIFF:
+                case CELL_CHKSTACK:
+                case CELL_CHKNPC:
+                case CELL_CHKBASILICA:
+                case CELL_CHKLANDPROTECTOR:
+                case CELL_CHKNOVENDING:
+                case CELL_CHKNOCHAT:
+                case CELL_CHKICEWALL:
+                case CELL_CHKNOICEWALL:
+                    break;
             }
         }
     }
