@@ -38,33 +38,63 @@
 #include "emap/struct/sessionext.h"
 #include "emap/utils/formatutils.h"
 
-#define getExt() \
-    TBL_NPC *nd = map->id2nd(st->oid); \
+#define getExt2() \
+    TBL_NPC *nd = NULL; \
+    int num = reference_uid(script->add_str(".id"), 0); \
+    int id = (int)i64db_iget(n->vars, num); \
+    if (!id) \
+        id = st->oid; \
+    nd = map->id2nd(id); \
     if (!nd) \
         return; \
     struct NpcdExt *ext = npcd_get(nd); \
     if (!ext) \
-        return
+        return;
 
-#define getExtRet(r) \
-    TBL_NPC *nd = map->id2nd(st->oid); \
+#define getExt2Ret(r) \
+    TBL_NPC *nd = NULL; \
+    int num = reference_uid(script->add_str(".id"), 0); \
+    int id = (int)i64db_iget(n->vars, num); \
+    if (!id) \
+        id = st->oid; \
+    nd = map->id2nd(id); \
     if (!nd) \
         return r; \
     struct NpcdExt *ext = npcd_get(nd); \
     if (!ext) \
-        return r
+        return r;
+
+#define getExt1() \
+    TBL_NPC *nd = NULL; \
+    int num = reference_uid(script->add_str(".id"), 0); \
+    int id = (int)i64db_iget(n->vars, num); \
+    if (!id) \
+        id = st->oid; \
+    nd = map->id2nd(id); \
+    if (!nd) \
+        return; \
+
+#define getExt1Return(r) \
+    TBL_NPC *nd = NULL; \
+    int num = reference_uid(script->add_str(".id"), 0); \
+    int id = (int)i64db_iget(n->vars, num); \
+    if (!id) \
+        id = st->oid; \
+    nd = map->id2nd(id); \
+    if (!nd) \
+        return r;
 
 void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
 {
     if (!strcmp(name, ".lang"))
     {
-        getExt();
+        getExt2();
         ext->language = *val;
         hookStop();
     }
     else if (!strcmp(name, ".sex"))
     {
-        getND();
+        getExt1();
         clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
         nd->vd->sex = *val;
         clif->spawn(&nd->bl);
@@ -72,13 +102,13 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
     }
     else if (!strcmp(name, ".distance"))
     {
-        getND();
+        getExt1();
         nd->area_size = *val;
         hookStop();
     }
     else if (!strcmp(name, ".dir"))
     {
-        getND();
+        getExt1();
         int newdir = *val;
 
         if (newdir < 0)
@@ -104,7 +134,7 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
     }
     else if (!strcmp(name, ".class"))
     {
-        getND();
+        getExt1();
         int class_ = *val;
         if (nd->class_ != class_)
             npc->setclass(nd, class_);
@@ -112,7 +142,7 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
     }
     else if (!strcmp(name, ".speed"))
     {
-        getND();
+        getExt1();
         unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
         nd->speed = *val;
         nd->ud->state.speed_changed = 1;
@@ -126,21 +156,21 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
     }
     else if (!strcmp(name, ".sit"))
     {
-        getND();
+        getExt1();
         nd->vd->dead_sit = (*val) ? 2 : 0;
         clif->sitting(&nd->bl);
         hookStop();
     }
     else if (!strcmp(name, ".stand"))
     {
-        getND();
+        getExt1();
         nd->vd->dead_sit = (*val) ? 0 : 2;
         clif->sitting(&nd->bl);
         hookStop();
     }
     else if (!strcmp(name, ".walkmask"))
     {
-        getExt();
+        getExt2();
         ext->walkMask = *val;
         hookStop();
     }
@@ -151,73 +181,73 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
     const char *name = reference_getname(data);
     if (!strcmp(name, ".lang"))
     {
-        getExtRet(0);
+        getExt2Ret(0);
         hookStop();
         return ext->language;
     }
     else if (!strcmp(name, ".sex"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->vd->sex;
     }
     else if (!strcmp(name, ".distance"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->area_size;
     }
     else if (!strcmp(name, ".dir"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->dir;
     }
     else if (!strcmp(name, ".x"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->bl.x;
     }
     else if (!strcmp(name, ".y"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->bl.y;
     }
     else if (!strcmp(name, ".class"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->class_;
     }
     else if (!strcmp(name, ".speed"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->speed;
     }
     else if (!strcmp(name, ".chat"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->chat_id;
     }
     else if (!strcmp(name, ".sit"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->vd->dead_sit == 2 ? 1 : 0;
     }
     else if (!strcmp(name, ".stand"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->vd->dead_sit == 0 ? 1 : 0;
     }
     else if (!strcmp(name, ".walkmask"))
     {
-        getExtRet(0);
+        getExt2Ret(0);
         hookStop();
         return ext->walkMask;
     }
@@ -234,7 +264,7 @@ void eset_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 *num
     }
     else if (!strcmp(name, ".name$"))
     {
-        getND();
+        getExt1();
         npc->setdisplayname(nd, str);
 //      not working because cant sent brodcast with translated npc name. need add for_each function for this.
 //        clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
@@ -255,19 +285,19 @@ char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct sc
     const char *name = reference_getname(data);
     if (!strcmp(name, ".map$"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return map->list[nd->bl.m].name;
     }
     else if (!strcmp(name, ".name$"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->name;
     }
     else if (!strcmp(name, ".extname$"))
     {
-        getNDReturn(0);
+        getExt1Return(0);
         hookStop();
         return nd->exname;
     }

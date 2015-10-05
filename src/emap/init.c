@@ -181,12 +181,14 @@ HPExport void plugin_init (void)
     addHookPre("map->gat2cell", emap_gat2cell);
     addHookPre("map->getcellp", emap_getcellp);
     addHookPre("map->setgatcell", emap_setgatcell);
-    addHookPre("script->set_reg_npc_num", eset_reg_npcscope_num);
     addHookPre("script->get_val_npc_num", eget_val_npcscope_num);
     addHookPre("script->get_val_ref_num", eget_val_npcscope_num);
-    addHookPre("script->set_reg_npc_str", eset_reg_npcscope_str);
     addHookPre("script->get_val_npc_str", eget_val_npcscope_str);
     addHookPre("script->get_val_ref_str", eget_val_npcscope_str);
+    addHookPre("script->set_reg_npc_num", eset_reg_npcscope_num);
+    addHookPre("script->set_reg_ref_num", eset_reg_npcscope_num);
+    addHookPre("script->set_reg_npc_str", eset_reg_npcscope_str);
+    addHookPre("script->set_reg_ref_str", eset_reg_npcscope_str);
     addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);
