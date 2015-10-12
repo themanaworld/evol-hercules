@@ -202,6 +202,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
+    addHookPost("mob->read_db_mode_sub", emob_read_db_mode_sub_post);
     addHookPost("skill->check_condition_castend", eskill_check_condition_castend_post);
     addHookPost("pc->additem", epc_additem_post);
     addHookPost("pc->isequip", epc_isequip_post);

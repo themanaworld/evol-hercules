@@ -69,3 +69,17 @@ void emob_read_db_additional_fields(struct mob_db *entry,
     if (mob->lookup_const(it, "WalkMask", &i32))
         data->walkMask = i32;
 }
+
+int emob_read_db_mode_sub_post(int retVal,
+                               struct mob_db *entry,
+                               struct status_data *mstatus,
+                               int *classPtr,
+                               config_setting_t *t)
+{
+    config_setting_t *t2;
+
+    if ((t2 = libconfig->setting_get_member(t, "SurviveWithoutMaster")))
+        retVal |= libconfig->setting_get_bool(t2) ? 0x8000 : 0;
+
+    return retVal;
+}
