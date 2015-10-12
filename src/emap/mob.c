@@ -17,6 +17,9 @@
 #include "map/itemdb.h"
 #include "map/mob.h"
 
+#include "emap/data/mobd.h"
+#include "emap/struct/mobdext.h"
+
 int emob_deleteslave_sub(struct block_list *bl, va_list ap)
 {
     if (!bl)
@@ -47,4 +50,22 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
 
     hookStop();
     return 0;
+}
+
+void emob_read_db_additional_fields(struct mob_db *entry,
+                                    int *classPtr,
+                                    config_setting_t *it,
+                                    int *nPtr, const char *source)
+{
+    int i32 = 0;
+
+    struct MobdExt *data = mobd_get(entry);
+    if (!data)
+    {
+        hookStop();
+        return;
+    }
+
+    if (mob->lookup_const(it, "WalkMask", &i32))
+        data->walkMask = i32;
 }

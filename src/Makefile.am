@@ -74,6 +74,8 @@ MAP_SRC = emap/atcommand.c \
     emap/data/itemd.h \
     emap/data/mapd.c \
     emap/data/mapd.h \
+    emap/data/mobd.c \
+    emap/data/mobd.h \
     emap/data/npcd.c \
     emap/data/npcd.h \
     emap/data/session.c \
@@ -81,6 +83,7 @@ MAP_SRC = emap/atcommand.c \
     emap/struct/bgdext.h \
     emap/struct/itemdext.h \
     emap/struct/mapdext.h \
+    emap/struct/mobdext.h \
     emap/struct/npcdext.h \
     emap/struct/sessionext.h \
     emap/utils/formatutils.c \

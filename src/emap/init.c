@@ -157,6 +157,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->check_job_name", epc_check_job_name);
     addHookPre("pc->delitem", epc_delitem_pre);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
+    addHookPre("mob->read_db_additional_fields", emob_read_db_additional_fields);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
     addHookPre("npc->buysellsel", enpc_buysellsel);
     addHookPre("npc->db_checkid", enpc_db_checkid);
