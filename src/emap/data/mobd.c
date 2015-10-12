@@ -20,6 +20,9 @@
 
 struct MobdExt *mobd_get(struct mob_db *md)
 {
+    if (!md)
+        return NULL;
+
     struct MobdExt *data = getFromMOBDB(md, 0);
     if (!data)
     {
@@ -27,6 +30,14 @@ struct MobdExt *mobd_get(struct mob_db *md)
         addToMOBDB(md, data, 0, true);
     }
     return data;
+}
+
+struct MobdExt *mobd_get_by_mob(TBL_MOB *md)
+{
+    if (!mob)
+        return NULL;
+
+    return mobd_get(mob->db_data[md->class_]);
 }
 
 struct MobdExt *mobd_create(void)

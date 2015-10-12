@@ -22,9 +22,11 @@
 #include "emap/permission.h"
 #include "emap/send.h"
 #include "emap/data/itemd.h"
+#include "emap/data/mobd.h"
 #include "emap/data/npcd.h"
 #include "emap/data/session.h"
 #include "emap/struct/itemdext.h"
+#include "emap/struct/mobdext.h"
 #include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
 
@@ -178,6 +180,13 @@ static int getWalkMask(const struct block_list *bl)
     {
         TBL_NPC *nd = (TBL_NPC*)bl;
         struct NpcdExt *ext = npcd_get(nd);
+        if (ext)
+            walkMask = ext->walkMask;
+    }
+    else if (bl->type == BL_MOB)
+    {
+        TBL_MOB *md = (TBL_MOB*)bl;
+        struct MobdExt *ext = mobd_get_by_mob(md);
         if (ext)
             walkMask = ext->walkMask;
     }
