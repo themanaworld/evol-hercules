@@ -13,6 +13,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/cbasetypes.h"
+#include "common/timer.h"
 #include "map/guild.h"
 #include "map/mob.h"
 #include "map/npc.h"
@@ -434,14 +435,19 @@ void eclif_set_unit_walking(struct block_list* bl, TBL_PC *tsd,
 {
     TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))
-        send_advmoving(ud, tsd ? &tsd->bl : bl, *target);
+    {
+        if (ud->walktimer != INVALID_TIMER)
+            send_advmoving(ud, true, tsd ? &tsd->bl : bl, *target);
+        else
+            send_advmoving(ud, false, tsd ? &tsd->bl : bl, *target);
+    }
 }
 
 void eclif_move(struct unit_data *ud)
 {
     TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))
-        send_advmoving(ud, ud->bl, AREA_WOS);
+        send_advmoving(ud, false, ud->bl, AREA_WOS);
 }
 
 void eclif_parse_LoadEndAck_pre(int *fdPtr __attribute__ ((unused)),

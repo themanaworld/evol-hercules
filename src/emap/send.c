@@ -228,7 +228,7 @@ void send_npc_info(struct block_list* bl1,
     clif->send(&buf, sizeof(buf), bl2, target);
 }
 
-void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_target target)
+void send_advmoving(struct unit_data* ud, bool moving, struct block_list *tbl, enum send_target target)
 {
     if (!ud)
         return;
@@ -240,7 +240,15 @@ void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_targ
     const bool haveMoves = (ud->walkpath.path_len > ud->walkpath.path_pos);
 
     int i = 14;
-    const int len = ud->walkpath.path_len - ud->walkpath.path_pos;
+    int start = ud->walkpath.path_pos;
+    int len = ud->walkpath.path_len - start;
+    if (moving)
+    {
+        start ++;
+        len --;
+        if (len <= 0)
+            return;
+    }
     if (haveMoves)
         i += len;
 
@@ -253,7 +261,7 @@ void send_advmoving(struct unit_data* ud, struct block_list *tbl, enum send_targ
     WBUFW (buf, 10) = bl->x;
     WBUFW (buf, 12) = bl->y;
     if (haveMoves)
-        memcpy(buf + 14, ud->walkpath.path + ud->walkpath.path_pos, len);
+        memcpy(buf + 14, ud->walkpath.path + start, len);
     clif->send(buf, i, tbl, target);
     aFree(buf);
 }
