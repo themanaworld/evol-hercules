@@ -156,6 +156,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->validate_levels", epc_validate_levels);
     addHookPre("pc->check_job_name", epc_check_job_name);
     addHookPre("pc->delitem", epc_delitem_pre);
+    addHookPre("pc->dropitem", epc_dropitem_pre);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
     addHookPre("mob->read_db_additional_fields", emob_read_db_additional_fields);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
@@ -175,6 +176,7 @@ HPExport void plugin_init (void)
     addHookPre("clif->pLoadEndAck", eclif_parse_LoadEndAck_pre);
     addHookPre("itemdb->is_item_usable", eitemdb_is_item_usable);
     addHookPre("itemdb->readdb_additional_fields", eitemdb_readdb_additional_fields);
+    addHookPre("itemdb->destroy_item_data", edestroy_item_data);
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
     addHookPre("mail->invalid_operation", email_invalid_operation);
@@ -212,6 +214,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->unequipitem", epc_unequipitem_post);
     addHookPost("pc->setnewpc", epc_setnewpc_post);
     addHookPost("pc->delitem", epc_delitem_post);
+    addHookPost("pc->dropitem", epc_dropitem_post);
     addHookPost("pc->can_insert_card_into", epc_can_insert_card_into_post);
 
     langScriptId = script->add_str("Lang");

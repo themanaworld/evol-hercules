@@ -34,6 +34,7 @@ struct ItemdExt
     int unequipFailEffect;
 
     struct ItemCardExt allowedCards[100];
+    struct script_code *dropScript;
 
     bool allowPickup;
     bool charmItem;

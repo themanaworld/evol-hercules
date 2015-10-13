@@ -14,6 +14,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "map/itemdb.h"
+#include "map/npc.h"
 #include "map/pc.h"
 
 #include "emap/clif.h"
@@ -457,3 +458,38 @@ bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
     return retVal;
 }
 
+// temporary inv index and item id
+static int tempN = 0;
+static int tempId = 0;
+
+int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr)
+{
+    const int n = *nPtr;
+    if (n < 0 || n >= MAX_INVENTORY)
+        return 0;
+
+    tempN = n;
+    tempId = sd->status.inventory[n].nameid;
+    return 1;
+}
+
+int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr)
+{
+    if (retVal && *nPtr == tempN && tempId)
+    {
+        struct item_data *item = itemdb->search(tempId);
+        if (!item)
+            return retVal;
+        struct ItemdExt *data = itemd_get(item);
+        if (!data || !data->dropScript)
+            return retVal;
+        script->current_item_id = tempId;
+        pc->setreg(sd, script->add_str("@itemId"), tempId);
+        pc->setreg(sd, script->add_str("@itemAmount"), *amountPtr);
+        script->run(data->dropScript, 0, sd->bl.id, npc->fake_nd->bl.id);
+        pc->setreg(sd, script->add_str("@itemId"), 0);
+        pc->setreg(sd, script->add_str("@itemAmount"), 0);
+        script->current_item_id = 0;
+    }
+    return retVal;
+}

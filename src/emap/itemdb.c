@@ -32,10 +32,12 @@ bool eitemdb_is_item_usable(struct item_data *item)
 void eitemdb_readdb_additional_fields(int *itemid,
                                       config_setting_t *it,
                                       int *n __attribute__ ((unused)),
-                                      const char *source __attribute__ ((unused)))
+                                      const char *source)
 {
     struct item_data *item = itemdb->exists(*itemid);
     int i32 = 0;
+    const char *str = NULL;
+
     if (!item)
     {
         hookStop();
@@ -92,6 +94,9 @@ void eitemdb_readdb_additional_fields(int *itemid,
     if (itemdb->lookup_const(it, "UnequipFailEffect", &i32))
         data->unequipFailEffect = i32;
 
+    if (libconfig->setting_lookup_string(it, "OnDropScript", &str))
+        data->dropScript = *str ? script->parse(str, source, -item->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+
     config_setting_t *group = libconfig->setting_get_member(it, "AllowCards");
     if (group)
     {
@@ -119,4 +124,14 @@ void eitemdb_readdb_additional_fields(int *itemid,
     }
 
     hookStop();
+}
+
+void edestroy_item_data(struct item_data* self, int *free_selfPtr)
+{
+    struct ItemdExt *data = itemd_get(self);
+    if (!data)
+        return;
+
+    if (data->dropScript)
+        script->free_code(data->dropScript);
 }

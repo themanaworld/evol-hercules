@@ -50,7 +50,12 @@ int epc_delitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr,
 int epc_delitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr,
                      int *typePtr, short *reasonPtr,
                      e_log_pick_type *log_type);
+
 bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
                                    int *idx_card, int *idx_equip);
+
+int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr);
+
+int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr);
 
 #endif  // EVOL_MAP_PC
