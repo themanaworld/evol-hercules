@@ -19,6 +19,7 @@
 
 #include "emap/clif.h"
 #include "emap/pc.h"
+#include "emap/script.h"
 #include "emap/data/itemd.h"
 #include "emap/data/mapd.h"
 #include "emap/data/session.h"
@@ -461,12 +462,17 @@ bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
 // temporary inv index and item id
 static int tempN = 0;
 static int tempId = 0;
+static int tempAmount = 0;
 
 int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr)
 {
     const int n = *nPtr;
     if (n < 0 || n >= MAX_INVENTORY)
+    {
+        tempN = 0;
+        tempId = 0;
         return 0;
+    }
 
     tempN = n;
     tempId = sd->status.inventory[n].nameid;
@@ -481,15 +487,38 @@ int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *a
         if (!item)
             return retVal;
         struct ItemdExt *data = itemd_get(item);
-        if (!data || !data->dropScript)
+        if (!data)
             return retVal;
-        script->current_item_id = tempId;
-        pc->setreg(sd, script->add_str("@itemId"), tempId);
-        pc->setreg(sd, script->add_str("@itemAmount"), *amountPtr);
-        script->run(data->dropScript, 0, sd->bl.id, npc->fake_nd->bl.id);
-        pc->setreg(sd, script->add_str("@itemId"), 0);
-        pc->setreg(sd, script->add_str("@itemAmount"), 0);
-        script->current_item_id = 0;
+        script_run_item_amount_script(sd, data->dropScript, tempId, *amountPtr);
+    }
+    return retVal;
+}
+
+int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem)
+{
+    if (!fitem)
+    {
+        tempN = 0;
+        tempId = 0;
+        return 0;
+    }
+    tempN = -1;
+    tempId = fitem->item_data.nameid;
+    tempAmount = fitem->item_data.amount;
+    return 1;
+}
+
+int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_data *fitem)
+{
+    if (retVal && tempN == -1 && tempId)
+    {
+        struct item_data *item = itemdb->search(tempId);
+        if (!item)
+            return retVal;
+        struct ItemdExt *data = itemd_get(item);
+        if (!data)
+            return retVal;
+        script_run_item_amount_script(sd, data->takeScript, tempId, tempAmount);
     }
     return retVal;
 }

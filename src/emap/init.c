@@ -157,6 +157,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->check_job_name", epc_check_job_name);
     addHookPre("pc->delitem", epc_delitem_pre);
     addHookPre("pc->dropitem", epc_dropitem_pre);
+    addHookPre("pc->takeitem", epc_takeitem_pre);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
     addHookPre("mob->read_db_additional_fields", emob_read_db_additional_fields);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);
@@ -215,6 +216,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->setnewpc", epc_setnewpc_post);
     addHookPost("pc->delitem", epc_delitem_post);
     addHookPost("pc->dropitem", epc_dropitem_post);
+    addHookPost("pc->takeitem", epc_takeitem_post);
     addHookPost("pc->can_insert_card_into", epc_can_insert_card_into_post);
 
     langScriptId = script->add_str("Lang");

@@ -58,4 +58,8 @@ int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr);
 
 int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr);
 
+int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem);
+
+int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_data *fitem);
+
 #endif  // EVOL_MAP_PC

@@ -96,6 +96,8 @@ void eitemdb_readdb_additional_fields(int *itemid,
 
     if (libconfig->setting_lookup_string(it, "OnDropScript", &str))
         data->dropScript = *str ? script->parse(str, source, -item->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
+    if (libconfig->setting_lookup_string(it, "OnTakeScript", &str))
+        data->takeScript = *str ? script->parse(str, source, -item->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
     config_setting_t *group = libconfig->setting_get_member(it, "AllowCards");
     if (group)
@@ -134,4 +136,6 @@ void edestroy_item_data(struct item_data* self, int *free_selfPtr)
 
     if (data->dropScript)
         script->free_code(data->dropScript);
+    if (data->takeScript)
+        script->free_code(data->takeScript);
 }

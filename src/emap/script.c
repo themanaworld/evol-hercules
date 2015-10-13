@@ -304,6 +304,20 @@ char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct sc
     return NULL;
 }
 
+void script_run_item_amount_script(TBL_PC *sd, struct script_code *itemScript, int itemId, int amount)
+{
+    if (!itemScript)
+        return;
+
+    script->current_item_id = itemId;
+    pc->setreg(sd, script->add_str("@itemId"), itemId);
+    pc->setreg(sd, script->add_str("@itemAmount"), amount);
+    script->run(itemScript, 0, sd->bl.id, npc->fake_nd->bl.id);
+    pc->setreg(sd, script->add_str("@itemId"), 0);
+    pc->setreg(sd, script->add_str("@itemAmount"), 0);
+    script->current_item_id = 0;
+}
+
 uint32 MakeDWord(uint16 word0, uint16 word1)
 {
     return ((uint32)(word0)) | ((uint32)(word1 << 0x10));

@@ -8,6 +8,7 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
 int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data);
 void eset_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str);
 char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data);
+void script_run_item_amount_script(TBL_PC *sd, struct script_code *itemScript, int itemId, int amount);
 
 BUILDIN(l);
 BUILDIN(lg);
