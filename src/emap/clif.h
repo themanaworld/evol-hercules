@@ -24,6 +24,8 @@ void eclif_set_unit_walking(struct block_list* bl, TBL_PC *tsd,
 void eclif_move(struct unit_data *ud);
 void eclif_parse_LoadEndAck_pre(int *fdPtr,
                                 struct map_session_data *sd);
+void eclif_parse_LoadEndAck_post(int *fdPtr,
+                                 struct map_session_data *sd);
 void eclif_changelook2(struct block_list *bl, int type, int val,
                        struct item_data *id, int n);
 void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *fitem);

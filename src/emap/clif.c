@@ -412,6 +412,17 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
+        if (packet == 0xb1b)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 14)
+            {   // not sending new packets to old clients
+                hookStop();
+                return 0;
+            }
+        }
     }
     return 0;
 }
@@ -450,10 +461,22 @@ void eclif_move(struct unit_data *ud)
         send_advmoving(ud, false, ud->bl, AREA_WOS);
 }
 
+bool tempChangeMap;
+
 void eclif_parse_LoadEndAck_pre(int *fdPtr __attribute__ ((unused)),
                                 struct map_session_data *sd)
 {
     sd->state.warp_clean = 0;
+    tempChangeMap = sd->state.changemap;
+}
+
+void eclif_parse_LoadEndAck_post(int *fdPtr __attribute__ ((unused)),
+                                 struct map_session_data *sd)
+{
+    if (!tempChangeMap)
+    {   // some messages not sent if map not changed
+        map->iwall_get(sd);
+    }
 }
 
 void eclif_changelook2(struct block_list *bl, int type, int val,

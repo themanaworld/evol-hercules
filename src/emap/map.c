@@ -29,6 +29,7 @@
 #include "emap/struct/mobdext.h"
 #include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
+#include "emap/struct/walldata2.h"
 
 struct mapcell2
 {
@@ -355,14 +356,9 @@ int emap_cell2gat(struct mapcell *cellPtr)
     return 1;
 }
 
-void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
+void emap_setgatcell2(int16 m, int16 x, int16 y, int gat)
 {
     int j;
-
-    const int16 m = *mPtr;
-    const int16 x = *xPtr;
-    const int16 y = *yPtr;
-    const int gat = *gatPtr;
 
     if (m < 0 || m >= map->count ||
         x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
@@ -370,7 +366,7 @@ void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
         return;
     }
 
-    j = x + y*map->list[m].xs;
+    j = x + y * map->list[m].xs;
 
     struct mapcell cell0 = map->gat2cell(gat);
     struct mapcell2 *cell = (struct mapcell2 *)&cell0;
@@ -380,4 +376,91 @@ void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
     cell2->water = cell->water;
     cell2->air = cell->air;
     cell2->wall = cell->wall;
+}
+
+void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
+{
+    emap_setgatcell2(*mPtr, *xPtr, *yPtr, *gatPtr);
+    hookStop();
+}
+
+bool emap_iwall_set(int16 *m, int16 *x, int16 *y, int *size, int8 *dir, bool *shootable, const char* wall_name)
+{
+    ShowError("Unsupported set wall function\n");
+    return false;
+}
+
+void emap_iwall_get(struct map_session_data *sd)
+{
+    if (!sd || map->list[sd->bl.m].iwall_num < 1)
+        return;
+
+    DBIterator* iter = db_iterator(map->iwall_db);
+    struct WallData *wall;
+    for (wall = dbi_first(iter); dbi_exists(iter); wall = dbi_next(iter))
+    {
+        if (wall->m != sd->bl.m)
+            continue;
+        send_setwall_single(sd->fd, wall->m, wall->x1, wall->y1 , wall->x2 , wall->y2 , wall->mask);
+    }
+    dbi_destroy(iter);
+}
+
+void emap_iwall_remove(const char *name)
+{
+    struct WallData *wall;
+
+    if ((wall = (struct WallData *)strdb_get(map->iwall_db, name)) == NULL)
+        return; // Nothing to do
+
+    int x;
+    int y;
+    int mask = 0;
+    int x1 = wall->x1;
+    int y1 = wall->y1;
+    int x2 = wall->x2;
+    int y2 = wall->y2;
+    int m = wall->m;
+    for (y = y1; y <= y2; y ++)
+    {
+        for (x = x1; x <= x2; x ++)
+            emap_setgatcell2(m, x, y, mask); // default collision can be lost
+    }
+
+    send_setwall(m, x1, y1, x2, y2, mask, ALL_SAMEMAP);
+    map->list[wall->m].iwall_num--;
+    strdb_remove(map->iwall_db, wall->name);
+}
+
+bool emap_iwall_set2(int m, int x1, int y1, int x2, int y2, int mask, const char *name)
+{
+    struct WallData *wall;
+
+    if (!name)
+        return false;
+
+    if ((wall = (struct WallData *)strdb_get(map->iwall_db, name)) != NULL)
+        return false; // Already Exists
+
+    CREATE(wall, struct WallData, 1);
+    wall->m = m;
+    wall->x1 = x1;
+    wall->y1 = y1;
+    wall->x2 = x2;
+    wall->y2 = y2;
+    wall->mask = mask;
+    safestrncpy(wall->name, name, sizeof(wall->name));
+
+    int x;
+    int y;
+    for (y = y1; y <= y2; y ++)
+    {
+        for (x = x1; x <= x2; x ++)
+            emap_setgatcell2(m, x, y, mask);
+    }
+    send_setwall(m, x1, y1, x2, y2, mask, ALL_SAMEMAP);
+
+    strdb_put(map->iwall_db, wall->name, wall);
+    map->list[m].iwall_num++;
+    return true;
 }

@@ -127,6 +127,7 @@ HPExport void plugin_init (void)
     addScriptCommand("isstr", "v", isStr);
     addScriptCommand("setbgteam", "ii", setBgTeam);
     addScriptCommand("checknpccell", "siii", checkNpcCell);
+    addScriptCommand("setcells", "siiiiis", setCells);
 
     do_init_langs();
 
@@ -185,6 +186,9 @@ HPExport void plugin_init (void)
     addHookPre("map->gat2cell", emap_gat2cell);
     addHookPre("map->getcellp", emap_getcellp);
     addHookPre("map->setgatcell", emap_setgatcell);
+    addHookPre("map->iwall_set", emap_iwall_set);
+    addHookPre("map->iwall_get", emap_iwall_get);
+    addHookPre("map->iwall_remove", emap_iwall_remove);
     addHookPre("script->get_val_npc_num", eget_val_npcscope_num);
     addHookPre("script->get_val_ref_num", eget_val_npcscope_num);
     addHookPre("script->get_val_npc_str", eget_val_npcscope_str);
@@ -199,6 +203,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->authok", eclif_authok_post);
     addHookPost("clif->changemap", eclif_changemap_post);
     addHookPost("clif->set_unit_idle", eclif_set_unit_idle_post);
+    addHookPost("clif->pLoadEndAck", eclif_parse_LoadEndAck_post);
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
     addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
     addHookPost("status->calc_pc_", estatus_calc_pc__post);

@@ -26,6 +26,7 @@
 #include "emap/script.h"
 #include "emap/clif.h"
 #include "emap/lang.h"
+#include "emap/map.h"
 #include "emap/scriptdefines.h"
 #include "emap/send.h"
 #include "emap/data/bgd.h"
@@ -1803,6 +1804,26 @@ BUILDIN(checkNpcCell)
         bl = &nd->bl;
 
     script_pushint(st, map->getcell(m, bl, x, y, type));
+
+    return true;
+}
+
+BUILDIN(setCells)
+{
+    int m;
+
+    const char *mapname = script_getstr(st, 2);
+    int x1 = script_getnum(st, 3);
+    int y1 = script_getnum(st, 4);
+    int x2 = script_getnum(st, 5);
+    int y2 = script_getnum(st, 6);
+    int mask = script_getnum(st, 7);
+    const char *name = script_getstr(st, 8);
+
+    if ((m = map->mapname2mapid(mapname)) < 0)
+        return true; // Invalid Map
+
+    emap_iwall_set2(m, x1, y1, x2, y2, mask, name);
 
     return true;
 }
