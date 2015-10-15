@@ -1827,3 +1827,10 @@ BUILDIN(setCells)
 
     return true;
 }
+
+BUILDIN(delCells)
+{
+    const char *name = script_getstr(st,2);
+    map->iwall_remove(name);
+    return true;
+}

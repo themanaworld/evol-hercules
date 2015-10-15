@@ -387,13 +387,17 @@ void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
 bool emap_iwall_set(int16 *m, int16 *x, int16 *y, int *size, int8 *dir, bool *shootable, const char* wall_name)
 {
     ShowError("Unsupported set wall function\n");
+    hookStop();
     return false;
 }
 
 void emap_iwall_get(struct map_session_data *sd)
 {
     if (!sd || map->list[sd->bl.m].iwall_num < 1)
+    {
+        hookStop();
         return;
+    }
 
     DBIterator* iter = db_iterator(map->iwall_db);
     struct WallData *wall;
@@ -404,6 +408,7 @@ void emap_iwall_get(struct map_session_data *sd)
         send_setwall_single(sd->fd, wall->m, wall->x1, wall->y1 , wall->x2 , wall->y2 , wall->mask);
     }
     dbi_destroy(iter);
+    hookStop();
 }
 
 void emap_iwall_remove(const char *name)
@@ -411,7 +416,10 @@ void emap_iwall_remove(const char *name)
     struct WallData *wall;
 
     if ((wall = (struct WallData *)strdb_get(map->iwall_db, name)) == NULL)
+    {
+        hookStop();
         return; // Nothing to do
+    }
 
     int x;
     int y;
@@ -430,6 +438,7 @@ void emap_iwall_remove(const char *name)
     send_setwall(m, x1, y1, x2, y2, mask, ALL_SAMEMAP);
     map->list[wall->m].iwall_num--;
     strdb_remove(map->iwall_db, wall->name);
+    hookStop();
 }
 
 bool emap_iwall_set2(int m, int x1, int y1, int x2, int y2, int mask, const char *name)

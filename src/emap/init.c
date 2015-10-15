@@ -128,6 +128,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setbgteam", "ii", setBgTeam);
     addScriptCommand("checknpccell", "siii", checkNpcCell);
     addScriptCommand("setcells", "siiiiis", setCells);
+    addScriptCommand("delcells", "s", delCells);
 
     do_init_langs();
 
