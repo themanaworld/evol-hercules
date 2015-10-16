@@ -28,7 +28,6 @@ po/remove-potcdate.*
 po/*.po~
 
 # files created by configure
-Makefile
 /config.h
 config.log
 config.status
