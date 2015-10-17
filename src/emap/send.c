@@ -408,14 +408,15 @@ void send_setwall(int m, int x1, int y1, int x2, int y2, int mask, enum send_tar
     WBUFW(buf, 6) = x2;
     WBUFW(buf, 8) = y2;
     WBUFL(buf, 10) = mask;
-    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WBUFP(buf, 14));
+    WBUFL(buf, 14) = 0;
+    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WBUFP(buf, 18));
 
     struct block_list dummy_bl;
     dummy_bl.type = BL_NUL;
     dummy_bl.x = x1;
     dummy_bl.y = y1;
     dummy_bl.m = m;
-    clif->send(buf, 30, &dummy_bl, target);
+    clif->send(buf, 34, &dummy_bl, target);
 }
 
 void send_setwall_single(int fd, int m, int x1, int y1, int x2, int y2, int mask)
@@ -424,13 +425,14 @@ void send_setwall_single(int fd, int m, int x1, int y1, int x2, int y2, int mask
     if (!data || data->clientVersion < 14)
         return;
 
-    WFIFOHEAD (fd, 28);
+    WFIFOHEAD (fd, 34);
     WFIFOW(fd, 0) = 0xb1b;
     WFIFOW(fd, 2) = x1;
     WFIFOW(fd, 4) = y1;
     WFIFOW(fd, 6) = x2;
     WFIFOW(fd, 8) = y2;
     WFIFOL(fd, 10) = mask;
-    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WFIFOP(fd, 14));
-    WFIFOSET(fd, 30);
+    WFIFOL(fd, 14) = 0;
+    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WFIFOP(fd, 18));
+    WFIFOSET(fd, 34);
 }
