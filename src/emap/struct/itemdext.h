@@ -36,6 +36,7 @@ struct ItemdExt
     struct ItemCardExt allowedCards[100];
     struct script_code *dropScript;
     struct script_code *takeScript;
+    struct script_code *insertScript;
 
     bool allowPickup;
     bool charmItem;

@@ -69,6 +69,7 @@ struct ItemdExt *itemd_create(void)
     data->charmItem = false;
     data->dropScript = NULL;
     data->takeScript = NULL;
+    data->insertScript = NULL;
     memset(&data->allowedCards, 0, sizeof(data->allowedCards));
     return data;
 }

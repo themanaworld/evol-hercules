@@ -522,3 +522,34 @@ int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_
     }
     return retVal;
 }
+
+int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equip)
+{
+    if (!sd || *idx_equip < 0 || *idx_equip >= MAX_INVENTORY ||
+        *idx_card < 0 || *idx_card >= MAX_INVENTORY)
+    {
+        tempN = 0;
+        tempId = 0;
+        tempAmount = 0;
+        return 0;
+    }
+    tempN = *idx_equip;
+    tempId = sd->status.inventory[*idx_equip].nameid;
+    tempAmount = sd->status.inventory[*idx_card].nameid;
+    return 1;
+}
+
+int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card, int *idx_equip)
+{
+    if (retVal && *idx_equip == tempN && tempId)
+    {
+        struct item_data *item = itemdb->search(tempId);
+        if (!item)
+            return retVal;
+        struct ItemdExt *data = itemd_get(item);
+        if (!data)
+            return retVal;
+        script_run_card_script(sd, data->insertScript, tempId, tempAmount);
+    }
+    return retVal;
+}

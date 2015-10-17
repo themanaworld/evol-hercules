@@ -62,4 +62,8 @@ int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem);
 
 int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_data *fitem);
 
+int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equip);
+
+int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card, int *idx_equip);
+
 #endif  // EVOL_MAP_PC
