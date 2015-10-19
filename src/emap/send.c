@@ -177,7 +177,7 @@ void send_pc_info(struct block_list* bl1,
     if (!bl1 || bl1->type != BL_PC)
         return;
 
-    char buf[12];
+    char buf[14];
     TBL_PC *sd = (TBL_PC *)bl1;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
@@ -192,13 +192,13 @@ void send_pc_info(struct block_list* bl1,
     }
 
     WBUFW (buf, 0) = 0xb0a;
-    WBUFW (buf, 2) = 12; // len
+    WBUFW (buf, 2) = 14; // len
     WBUFL (buf, 4) = sd->bl.id;
     if (pc_has_permission(sd, permission_send_gm_flag))
         WBUFL (buf, 8) = sd->group_id;
     else
         WBUFL (buf, 8) = 0;
-
+    WBUFW (buf, 12) = data->mount;
     clif->send(&buf, sizeof(buf), bl2, target);
 }
 

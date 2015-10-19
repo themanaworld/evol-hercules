@@ -10,6 +10,7 @@ struct SessionExt
     int clientVersion;
     int language;
     int teamId;
+    uint16 mount;
     uint8 state;
 };
 

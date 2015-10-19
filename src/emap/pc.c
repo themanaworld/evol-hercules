@@ -28,6 +28,7 @@
 #include "emap/struct/sessionext.h"
 
 int langScriptId;
+int mountScriptId;
 
 int epc_readparam_pre(TBL_PC* sd, int *type)
 {
@@ -49,8 +50,14 @@ int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
         struct SessionExt *data = session_get_bysd(sd);
         if (!data)
             return 0;
-
         data->language = *val;
+    }
+    else if (*reg == mountScriptId)
+    {
+        struct SessionExt *data = session_get_bysd(sd);
+        if (!data)
+            return 0;
+        data->mount = *val;
     }
 
     return 0;

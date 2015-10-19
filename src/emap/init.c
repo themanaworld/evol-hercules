@@ -62,6 +62,7 @@
 #include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 extern int langScriptId;
+extern int mountScriptId;
 
 HPExport struct hplugin_info pinfo =
 {
@@ -228,6 +229,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->insert_card", epc_insert_card_post);
 
     langScriptId = script->add_str("Lang");
+    mountScriptId = script->add_str("Mount");
 }
 
 HPExport void server_preinit (void)
