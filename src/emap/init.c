@@ -119,7 +119,6 @@ HPExport void plugin_init (void)
     addScriptCommand("ispcdead", "", isPcDead);
     addScriptCommand("areatimer", "siiiii*", areaTimer);
     addScriptCommand("getareadropitem", "siiiiv*", getAreaDropItem);
-    addScriptCommand("setmount", "?", setMount);
     addScriptCommand("clientcommand", "s", clientCommand);
     addScriptCommand("isunitwalking", "?", isUnitWalking);
     addScriptCommand("failedrefindex", "i", failedRefIndex);
@@ -130,6 +129,7 @@ HPExport void plugin_init (void)
     addScriptCommand("checknpccell", "siii", checkNpcCell);
     addScriptCommand("setcells", "siiiiis", setCells);
     addScriptCommand("delcells", "s", delCells);
+    addScriptCommand("setmount", "i", setMount);
 
     do_init_langs();
 
@@ -229,7 +229,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->insert_card", epc_insert_card_post);
 
     langScriptId = script->add_str("Lang");
-    mountScriptId = script->add_str("Mount");
+    mountScriptId = script->add_str("mount");
 }
 
 HPExport void server_preinit (void)

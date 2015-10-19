@@ -19,6 +19,7 @@
 
 #include "emap/clif.h"
 #include "emap/pc.h"
+#include "emap/send.h"
 #include "emap/script.h"
 #include "emap/data/itemd.h"
 #include "emap/data/mapd.h"
@@ -57,7 +58,11 @@ int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
         struct SessionExt *data = session_get_bysd(sd);
         if (!data)
             return 0;
-        data->mount = *val;
+        if (data->mount != *val)
+        {
+            data->mount = *val;
+            send_pc_info(&sd->bl, &sd->bl, SELF);
+        }
     }
 
     return 0;

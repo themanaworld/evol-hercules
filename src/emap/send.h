@@ -1,8 +1,8 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 - 2015 Evol developers
 
-#ifndef EVOL_MAP_PC
-#define EVOL_MAP_PC
+#ifndef EVOL_MAP_SEND
+#define EVOL_MAP_SEND
 
 void send_npccommand (TBL_PC *sd, int npcId, int cmd);
 void send_npccommand2 (TBL_PC *sd, int npcId, int cmd, int id, int x, int y);
@@ -44,4 +44,4 @@ void send_setwall_single(int fd,
                          int x2, int y2,
                          int mask);
 
-#endif  // EVOL_MAP_PC
+#endif  // EVOL_MAP_SEND

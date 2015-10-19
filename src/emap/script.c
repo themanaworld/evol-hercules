@@ -85,6 +85,8 @@
     if (!nd) \
         return r;
 
+extern int mountScriptId;
+
 void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
 {
     if (!strcmp(name, ".lang"))
@@ -1423,89 +1425,6 @@ BUILDIN(getAreaDropItem)
     return true;
 }
 
-enum setmount_type
-{
-    SETMOUNT_TYPE_NONE         = 0,
-    SETMOUNT_TYPE_PECO         = 1,
-    SETMOUNT_TYPE_WUG          = 2,
-    SETMOUNT_TYPE_MADO         = 3,
-    SETMOUNT_TYPE_DRAGON_GREEN = 4,
-    SETMOUNT_TYPE_DRAGON_BROWN = 5,
-    SETMOUNT_TYPE_DRAGON_GRAY  = 6,
-    SETMOUNT_TYPE_DRAGON_BLUE  = 7,
-    SETMOUNT_TYPE_DRAGON_RED   = 8,
-    SETMOUNT_TYPE_MAX,
-    SETMOUNT_TYPE_DRAGON       = SETMOUNT_TYPE_DRAGON_GREEN,
-};
-
-BUILDIN(setMount)
-{
-    int flag = SETMOUNT_TYPE_NONE;
-    TBL_PC* sd = script->rid2sd(st);
-
-    if (sd == NULL)
-        return true;  // no player attached, report source
-
-    if (script_hasdata(st, 2))
-        flag = script_getnum(st, 2);
-
-    // Sanity checks and auto-detection
-    if (flag >= SETMOUNT_TYPE_DRAGON_GREEN && flag <= SETMOUNT_TYPE_DRAGON_RED)
-    {
-        if (pc->checkskill(sd, RK_DRAGONTRAINING))
-        {
-            // Rune Knight (Dragon)
-            unsigned int option;
-            option = ( flag == SETMOUNT_TYPE_DRAGON_GREEN ? OPTION_DRAGON1 :
-                       flag == SETMOUNT_TYPE_DRAGON_BROWN ? OPTION_DRAGON2 :
-                       flag == SETMOUNT_TYPE_DRAGON_GRAY ? OPTION_DRAGON3 :
-                       flag == SETMOUNT_TYPE_DRAGON_BLUE ? OPTION_DRAGON4 :
-                       flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
-                       OPTION_DRAGON1); // default value
-            pc->setridingdragon(sd, option);
-        }
-    }
-    else if (flag == SETMOUNT_TYPE_WUG)
-    {
-        // Ranger (Warg)
-        if (pc->checkskill(sd, RA_WUGRIDER))
-            pc->setridingwug(sd, true);
-    }
-    else if (flag == SETMOUNT_TYPE_MADO)
-    {
-        // Mechanic (Mado Gear)
-        if (pc->checkskill(sd, NC_MADOLICENCE))
-            pc->setmadogear(sd, true);
-    }
-    else if (flag == SETMOUNT_TYPE_PECO)
-    {
-        // Knight / Crusader (Peco Peco)
-        if (pc->checkskill(sd, KN_RIDING))
-            pc->setridingpeco(sd, true);
-    }
-    else if (flag == SETMOUNT_TYPE_NONE && pc_hasmount(sd))
-    {
-        if (pc_isridingdragon(sd))
-        {
-            pc->setridingdragon(sd, 0);
-        }
-        if (pc_isridingwug(sd))
-        {
-            pc->setridingwug(sd, false);
-        }
-        if (pc_ismadogear(sd))
-        {
-            pc->setmadogear(sd, false);
-        }
-        if (pc_isridingpeco(sd))
-        {
-            pc->setridingpeco(sd, false);
-        }
-    }
-
-    return true;
-}
-
 BUILDIN(clientCommand)
 {
     getSD();
@@ -1846,5 +1765,14 @@ BUILDIN(delCells)
 {
     const char *name = script_getstr(st,2);
     map->iwall_remove(name);
+    return true;
+}
+
+BUILDIN(setMount)
+{
+    getSD()
+    int mount = script_getnum(st, 2);
+    pc_setglobalreg(sd, mountScriptId, mount);
+    send_pc_info(&sd->bl, &sd->bl, AREA);
     return true;
 }
