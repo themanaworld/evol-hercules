@@ -210,6 +210,7 @@ HPExport void plugin_init (void)
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
     addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
     addHookPost("status->calc_pc_", estatus_calc_pc__post);
+    addHookPost("status->calc_speed", estatus_calc_speed_post);
     addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);

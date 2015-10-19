@@ -1773,6 +1773,7 @@ BUILDIN(setMount)
     getSD()
     int mount = script_getnum(st, 2);
     pc_setglobalreg(sd, mountScriptId, mount);
+    status_calc_pc(sd, SCO_NONE);
     send_pc_info(&sd->bl, &sd->bl, AREA);
     return true;
 }

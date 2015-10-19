@@ -19,6 +19,7 @@
 #include "map/script.h"
 #include "map/status.h"
 
+#include "emap/horse.h"
 #include "emap/data/itemd.h"
 #include "emap/data/npcd.h"
 #include "emap/struct/itemdext.h"
@@ -123,5 +124,16 @@ int estatus_calc_pc_additional(struct map_session_data* sd,
 
         // here can be refine bonuses
     }
+
+    horse_add_bonus(sd);
+
     return 0;
+}
+
+unsigned short estatus_calc_speed_post(unsigned short retVal,
+                                       struct block_list *bl,
+                                       struct status_change *sc,
+                                       int *speed)
+{
+    return horse_add_speed_bonus(BL_CAST(BL_PC, bl), retVal);
 }

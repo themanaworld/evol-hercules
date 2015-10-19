@@ -36,6 +36,8 @@ MAP_SRC = emap/atcommand.c \
     emap/battleground.h \
     emap/clif.c \
     emap/clif.h \
+    emap/horse.c \
+    emap/horse.h \
     emap/init.c \
     emap/itemdb.c \
     emap/itemdb.h \
