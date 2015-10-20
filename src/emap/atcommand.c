@@ -64,14 +64,19 @@ ACMD2(setSkill)
     int skill_id = 0;
     int skill_level = 0;
 
-    if (!message || !*message || sscanf(message, "%5d %2d", &skill_id, &skill_level) < 2)
+    if (!*message || sscanf(message, "%5d %2d", &skill_id, &skill_level) < 2)
     {
-        const char* text = info->help;
+        char buf[100];
 
-        if (text)
-            clif->messageln (fd, text);
-
-        return false;
+        if (!*message ||
+            sscanf(message, "%99s %2d", &buf[0], &skill_level) != 2 ||
+            !script->get_constant(buf, &skill_id))
+        {
+            const char* text = info->help;
+            if (text)
+                clif->messageln (fd, text);
+            return false;
+        }
     }
     if (!skill->get_index(skill_id))
     {
