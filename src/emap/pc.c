@@ -285,7 +285,8 @@ int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr)
             sd->battle_status.matk_min < data->requiredMAtkMin ||
             sd->battle_status.matk_max < data->requiredMAtkMax ||
             sd->battle_status.def < data->requiredDef ||
-            sd->battle_status.mdef < data->requiredMDef
+            sd->battle_status.mdef < data->requiredMDef ||
+            (data->requiredSkill && !pc->checkskill(sd, data->requiredSkill))
         )
         {
             return 0;

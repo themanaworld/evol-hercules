@@ -62,6 +62,7 @@ struct ItemdExt *itemd_create(void)
     data->requiredMAtkMax = 0;
     data->requiredDef = 0;
     data->requiredMDef = 0;
+    data->requiredSkill = 0;
     data->useEffect = -1;
     data->useFailEffect = -1;
     data->unequipEffect = -1;

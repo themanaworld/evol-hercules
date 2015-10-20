@@ -27,6 +27,7 @@ struct ItemdExt
     int requiredMAtkMax;
     int requiredDef;
     int requiredMDef;
+    int requiredSkill;
 
     int useEffect;
     int useFailEffect;
