@@ -11,6 +11,7 @@
 #include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -172,6 +173,7 @@ HPExport void plugin_init (void)
     addHookPre("clif->charnameack", eclif_charnameack);
     addHookPre("clif->getareachar_item", eclif_getareachar_item);
     addHookPre("clif->dropflooritem", eclif_dropflooritem);
+    addHookPre("clif->disp_message", eclif_disp_message);
     addHookPre("clif->sendlook", eclif_sendlook);
     addHookPre("clif->send", eclif_send);
     addHookPre("clif->sendbgemblem_area", eclif_sendbgemblem_area);

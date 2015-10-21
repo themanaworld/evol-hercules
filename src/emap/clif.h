@@ -32,5 +32,8 @@ void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *
 void eclif_dropflooritem(struct flooritem_data* fitem);
 void eclif_sendbgemblem_area(struct map_session_data *sd);
 void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd);
+void eclif_disp_message(struct block_list* src,
+                        const char* mes, size_t *lenPtr,
+                        enum send_target *targetPtr);
 
 #endif  // EVOL_MAP_CLIF

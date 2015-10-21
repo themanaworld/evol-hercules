@@ -10,6 +10,7 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/cbasetypes.h"
@@ -699,4 +700,30 @@ void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
     WFIFOSET(fd, 34);
     hookStop();
     return;
+}
+
+void eclif_disp_message(struct block_list* src,
+                        const char* mes, size_t *lenPtr,
+                        enum send_target *targetPtr)
+{
+    unsigned char buf[256];
+
+    int len = *lenPtr;
+
+    if (len == 0)
+        return;
+
+    nullpo_retv(src);
+    nullpo_retv(mes);
+
+    if (len > sizeof(buf) - 5)
+    {
+        ShowWarning("clif_disp_message: Truncated message '%s' (len=%d, max=%d, aid=%d).\n", mes, (int)len, (int)(sizeof(buf) - 5), src->id);
+        len = sizeof(buf) - 5;
+    }
+
+    WBUFW(buf, 0) = 0x8e;
+    WBUFW(buf, 2) = len + 5;
+    safestrncpy((char*)WBUFP(buf, 4), mes, len + 1);
+    clif->send(buf, WBUFW(buf, 2), src, *targetPtr);
 }
