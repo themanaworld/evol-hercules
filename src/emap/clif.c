@@ -29,6 +29,8 @@
 #include "emap/struct/mapdext.h"
 #include "emap/struct/sessionext.h"
 
+extern bool isInit;
+
 void eclif_quest_send_list(TBL_PC *sd)
 {
     if (!sd)
@@ -710,7 +712,7 @@ void eclif_disp_message(struct block_list* src,
 
     int len = *lenPtr;
 
-    if (len == 0)
+    if (len == 0 || !isInit)
         return;
 
     nullpo_retv(src);

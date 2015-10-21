@@ -64,6 +64,7 @@
 
 extern int langScriptId;
 extern int mountScriptId;
+bool isInit;
 
 HPExport struct hplugin_info pinfo =
 {
@@ -75,6 +76,7 @@ HPExport struct hplugin_info pinfo =
 
 HPExport void plugin_init (void)
 {
+    isInit = false;
     status_init();
 
     addAtcommand("setskill", setSkill);
@@ -233,6 +235,8 @@ HPExport void plugin_init (void)
 
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");
+
+    isInit = true;
 }
 
 HPExport void server_preinit (void)
@@ -257,4 +261,5 @@ HPExport void plugin_final (void)
 {
     do_final_langs();
     commonClean();
+    isInit = false;
 }

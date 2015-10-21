@@ -162,7 +162,7 @@ const char* lang_trans(const char *str, int lng, int flg)
     if (!str)
         return 0;
 
-    if (lng < 0 || lng >= lang_num)
+    if (lng < 0 || lng >= lang_num || !translate_db || !translate_db->get)
         return str;
 
     char **strings = (char **)strdb_get(translate_db, str);
