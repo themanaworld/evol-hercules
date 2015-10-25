@@ -7,6 +7,7 @@
 struct WallData
 {
     char name[50];
+    int layer;
     int x1;
     int y1;
     int x2;

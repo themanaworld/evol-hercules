@@ -34,12 +34,14 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl,
                      int val, int val2, struct item_data *data, int n,
                      enum send_target target);
 void send_setwall(int m,
+                  int layer,
                   int x1, int y1,
                   int x2, int y2,
                   int mask,
                   enum send_target target);
 void send_setwall_single(int fd,
                          int m,
+                         int layer,
                          int x1, int y1,
                          int x2, int y2,
                          int mask);

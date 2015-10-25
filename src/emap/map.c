@@ -405,7 +405,7 @@ void emap_iwall_get(struct map_session_data *sd)
     {
         if (wall->m != sd->bl.m)
             continue;
-        send_setwall_single(sd->fd, wall->m, wall->x1, wall->y1 , wall->x2 , wall->y2 , wall->mask);
+        send_setwall_single(sd->fd, wall->m, wall->layer, wall->x1, wall->y1 , wall->x2 , wall->y2 , wall->mask);
     }
     dbi_destroy(iter);
     hookStop();
@@ -429,19 +429,23 @@ void emap_iwall_remove(const char *name)
     int x2 = wall->x2;
     int y2 = wall->y2;
     int m = wall->m;
-    for (y = y1; y <= y2; y ++)
+    int layer = wall->layer;
+    if (layer == 0)
     {
-        for (x = x1; x <= x2; x ++)
-            emap_setgatcell2(m, x, y, mask); // default collision can be lost
+        for (y = y1; y <= y2; y ++)
+        {
+            for (x = x1; x <= x2; x ++)
+                emap_setgatcell2(m, x, y, mask); // default collision can be lost
+        }
     }
 
-    send_setwall(m, x1, y1, x2, y2, mask, ALL_SAMEMAP);
+    send_setwall(m, layer, x1, y1, x2, y2, mask, ALL_SAMEMAP);
     map->list[wall->m].iwall_num--;
     strdb_remove(map->iwall_db, wall->name);
     hookStop();
 }
 
-bool emap_iwall_set2(int m, int x1, int y1, int x2, int y2, int mask, const char *name)
+bool emap_iwall_set2(int m, int layer, int x1, int y1, int x2, int y2, int mask, const char *name)
 {
     struct WallData *wall;
 
@@ -458,6 +462,7 @@ bool emap_iwall_set2(int m, int x1, int y1, int x2, int y2, int mask, const char
     wall->x2 = x2;
     wall->y2 = y2;
     wall->mask = mask;
+    wall->layer = layer;
     safestrncpy(wall->name, name, sizeof(wall->name));
 
     int x;
@@ -467,7 +472,7 @@ bool emap_iwall_set2(int m, int x1, int y1, int x2, int y2, int mask, const char
         for (x = x1; x <= x2; x ++)
             emap_setgatcell2(m, x, y, mask);
     }
-    send_setwall(m, x1, y1, x2, y2, mask, ALL_SAMEMAP);
+    send_setwall(m, layer, x1, y1, x2, y2, mask, ALL_SAMEMAP);
 
     strdb_put(map->iwall_db, wall->name, wall);
     map->list[m].iwall_num++;

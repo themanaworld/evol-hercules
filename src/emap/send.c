@@ -398,7 +398,7 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
     clif->send(buf, 19, bl, target);
 }
 
-void send_setwall(int m, int x1, int y1, int x2, int y2, int mask, enum send_target target)
+void send_setwall(int m, int layer, int x1, int y1, int x2, int y2, int mask, enum send_target target)
 {
     unsigned char buf[50];
 
@@ -408,7 +408,7 @@ void send_setwall(int m, int x1, int y1, int x2, int y2, int mask, enum send_tar
     WBUFW(buf, 6) = x2;
     WBUFW(buf, 8) = y2;
     WBUFL(buf, 10) = mask;
-    WBUFL(buf, 14) = 0;
+    WBUFL(buf, 14) = layer;
     mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WBUFP(buf, 18));
 
     struct block_list dummy_bl;
@@ -419,7 +419,7 @@ void send_setwall(int m, int x1, int y1, int x2, int y2, int mask, enum send_tar
     clif->send(buf, 34, &dummy_bl, target);
 }
 
-void send_setwall_single(int fd, int m, int x1, int y1, int x2, int y2, int mask)
+void send_setwall_single(int fd, int m, int layer, int x1, int y1, int x2, int y2, int mask)
 {
     struct SessionExt *data = session_get(fd);
     if (!data || data->clientVersion < 14)
@@ -432,7 +432,7 @@ void send_setwall_single(int fd, int m, int x1, int y1, int x2, int y2, int mask
     WFIFOW(fd, 6) = x2;
     WFIFOW(fd, 8) = y2;
     WFIFOL(fd, 10) = mask;
-    WFIFOL(fd, 14) = 0;
+    WFIFOL(fd, 14) = layer;
     mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WFIFOP(fd, 18));
     WFIFOSET(fd, 34);
 }

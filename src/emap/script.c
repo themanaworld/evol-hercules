@@ -1756,7 +1756,7 @@ BUILDIN(setCells)
     if ((m = map->mapname2mapid(mapname)) < 0)
         return true; // Invalid Map
 
-    emap_iwall_set2(m, x1, y1, x2, y2, mask, name);
+    emap_iwall_set2(m, 0, x1, y1, x2, y2, mask, name);
 
     return true;
 }

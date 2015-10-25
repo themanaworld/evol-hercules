@@ -34,6 +34,7 @@ bool emap_iwall_set(int16 *m,
 void emap_iwall_get(struct map_session_data *sd);
 void emap_iwall_remove(const char *name);
 bool emap_iwall_set2(int m,
+                     int layer,
                      int x1, int y1,
                      int x2, int y2,
                      int mask,
