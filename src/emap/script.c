@@ -1777,3 +1777,15 @@ BUILDIN(setMount)
     send_pc_info(&sd->bl, &sd->bl, AREA);
     return true;
 }
+
+BUILDIN(setSkin)
+{
+    if (!st->oid)
+        return false;
+
+    getSD()
+
+    const char *skin = script_getstr(st, 2);
+    send_pc_skin(sd->fd, st->oid, skin);
+    return true;
+}

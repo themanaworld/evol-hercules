@@ -436,3 +436,20 @@ void send_setwall_single(int fd, int m, int layer, int x1, int y1, int x2, int y
     mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WFIFOP(fd, 18));
     WFIFOSET(fd, 34);
 }
+
+void send_pc_skin(int fd, int npcId, const char *const skin)
+{
+    if (!skin)
+        return;
+    struct SessionExt *data = session_get(fd);
+    if (!data || data->clientVersion < 15)
+        return;
+
+    const int sz = strlen(skin) + 9;
+    WFIFOHEAD (fd, sz);
+    WFIFOW(fd, 0) = 0xb1c;
+    WFIFOW(fd, 2) = sz;
+    WFIFOL(fd, 4) = npcId;
+    strcpy((char*)WFIFOP (fd, 8), skin);
+    WFIFOSET(fd, sz);
+}

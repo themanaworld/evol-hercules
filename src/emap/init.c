@@ -133,6 +133,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setcells", "siiiiis", setCells);
     addScriptCommand("delcells", "s", delCells);
     addScriptCommand("setmount", "i", setMount);
+    addScriptCommand("setskin", "s", setSkin);
 
     do_init_langs();
 

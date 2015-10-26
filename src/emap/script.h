@@ -63,5 +63,6 @@ BUILDIN(chatJoin);
 BUILDIN(checkNpcCell);
 BUILDIN(setCells);
 BUILDIN(delCells);
+BUILDIN(setSkin);
 
 #endif  // EVOL_MAP_SCRIPT

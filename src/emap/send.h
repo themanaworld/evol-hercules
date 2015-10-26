@@ -45,5 +45,8 @@ void send_setwall_single(int fd,
                          int x1, int y1,
                          int x2, int y2,
                          int mask);
+void send_pc_skin(int fd,
+                  int npcId,
+                  const char *const skin);
 
 #endif  // EVOL_MAP_SEND
