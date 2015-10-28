@@ -187,7 +187,7 @@ void send_pc_info(struct block_list* bl1,
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
-        if (!tdata || tdata->clientVersion < 4)
+        if (!tdata || (bl1 != bl2 && tdata->clientVersion < 4))
             return;
     }
 

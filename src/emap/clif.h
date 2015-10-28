@@ -8,6 +8,7 @@ void eclif_quest_send_list(TBL_PC *sd);
 void eclif_quest_add(TBL_PC *sd, struct quest *qd);
 void eclif_charnameack(int *fdPtr, struct block_list *bl);
 void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl);
+bool eclif_spawn_post(bool retVal, struct block_list *bl);
 void eclif_sendlook(struct block_list *bl, int *id, int *type,
                     int *val, int *val2, enum send_target *target);
 bool eclif_send(const void* buf, int *len, struct block_list* bl, enum send_target *type);

@@ -212,6 +212,7 @@ HPExport void plugin_init (void)
     addHookPost("clif->changemap", eclif_changemap_post);
     addHookPost("clif->set_unit_idle", eclif_set_unit_idle_post);
     addHookPost("clif->pLoadEndAck", eclif_parse_LoadEndAck_post);
+    addHookPost("clif->spawn", eclif_spawn_post);
     addHookPost("status->set_viewdata", estatus_set_viewdata_post);
     addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
     addHookPost("status->calc_pc_", estatus_calc_pc__post);

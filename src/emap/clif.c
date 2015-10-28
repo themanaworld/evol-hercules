@@ -243,7 +243,17 @@ void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
     {
         eclif_send_additional_slots(sd, (TBL_PC *)bl);
         eclif_send_additional_slots((TBL_PC *)bl, sd);
+        send_pc_info(bl, &sd->bl, SELF);
     }
+}
+
+bool eclif_spawn_post(bool retVal, struct block_list *bl)
+{
+    if (retVal == true && bl->type == BL_PC)
+    {
+        send_pc_info(bl, bl, AREA);
+    }
+    return retVal;
 }
 
 void eclif_authok_post(TBL_PC *sd)
