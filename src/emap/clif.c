@@ -235,13 +235,52 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
     //skipping SHADOW slots
 }
 
+#undef equipPos
+
+#define equipPos2(index, field) \
+    equip = sd->equip_index[index]; \
+    if (equip >= 0) \
+    { \
+        item = sd->inventory_data[equip]; \
+        if (item && item->look) \
+        { \
+            send_changelook2(sd, bl, bl->id, field, item->look, 0, item, equip, AREA); \
+        } \
+    }
+
+static void eclif_send_additional_slots2(struct block_list *bl)
+{
+    if (!bl)
+        return;
+
+    TBL_PC* sd = (TBL_PC*)bl;
+    struct item_data *item;
+    short equip;
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    if (!data || data->invisible)
+        return;
+
+    equipPos2(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
+    equipPos2(EQI_HEAD_TOP, LOOK_HEAD_TOP);
+    equipPos2(EQI_HEAD_MID, LOOK_HEAD_MID);
+    equipPos2(EQI_GARMENT, LOOK_ROBE);
+    equipPos2(EQI_SHOES, LOOK_SHOES);
+    equipPos2(EQI_COSTUME_TOP, 13);
+    equipPos2(EQI_COSTUME_MID, 14);
+    equipPos2(EQI_COSTUME_LOW, 15);
+    equipPos2(EQI_COSTUME_GARMENT, 16);
+    equipPos2(EQI_ARMOR, 17);
+    //skipping SHADOW slots
+}
+
+#undef equipPos2
+
 void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
 {
     if (!bl)
         return;
     if (bl->type == BL_PC)
     {
-        eclif_send_additional_slots(sd, (TBL_PC *)bl);
         eclif_send_additional_slots((TBL_PC *)bl, sd);
         send_pc_info(bl, &sd->bl, SELF);
     }
@@ -252,6 +291,7 @@ bool eclif_spawn_post(bool retVal, struct block_list *bl)
     if (retVal == true && bl->type == BL_PC)
     {
         send_pc_info(bl, bl, AREA);
+        eclif_send_additional_slots2(bl);
     }
     return retVal;
 }
