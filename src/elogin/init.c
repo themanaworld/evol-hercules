@@ -36,7 +36,7 @@ HPExport void plugin_init (void)
     interfaces_init_common();
 
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
-    addPacket(0x027c, 95, elogin_parse_client_login2, hpParse_Login);
+    addPacket(0x027c, 91, elogin_parse_client_login2, hpParse_Login);
     addPacket(0x5000, 54, elogin_parse_change_paassword, hpParse_FromChar);
     addHookPre("login->parse_client_login", elogin_parse_client_login_pre);
     addHookPre("login->check_password", elogin_check_password);
