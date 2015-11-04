@@ -77,6 +77,7 @@ int enpc_buysellsel(TBL_PC* sd, int *id, int *type)
     if (*type == 0 && nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_MARKET)
     {
         clif->npc_market_open(sd, nd);
+        sd->npc_shopid = nd->bl.id;
         hookStop();
         return 0;
     }
