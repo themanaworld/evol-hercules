@@ -11,21 +11,25 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "map/battle.h"
 #include "map/itemdb.h"
 #include "map/map.h"
+#include "map/npc.h"
 #include "map/pc.h"
 
 #include "emap/permission.h"
 #include "emap/send.h"
 #include "emap/data/itemd.h"
+#include "emap/data/mapd.h"
 #include "emap/data/mobd.h"
 #include "emap/data/npcd.h"
 #include "emap/data/session.h"
 #include "emap/struct/itemdext.h"
+#include "emap/struct/mapdext.h"
 #include "emap/struct/mobdext.h"
 #include "emap/struct/npcdext.h"
 #include "emap/struct/sessionext.h"
@@ -477,4 +481,84 @@ bool emap_iwall_set2(int m, int layer, int x1, int y1, int x2, int y2, int mask,
     strdb_put(map->iwall_db, wall->name, wall);
     map->list[m].iwall_num++;
     return true;
+}
+
+void map_alwaysVisible_add(const struct block_list *bl)
+{
+    if (!bl)
+        return;
+    struct MapdExt *data = mapd_get(bl->m);
+    if (!data)
+        return;
+    int f;
+    for (f = 0; f < VECTOR_LENGTH(data->npcs); f ++)
+    {
+        if (VECTOR_INDEX(data->npcs, f) == bl->id)
+            return;
+    }
+    VECTOR_ENSURE(data->npcs, 1, 1);
+    VECTOR_PUSH(data->npcs, bl->id);
+}
+
+bool map_alwaysVisible_find(const struct block_list *bl)
+{
+    if (!bl)
+        return false;
+    struct MapdExt *data = mapd_get(bl->m);
+    if (!data)
+        return false;
+    int f;
+    for (f = 0; f < VECTOR_LENGTH(data->npcs); f ++)
+    {
+        if (VECTOR_INDEX(data->npcs, f) == bl->id)
+            return true;
+    }
+    return false;
+}
+
+void map_alwaysVisible_delete(const struct block_list *bl)
+{
+    if (!bl)
+        return;
+    struct MapdExt *data = mapd_get(bl->m);
+    if (!data)
+        return;
+    int f;
+    for (f = 0; f < VECTOR_LENGTH(data->npcs); f ++)
+    {
+        if (VECTOR_INDEX(data->npcs, f) == bl->id)
+        {
+            VECTOR_ERASE(data->npcs, f);
+            return;
+        }
+    }
+}
+
+void map_alwaysVisible_send(TBL_PC *sd)
+{
+    if (!sd)
+        return;
+    int f;
+    struct MapdExt *data = mapd_get(sd->bl.m);
+    if (!data)
+        return;
+
+    for (f = 0; f < VECTOR_LENGTH(data->npcs); f ++)
+    {
+        const int id = VECTOR_INDEX(data->npcs, f);
+        TBL_NPC *npc = map->id2nd(id);
+        clif->set_unit_idle(&npc->bl, sd, SELF);
+        clif->charnameack(sd->fd, &npc->bl);
+    }
+}
+
+void edo_final_maps(void)
+{
+    int f;
+    for (f = 0; f < map->count; f++)
+    {
+        struct MapdExt *data = mapd_get(f);
+        if (data)
+            VECTOR_CLEAR(data->npcs);
+    }
 }

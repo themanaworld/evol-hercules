@@ -177,6 +177,15 @@ void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num
         ext->walkMask = *val;
         hookStop();
     }
+    else if (!strcmp(name, ".alwaysVisible"))
+    {
+        getExt1();
+        if (*val)
+            map_alwaysVisible_add(&nd->bl);
+        else
+            map_alwaysVisible_delete(&nd->bl);
+        hookStop();
+    }
 }
 
 int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
@@ -253,6 +262,13 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
         getExt2Ret(0);
         hookStop();
         return ext->walkMask;
+    }
+    else if (!strcmp(name, ".alwaysVisible"))
+    {
+        getExt1Return(0);
+        bool res = map_alwaysVisible_find(&nd->bl);
+        hookStop();
+        return res;
     }
     return 0;
 }

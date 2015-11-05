@@ -23,6 +23,7 @@
 
 #include "emap/clif.h"
 #include "emap/lang.h"
+#include "emap/map.h"
 #include "emap/send.h"
 #include "emap/data/mapd.h"
 #include "emap/data/session.h"
@@ -530,6 +531,7 @@ void eclif_parse_LoadEndAck_post(int *fdPtr __attribute__ ((unused)),
     {   // some messages not sent if map not changed
         map->iwall_get(sd);
     }
+    map_alwaysVisible_send(sd);
 }
 
 void eclif_changelook2(struct block_list *bl, int type, int val,

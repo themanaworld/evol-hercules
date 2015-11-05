@@ -38,5 +38,6 @@ struct MapdExt *mapd_create(void)
     data->mask = 1;
     data->invisible = false;
     data->flag.nopve = 0;
+    VECTOR_INIT(data->npcs);
     return data;
 }

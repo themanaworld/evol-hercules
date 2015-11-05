@@ -190,6 +190,7 @@ HPExport void plugin_init (void)
     addHookPre("unit->can_move", eunit_can_move);
     addHookPre("unit->walktoxy", eunit_walktoxy);
     addHookPre("mail->invalid_operation", email_invalid_operation);
+    addHookPre("map->list_final", edo_final_maps);
     addHookPre("map->cell2gat", emap_cell2gat);
     addHookPre("map->gat2cell", emap_gat2cell);
     addHookPre("map->getcellp", emap_getcellp);
