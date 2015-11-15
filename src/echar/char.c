@@ -42,7 +42,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
             return;
         }
         sex = RFIFOB(fd, 33);
-        if (sex > 1 && sex != 99)
+        if (sex != 9 && sex != 1 && sex != 3 && sex != 99)
         {
             chr->creation_failed(fd, -11);
             RFIFOSKIP(fd, 31 + 5);
