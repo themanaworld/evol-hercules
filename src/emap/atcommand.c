@@ -89,3 +89,37 @@ ACMD2(setSkill)
 
     return true;
 }
+
+ACMD2(slide)
+{
+    int x = 0;
+    int y = 0;
+    if (!*message || sscanf(message, "%4d %4d", &x, &y) < 2)
+    {
+        const char* text = info->help;
+        if (text)
+            clif->messageln (fd, text);
+        return false;
+    }
+
+    if (!sd)
+    {
+        clif->message(fd, msg_fd(fd, 3)); // Character not found.
+        return false;
+    }
+
+    const int m = sd->bl.m;
+    if (x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
+    {
+        ShowError("slide: attempt to place player %s (%d:%d) on invalid coordinates (%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, x, y);
+        return false;
+    }
+    if (map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle->bc->gm_ignore_warpable_area)
+    {
+        clif->message(fd, msg_fd(fd, 2));
+        return false;
+    }
+    clif->slide(&sd->bl, x, y);
+    unit->movepos(&sd->bl, x, y, 1, 0);
+    return true;
+}

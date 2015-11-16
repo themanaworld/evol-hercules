@@ -80,6 +80,7 @@ HPExport void plugin_init (void)
     status_init();
 
     addAtcommand("setskill", setSkill);
+    addAtcommand("slide", slide);
 
     addScriptCommand("chatjoin", "i*", chatJoin);
     addScriptCommand("setcamnpc", "*", setCamNpc);
