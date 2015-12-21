@@ -4,7 +4,7 @@
 #ifndef EVOL_MAP_NPC
 #define EVOL_MAP_NPC
 
-void enpc_parse_unknown_mapflag(const char *name, char *w3, char *w4, const char* start,
+void enpc_parse_unknown_mapflag(const char *name, const char *w3, const char *w4, const char* start,
                                 const char* buffer, const char* filepath, int *retval);
 
 int enpc_buysellsel(TBL_PC* sd, int *id, int *type);
