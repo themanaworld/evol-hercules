@@ -4,9 +4,9 @@
 #ifndef EVOL_COMMON_CONFIG
 #define EVOL_COMMON_CONFIG
 
-void config_default_map(const char *val);
-void config_default_x(const char *val);
-void config_default_y(const char *val);
+void config_default_map(const char *key, const char *val);
+void config_default_x(const char *key, const char *val);
+void config_default_y(const char *key, const char *val);
 void common_config_final(void);
 
 extern const char *default_map;

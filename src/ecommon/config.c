@@ -20,17 +20,20 @@ const char *default_map = NULL;
 int default_x = 0;
 int default_y = 0;
 
-void config_default_map(const char *val)
+void config_default_map(const char *key __attribute__ ((unused)),
+                        const char *val)
 {
     mapindex->default_map = aStrdup(val);
 }
 
-void config_default_x(const char *val)
+void config_default_x(const char *key __attribute__ ((unused)),
+                      const char *val)
 {
     mapindex->default_x = atoi(val);
 }
 
-void config_default_y(const char *val)
+void config_default_y(const char *key __attribute__ ((unused)),
+                      const char *val)
 {
     mapindex->default_y = atoi(val);
 }

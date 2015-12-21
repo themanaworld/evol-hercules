@@ -5,10 +5,10 @@
 #define EVOL_CHAR_CONFIG
 
 void config_final(void);
-void config_min_char_class(const char *val);
-void config_max_char_class(const char *val);
-void config_min_look(const char *val);
-void config_max_look(const char *val);
+void config_min_char_class(const char *key, const char *val);
+void config_max_char_class(const char *key, const char *val);
+void config_min_look(const char *key, const char *val);
+void config_max_look(const char *key, const char *val);
 
 extern int min_char_class;
 extern int max_char_class;
