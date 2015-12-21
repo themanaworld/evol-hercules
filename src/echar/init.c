@@ -53,6 +53,7 @@ HPExport void plugin_init (void)
     addHookPre("chr->parse_char_create_new_char", echar_parse_char_create_new_char);
     addHookPre("chr->creation_failed", echar_creation_failed);
     addHookPre("chr->parse_char_connect", echar_parse_char_connect_pre);
+    addHookPre("chr->parse_frommap_request_stats_report", echar_parse_frommap_request_stats_report_pre);
 
     addHookPost("chr->mmo_char_send099d", echar_mmo_char_send099d);
     addHookPost("chr->mmo_char_send_characters", echar_mmo_char_send_characters_post);

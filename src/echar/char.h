@@ -28,4 +28,6 @@ void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint
 
 void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl);
 
+void echar_parse_frommap_request_stats_report_pre(int *fdPtr);
+
 #endif  // EVOL_CHAR_CHAR
