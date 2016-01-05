@@ -15,6 +15,7 @@
 #include "common/strlib.h"
 #include "common/cbasetypes.h"
 //#include "common/utils.h"
+#include "common/random.h"
 #include "common/timer.h"
 #include "map/guild.h"
 #include "map/mob.h"
@@ -352,7 +353,7 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
         if (*len >= 2)
         {
             const int packet = RBUFW (buf, 0);
-            if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db)
+            if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db || packet == 0x8c8)
             {
                 struct map_session_data *sd = BL_CAST(BL_PC, bl);
                 struct SessionExt *data = session_get_bysd(sd);
@@ -364,7 +365,7 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
                     return true;
                 }
             }
-            if (packet == 0x915 || packet == 0x90f || packet == 0x914)
+            if (packet == 0x915 || packet == 0x90f || packet == 0x914 || packet == 0x2e1)
             {
                 struct map_session_data *sd = BL_CAST(BL_PC, bl);
                 struct SessionExt *data = session_get_bysd(sd);
@@ -509,7 +510,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
-        if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db)
+        if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db || packet == 0x8c8)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
@@ -520,7 +521,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
-        if (packet == 0x915 || packet == 0x90f || packet == 0x914)
+        if (packet == 0x915 || packet == 0x90f || packet == 0x914 || packet == 0x2e1)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
@@ -610,6 +611,13 @@ static inline unsigned char clif_bl_type_old(struct block_list *bl) {
 		case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
 		default:       return 0x1; //NPC_TYPE
 	}
+}
+
+//Modifies the type of damage according to status changes [Skotlex]
+//Aegis data specifies that: 4 endure against single hit sources, 9 against multi-hit.
+static inline int clif_calc_delay(int type, int div, int damage, int delay)
+{
+	return ( delay == 0 && damage > 0 ) ? ( div > 1 ? 9 : 4 ) : type;
 }
 
 // this function must be used only by clients version < 16
@@ -817,6 +825,75 @@ void eclif_set_unit_walking_old(struct block_list* bl,
 	}
 }
 
+void eclif_damage_old(struct block_list* src,
+                      struct block_list* dst,
+                      int sdelay,
+                      int ddelay,
+                      int64 in_damage,
+                      short div,
+                      unsigned char type,
+                      int64 in_damage2)
+{
+	struct packet_damage_old p;
+	struct status_change *sc;
+	int damage,damage2;
+
+	nullpo_retv(src);
+	nullpo_retv(dst);
+
+	sc = status->get_sc(dst);
+
+	if(sc && sc->count && sc->data[SC_ILLUSION]) {
+		if(in_damage) in_damage = in_damage*(sc->data[SC_ILLUSION]->val2); //+ rnd()%100;
+		if(in_damage2) in_damage2 = in_damage2*(sc->data[SC_ILLUSION]->val2); //+ rnd()%100;
+	}
+
+	damage = (int)min(in_damage,INT_MAX);
+	damage2 = (int)min(in_damage2,INT_MAX);
+
+	type = clif_calc_delay(type,div,damage+damage2,ddelay);
+
+	p.PacketType = 0x2e1;
+	p.GID = src->id;
+	p.targetGID = dst->id;
+	p.startTime = (uint32)timer->gettick();
+	p.attackMT = sdelay;
+	p.attackedMT = ddelay;
+	p.count = div;
+	p.action = type;
+
+	if (battle->bc->hide_woe_damage && map_flag_gvg2(src->m) ) {
+		p.damage = damage?div:0;
+		p.leftDamage = damage2?div:0;
+	} else {
+		p.damage = damage;
+		p.leftDamage = damage2;
+	}
+//	p.is_sp_damaged = 0;	// [ToDo] IsSPDamage - Displays blue digits.
+
+	if(disguised(dst)) {
+		clif->send(&p,sizeof(p),dst,AREA_WOS);
+		p.targetGID = -dst->id;
+		clif->send(&p,sizeof(p),dst,SELF);
+	} else
+		clif->send(&p,sizeof(p),dst,AREA);
+
+	if(disguised(src)) {
+		p.GID = -src->id;
+		if (disguised(dst))
+			p.targetGID = dst->id;
+
+		if(damage > 0) p.damage = -1;
+		if(damage2 > 0) p.leftDamage = -1;
+
+		clif->send(&p,sizeof(p),src,SELF);
+	}
+
+	if(src == dst) {
+		unit->setdir(src,unit->getdir(src));
+	}
+}
+
 void eclif_set_unit_idle_post(struct block_list* bl, TBL_PC *tsd,
                               enum send_target *target)
 {
@@ -850,6 +927,22 @@ void eclif_set_unit_walking_post(struct block_list* bl, TBL_PC *tsd,
         else
             send_advmoving(ud, false, tsd ? &tsd->bl : bl, *target);
     }
+}
+
+int eclif_damage_post(int retVal,
+                      struct block_list* src,
+                      struct block_list* dst,
+                      int *sdelay,
+                      int *ddelay,
+                      int64 *in_damage,
+                      short *div,
+                      unsigned char *type,
+                      int64 *in_damage2)
+{
+    eclif_damage_old(src, dst,
+        *sdelay, *ddelay, *in_damage,
+        *div, *type, *in_damage2);
+    return retVal;
 }
 
 void eclif_move(struct unit_data *ud)

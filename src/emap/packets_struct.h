@@ -222,4 +222,28 @@ struct packet_unit_walking_old {
 #endif
 } __attribute__((packed));
 
+struct packet_damage_old {
+	short PacketType;
+	unsigned int GID;
+	unsigned int targetGID;
+	unsigned int startTime;
+	int attackMT;
+	int attackedMT;
+#if PACKETVER < 20071113
+	short damage;
+#else
+	int damage;
+#endif
+//#if PACKETVER >= 20131223
+//	unsigned char is_sp_damaged;
+//#endif
+	short count;
+	unsigned char action;
+#if PACKETVER < 20071113
+	short leftDamage;
+#else
+	int leftDamage;
+#endif
+} __attribute__((packed));
+
 #endif /* EVOL_MAP_PACKETS_STRUCT_H */

@@ -24,6 +24,15 @@ void eclif_set_unit_walking_pre(struct block_list* bl, TBL_PC *tsd,
                                 struct unit_data* ud, enum send_target *target);
 void eclif_set_unit_walking_post(struct block_list* bl, TBL_PC *tsd,
                                  struct unit_data* ud, enum send_target *target);
+int eclif_damage_post(int retVal,
+                      struct block_list* src,
+                      struct block_list* dst,
+                      int *sdelay,
+                      int *ddelay,
+                      int64 *in_damage,
+                      short *div,
+                      unsigned char *type,
+                      int64 *in_damage2);
 void eclif_move(struct unit_data *ud);
 void eclif_parse_LoadEndAck_pre(int *fdPtr,
                                 struct map_session_data *sd);
