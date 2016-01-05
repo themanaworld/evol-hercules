@@ -37,4 +37,8 @@ void eclif_disp_message(struct block_list* src,
                         const char* mes, size_t *lenPtr,
                         enum send_target *targetPtr);
 
+void eclif_set_unit_idle_old(struct block_list* bl,
+                             struct map_session_data *tsd,
+                             enum send_target target);
+
 #endif  // EVOL_MAP_CLIF
