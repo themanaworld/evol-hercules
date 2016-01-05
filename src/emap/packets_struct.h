@@ -155,4 +155,71 @@ struct packet_spawn_unit_old {
 #endif
 } __attribute__((packed));
 
+struct packet_unit_walking_old {
+	short PacketType;
+#if PACKETVER >= 20091103
+	short PacketLength;
+#endif
+#if PACKETVER > 20071106
+	unsigned char objecttype;
+#endif
+//#if PACKETVER >= 20131223
+//	unsigned int AID;
+//#endif
+	unsigned int GID;
+	short speed;
+	short bodyState;
+	short healthState;
+#if PACKETVER < 7
+	short effectState;
+#else
+	int effectState;
+#endif
+	short job;
+	short head;
+#if PACKETVER < 7
+	short weapon;
+#else
+	int weapon;
+#endif
+	short accessory;
+	unsigned int moveStartTime;
+#if PACKETVER < 7
+	short shield;
+#endif
+	short accessory2;
+	short accessory3;
+	short headpalette;
+	short bodypalette;
+	short headDir;
+#if PACKETVER >= 20101124
+	short robe;
+#endif
+	unsigned int GUID;
+	short GEmblemVer;
+	short honor;
+#if PACKETVER > 7
+	int virtue;
+#else
+	short virtue;
+#endif
+	uint8 isPKModeON;
+	unsigned char sex;
+	unsigned char MoveData[6];
+	unsigned char xSize;
+	unsigned char ySize;
+	short clevel;
+#if PACKETVER >= 20080102
+	short font;
+#endif
+#if PACKETVER >= 20120221
+	int maxHP;
+	int HP;
+	unsigned char isBoss;
+#endif
+#if PACKETVER >= 20150513
+	short body;
+#endif
+} __attribute__((packed));
+
 #endif /* EVOL_MAP_PACKETS_STRUCT_H */

@@ -352,7 +352,7 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
         if (*len >= 2)
         {
             const int packet = RBUFW (buf, 0);
-            if (packet == 0x9dd || packet == 0x9dc)
+            if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db)
             {
                 struct map_session_data *sd = BL_CAST(BL_PC, bl);
                 struct SessionExt *data = session_get_bysd(sd);
@@ -364,7 +364,7 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
                     return true;
                 }
             }
-            if (packet == 0x915 || packet == 0x90f)
+            if (packet == 0x915 || packet == 0x90f || packet == 0x914)
             {
                 struct map_session_data *sd = BL_CAST(BL_PC, bl);
                 struct SessionExt *data = session_get_bysd(sd);
@@ -509,7 +509,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
-        if (packet == 0x9dd || packet == 0x9dc)
+        if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
@@ -520,7 +520,7 @@ int eclif_send_actual(int *fd, void *buf, int *len)
                 return 0;
             }
         }
-        if (packet == 0x915 || packet == 0x90f)
+        if (packet == 0x915 || packet == 0x90f || packet == 0x914)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
@@ -582,6 +582,17 @@ static inline void WBUFPOS(uint8* p, unsigned short pos, short x, short y, unsig
 	p[0] = (uint8)(x>>2);
 	p[1] = (uint8)((x<<6) | ((y>>4)&0x3f));
 	p[2] = (uint8)((y<<4) | (dir&0xf));
+}
+
+// client-side: x0+=sx0*0.0625-0.5 and y0+=sy0*0.0625-0.5
+static inline void WBUFPOS2(uint8* p, unsigned short pos, short x0, short y0, short x1, short y1, unsigned char sx0, unsigned char sy0) {
+	p += pos;
+	p[0] = (uint8)(x0>>2);
+	p[1] = (uint8)((x0<<6) | ((y0>>4)&0x3f));
+	p[2] = (uint8)((y0<<4) | ((x1>>6)&0x0f));
+	p[3] = (uint8)((x1<<2) | ((y1>>8)&0x03));
+	p[4] = (uint8)y1;
+	p[5] = (uint8)((sx0<<4) | (sy0&0x0f));
 }
 
 static inline unsigned char clif_bl_type_old(struct block_list *bl) {
@@ -740,6 +751,72 @@ void eclif_spawn_unit_old(struct block_list* bl, enum send_target target)
 
 }
 
+void eclif_set_unit_walking_old(struct block_list* bl,
+                                struct map_session_data *tsd,
+                                struct unit_data* ud,
+                                enum send_target target)
+{
+	struct map_session_data* sd;
+	struct status_change* sc = status->get_sc(bl);
+	struct view_data* vd = status->get_viewdata(bl);
+	struct packet_unit_walking_old p;
+	int g_id = status->get_guild_id(bl);
+
+	nullpo_retv(bl);
+	nullpo_retv(ud);
+
+	sd = BL_CAST(BL_PC, bl);
+
+	p.PacketType = 0x914;
+	p.PacketLength = sizeof(p);
+	p.objecttype = clif_bl_type_old(bl);
+//	p.AID = bl->id;
+//	p.GID = (tsd) ? tsd->status.char_id : 0;	// CCODE
+	p.GID = bl->id;
+	p.speed = status->get_speed(bl);
+	p.bodyState = (sc) ? sc->opt1 : 0;
+	p.healthState = (sc) ? sc->opt2 : 0;
+	p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
+	p.job = vd->class_;
+	p.head = vd->hair_style;
+	p.weapon = vd->weapon;
+	p.accessory = vd->head_bottom;
+	p.moveStartTime = (unsigned int)timer->gettick();
+	p.accessory2 = vd->head_top;
+	p.accessory3 = vd->head_mid;
+	p.headpalette = vd->hair_color;
+	p.bodypalette = vd->cloth_color;
+	p.headDir = (sd)? sd->head_dir : 0;
+	p.robe = vd->robe;
+	p.GUID = g_id;
+	p.GEmblemVer = status->get_emblem_id(bl);
+	p.honor = (sd) ? sd->status.manner : 0;
+	p.virtue = (sc) ? sc->opt3 : 0;
+	p.isPKModeON = (sd && sd->status.karma) ? 1 : 0;
+	p.sex = vd->sex;
+	WBUFPOS2(&p.MoveData[0],0,bl->x,bl->y,ud->to_x,ud->to_y,8,8);
+	p.xSize = p.ySize = (sd) ? 5 : 0;
+	p.clevel = clif_setlevel(bl);
+	p.font = (sd) ? sd->status.font : 0;
+	if (battle->bc->show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl)) {
+		p.maxHP = status_get_max_hp(bl);
+		p.HP = status_get_hp(bl);
+		p.isBoss = ( ((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss ) ? 1 : 0;
+	} else {
+		p.maxHP = -1;
+		p.HP = -1;
+		p.isBoss = 0;
+	}
+
+	clif->send(&p,sizeof(p),tsd?&tsd->bl:bl,target);
+
+	if( disguised(bl) ) {
+		p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+		p.GID = -bl->id;
+		clif->send(&p,sizeof(p),bl,SELF);
+	}
+}
+
 void eclif_set_unit_idle_post(struct block_list* bl, TBL_PC *tsd,
                               enum send_target *target)
 {
@@ -756,8 +833,14 @@ void eclif_set_unit_idle_post(struct block_list* bl, TBL_PC *tsd,
         send_npc_info(bl, &tsd->bl, *target);
 }
 
-void eclif_set_unit_walking(struct block_list* bl, TBL_PC *tsd,
-                            struct unit_data* ud, enum send_target *target)
+void eclif_set_unit_walking_pre(struct block_list* bl, TBL_PC *tsd,
+                                struct unit_data* ud, enum send_target *target)
+{
+    eclif_set_unit_walking_old(bl, tsd, ud, *target);
+}
+
+void eclif_set_unit_walking_post(struct block_list* bl, TBL_PC *tsd,
+                                 struct unit_data* ud, enum send_target *target)
 {
     TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))

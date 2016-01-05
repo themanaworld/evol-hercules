@@ -20,8 +20,10 @@ void eclif_authok_post(TBL_PC *sd);
 void eclif_changemap_post(TBL_PC *sd, short *m, int *x, int *y);
 void eclif_set_unit_idle_post(struct block_list* bl, TBL_PC *tsd,
                               enum send_target *target);
-void eclif_set_unit_walking(struct block_list* bl, TBL_PC *tsd,
-                            struct unit_data* ud, enum send_target *target);
+void eclif_set_unit_walking_pre(struct block_list* bl, TBL_PC *tsd,
+                                struct unit_data* ud, enum send_target *target);
+void eclif_set_unit_walking_post(struct block_list* bl, TBL_PC *tsd,
+                                 struct unit_data* ud, enum send_target *target);
 void eclif_move(struct unit_data *ud);
 void eclif_parse_LoadEndAck_pre(int *fdPtr,
                                 struct map_session_data *sd);

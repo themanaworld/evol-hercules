@@ -183,6 +183,7 @@ HPExport void plugin_init (void)
     addHookPre("clif->sendbgemblem_area", eclif_sendbgemblem_area);
     addHookPre("clif->sendbgemblem_single", eclif_sendbgemblem_single);
     addHookPre("clif->set_unit_idle", eclif_set_unit_idle);
+    addHookPre("clif->set_unit_walking", eclif_set_unit_walking_pre);
     addHookPre("clif->send_actual", eclif_send_actual);
     addHookPre("clif->pLoadEndAck", eclif_parse_LoadEndAck_pre);
     addHookPre("clif->spawn_unit", eclif_spawn_unit_pre);
@@ -220,7 +221,7 @@ HPExport void plugin_init (void)
     addHookPost("status->read_job_db_sub", estatus_read_job_db_sub);
     addHookPost("status->calc_pc_", estatus_calc_pc__post);
     addHookPost("status->calc_speed", estatus_calc_speed_post);
-    addHookPost("clif->set_unit_walking", eclif_set_unit_walking);
+    addHookPost("clif->set_unit_walking", eclif_set_unit_walking_post);
     addHookPost("clif->move", eclif_move);
     addHookPost("map->addflooritem", emap_addflooritem_post);
     addHookPost("mob->read_db_mode_sub", emob_read_db_mode_sub_post);
