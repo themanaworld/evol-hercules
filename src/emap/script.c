@@ -389,7 +389,7 @@ BUILDIN(setCamNpc)
             return false;
         }
 
-        nd = (TBL_NPC *) map->id2bl (st->oid);
+        nd = map->id2nd(st->oid);
     }
     if (!nd)
     {
@@ -453,7 +453,7 @@ BUILDIN(npcTalk3)
     }
     else
     {
-        nd = (TBL_NPC *) map->id2bl (st->oid);
+        nd = map->id2nd(st->oid);
         str = script_getstr(st, 2);
     }
 
@@ -943,7 +943,7 @@ BUILDIN(setNpcDir)
             return false;
         }
 
-        nd = (TBL_NPC *) map->id2bl (st->oid);
+        nd = map->id2nd(st->oid);
         newdir = script_getnum(st, 2);
     }
     if (!nd)
@@ -1603,7 +1603,7 @@ BUILDIN(npcSit)
             return false;
         }
 
-        nd = (TBL_NPC *) map->id2bl (st->oid);
+        nd = map->id2nd(st->oid);
     }
     if (!nd)
     {
@@ -1633,7 +1633,7 @@ BUILDIN(npcStand)
             return false;
         }
 
-        nd = (TBL_NPC *) map->id2bl (st->oid);
+        nd = map->id2nd(st->oid);
     }
     if (!nd)
     {
@@ -1648,7 +1648,7 @@ BUILDIN(npcStand)
 
 BUILDIN(npcWalkTo)
 {
-    struct npc_data *nd = (struct npc_data *)map->id2bl(st->oid);
+    struct npc_data *nd = map->id2nd(st->oid);
     int x = 0, y = 0;
 
     x = script_getnum(st, 2);
