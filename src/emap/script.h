@@ -26,6 +26,7 @@ BUILDIN(requestItem);
 BUILDIN(requestItems);
 BUILDIN(requestItemIndex);
 BUILDIN(requestItemsIndex);
+BUILDIN(requestCraft);
 BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(setNpcDir);

@@ -876,6 +876,70 @@ BUILDIN(requestItemsIndex)
     return true;
 }
 
+BUILDIN(requestCraft)
+{
+    getSessionData(client);
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:requestitem: not a variable\n");
+        script->reportsrc(st);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+
+    if (!is_string_variable(name))
+    {
+        ShowWarning("parameter is not variable\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    int count = 1;
+
+    if (script_hasdata(st, 3))
+    {
+        count = script_getnum(st, 3);
+        if (count < 0)
+            count = 1;
+    }
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+
+        // send item request with limit count
+        if (client || client->clientVersion >= 16)
+            send_npccommand2(sd, st->oid, 12, count, 0, 0);
+        else
+            clif->scriptinputstr(sd, st->oid);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+
+        if (!sd->npc_str)
+        {
+            ShowWarning("npc string not found\n");
+            script->reportsrc(st);
+            return false;
+        }
+
+        script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st, 2));
+        st->state = RUN;
+    }
+    return true;
+}
+
 BUILDIN(setq)
 {
     int i;

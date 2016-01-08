@@ -98,6 +98,7 @@ HPExport void plugin_init (void)
     addScriptCommand("requestitems", "v*", requestItems);
     addScriptCommand("requestitemindex", "v", requestItemIndex);
     addScriptCommand("requestitemsindex", "v*", requestItemsIndex);
+    addScriptCommand("requestcraft", "v*", requestCraft);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("setnpcdir", "*", setNpcDir);
