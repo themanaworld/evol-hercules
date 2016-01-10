@@ -25,6 +25,7 @@
 
 #include "emap/script.h"
 #include "emap/clif.h"
+#include "emap/craft.h"
 #include "emap/lang.h"
 #include "emap/map.h"
 #include "emap/scriptdefines.h"
@@ -1867,5 +1868,14 @@ BUILDIN(setSkin)
 
     const char *skin = script_getstr(st, 2);
     send_pc_skin(sd->fd, st->oid, skin);
+    return true;
+}
+
+BUILDIN(initCraft)
+{
+    getSD()
+
+    int var = str_to_craftvar(sd, script_getstr(st, 2));
+    script_pushint(st, var);
     return true;
 }

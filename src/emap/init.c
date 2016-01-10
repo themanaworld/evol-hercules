@@ -45,6 +45,7 @@
 #include "emap/atcommand.h"
 #include "emap/battleground.h"
 #include "emap/clif.h"
+#include "emap/craft.h"
 #include "emap/itemdb.h"
 #include "emap/lang.h"
 #include "emap/mail.h"
@@ -99,6 +100,7 @@ HPExport void plugin_init (void)
     addScriptCommand("requestitemindex", "v", requestItemIndex);
     addScriptCommand("requestitemsindex", "v*", requestItemsIndex);
     addScriptCommand("requestcraft", "v*", requestCraft);
+    addScriptCommand("initcraft", "s", initCraft);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("setnpcdir", "*", setNpcDir);
@@ -138,6 +140,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setskin", "s", setSkin);
 
     do_init_langs();
+    do_init_craft();
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addPacket(0xb07, 26, map_parse_join_channel, hpClif_Parse);
@@ -268,6 +271,7 @@ HPExport void server_online (void)
 HPExport void plugin_final (void)
 {
     do_final_langs();
+    do_final_craft();
     commonClean();
     isInit = false;
 }

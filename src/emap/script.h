@@ -65,5 +65,6 @@ BUILDIN(checkNpcCell);
 BUILDIN(setCells);
 BUILDIN(delCells);
 BUILDIN(setSkin);
+BUILDIN(initCraft);
 
 #endif  // EVOL_MAP_SCRIPT

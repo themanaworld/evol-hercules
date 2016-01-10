@@ -36,6 +36,8 @@ MAP_SRC = emap/atcommand.c \
     emap/battleground.h \
     emap/clif.c \
     emap/clif.h \
+    emap/craft.c \
+    emap/craft.h \
     emap/horse.c \
     emap/horse.h \
     emap/init.c \
@@ -95,7 +97,10 @@ MAP_SRC = emap/atcommand.c \
     ecommon/config.h \
     ecommon/init.c \
     ecommon/init.h \
-    ecommon/serverversion.h
+    ecommon/serverversion.h \
+    ecommon/struct/strutildata.h \
+    ecommon/utils/strutil.c \
+    ecommon/utils/strutil.h
 
 # need remove -Wno-unused
 
