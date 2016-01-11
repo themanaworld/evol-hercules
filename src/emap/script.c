@@ -1895,3 +1895,26 @@ BUILDIN(deleteCraft)
     craft_delete(script_getnum(st, 2));
     return true;
 }
+
+BUILDIN(getCraftSlotId)
+{
+    getSD()
+
+    const struct craft_slot *crslot = craft_get_slot(script_getnum(st, 2),
+        script_getnum(st, 3));
+    if (!crslot)
+        return false;
+    const int len = VECTOR_LENGTH(crslot->items);
+    if (len > 0)
+    {
+        struct item_pair *pair = &VECTOR_INDEX(crslot->items, 0);
+        const int invIndex = pair->index;
+        const int item_id = sd->status.inventory[invIndex].nameid;
+        script_pushint(st, item_id);
+    }
+    else
+    {
+        script_pushint(st, 0);
+    }
+    return true;
+}

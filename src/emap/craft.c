@@ -274,3 +274,19 @@ void craft_delete(const int id)
     delete_craft_var(craft);
     idb_remove(craftvar_db, id);
 }
+
+struct craft_slot *craft_get_slot(const int id, const int slot)
+{
+    struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", id);
+        return NULL;
+    }
+    if (slot < 0 || slot > craft_inventory_size)
+    {
+        ShowError("Wrong slot %d for craft with id %d.\n", slot, id);
+        return NULL;
+    }
+    return &craft->slots[slot];
+}

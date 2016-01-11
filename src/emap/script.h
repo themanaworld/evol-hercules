@@ -68,5 +68,6 @@ BUILDIN(setSkin);
 BUILDIN(initCraft);
 BUILDIN(dumpCraft);
 BUILDIN(deleteCraft);
+BUILDIN(getCraftSlotId);
 
 #endif  // EVOL_MAP_SCRIPT
