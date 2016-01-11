@@ -1887,3 +1887,11 @@ BUILDIN(dumpCraft)
     craft_dump(sd, script_getnum(st, 2));
     return true;
 }
+
+BUILDIN(deleteCraft)
+{
+    getSD()
+
+    craft_delete(script_getnum(st, 2));
+    return true;
+}

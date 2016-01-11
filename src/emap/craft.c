@@ -32,6 +32,18 @@ void do_init_craft(void)
     craftvar_db = idb_alloc(DB_OPT_RELEASE_BOTH);
 }
 
+static void delete_craft_var(struct craft_vardata *craft)
+{
+    if (!craft)
+        return;
+    int index;
+    for (index = 0; index < craft_inventory_size; index ++)
+    {
+        struct craft_slot *slot = &craft->slots[index];
+        VECTOR_CLEAR(slot->items);
+    }
+}
+
 static int delete_craft_sub(DBKey key __attribute__ ((unused)),
                             DBData *data,
                             va_list args __attribute__ ((unused)))
@@ -40,12 +52,7 @@ static int delete_craft_sub(DBKey key __attribute__ ((unused)),
     if (!craft)
         return 0;
 
-    int index;
-    for (index = 0; index < craft_inventory_size; index ++)
-    {
-        struct craft_slot *slot = &craft->slots[index];
-        VECTOR_CLEAR(slot->items);
-    }
+    delete_craft_var(craft);
     return 0;
 }
 
@@ -254,4 +261,16 @@ void craft_dump(TBL_PC *sd, const int id)
             }
         }
     }
+}
+
+void craft_delete(const int id)
+{
+    struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", id);
+        return;
+    }
+    delete_craft_var(craft);
+    idb_remove(craftvar_db, id);
 }

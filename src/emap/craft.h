@@ -32,5 +32,6 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr);
 int str_to_craftvar(TBL_PC *sd, const char *craftstr);
 struct craft_vardata *craft_str_to_craft(const char *craftstr);
 void craft_dump(TBL_PC *sd, const int id);
+void craft_delete(const int id);
 
 #endif  // EVOL_MAP_CRAFT

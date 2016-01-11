@@ -67,5 +67,6 @@ BUILDIN(delCells);
 BUILDIN(setSkin);
 BUILDIN(initCraft);
 BUILDIN(dumpCraft);
+BUILDIN(deleteCraft);
 
 #endif  // EVOL_MAP_SCRIPT
