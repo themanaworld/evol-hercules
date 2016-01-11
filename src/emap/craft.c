@@ -12,6 +12,7 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "map/itemdb.h"
 #include "map/npc.h"
 #include "map/pc.h"
 
@@ -20,6 +21,7 @@
 #include "ecommon/struct/strutildata.h"
 
 #include "emap/craft.h"
+#include "emap/lang.h"
 
 struct DBMap *craftvar_db = NULL;
 
@@ -177,6 +179,7 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
                 return false;
             }
             VECTOR_ENSURE(crslot->items, slot + 1, 1);
+            VECTOR_INSERTZEROED(crslot->items, slot);
             struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
             pair->index = index;
             pair->amount = amount;
@@ -203,4 +206,52 @@ int str_to_craftvar(TBL_PC *sd, const char *craftstr)
     craft_counter ++;
     idb_put(craftvar_db, craft_counter, craft);
     return craft_counter;
+}
+
+void craft_dump(TBL_PC *sd, const int id)
+{
+    struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", id);
+        return;
+    }
+    int index;
+    ShowInfo("craft dump: %d\n", id);
+    for (index = 0; index < craft_inventory_size; index ++)
+    {
+        struct craft_slot *crslot = &craft->slots[index];
+        const int len = VECTOR_LENGTH(crslot->items);
+        int slot;
+        if (len > 0)
+            ShowInfo(" index: %d\n", index);
+        for (slot = 0; slot < len; slot ++)
+        {
+            struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
+            const int invIndex = pair->index;
+            if (invIndex >= 0 &&
+                invIndex < MAX_INVENTORY &&
+                sd->status.inventory[invIndex].nameid)
+            {
+                const int item_id = sd->status.inventory[invIndex].nameid;
+                const struct item_data *i_data = itemdb->search(item_id);
+                if (i_data)
+                {
+                    ShowInfo("  item: %d (%s,%d), %d\n",
+                        invIndex,
+                        lang_pctrans(i_data->jname, sd),
+                        item_id,
+                        pair->amount);
+                }
+                else
+                {
+                    ShowInfo("  item: %d, %d\n", invIndex, pair->amount);
+                }
+            }
+            else
+            {
+                ShowInfo("  item: %d, %d\n", invIndex, pair->amount);
+            }
+        }
+    }
 }

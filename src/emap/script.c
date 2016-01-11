@@ -1879,3 +1879,11 @@ BUILDIN(initCraft)
     script_pushint(st, var);
     return true;
 }
+
+BUILDIN(dumpCraft)
+{
+    getSD()
+
+    craft_dump(sd, script_getnum(st, 2));
+    return true;
+}
