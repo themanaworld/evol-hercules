@@ -69,5 +69,6 @@ BUILDIN(initCraft);
 BUILDIN(dumpCraft);
 BUILDIN(deleteCraft);
 BUILDIN(getCraftSlotId);
+BUILDIN(getCraftSlotAmount);
 
 #endif  // EVOL_MAP_SCRIPT

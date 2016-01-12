@@ -1918,3 +1918,37 @@ BUILDIN(getCraftSlotId)
     }
     return true;
 }
+
+BUILDIN(getCraftSlotAmount)
+{
+    getSD()
+
+    const struct craft_slot *crslot = craft_get_slot(script_getnum(st, 2),
+        script_getnum(st, 3));
+    if (!crslot)
+        return false;
+    const int len = VECTOR_LENGTH(crslot->items);
+    if (len > 0)
+    {
+        int slot;
+        int amount = 0;
+        for (slot = 0; slot < len; slot ++)
+        {
+            struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
+            const int invIndex = pair->index;
+            const int item_id = sd->status.inventory[invIndex].nameid;
+            if (item_id > 0)
+            {
+                const int item_amount = sd->status.inventory[invIndex].amount;
+                if (item_amount > 0)
+                    amount += pair->amount;
+            }
+        }
+        script_pushint(st, amount);
+    }
+    else
+    {
+        script_pushint(st, 0);
+    }
+    return true;
+}

@@ -104,6 +104,7 @@ HPExport void plugin_init (void)
     addScriptCommand("dumpcraft", "i", dumpCraft);
     addScriptCommand("deletecraft", "i", deleteCraft);
     addScriptCommand("getcraftslotid", "ii", getCraftSlotId);
+    addScriptCommand("getcraftslotamount", "ii", getCraftSlotAmount);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("setq", "ii", setq);
     addScriptCommand("setnpcdir", "*", setNpcDir);
