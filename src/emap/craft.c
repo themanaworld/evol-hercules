@@ -93,6 +93,7 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
             continue;
         }
         int slot;
+        int item_id = 0;
         for (slot = 0; slot < slotdata->len; slot ++)
         {
             const char *itemstr = VECTOR_INDEX(slotdata->parts, slot + 1);
@@ -112,6 +113,15 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
                 strutil_free(craftdata);
                 return false;
             }
+            const int new_item = sd->status.inventory[index].nameid;
+            if (item_id != 0 && new_item != item_id)
+            {   // different item id in same slot
+                strutil_free(slotdata);
+                strutil_free(craftdata);
+                return false;
+            }
+            if (new_item != 0)
+                item_id = new_item;
             amounts[index] += amount;
             if (amounts[index] > 32000)
             {   // slot overflow
