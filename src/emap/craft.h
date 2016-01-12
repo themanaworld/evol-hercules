@@ -34,5 +34,6 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr);
 void craft_dump(TBL_PC *sd, const int id);
 void craft_delete(const int id);
 struct craft_slot *craft_get_slot(const int id, const int slot);
+bool craft_validate(TBL_PC *sd, const int id);
 
 #endif  // EVOL_MAP_CRAFT

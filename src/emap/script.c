@@ -1952,3 +1952,11 @@ BUILDIN(getCraftSlotAmount)
     }
     return true;
 }
+
+BUILDIN(validateCraft)
+{
+    getSD()
+    const bool valid = craft_validate(sd, script_getnum(st, 2));
+    script_pushint(st, valid ? 1 : 0);
+    return true;
+}

@@ -189,7 +189,8 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
                 index = atoi(itemstr);
                 amount = 1;
             }
-            if (index < 0 || index >= MAX_INVENTORY)
+            if (index < 0 ||
+                index >= MAX_INVENTORY)
             {   // wrong item index
                 strutil_free(slotdata);
                 strutil_free(craftdata);
@@ -299,4 +300,52 @@ struct craft_slot *craft_get_slot(const int id, const int slot)
         return NULL;
     }
     return &craft->slots[slot];
+}
+
+bool craft_validate(TBL_PC *sd, const int id)
+{
+    struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", id);
+        return false;
+    }
+    int amounts[MAX_INVENTORY];
+    int f;
+
+    for (f = 0; f < MAX_INVENTORY; f ++)
+        amounts[f] = 0;
+
+    int index;
+    for (index = 0; index < craft_inventory_size; index ++)
+    {
+        struct craft_slot *crslot = &craft->slots[index];
+        const int len = VECTOR_LENGTH(crslot->items);
+        int slot;
+        for (slot = 0; slot < len; slot ++)
+        {
+            struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
+            const int invIndex = pair->index;
+            if (invIndex < 0 ||
+                invIndex >= MAX_INVENTORY ||
+                !sd->status.inventory[invIndex].nameid ||
+                !sd->status.inventory[invIndex].amount)
+            {
+                return false;
+            }
+            amounts[invIndex] += pair->amount;
+        }
+    }
+    for (f = 0; f < MAX_INVENTORY; f ++)
+    {
+        const int amount = amounts[f];
+        if (!amount)
+            continue;
+        if(sd->status.inventory[f].nameid == 0 ||
+           sd->status.inventory[f].amount < amount)
+        {
+            return false;
+        }
+    }
+    return true;
 }
