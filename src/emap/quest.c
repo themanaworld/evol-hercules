@@ -73,7 +73,7 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
         return NULL;
     }
 
-    script->set_constant2(str, quest_id, false);
+    script->set_constant2(str, quest_id, false, false);
 
     CREATE(entry, struct quest_db, 1);
     entry->id = quest_id;
