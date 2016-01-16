@@ -1873,7 +1873,7 @@ BUILDIN(setSkin)
 
 BUILDIN(initCraft)
 {
-    getSD()
+    getSDReturn(-1)
 
     int var = str_to_craftvar(sd, script_getstr(st, 2));
     script_pushint(st, var);
@@ -1898,7 +1898,7 @@ BUILDIN(deleteCraft)
 
 BUILDIN(getCraftSlotId)
 {
-    getSD()
+    getSDReturn(0)
 
     const struct craft_slot *crslot = craft_get_slot(script_getnum(st, 2),
         script_getnum(st, 3));
@@ -1921,7 +1921,7 @@ BUILDIN(getCraftSlotId)
 
 BUILDIN(getCraftSlotAmount)
 {
-    getSD()
+    getSDReturn(0)
 
     const struct craft_slot *crslot = craft_get_slot(script_getnum(st, 2),
         script_getnum(st, 3));
@@ -1955,8 +1955,79 @@ BUILDIN(getCraftSlotAmount)
 
 BUILDIN(validateCraft)
 {
-    getSD()
+    getSDReturn(0)
     const bool valid = craft_validate(sd, script_getnum(st, 2));
     script_pushint(st, valid ? 1 : 0);
+    return true;
+}
+
+BUILDIN(getInvIndexLink)
+{
+    getSDReturnS("")
+
+    int index = script_getnum (st, 2);
+
+    if (index < 0 || index >= MAX_INVENTORY)
+    {
+        script_pushstr(st, "");
+        return false;
+    }
+
+    const int item_id = sd->status.inventory[index].nameid;
+    const struct item_data *const i_data = itemdb->search(item_id);
+    char *const item_name = (char *) aCalloc (1000, sizeof (char));
+
+    if (sd)
+    {
+        int version = 0;
+        struct SessionExt *data = session_get_bysd(sd);
+        if (data)
+            version = data->clientVersion;
+
+        if (i_data && version >= 7)
+        {
+            const struct item *const item = &sd->status.inventory[index];
+            if (item->card[0] == CARD0_PET ||
+                item->card[0] == CARD0_FORGE ||
+                item->card[0] == CARD0_CREATE)
+            {
+                sprintf(item_name, "[@@%u|@@]", (unsigned)i_data->nameid);
+            }
+            else
+            {
+                sprintf(item_name, "[@@%u", (unsigned)i_data->nameid);
+                int f;
+                for (f = 0; f < 4 && item->card[f]; f ++)
+                {
+                    char buf[100];
+                    sprintf(buf, ",%u", (unsigned)item->card[f]);
+                    strcat(item_name, buf);
+                }
+                strcat(item_name, "|@@]");
+            }
+        }
+        else if (i_data)
+        {
+            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
+        }
+        else if (item_id > 0)
+        {
+            sprintf(item_name, "[@@%u|Unknown Item@@]", (unsigned)item_id);
+        }
+        else
+        {
+            sprintf(item_name, "[Unknown Item]");
+        }
+    }
+    else
+    {
+        if (i_data)
+            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+        else
+            sprintf(item_name, "[Unknown Item]");
+    }
+
+    script_pushstr(st, item_name);
+
     return true;
 }

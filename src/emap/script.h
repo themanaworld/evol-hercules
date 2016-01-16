@@ -71,5 +71,6 @@ BUILDIN(deleteCraft);
 BUILDIN(getCraftSlotId);
 BUILDIN(getCraftSlotAmount);
 BUILDIN(validateCraft);
+BUILDIN(getInvIndexLink);
 
 #endif  // EVOL_MAP_SCRIPT

@@ -76,6 +76,16 @@
         return false; \
     }
 
+#define getSDReturnS(def) \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+    { \
+        ShowWarning("player not attached\n"); \
+        script->reportsrc(st); \
+        script_pushstr(st, def); \
+        return false; \
+    }
+
 #define getInventoryIndex(idx) \
     const int n = script_getnum(st, idx); \
     if (n < 0 || n >= MAX_INVENTORY) \
