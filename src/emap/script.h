@@ -72,5 +72,6 @@ BUILDIN(getCraftSlotId);
 BUILDIN(getCraftSlotAmount);
 BUILDIN(validateCraft);
 BUILDIN(getInvIndexLink);
+BUILDIN(emotion);
 
 #endif  // EVOL_MAP_SCRIPT

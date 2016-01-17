@@ -2031,3 +2031,40 @@ BUILDIN(getInvIndexLink)
 
     return true;
 }
+
+/*==========================================
+ * Shows an emoticon on top of the player/npc
+ * emotion emotion#, <target: 0 - NPC, 1 - PC>, <NPC/PC name>
+ *------------------------------------------*/
+//Optional second parameter added by [Skotlex]
+BUILDIN(emotion)
+{
+    int player = 0;
+
+    int type = script_getnum(st, 2);
+
+    if (script_hasdata(st, 3))
+        player = script_getnum(st, 3);
+
+    if (player != 0)
+    {
+        struct map_session_data *sd = NULL;
+        if (script_hasdata(st, 4))
+            sd = script->nick2sd(st, script_getstr(st, 4));
+        else
+            sd = script->rid2sd(st);
+        if (sd != NULL)
+            clif->emotion(&sd->bl, type);
+    }
+    else if (script_hasdata(st, 4))
+    {
+        struct npc_data *nd = npc->name2id(script_getstr(st, 4));
+        if (nd == NULL)
+            clif->emotion(&nd->bl,type);
+    }
+    else
+    {
+        clif->emotion(map->id2bl(st->oid), type);
+    }
+    return true;
+}

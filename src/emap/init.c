@@ -144,6 +144,7 @@ HPExport void plugin_init (void)
     addScriptCommand("delcells", "s", delCells);
     addScriptCommand("setmount", "i", setMount);
     addScriptCommand("setskin", "s", setSkin);
+    addScriptCommand("emotion", "i??", emotion);
 
     do_init_langs();
     do_init_craft();
