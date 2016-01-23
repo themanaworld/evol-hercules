@@ -38,6 +38,8 @@ MAP_SRC = emap/atcommand.c \
     emap/clif.h \
     emap/craft.c \
     emap/craft.h \
+    emap/craftconf.c \
+    emap/craftconf.h \
     emap/horse.c \
     emap/horse.h \
     emap/init.c \
@@ -73,6 +75,7 @@ MAP_SRC = emap/atcommand.c \
     emap/status.h \
     emap/unit.c \
     emap/unit.h \
+    emap/const/craft.h \
     emap/data/bgd.c \
     emap/data/bgd.h \
     emap/data/itemd.c \
@@ -86,6 +89,7 @@ MAP_SRC = emap/atcommand.c \
     emap/data/session.c \
     emap/data/session.h \
     emap/struct/bgdext.h \
+    emap/struct/craft.h \
     emap/struct/itemdext.h \
     emap/struct/mapdext.h \
     emap/struct/mobdext.h \

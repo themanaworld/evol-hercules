@@ -46,6 +46,7 @@
 #include "emap/battleground.h"
 #include "emap/clif.h"
 #include "emap/craft.h"
+#include "emap/craftconf.h"
 #include "emap/itemdb.h"
 #include "emap/lang.h"
 #include "emap/mail.h"
@@ -273,12 +274,14 @@ HPExport void server_preinit (void)
 HPExport void server_online (void)
 {
     do_init_craft();
+    do_init_craftconf();
 }
 
 HPExport void plugin_final (void)
 {
     do_final_langs();
     do_final_craft();
+    do_final_craftconf();
     commonClean();
     isInit = false;
 }
