@@ -16,6 +16,12 @@ struct item_pair
     int amount;
 };
 
+struct skill_pair
+{
+    int id;
+    int level;
+};
+
 struct craft_slot
 {
     VECTOR_DECL(struct item_pair) items;
@@ -24,6 +30,38 @@ struct craft_slot
 struct craft_vardata
 {
     struct craft_slot slots[craft_inventory_size];
+};
+
+struct craft_db_inventory
+{
+    struct item_pair items[craft_inventory_size];
+};
+
+VECTOR_STRUCT_DECL(craft_items_collection, struct item_pair);
+
+struct craft_db_entry
+{
+    int id;
+    char name[32];
+    VECTOR_DECL(struct craft_db_inventory) inventories;
+    struct craft_items_collection create_items;
+    struct craft_items_collection delete_items;
+    struct craft_items_collection required_items;
+    struct craft_items_collection required_equips;
+    struct craft_items_collection required_skills;
+    struct craft_items_collection required_quests;
+    int priority;
+    int price;
+    int level;
+    int flag;
+};
+
+enum craft_field_type
+{
+    CRAFT_ITEM,
+    CRAFT_QUEST,
+    CRAFT_SKILL,
+    CRAFT_BOOL
 };
 
 void do_init_craft(void);

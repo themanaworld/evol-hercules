@@ -147,7 +147,6 @@ HPExport void plugin_init (void)
     addScriptCommand("emotion", "i??", emotion);
 
     do_init_langs();
-    do_init_craft();
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
     addPacket(0xb07, 26, map_parse_join_channel, hpClif_Parse);
@@ -273,6 +272,7 @@ HPExport void server_preinit (void)
 
 HPExport void server_online (void)
 {
+    do_init_craft();
 }
 
 HPExport void plugin_final (void)
