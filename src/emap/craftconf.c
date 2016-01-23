@@ -38,6 +38,7 @@ struct craft_db_entry *craft_create_db_entry(const int id)
     VECTOR_INIT(entry->required_equips);
     VECTOR_INIT(entry->required_skills);
     VECTOR_INIT(entry->required_quests);
+    entry->selected_inventory = NULL;
     return entry;
 }
 

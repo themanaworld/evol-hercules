@@ -164,6 +164,9 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
     }
 
     struct craft_vardata *vardata = aCalloc(1, sizeof(struct craft_vardata));
+    if (!vardata)
+        return false;
+    vardata->entry_id = -1;
     int index;
     for (index = 0; index < craftdata->len; index ++)
     {
@@ -485,7 +488,10 @@ static bool check_inventories(TBL_PC *sd,
             }
         }
         if (correct)
+        {
+            entry->selected_inventory = entry_inventory;
             return true;
+        }
         correct = true;
     }
     return false;
@@ -591,6 +597,132 @@ int craft_find_entry(TBL_PC *sd,
     struct item_pair inventory[craft_inventory_size];
     simplify_craftvar(sd, &inventory[0], craft);
     const int recipe = craft_get_recipe(sd, craft, &inventory[0], flag);
+    craft->entry_id = recipe;
     //ShowInfo("found recipe: %d\n", recipe);
     return recipe;
+}
+
+static bool craft_delete_items(TBL_PC *sd,
+                               struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            const int index = find_inventory_item(sd, itemPair->index, itemPair->amount);
+            if (!index)
+                return false;
+            pc->delitem(sd, index, itemPair->amount, 2, 8, LOG_TYPE_PRODUCE);
+        }
+    }
+    return true;
+}
+
+static bool craft_create_items(TBL_PC *sd,
+                               struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        struct item it;
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            memset(&it, 0, sizeof(it));
+            it.nameid = itemPair->index;
+            it.amount = itemPair->amount;
+            it.identify = 1;
+            pc->additem(sd, &it, itemPair->amount, LOG_TYPE_PRODUCE);
+        }
+    }
+    return true;
+}
+
+static bool craft_delete_inventory(TBL_PC *sd,
+                                   struct craft_vardata *craft,
+                                   struct craft_db_entry *entry)
+{
+    if (!sd || !craft || !entry)
+        return false;
+
+    struct craft_db_inventory *entry_inventory = entry->selected_inventory;
+    if (!entry_inventory)
+        return false;
+
+    int f;
+    for (f = 0; f < craft_inventory_size; f ++)
+    {
+        struct item_pair *entryItem = &entry_inventory->items[f];
+        int needAmount = entryItem->amount;
+        struct craft_slot *craftSlot = &craft->slots[f];
+        int i;
+        int len = VECTOR_LENGTH(craftSlot->items);
+        for (i = 0; i < len && needAmount; i ++)
+        {
+            struct item_pair *craftItem = &VECTOR_INDEX(craftSlot->items, i);
+            if (needAmount > craftItem->amount)
+            {
+                pc->delitem(sd, craftItem->index, craftItem->amount, 2, 8, LOG_TYPE_PRODUCE);
+                needAmount -= craftItem->amount;
+            }
+            else
+            {
+                pc->delitem(sd, craftItem->index, needAmount, 2, 8, LOG_TYPE_PRODUCE);
+                needAmount = 0;
+            }
+        }
+        if (needAmount > 0)
+        {
+            ShowError("Craft broken amount. Probably exploit in use: '"
+                CL_WHITE"%s"CL_RESET"'"
+                " (AID/CID: '"CL_WHITE"%d/%d"CL_RESET"'.\n",
+                sd->status.name, sd->status.account_id, sd->status.char_id);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool craft_use(TBL_PC *sd,
+               const int id)
+{
+    struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", id);
+        return -1;
+    }
+    struct craft_db_entry *entry = idb_get(craftconf_db, craft->entry_id);
+    if (!entry)
+    {
+        ShowError("Craft config entry with id %d not exists.\n", craft->entry_id);
+        return false;
+    }
+
+    if (!craft_delete_inventory(sd, craft, entry))
+        return false;
+
+    if (!craft_delete_items(sd, &entry->delete_items))
+        return false;
+
+    if (sd->status.zeny < entry->price)
+    {
+        ShowError("Craft broken zeny. Probably exploit in use: '"
+            CL_WHITE"%s"CL_RESET"'"
+            " (AID/CID: '"CL_WHITE"%d/%d"CL_RESET"'.\n",
+            sd->status.name, sd->status.account_id, sd->status.char_id);
+        return false;
+    }
+    sd->status.zeny -= entry->price;
+
+    craft_create_items(sd, &entry->create_items);
+
+    clif->updatestatus(sd, SP_ZENY);
+    clif->updatestatus(sd, SP_WEIGHT);
+    return true;
 }

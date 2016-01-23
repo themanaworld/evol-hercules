@@ -1952,6 +1952,12 @@ BUILDIN(findCraftEntry)
     return true;
 }
 
+BUILDIN(useCraft)
+{
+    getSDReturn(0)
+    return craft_use(sd, script_getnum(st, 2));
+}
+
 BUILDIN(getInvIndexLink)
 {
     getSDReturnS("")

@@ -74,5 +74,6 @@ BUILDIN(validateCraft);
 BUILDIN(getInvIndexLink);
 BUILDIN(emotion);
 BUILDIN(findCraftEntry);
+BUILDIN(useCraft);
 
 #endif  // EVOL_MAP_SCRIPT

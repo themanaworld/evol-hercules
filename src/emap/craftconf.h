@@ -30,6 +30,7 @@ struct craft_db_entry
     struct craft_items_collection required_equips;
     struct craft_items_collection required_skills;
     struct craft_items_collection required_quests;
+    struct craft_db_inventory *selected_inventory;
     int priority;
     int price;
     int level;

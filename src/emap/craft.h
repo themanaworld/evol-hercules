@@ -28,6 +28,7 @@ struct craft_slot
 struct craft_vardata
 {
     struct craft_slot slots[craft_inventory_size];
+    int entry_id;
 };
 
 void do_init_craft(void);
@@ -40,5 +41,6 @@ void craft_delete(const int id);
 struct craft_slot *craft_get_slot(const int id, const int slot);
 bool craft_validate(TBL_PC *sd, const int id);
 int craft_find_entry(TBL_PC *sd, const int craftvar, const int flag);
+bool craft_use_entry(TBL_PC *sd, const int id);
 
 #endif  // EVOL_MAP_CRAFT
