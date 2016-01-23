@@ -143,7 +143,8 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
         if (!amount)
             continue;
         if(sd->status.inventory[f].nameid == 0 ||
-           sd->status.inventory[f].amount < amount)
+           sd->status.inventory[f].amount < amount ||
+           sd->status.inventory[f].equip > 0)
         {
             return false;
         }
@@ -335,7 +336,8 @@ bool craft_validate(TBL_PC *sd, const int id)
             if (invIndex < 0 ||
                 invIndex >= MAX_INVENTORY ||
                 !sd->status.inventory[invIndex].nameid ||
-                !sd->status.inventory[invIndex].amount)
+                sd->status.inventory[invIndex].amount <= 0 ||
+                sd->status.inventory[invIndex].equip > 0)
             {
                 return false;
             }
@@ -348,7 +350,8 @@ bool craft_validate(TBL_PC *sd, const int id)
         if (!amount)
             continue;
         if(sd->status.inventory[f].nameid == 0 ||
-           sd->status.inventory[f].amount < amount)
+           sd->status.inventory[f].amount < amount ||
+           sd->status.inventory[f].equip > 0)
         {
             return false;
         }
@@ -364,7 +367,8 @@ static int find_inventory_item(TBL_PC *sd,
     for (i = 0; i < MAX_INVENTORY; i++)
     {
         if (sd->status.inventory[i].nameid == id &&
-            sd->status.inventory[i].amount >= amount)
+            sd->status.inventory[i].amount >= amount &&
+            sd->status.inventory[i].equip == 0)
         {
             return i;
         }
