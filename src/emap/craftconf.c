@@ -272,6 +272,7 @@ static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *sour
     }
 
     struct craft_db_entry *entry = craft_create_db_entry(class_);
+    entry->id = class_;
     idb_put(craftconf_db, class_, entry);
 
     safestrncpy(entry->name, str, sizeof(entry->name));

@@ -10,6 +10,8 @@
 
 #include "emap/struct/itempair.h"
 
+extern struct DBMap *craftconf_db;
+
 VECTOR_STRUCT_DECL(craft_items_collection, struct item_pair);
 
 struct craft_db_inventory

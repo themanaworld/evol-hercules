@@ -23,6 +23,7 @@
 #include "ecommon/struct/strutildata.h"
 
 #include "emap/craft.h"
+#include "emap/craftconf.h"
 #include "emap/lang.h"
 
 struct DBMap *craftvar_db = NULL;
@@ -350,4 +351,246 @@ bool craft_validate(TBL_PC *sd, const int id)
         }
     }
     return true;
+}
+
+static int find_inventory_item(TBL_PC *sd,
+                               const int id,
+                               const int amount)
+{
+    int i;
+    for (i = 0; i < MAX_INVENTORY; i++)
+    {
+        if (sd->status.inventory[i].nameid == id &&
+            sd->status.inventory[i].amount >= amount)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static int find_inventory_equipped_item(TBL_PC *sd,
+                                        const int id)
+{
+    int i;
+    for (i = 0; i < MAX_INVENTORY; i++)
+    {
+        if (sd->status.inventory[i].nameid == id &&
+            sd->status.inventory[i].amount > 0 &&
+            sd->status.inventory[i].equip > 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static bool check_items_collection(TBL_PC *sd,
+                                   struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            if (find_inventory_item(sd, itemPair->index, itemPair->amount) < 0)
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool check_equips(TBL_PC *sd,
+                         struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            if (find_inventory_equipped_item(sd, itemPair->index) < 0)
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool check_skills(TBL_PC *sd,
+                         struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            const int index = skill->get_index(itemPair->index);
+            if (!index)
+                return false;
+            if (sd->status.skill[index].lv < itemPair->amount)
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool check_quests(TBL_PC *sd,
+                         struct craft_items_collection *vector)
+{
+    int len = VECTOR_LENGTH(*vector);
+    int i;
+    if (len > 0)
+    {
+        for (i = 0; i < len; i ++)
+        {
+            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+
+            int n;
+            ARR_FIND(0, sd->avail_quests, n, sd->quest_log[n].quest_id == itemPair->index);
+            if (n == sd->avail_quests)
+                return false;
+            if (sd->quest_log[n].count[0] < itemPair->amount)
+                return false;
+        }
+    }
+    return true;
+}
+
+static bool check_inventories(TBL_PC *sd,
+                              struct craft_db_entry *entry,
+                              struct item_pair *inventory)
+{
+    int inv_count = VECTOR_LENGTH(entry->inventories);
+    bool correct = true;
+
+    int f;
+    for (f = 0; f < inv_count; f ++)
+    {
+        struct craft_db_inventory *entry_inventory = &VECTOR_INDEX(entry->inventories, f);
+        int i;
+        for (i = 0; i < craft_inventory_size; i ++)
+        {
+            struct item_pair *invItem = &inventory[i];
+            struct item_pair *entryItem = &entry_inventory->items[i];
+            if (invItem->index != entryItem->index ||
+                invItem->amount < entryItem->amount)
+            {   // items not same or amount too small, skipping
+                correct = false;
+                continue;
+            }
+        }
+        if (correct)
+            return true;
+        correct = true;
+    }
+    return false;
+}
+
+static void simplify_craftvar(TBL_PC *sd,
+                              struct item_pair *inventory,
+                              struct craft_vardata *craft)
+{
+    int i;
+
+    // combine different slots from inventory var into one slot with id and amount
+    for (i = 0; i < craft_inventory_size; i ++)
+    {
+        struct item_pair *invPair = &inventory[i];
+        invPair->index = 0;
+        invPair->amount = 0;
+
+        struct craft_slot *slot = &craft->slots[i];
+        const int len = VECTOR_LENGTH(slot->items);
+        int f;
+        for (f = 0; f < len; f ++)
+        {
+            struct item_pair *pair = &VECTOR_INDEX(slot->items, f);
+            const int itemIndex = pair->index;
+            const int itemId = sd->status.inventory[itemIndex].nameid;
+            // additional check for craft var
+            if (invPair->index != 0 && invPair->index != itemId)
+                continue;
+            invPair->index = itemId;
+            invPair->amount += sd->status.inventory[itemIndex].amount;
+        }
+    }
+}
+
+static int craft_get_recipe(TBL_PC *sd,
+                            struct craft_vardata *craft,
+                            struct item_pair *inventory,
+                            const int flag)
+{
+    if (!sd || !craft || !inventory)
+        return -1;
+
+    struct craft_db_entry *best_entry = NULL;
+    struct craft_db_entry *entry;
+
+    DBIterator* iter = db_iterator(craftconf_db);
+
+    for (entry = dbi_first(iter); dbi_exists(iter); entry = dbi_next(iter))
+    {
+        //ShowInfo("check recipes: %d\n", entry->id);
+        if ((flag && !(entry->flag & flag)) ||
+            sd->status.zeny < entry->price ||
+            sd->status.base_level < entry->level)
+        {
+            continue;
+        }
+        //ShowInfo("base correct\n");
+        if (!check_inventories(sd, entry, inventory))
+            continue;
+        //ShowInfo("inventories correct\n");
+        if (!check_items_collection(sd, &entry->delete_items))
+            continue;
+        //ShowInfo("delete_items correct\n");
+        if (!check_items_collection(sd, &entry->required_items))
+            continue;
+        //ShowInfo("required_items correct\n");
+        if (!check_equips(sd, &entry->required_equips))
+            continue;
+        //ShowInfo("required_equips correct\n");
+        if (!check_skills(sd, &entry->required_skills))
+            continue;
+        //ShowInfo("required_quests correct\n");
+        if (!check_quests(sd, &entry->required_quests))
+            continue;
+
+        //ShowInfo("found\n");
+        if (best_entry == NULL ||
+            entry->priority > best_entry->priority ||
+            entry->id < best_entry->id)
+        {
+            best_entry = entry;
+        }
+    }
+    dbi_destroy(iter);
+    return best_entry ? best_entry->id : -1;
+}
+
+int craft_find_entry(TBL_PC *sd,
+                     const int craftvar,
+                     const int flag)
+{
+    if (!sd)
+        return -1;
+
+    struct craft_vardata *craft = idb_get(craftvar_db, craftvar);
+    if (!craft)
+    {
+        ShowError("Craft object with id %d not exists.\n", craftvar);
+        return -1;
+    }
+
+    struct item_pair inventory[craft_inventory_size];
+    simplify_craftvar(sd, &inventory[0], craft);
+    const int recipe = craft_get_recipe(sd, craft, &inventory[0], flag);
+    //ShowInfo("found recipe: %d\n", recipe);
+    return recipe;
 }

@@ -12,6 +12,8 @@
 
 extern struct DBMap *craftvar_db;
 
+VECTOR_STRUCT_DECL(craft_ids, int);
+
 struct skill_pair
 {
     int id;
@@ -37,5 +39,6 @@ void craft_dump(TBL_PC *sd, const int id);
 void craft_delete(const int id);
 struct craft_slot *craft_get_slot(const int id, const int slot);
 bool craft_validate(TBL_PC *sd, const int id);
+int craft_find_entry(TBL_PC *sd, const int craftvar, const int flag);
 
 #endif  // EVOL_MAP_CRAFT

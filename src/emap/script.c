@@ -532,7 +532,7 @@ BUILDIN(shop)
 
 BUILDIN(getItemLink)
 {
-    struct item_data *i_data;
+    struct item_data *i_data = NULL;
     char *item_name;
     int  item_id = 0;
 
@@ -1938,6 +1938,16 @@ BUILDIN(validateCraft)
     getSDReturn(0)
     const bool valid = craft_validate(sd, script_getnum(st, 2));
     script_pushint(st, valid ? 1 : 0);
+    return true;
+}
+
+BUILDIN(findCraftEntry)
+{
+    getSDReturn(-1)
+    const int id = craft_find_entry(sd,
+        script_getnum(st, 2),
+        script_getnum(st, 3));
+    script_pushint(st, id);
     return true;
 }
 
