@@ -543,7 +543,8 @@ BUILDIN(getItemLink)
     else
     {
         item_id = script_getnum (st, 2);
-        i_data = itemdb->search (item_id);
+        if (item_id)
+            i_data = itemdb->search (item_id);
     }
 
     item_name = (char *) aCalloc (100, sizeof (char));
@@ -1964,7 +1965,9 @@ BUILDIN(getInvIndexLink)
     }
 
     const int item_id = sd->status.inventory[index].nameid;
-    const struct item_data *const i_data = itemdb->search(item_id);
+    const struct item_data *i_data = NULL;
+    if (item_id)
+        i_data = itemdb->search(item_id);
     char *const item_name = (char *) aCalloc (1000, sizeof (char));
 
     if (sd)
