@@ -393,15 +393,14 @@ static int find_inventory_equipped_item(TBL_PC *sd,
 }
 
 static int find_local_inventory_item(struct item_pair *local_inventory,
-                                     const int id,
-                                     const int amount)
+                                     const int id)
 {
     int i;
     for (i = 0; i < MAX_INVENTORY; i++)
     {
         struct item_pair *pair = &local_inventory[i];
         if (pair->index == id &&
-            pair->amount >= amount)
+            pair->amount >= 0)
         {
             return i;
         }
@@ -419,12 +418,28 @@ static bool check_items_collection(struct item_pair *local_inventory,
         for (i = 0; i < len; i ++)
         {
             struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
-            const int index =  find_local_inventory_item(local_inventory,
-                itemPair->index,
-                itemPair->amount);
-            if (index < 0)
-                return false;
-            local_inventory[index].amount -= itemPair->amount;
+            int needAmount = itemPair->amount;
+            while (needAmount > 0)
+            {
+                const int index =  find_local_inventory_item(local_inventory,
+                    itemPair->index);
+                if (index < 0)
+                    return false;
+                struct item_pair *localPair = &local_inventory[index];
+                if (needAmount > localPair->amount)
+                {
+                    needAmount -= localPair->amount;
+                    localPair->index = 0;
+                    localPair->amount = 0;
+                }
+                else
+                {
+                    localPair->amount -= needAmount;
+                    needAmount = 0;
+                    if (localPair->amount == 0)
+                        localPair->index = 0;
+                }
+            }
         }
     }
     return true;
@@ -601,6 +616,8 @@ static bool apply_craft_inventory(struct craft_db_inventory *entry_inventory,
                 local_inventory[craftItem->index].amount -= needAmount;
                 needAmount = 0;
             }
+            if (local_inventory[craftItem->index].amount == 0)
+                local_inventory[craftItem->index].index = 0;
         }
         if (needAmount > 0)
             return false;
@@ -626,7 +643,7 @@ static int craft_get_recipe(TBL_PC *sd,
 
     for (entry = dbi_first(iter); dbi_exists(iter); entry = dbi_next(iter))
     {
-        ShowInfo("check recipes: %d\n", entry->id);
+        //ShowInfo("check recipes: %d\n", entry->id);
         if ((flag && !(entry->flag & flag)) ||
             sd->status.zeny < entry->price ||
             sd->status.base_level < entry->level)
@@ -637,29 +654,29 @@ static int craft_get_recipe(TBL_PC *sd,
         struct item_pair temp_inventory[MAX_INVENTORY];    // id, amount
         memcpy(&temp_inventory[0], &local_inventory[0], MAX_INVENTORY * sizeof(struct item_pair));
 
-        ShowInfo("base correct\n");
+        //ShowInfo("base correct\n");
         if (!check_inventories(sd, entry, inventory))
             continue;
-        ShowInfo("inventories correct\n");
+        //ShowInfo("inventories correct\n");
         if (!apply_craft_inventory(entry->selected_inventory, craft, &temp_inventory[0]))
             continue;
-        ShowInfo("apply craft correct\n");
+        //ShowInfo("apply craft correct\n");
         if (!check_items_collection(&temp_inventory[0], &entry->delete_items))
             continue;
-        ShowInfo("delete_items correct\n");
+        //ShowInfo("delete_items correct\n");
         if (!check_items_collection(&temp_inventory[0], &entry->required_items))
             continue;
-        ShowInfo("required_items correct\n");
+        //ShowInfo("required_items correct\n");
         if (!check_equips(sd, &entry->required_equips))
             continue;
-        ShowInfo("required_equips correct\n");
+        //ShowInfo("required_equips correct\n");
         if (!check_skills(sd, &entry->required_skills))
             continue;
-        ShowInfo("required_quests correct\n");
+        //ShowInfo("required_quests correct\n");
         if (!check_quests(sd, &entry->required_quests))
             continue;
 
-        ShowInfo("found\n");
+        //ShowInfo("found\n");
         if (best_entry == NULL ||
             entry->priority > best_entry->priority ||
             entry->id < best_entry->id)
