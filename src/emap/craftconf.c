@@ -133,6 +133,54 @@ static void craft_read_source_inventory(struct craft_db_entry *entry,
     }
 }
 
+static void craft_read_create_items(struct craft_db_entry *entry,
+                                    config_setting_t *tt)
+{
+    int i32;
+    int i = 0;
+    if (!tt || !config_setting_is_group(tt))
+        return;
+
+    config_setting_t *item;
+
+    int invLen = VECTOR_LENGTH(entry->create_items);
+    VECTOR_ENSURE(entry->create_items, invLen + 1, 1);
+    VECTOR_INSERTZEROED(entry->create_items, invLen);
+    struct craft_items_collection *collection = &VECTOR_INDEX(entry->create_items, invLen);
+    VECTOR_INIT(*collection);
+    int collecitonLen = VECTOR_LENGTH(*collection);
+
+    while((item = libconfig->setting_get_elem(tt, i)))
+    {
+        int amount = 0;
+        const char *name = config_setting_name(item);
+        int itemId = craft_get_item_id(entry, "Wrong item name in craft %d in field %s in: %s\n", name, "CreateItems");
+        if (!itemId)
+        {
+            i ++;
+            continue;
+        }
+        if (craft_get_const(item, &i32) && i32 >= 0)
+            amount = i32;
+
+        if (amount < 1)
+        {
+            ShowWarning("Wrong item amount in craft %d in field CreateItems in: %d\n", entry->id, amount);
+            i ++;
+            continue;
+        }
+
+        VECTOR_ENSURE(*collection, collecitonLen + 1, 1);
+        VECTOR_INSERTZEROED(*collection, collecitonLen);
+        struct item_pair *pair = &VECTOR_INDEX(*collection, collecitonLen);
+        pair->index = itemId;
+        pair->amount = amount;
+
+        collecitonLen ++;
+        i ++;
+    }
+}
+
 static void craft_read_items_collection(struct craft_db_entry *entry,
                                         struct craft_items_collection *vector,
                                         config_setting_t *t,
@@ -297,7 +345,16 @@ static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *sour
         }
     }
 
-    craft_read_items_collection(entry, &entry->create_items, craftt, "CreateItems", CRAFT_ITEM);
+    if ((t = libconfig->setting_get_member(craftt, "CreateItems")) && config_setting_is_list(t))
+    {
+        int i, len = libconfig->setting_length(t);
+
+        for (i = 0; i < len; i++)
+        {
+            craft_read_create_items(entry, libconfig->setting_get_elem(t, i));
+        }
+    }
+
     craft_read_items_collection(entry, &entry->delete_items, craftt, "DeleteItems", CRAFT_ITEM);
     craft_read_items_collection(entry, &entry->required_items, craftt, "RequiredItems", CRAFT_ITEM);
     craft_read_items_collection(entry, &entry->required_skills, craftt, "RequiredSkills", CRAFT_ITEM);
@@ -346,12 +403,20 @@ static void delete_craft_entry(struct craft_db_entry *entry)
     if (!entry)
         return;
     VECTOR_CLEAR(entry->inventories);
-    VECTOR_CLEAR(entry->create_items);
     VECTOR_CLEAR(entry->delete_items);
     VECTOR_CLEAR(entry->required_items);
     VECTOR_CLEAR(entry->required_equips);
     VECTOR_CLEAR(entry->required_skills);
     VECTOR_CLEAR(entry->required_quests);
+    const int len = VECTOR_LENGTH(entry->create_items);
+    int f;
+    for (f = 0; f < len; f ++)
+    {
+        struct craft_items_collection *collection = &VECTOR_INDEX(
+            entry->create_items, f);
+        VECTOR_CLEAR(*collection);
+    }
+    VECTOR_CLEAR(entry->create_items);
 }
 
 static int delete_craftconf_sub(DBKey key __attribute__ ((unused)),

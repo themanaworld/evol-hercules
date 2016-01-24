@@ -19,12 +19,17 @@ struct craft_db_inventory
     struct item_pair items[craft_inventory_size];
 };
 
+struct craft_db_create_items
+{
+    struct craft_items_collection items;
+};
+
 struct craft_db_entry
 {
     int id;
     char name[32];
     VECTOR_DECL(struct craft_db_inventory) inventories;
-    struct craft_items_collection create_items;
+    VECTOR_DECL(struct craft_items_collection) create_items;
     struct craft_items_collection delete_items;
     struct craft_items_collection required_items;
     struct craft_items_collection required_equips;

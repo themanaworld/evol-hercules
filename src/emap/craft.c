@@ -730,8 +730,13 @@ static bool craft_delete_items(TBL_PC *sd,
 }
 
 static bool craft_create_items(TBL_PC *sd,
-                               struct craft_items_collection *vector)
+                               struct craft_db_entry *entry)
 {
+    // +++ for now used 0 index, but need select random
+    const int vars = VECTOR_LENGTH(entry->create_items);
+    struct craft_items_collection *vector = &VECTOR_INDEX(entry->create_items,
+        (rand() % (vars * 10)) / 10);
+
     int len = VECTOR_LENGTH(*vector);
     int i;
     if (len > 0)
@@ -828,7 +833,7 @@ bool craft_use(TBL_PC *sd,
     }
     sd->status.zeny -= entry->price;
 
-    craft_create_items(sd, &entry->create_items);
+    craft_create_items(sd, entry);
 
     clif->updatestatus(sd, SP_ZENY);
     clif->updatestatus(sd, SP_WEIGHT);
