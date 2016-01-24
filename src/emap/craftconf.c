@@ -327,6 +327,8 @@ static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *sour
 
     safestrncpy(entry->name, str, sizeof(entry->name));
 
+    script->set_constant2(entry->name, entry->id, false, false);
+
     //ShowInfo("Craft: id=%d, name=%s\n", class_, entry->name);
 
     readField("Priority", priority, 0);
