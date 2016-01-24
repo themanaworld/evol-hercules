@@ -1954,8 +1954,15 @@ BUILDIN(findCraftEntry)
 
 BUILDIN(useCraft)
 {
-    getSDReturn(0)
+    getSD()
     return craft_use(sd, script_getnum(st, 2));
+}
+
+BUILDIN(getCraftCode)
+{
+    getSDReturn(-1)
+    script_pushint(st, craft_get_entry_code(sd, script_getnum(st, 2)));
+    return true;
 }
 
 BUILDIN(getInvIndexLink)

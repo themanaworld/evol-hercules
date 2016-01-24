@@ -42,5 +42,7 @@ struct craft_slot *craft_get_slot(const int id, const int slot);
 bool craft_validate(TBL_PC *sd, const int id);
 int craft_find_entry(TBL_PC *sd, const int craftvar, const int flag);
 bool craft_use_entry(TBL_PC *sd, const int id);
+bool craft_use(TBL_PC *sd, const int id);
+int craft_get_entry_code(TBL_PC *sd, const int id);
 
 #endif  // EVOL_MAP_CRAFT

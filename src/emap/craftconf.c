@@ -39,6 +39,7 @@ struct craft_db_entry *craft_create_db_entry(const int id)
     VECTOR_INIT(entry->required_skills);
     VECTOR_INIT(entry->required_quests);
     entry->selected_inventory = NULL;
+//    entry->return_code = 0;
     return entry;
 }
 
@@ -284,6 +285,7 @@ static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *sour
     readField("Price", price, 0);
     readField("Lv", level, 0);
     readField("Flag", flag, -1);
+    readField("ReturnCode", return_code, 0);
 
     if ((t = libconfig->setting_get_member(craftt, "SourceItems")) && config_setting_is_list(t))
     {

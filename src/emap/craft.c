@@ -834,3 +834,15 @@ bool craft_use(TBL_PC *sd,
     clif->updatestatus(sd, SP_WEIGHT);
     return true;
 }
+
+int craft_get_entry_code(TBL_PC *sd,
+                         const int id)
+{
+    struct craft_db_entry *entry = idb_get(craftconf_db, id);
+    if (!entry)
+    {
+        ShowError("Craft config entry with id %d not exists.\n", id);
+        return -1;
+    }
+    return entry->return_code;
+}

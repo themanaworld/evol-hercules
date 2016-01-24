@@ -35,6 +35,7 @@ struct craft_db_entry
     int price;
     int level;
     int flag;
+    int return_code;
 };
 
 enum craft_field_type
