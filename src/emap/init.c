@@ -92,7 +92,7 @@ HPExport void plugin_init (void)
     addScriptCommand("npctalk3", "s", npcTalk3);
     addScriptCommand("closedialog", "", closeDialog);
     addScriptCommand("shop", "s", shop);
-    addScriptCommand("getitemlink", "v", getItemLink);
+    addScriptCommand("getitemlink", "v*", getItemLink);
     addScriptCommand("getinvindexlink", "i", getInvIndexLink);
     addScriptCommand("l", "s*", l);
     addScriptCommand("lg", "s*", lg);

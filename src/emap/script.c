@@ -530,24 +530,27 @@ BUILDIN(shop)
     return true;
 }
 
+#define paramToItem(param) \
+    if (script_isstringtype(st, param)) \
+    { \
+        i_data = itemdb->search_name (script_getstr(st, param)); \
+    } \
+    else \
+    { \
+        item_id = script_getnum (st, param); \
+        if (item_id) \
+            i_data = itemdb->search (item_id); \
+    }
+
 BUILDIN(getItemLink)
 {
     struct item_data *i_data = NULL;
     char *item_name;
     int  item_id = 0;
 
-    if (script_isstringtype(st, 2))
-    {
-        i_data = itemdb->search_name (script_getstr(st, 2));
-    }
-    else
-    {
-        item_id = script_getnum (st, 2);
-        if (item_id)
-            i_data = itemdb->search (item_id);
-    }
+    paramToItem(2);
 
-    item_name = (char *) aCalloc (100, sizeof (char));
+    item_name = (char *) aCalloc (1000, sizeof (char));
     TBL_PC *sd = script->rid2sd(st);
 
     if (sd)
@@ -558,13 +561,40 @@ BUILDIN(getItemLink)
             version = data->clientVersion;
 
         if (i_data && version >= 7)
-            sprintf(item_name, "[@@%u|@@]", (unsigned)i_data->nameid);
+        {
+            if (!script_hasdata(st, 3))
+            {
+                sprintf(item_name, "[@@%u|@@]", (unsigned)i_data->nameid);
+            }
+            else
+            {
+                sprintf(item_name, "[@@%u", (unsigned)i_data->nameid);
+                int f;
+                for (f = 3; f < 7 && script_hasdata(st, f); f ++)
+                {
+                    paramToItem(f);
+                    if (i_data)
+                    {
+                        char buf[100];
+                        sprintf(buf, ",%u", (unsigned)i_data->nameid);
+                        strcat(item_name, buf);
+                    }
+                }
+                strcat(item_name, "|@@]");
+            }
+        }
         else if (i_data)
+        {
             sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
+        }
         else if (item_id > 0)
+        {
             sprintf(item_name, "[@@%u|Unknown Item@@]", (unsigned)item_id);
+        }
         else
+        {
             sprintf(item_name, "[Unknown Item]");
+        }
     }
     else
     {
@@ -578,6 +608,8 @@ BUILDIN(getItemLink)
 
     return true;
 }
+
+#undef paramToItem
 
 BUILDIN(requestLang)
 {
