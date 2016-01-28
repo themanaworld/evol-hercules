@@ -99,7 +99,7 @@ HPExport void plugin_init (void)
     addScriptCommand("requestlang", "", requestLang);
     addScriptCommand("requestitem", "", requestItem);
     addScriptCommand("requestitems", "*", requestItems);
-    addScriptCommand("requestitemindex", "v", requestItemIndex);
+    addScriptCommand("requestitemindex", "", requestItemIndex);
     addScriptCommand("requestitemsindex", "v*", requestItemsIndex);
     addScriptCommand("requestcraft", "*", requestCraft);
     addScriptCommand("initcraft", "s", initCraft);
