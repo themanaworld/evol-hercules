@@ -613,28 +613,7 @@ BUILDIN(getItemLink)
 
 BUILDIN(requestLang)
 {
-    getSD();
-    struct script_data* data;
-    int64 uid;
-    const char* name;
-
-    data = script_getdata(st, 2);
-    if (!data_isreference(data))
-    {
-        ShowError("script:requestlang: not a variable\n");
-        script->reportsrc(st);
-        st->state = END;
-        return false;
-    }
-    uid = reference_getuid(data);
-    name = reference_getname(data);
-
-    if (is_string_variable(name))
-    {
-        ShowError("script:requestlang: not a variable\n");
-        script->reportsrc(st);
-        return false;
-    }
+    getSDReturn(-1);
 
     if (!sd->state.menu_or_input)
     {
@@ -654,7 +633,7 @@ BUILDIN(requestLang)
         int lng = -1;
         if (*sd->npc_str)
             lng = lang_getId(sd->npc_str);
-        script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(lng), script_getref(st,2));
+        script_pushint(st, lng);
         st->state = RUN;
     }
     return true;

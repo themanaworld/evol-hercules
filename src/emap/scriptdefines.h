@@ -4,7 +4,7 @@
 #ifndef EVOL_MAP_SCRIPTDEFINES
 #define EVOL_MAP_SCRIPTDEFINES
 
-#define getSessionDataReturn(def) \
+#define getSessionDataReturn(data, def) \
     if (!st->rid) \
     { \
         ShowWarning("!st->rid\n"); \
