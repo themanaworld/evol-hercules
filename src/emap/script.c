@@ -641,28 +641,7 @@ BUILDIN(requestLang)
 
 BUILDIN(requestItem)
 {
-    getSD();
-    struct script_data* data;
-    int64 uid;
-    const char* name;
-
-    data = script_getdata(st, 2);
-    if (!data_isreference(data))
-    {
-        ShowError("script:requestitem: not a variable\n");
-        script->reportsrc(st);
-        st->state = END;
-        return false;
-    }
-    uid = reference_getuid(data);
-    name = reference_getname(data);
-
-    if (is_string_variable(name))
-    {
-        ShowError("script:requestitem: not a variable\n");
-        script->reportsrc(st);
-        return false;
-    }
+    getSDReturn(0);
 
     if (!sd->state.menu_or_input)
     {
@@ -683,6 +662,7 @@ BUILDIN(requestItem)
         if (!sd->npc_str)
         {
             ShowWarning("npc string not found\n");
+            script_pushint(st, 0);
             script->reportsrc(st);
             return false;
         }
@@ -690,11 +670,12 @@ BUILDIN(requestItem)
         if (sscanf (sd->npc_str, "%5d", &item) < 1)
         {
             ShowWarning("input data is not item id\n");
+            script_pushint(st, 0);
             script->reportsrc(st);
             return false;
         }
 
-        script->set_reg(st, sd, uid, name, (void*)h64BPTRSIZE(item), script_getref(st,2));
+        script_pushint(st, item);
         st->state = RUN;
     }
     return true;
