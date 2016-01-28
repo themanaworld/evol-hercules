@@ -82,7 +82,7 @@
     { \
         ShowWarning("player not attached\n"); \
         script->reportsrc(st); \
-        script_pushstr(st, def); \
+        script_pushstr(st, aStrdup(def)); \
         return false; \
     }
 

@@ -683,34 +683,12 @@ BUILDIN(requestItem)
 
 BUILDIN(requestItems)
 {
-    getSD();
-    struct script_data* data;
-    int64 uid;
-    const char* name;
-
-    data = script_getdata(st, 2);
-    if (!data_isreference(data))
-    {
-        ShowError("script:requestitem: not a variable\n");
-        script->reportsrc(st);
-        st->state = END;
-        return false;
-    }
-    uid = reference_getuid(data);
-    name = reference_getname(data);
-
-    if (!is_string_variable(name))
-    {
-        ShowWarning("parameter is not variable\n");
-        script->reportsrc(st);
-        return false;
-    }
-
+    getSDReturnS("0,0");
     int count = 1;
 
-    if (script_hasdata(st, 3))
+    if (script_hasdata(st, 2))
     {
-        count = script_getnum(st, 3);
+        count = script_getnum(st, 2);
         if (count < 0)
             count = 1;
     }
@@ -732,11 +710,12 @@ BUILDIN(requestItems)
         if (!sd->npc_str)
         {
             ShowWarning("npc string not found\n");
+            script_pushstr(st, aStrdup("0,0"));
             script->reportsrc(st);
             return false;
         }
 
-        script->set_reg(st, sd, uid, name, (void*)sd->npc_str, script_getref(st, 2));
+        script_pushstr(st, aStrdup(sd->npc_str));
         st->state = RUN;
     }
     return true;
