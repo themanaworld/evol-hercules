@@ -22,6 +22,24 @@
     } \
     struct SessionExt *data = session_get(sd->fd)
 
+#define getSessionDataReturnS(data, def) \
+    if (!st->rid) \
+    { \
+        ShowWarning("!st->rid\n"); \
+        script->reportsrc(st); \
+        script_pushstr(st, aStrdup(def)); \
+        return false; \
+    } \
+    TBL_PC *sd = script->rid2sd(st); \
+    if (!sd) \
+    { \
+        ShowWarning("player not attached\n"); \
+        script->reportsrc(st); \
+        script_pushstr(st, aStrdup(def)); \
+        return false; \
+    } \
+    struct SessionExt *data = session_get(sd->fd)
+
 #define getSessionData(data) \
     if (!st->rid) \
     { \
