@@ -441,22 +441,12 @@ BUILDIN(restoreCam)
 
 BUILDIN(npcTalk3)
 {
-    const char *str;
     char *msg;
-    TBL_NPC *nd = NULL;
 
     getSD();
 
-    if (script_hasdata(st, 3))
-    {
-        nd = npc->name2id (script_getstr(st, 2));
-        str = script_getstr(st, 3);
-    }
-    else
-    {
-        nd = map->id2nd(st->oid);
-        str = script_getstr(st, 2);
-    }
+    TBL_NPC *nd = map->id2nd(st->oid);
+    const char *str = script_getstr(st, 2);
 
     if (!nd)
     {
