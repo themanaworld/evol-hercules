@@ -31,7 +31,6 @@ BUILDIN(getq);
 BUILDIN(setq);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
-BUILDIN(countItemColor);
 BUILDIN(miscEffect);
 BUILDIN(setMapMask);
 BUILDIN(getMapMask);
