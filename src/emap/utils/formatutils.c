@@ -107,7 +107,7 @@ int format_sub(struct script_state* st, int translate)
         sz += len - 2;
         if (sz > 490)
             break;
-        memmove(tmp + len, tmp + 2, strlen(tmp + 2));
+        memmove(tmp + len, tmp + 2, strlen(tmp + 2) + 1);
         memcpy(tmp, item, len);
         ptr = tmp + len;
         idx ++;
