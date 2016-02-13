@@ -28,8 +28,10 @@
 #include "emap/map.h"
 #include "emap/packets_struct.h"
 #include "emap/send.h"
+#include "emap/data/itemd.h"
 #include "emap/data/mapd.h"
 #include "emap/data/session.h"
+#include "emap/struct/itemdext.h"
 #include "emap/struct/mapdext.h"
 #include "emap/struct/sessionext.h"
 
@@ -1118,7 +1120,7 @@ void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *
     struct SessionExt *data = session_get(fd);
     if (!data || data->clientVersion < 10)
         return;
-    hookStop();
+
     WFIFOHEAD(fd, 28);
     WFIFOW(fd, 0) = 0xb18;
     WFIFOL(fd, 2) = fitem->bl.id;
@@ -1137,12 +1139,26 @@ void eclif_getareachar_item(struct map_session_data *sd, struct flooritem_data *
     WFIFOB(fd, 26) = fitem->subx;
     WFIFOB(fd, 27) = fitem->suby;
     WFIFOSET(fd, 28);
+    hookStop();
 }
 
 void eclif_dropflooritem(struct flooritem_data* fitem)
 {
     char buf[28];
     int view;
+
+    struct ItemdExt *itemData = itemd_get_by_item(&fitem->item_data);
+    if (itemData)
+    {
+        if (itemData->subX)
+            fitem->subx = (rand() % (itemData->subX * 2)) - itemData->subX;
+        else
+            fitem->subx = 0;
+        if (itemData->subY)
+            fitem->suby = (rand() % (itemData->subY * 2)) - itemData->subY;
+        else
+            fitem->suby = 0;
+    }
 
     WBUFW(buf, 0) = 0xb19;
     WBUFL(buf, 2) = fitem->bl.id;

@@ -23,8 +23,8 @@ void send_server_version(int fd)
     WFIFOHEAD(fd, 4 + 8);
     WFIFOW(fd, 0) = 0x7531;
     WFIFOW(fd, 2) = 16;
-    WFIFOL(fd, 4) = 0;  // unused
-    WFIFOL(fd, 8) = 11;  // plugin version
+    WFIFOL(fd, 4) = 0;   // unused
+    WFIFOL(fd, 8) = 12;  // plugin version
     WFIFOL(fd, 12) = serverPacketVersion;  // server packet version
 
     WFIFOSET(fd, WFIFOW(fd,2));

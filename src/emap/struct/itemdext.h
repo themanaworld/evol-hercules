@@ -39,6 +39,8 @@ struct ItemdExt
     struct script_code *takeScript;
     struct script_code *insertScript;
 
+    int16_t subX;
+    int16_t subY;
     bool allowPickup;
     bool charmItem;
 };

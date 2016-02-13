@@ -86,6 +86,32 @@ void eitemdb_readdb_additional_fields(int *itemid,
         data->requiredSkill = i32;
     if (libconfig->setting_lookup_bool(it, "Charm", &i32) && i32 >= 0)
         data->charmItem = i32 ? true : false;
+    if ((t = libconfig->setting_get_member(it, "MaxFloorOffset")))
+    {
+        if (config_setting_is_aggregate(t))
+        {
+            data->subX = libconfig->setting_get_int_elem(t, 0);
+            if (libconfig->setting_length(t) >= 2)
+                data->subY = libconfig->setting_get_int_elem(t, 1);
+            else if (libconfig->setting_length(t) >= 1)
+                data->subY = data->subX;
+        }
+        else if (libconfig->setting_lookup_int(it, "MaxFloorOffset", &i32))
+        {
+            data->subX = i32;
+            data->subY = i32;
+        }
+        if (data->subX < 0 || data->subX > 127)
+        {
+            ShowWarning("Field MaxFloorOffsetX for item %s must be in range 0-127\n", item->name);
+            data->subX = 8;
+        }
+        if (data->subY < 0 || data->subY > 127)
+        {
+            ShowWarning("Field MaxFloorOffsetY for item %s must be in range 0-127\n", item->name);
+            data->subY = 8;
+        }
+    }
 
     if (itemdb->lookup_const(it, "UseEffect", &i32))
         data->useEffect = i32;

@@ -74,15 +74,18 @@ int emap_addflooritem_post(int retVal,
                            int *flags __attribute__ ((unused)))
 {
     TBL_ITEM* fitem = (TBL_ITEM*)idb_get(map->id_db, retVal);
-    if (fitem && fitem->cleartimer != INVALID_TIMER)
+    if (fitem)
     {
-        int timeout = battle->bc->flooritem_lifetime;
-        struct ItemdExt *data = itemd_get_by_item(item);
-        if (data)
-            timeout = data->floorLifeTime;
-        timer->delete(fitem->cleartimer, map->clearflooritem_timer);
-        if (timeout >= 0)
-            fitem->cleartimer = timer->add(timer->gettick() + timeout, map->clearflooritem_timer, fitem->bl.id, 0);
+        if (fitem->cleartimer != INVALID_TIMER)
+        {
+            int timeout = battle->bc->flooritem_lifetime;
+            struct ItemdExt *data =  itemd_get_by_item(item);
+            if (data)
+                timeout = data->floorLifeTime;
+            timer->delete(fitem->cleartimer, map->clearflooritem_timer);
+            if (timeout >= 0)
+                fitem->cleartimer = timer->add(timer->gettick() + timeout, map->clearflooritem_timer, fitem->bl.id, 0);
+        }
     }
     return retVal;
 }
