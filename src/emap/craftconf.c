@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -43,7 +44,7 @@ struct craft_db_entry *craft_create_db_entry(const int id)
     return entry;
 }
 
-static bool craft_lookup_const(const config_setting_t *it, const char *name, int *value)
+static bool craft_lookup_const(const struct config_setting_t *it, const char *name, int *value)
 {
     if (libconfig->setting_lookup_int(it, name, value))
     {
@@ -61,7 +62,7 @@ static bool craft_lookup_const(const config_setting_t *it, const char *name, int
     return false;
 }
 
-static bool craft_get_const(const config_setting_t *it, int *value)
+static bool craft_get_const(const struct config_setting_t *it, int *value)
 {
     const char *str = libconfig->setting_get_string(it);
     if (str && *str && script->get_constant(str, value))
@@ -89,14 +90,14 @@ static int craft_get_item_id(struct craft_db_entry *entry,
 }
 
 static void craft_read_source_inventory(struct craft_db_entry *entry,
-                                        config_setting_t *tt)
+                                        struct config_setting_t *tt)
 {
     int i32;
     int i = 0;
     if (!tt || !config_setting_is_group(tt))
         return;
 
-    config_setting_t *item;
+    struct config_setting_t *item;
 
     int invLen = VECTOR_LENGTH(entry->inventories);
     VECTOR_ENSURE(entry->inventories, invLen + 1, 1);
@@ -134,14 +135,14 @@ static void craft_read_source_inventory(struct craft_db_entry *entry,
 }
 
 static void craft_read_create_items(struct craft_db_entry *entry,
-                                    config_setting_t *tt)
+                                    struct config_setting_t *tt)
 {
     int i32;
     int i = 0;
     if (!tt || !config_setting_is_group(tt))
         return;
 
-    config_setting_t *item;
+    struct config_setting_t *item;
 
     int invLen = VECTOR_LENGTH(entry->create_items);
     VECTOR_ENSURE(entry->create_items, invLen + 1, 1);
@@ -183,7 +184,7 @@ static void craft_read_create_items(struct craft_db_entry *entry,
 
 static void craft_read_items_collection(struct craft_db_entry *entry,
                                         struct craft_items_collection *vector,
-                                        config_setting_t *t,
+                                        struct config_setting_t *t,
                                         const char *const fieldName,
                                         enum craft_field_type fieldType)
 {
@@ -192,12 +193,12 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
     if (!t)
         return;
 
-    config_setting_t *tt = libconfig->setting_get_member(t, fieldName);
+    struct config_setting_t *tt = libconfig->setting_get_member(t, fieldName);
 
     if (!tt || !config_setting_is_group(tt))
         return;
 
-    config_setting_t *item;
+    struct config_setting_t *item;
 
     int len = 0;
     while((item = libconfig->setting_get_elem(tt, i)))
@@ -303,12 +304,12 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
         entry->var = def; \
     }
 
-static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *source)
+static bool craft_read_db_sub(struct config_setting_t *craftt, int id, const char *source)
 {
     int class_;
     int i32;
     const char *str = NULL;
-    config_setting_t *t;
+    struct config_setting_t *t;
 
     if (!libconfig->setting_lookup_int(craftt, "Id", &class_))
     {
@@ -369,16 +370,16 @@ static bool craft_read_db_sub(config_setting_t *craftt, int id, const char *sour
 
 static void load_craft_db(const char *filename)
 {
-    config_t craft_db_conf;
+    struct config_t craft_db_conf;
     char filepath[256];
-    config_setting_t *cdb;
-    config_setting_t *t;
+    struct config_setting_t *cdb;
+    struct config_setting_t *t;
     int i = 0;
 
     nullpo_retv(filename);
     sprintf(filepath, "%s/%s", map->db_path, filename);
 
-    if (libconfig->read_file(&craft_db_conf, filepath) ||
+    if (!libconfig->load_file(&craft_db_conf, filepath) ||
         !(cdb = libconfig->setting_get_member(craft_db_conf.root, "craft_db")))
     {
         ShowError("can't read %s\n", filepath);

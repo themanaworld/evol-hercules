@@ -63,7 +63,7 @@ void estatus_set_viewdata_post(struct block_list *bl,
 
 void estatus_read_job_db_sub(int *idxPtr,
                              const char *name __attribute__ ((unused)),
-                             config_setting_t *jdb)
+                             struct config_setting_t *jdb)
 {
     int i32 = 0;
     const int idx = *idxPtr;

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -30,7 +31,7 @@ bool eitemdb_is_item_usable(struct item_data *item)
 }
 
 void eitemdb_readdb_additional_fields(int *itemid,
-                                      config_setting_t *it,
+                                      struct config_setting_t *it,
                                       int *n __attribute__ ((unused)),
                                       const char *source)
 {
@@ -50,7 +51,7 @@ void eitemdb_readdb_additional_fields(int *itemid,
         return;
     }
 
-    config_setting_t *t = NULL;
+    struct config_setting_t *t = NULL;
 
     if (libconfig->setting_lookup_int(it, "FloorLifeTime", &i32) && i32 >= 0)
         data->floorLifeTime = i32;
@@ -129,11 +130,11 @@ void eitemdb_readdb_additional_fields(int *itemid,
     if (libconfig->setting_lookup_string(it, "OnInsertCardScript", &str))
         data->insertScript = *str ? script->parse(str, source, -item->nameid, SCRIPT_IGNORE_EXTERNAL_BRACKETS, NULL) : NULL;
 
-    config_setting_t *group = libconfig->setting_get_member(it, "AllowCards");
+    struct config_setting_t *group = libconfig->setting_get_member(it, "AllowCards");
     if (group)
     {
         int idx = 0;
-        config_setting_t *it2 = NULL;
+        struct config_setting_t *it2 = NULL;
         int cnt = 0;
         while ((it2 = libconfig->setting_get_elem(group, idx ++)))
         {

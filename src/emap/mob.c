@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -53,7 +54,7 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
 }
 
 void emob_read_db_additional_fields(struct mob_db *entry,
-                                    config_setting_t *it,
+                                    struct config_setting_t *it,
                                     int *nPtr,
                                     const char *source)
 {
@@ -72,9 +73,9 @@ void emob_read_db_additional_fields(struct mob_db *entry,
 
 int emob_read_db_mode_sub_post(int retVal,
                                struct mob_db *entry,
-                               config_setting_t *t)
+                               struct config_setting_t *t)
 {
-    config_setting_t *t2;
+    struct config_setting_t *t2;
 
     if ((t2 = libconfig->setting_get_member(t, "SurviveWithoutMaster")))
         retVal |= libconfig->setting_get_bool(t2) ? 0x8000 : 0;

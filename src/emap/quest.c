@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
@@ -27,10 +28,10 @@
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char *source)
+struct quest_db *equest_read_db_sub(struct config_setting_t *cs, int *nPtr, const char *source)
 {
     struct quest_db *entry = NULL;
-    config_setting_t *t = NULL;
+    struct config_setting_t *t = NULL;
     int i32 = 0, quest_id;
     const char *str = NULL;
     const int n = *nPtr;
@@ -88,7 +89,7 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
         for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
             // Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
             //       quest_log (as well as the client) expect this maximum size.
-            config_setting_t *tt = libconfig->setting_get_elem(t, i);
+            struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
             int mob_id = 0, count = 0;
             if (!tt)
                 break;
@@ -112,7 +113,7 @@ struct quest_db *equest_read_db_sub(config_setting_t *cs, int *nPtr, const char 
     if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
         int i, len = libconfig->setting_length(t);
         for (i = 0; i < len; i++) {
-            config_setting_t *tt = libconfig->setting_get_elem(t, i);
+            struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
             int mob_id = 0, nameid = 0, rate = 0;
             if (!tt)
                 break;

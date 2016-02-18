@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
