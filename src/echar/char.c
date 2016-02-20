@@ -77,6 +77,16 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
             char_dat.clothes_color = look;
 
             chr->mmo_char_tosql(result, &char_dat);
+            char cSex = 'U';
+            if (sex == SEX_MALE)
+                cSex = 'M';
+            else if (sex == SEX_FEMALE)
+                cSex = 'F';
+
+            if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", "char", cSex, char_dat.char_id))
+            {
+                Sql_ShowDebug(inter->sql_handle);
+            }
         }
         chr->creation_ok(fd, &char_dat);
 
