@@ -1672,7 +1672,7 @@ BUILDIN(checkNpcCell)
 
     if (m == -1)
     {
-        ShowWarning("checknpccell: Attempted to run on unexsitent map '%s', type %d, x/y %d,%d\n", script_getstr(st, 2), type, x, y);
+        ShowWarning("checknpccell: Attempted to run on unexsitent map '%s', type %u, x/y %d,%d\n", script_getstr(st, 2), type, x, y);
         return true;
     }
 
