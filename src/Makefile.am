@@ -108,7 +108,7 @@ MAP_SRC = emap/atcommand.c \
 
 # need remove -Wno-unused
 
-SHARED_CFLAGS = -pipe -ffast-math -fvisibility=hidden -rdynamic -std=gnu90 -Wall -Wextra -Wno-sign-compare -Wno-unused \
+SHARED_CFLAGS = ${CFLAGS} -pipe -ffast-math -fvisibility=hidden -rdynamic -std=c99 -Wall -Wextra -Wno-sign-compare -Wno-unused \
     -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty -DPACKETVER=20150000
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
