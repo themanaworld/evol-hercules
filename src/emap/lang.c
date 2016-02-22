@@ -15,6 +15,7 @@
 #include "map/npc.h"
 #include "map/pc.h"
 
+#include "emap/config.h"
 #include "emap/lang.h"
 #include "emap/data/session.h"
 #include "emap/struct/sessionext.h"
@@ -175,7 +176,7 @@ const char* lang_trans(const char *str, int lng, int flg)
 
     if (!strings[lng])
     {
-        if (flg)
+        if (warn_missing_translation && flg)
             printf ("no lang string (%s) for: %s\n", lang_langs[lng], str);
         return str;
     }

@@ -36,6 +36,8 @@ MAP_SRC = emap/atcommand.c \
     emap/battleground.h \
     emap/clif.c \
     emap/clif.h \
+    emap/config.c \
+    emap/config.h \
     emap/craft.c \
     emap/craft.h \
     emap/craftconf.c \

@@ -46,6 +46,7 @@
 #include "emap/atcommand.h"
 #include "emap/battleground.h"
 #include "emap/clif.h"
+#include "emap/config.h"
 #include "emap/craft.h"
 #include "emap/craftconf.h"
 #include "emap/itemdb.h"
@@ -268,6 +269,7 @@ HPExport void server_preinit (void)
     addMapInterConf("default_map", config_default_map);
     addMapInterConf("default_x", config_default_x);
     addMapInterConf("default_y", config_default_y);
+    addMapInterConf("warn_missing_translation", config_warn_missing_translation);
 
     addHookPre("quest->read_db_sub", equest_read_db_sub);
     addGroupPermission("send_gm", permission_send_gm_flag);
