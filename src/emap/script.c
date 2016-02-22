@@ -1948,7 +1948,7 @@ BUILDIN(emotion)
     else if (script_hasdata(st, 4))
     {
         struct npc_data *nd = npc->name2id(script_getstr(st, 4));
-        if (nd == NULL)
+        if (nd != NULL)
             clif->emotion(&nd->bl,type);
     }
     else
