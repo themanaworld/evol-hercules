@@ -150,6 +150,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setmount", "i", setMount);
     addScriptCommand("setskin", "s", setSkin);
     addScriptCommand("emotion", "i??", emotion);
+    addScriptCommand("setlook", "ii", setLook);
 
     do_init_langs();
 

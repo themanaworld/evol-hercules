@@ -1957,3 +1957,17 @@ BUILDIN(emotion)
     }
     return true;
 }
+
+BUILDIN(setLook)
+{
+    const int type = script_getnum(st, 2);
+    const int val = script_getnum(st, 3);
+
+    struct map_session_data *sd = script->rid2sd(st);
+    if (sd == NULL)
+        return true;
+
+    pc->changelook(sd, type, val);
+    send_changelook2(sd, &sd->bl, sd->bl.id, type, val, 0, NULL, 0, AREA);
+    return true;
+}

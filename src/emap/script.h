@@ -75,5 +75,6 @@ BUILDIN(emotion);
 BUILDIN(findCraftEntry);
 BUILDIN(useCraft);
 BUILDIN(getCraftCode);
+BUILDIN(setLook);
 
 #endif  // EVOL_MAP_SCRIPT
