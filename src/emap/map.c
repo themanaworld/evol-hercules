@@ -186,14 +186,14 @@ static int getWalkMask(const struct block_list *bl)
     int walkMask = 0;
     if (bl->type == BL_NPC)
     {
-        TBL_NPC *nd = (TBL_NPC*)bl;
+        TBL_NPC *nd = (TBL_NPC *)bl;
         struct NpcdExt *ext = npcd_get(nd);
         if (ext)
             walkMask = ext->walkMask;
     }
     else if (bl->type == BL_MOB)
     {
-        TBL_MOB *md = (TBL_MOB*)bl;
+        TBL_MOB *md = (TBL_MOB *)bl;
         struct MobdExt *ext = mobd_get_by_mob(md);
         if (ext)
             walkMask = ext->walkMask;

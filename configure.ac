@@ -126,6 +126,8 @@ AC_CHECK_COMPILER_WFLAG(format-y2k)
 AC_CHECK_COMPILER_WFLAG(missing-include-dirs)
 AC_CHECK_COMPILER_WFLAG(suggest-attribute=noreturn)
 AC_CHECK_COMPILER_WFLAG(undef)
+# disabled for now
+#AC_CHECK_COMPILER_WFLAG(cast-qual)
 
 AC_CHECK_FUNC([strnlen],[CFLAGS="$CFLAGS -DHAVE_STRNLEN"])
 AC_CHECK_FUNC([setrlimit],[CLAGS="$CFLAGS -DHAVE_SETRLIMIT"])

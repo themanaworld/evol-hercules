@@ -54,7 +54,7 @@ int elogin_parse_client_login_pre(int *fdPtr,
         return 1;
     }
     char username[NAME_LENGTH];
-    safestrncpy(username, (const char*)RFIFOP(fd, 6), NAME_LENGTH);
+    safestrncpy(username, RFIFOP(fd, 6), NAME_LENGTH);
     int len = safestrnlen(username, NAME_LENGTH);
     if (clientVersion < 2)
     {
@@ -93,7 +93,7 @@ void elogin_parse_client_login2(int fd)
     uint8 clienttype;
     int result;
 
-    safestrncpy(username, (const char*)RFIFOP(fd, 2), NAME_LENGTH);
+    safestrncpy(username, RFIFOP(fd, 2), NAME_LENGTH);
 
     int len = safestrnlen(username, NAME_LENGTH);
     if (len < 2 || !(username[len - 2] == '_') || !memchr("FfMm", username[len - 1], 4))
@@ -102,8 +102,8 @@ void elogin_parse_client_login2(int fd)
         return;
     }
 
-    safestrncpy(password, (const char*)RFIFOP(fd, 26), NAME_LENGTH);
-    safestrncpy(email, (const char*)RFIFOP(fd, 51), 40);
+    safestrncpy(password, RFIFOP(fd, 26), NAME_LENGTH);
+    safestrncpy(email, RFIFOP(fd, 51), 40);
     clienttype = RFIFOB(fd, 50);
 
     struct login_session_data* sd = (struct login_session_data*)sockt->session[fd]->session_data;

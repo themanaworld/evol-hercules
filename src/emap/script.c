@@ -441,7 +441,7 @@ BUILDIN(restoreCam)
 
 BUILDIN(npcTalk3)
 {
-    char *msg;
+    const char *msg;
 
     getSD();
 
@@ -463,7 +463,7 @@ BUILDIN(npcTalk3)
     }
 
     if (sd)
-        msg = (char*)lang_pctrans (nd->name, sd);
+        msg = lang_pctrans (nd->name, sd);
     else
         msg = nd->name;
 

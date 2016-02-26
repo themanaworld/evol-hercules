@@ -59,7 +59,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
         }
     }
 
-    const int result = chr->make_new_char_sql(sd, (char*)RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29));
+    const int result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29));
     if (result < 0)
     {
         chr->creation_failed(fd, result);

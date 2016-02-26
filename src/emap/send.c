@@ -75,7 +75,7 @@ void send_local_message(int fd, struct block_list* bl, const char* msg)
     WFIFOW (fd, 0) = 0x8d;
     WFIFOW (fd, 2) = msg_len + 8;
     WFIFOL (fd, 4) = bl->id;
-    safestrncpy((char*)WFIFOP(fd, 8), msg, msg_len);
+    safestrncpy(WFIFOP(fd, 8), msg, msg_len);
     WFIFOSET (fd, msg_len + 8);
 }
 
@@ -279,7 +279,7 @@ void send_changemusic_brodcast(const int map, const char *music)
     bl.m = map;
     WBUFW (buf, 0) = 0xb05;
     WBUFW (buf, 2) = sz;
-    strcpy ((char *)WBUFP (buf, 4), music);
+    strcpy (WBUFP (buf, 4), music);
     clif->send (buf, sz, &bl, ALL_SAMEMAP);
     aFree(buf);
 }
@@ -297,7 +297,7 @@ void send_changenpc_title (TBL_PC *sd, const int npcId, const char *name)
     WFIFOW (fd, 2) = sz;
     WFIFOL (fd, 4) = npcId;
     WFIFOW (fd, 8) = len;
-    strcpy ((char*)WFIFOP (fd, 10), name);
+    strcpy (WFIFOP (fd, 10), name);
     WFIFOSET (fd, sz);
 }
 
@@ -308,7 +308,7 @@ void send_join_ack(int fd, const char *const name, int flag)
 
     WFIFOHEAD (fd, 27);
     WFIFOW (fd, 0) = 0xb08;
-    safestrncpy ((char*)WFIFOP (fd, 2), name, 24);
+    safestrncpy (WFIFOP (fd, 2), name, 24);
     WFIFOB (fd, 26) = flag;
     WFIFOSET (fd, 27);
 }
@@ -409,7 +409,7 @@ void send_setwall(int m, int layer, int x1, int y1, int x2, int y2, int mask, en
     WBUFW(buf, 8) = y2;
     WBUFL(buf, 10) = mask;
     WBUFL(buf, 14) = layer;
-    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name,(char*)WBUFP(buf, 18));
+    mapindex->getmapname_ext(map->list[m].custom_name ? map->list[map->list[m].instance_src_map].name : map->list[m].name, WBUFP(buf, 18));
 
     struct block_list dummy_bl;
     dummy_bl.type = BL_NUL;
@@ -450,6 +450,6 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
     WFIFOW(fd, 0) = 0xb1c;
     WFIFOW(fd, 2) = sz;
     WFIFOL(fd, 4) = npcId;
-    strcpy((char*)WFIFOP (fd, 8), skin);
+    strcpy(WFIFOP (fd, 8), skin);
     WFIFOSET(fd, sz);
 }

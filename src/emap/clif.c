@@ -1189,7 +1189,7 @@ void eclif_sendbgemblem_area(struct map_session_data *sd)
 
     WBUFW(buf, 0) = 0xb1a;
     WBUFL(buf, 2) = sd->bl.id;
-    safestrncpy((char*)WBUFP(buf,6), sd->status.name, NAME_LENGTH); // name don't show in screen.
+    safestrncpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH); // name don't show in screen.
     WBUFW(buf, 30) = sd->bg_id;
     WBUFW(buf, 32) = data->teamId;
     clif->send(buf, 34, &sd->bl, AREA);
@@ -1206,7 +1206,7 @@ void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
     WFIFOHEAD(fd, 34);
     WFIFOW(fd, 0) = 0xb1a;
     WFIFOL(fd, 2) = sd->bl.id;
-    safestrncpy((char*)WFIFOP(fd, 6), sd->status.name, NAME_LENGTH);
+    safestrncpy(WFIFOP(fd, 6), sd->status.name, NAME_LENGTH);
     WFIFOW(fd, 30) = sd->bg_id;
     WFIFOW(fd, 32) = data->teamId;
     WFIFOSET(fd, 34);
@@ -1236,6 +1236,6 @@ void eclif_disp_message(struct block_list* src,
 
     WBUFW(buf, 0) = 0x8e;
     WBUFW(buf, 2) = len + 5;
-    safestrncpy((char*)WBUFP(buf, 4), mes, len + 1);
+    safestrncpy(WBUFP(buf, 4), mes, len + 1);
     clif->send(buf, WBUFW(buf, 2), src, *targetPtr);
 }

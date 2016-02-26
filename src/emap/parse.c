@@ -43,7 +43,7 @@ void map_parse_join_channel(int fd)
     if (!sd)
         return;
 
-    safestrncpy(name, (char*)RFIFOP(fd, 2), 24);
+    safestrncpy(name, RFIFOP(fd, 2), 24);
     if (name[0] == '#')
         p = name + 1;
     else
@@ -73,7 +73,7 @@ void map_parse_part_channel(int fd)
     if (!sd)
         return;
 
-    safestrncpy(name, (char*)RFIFOP(fd, 2), 24);
+    safestrncpy(name, RFIFOP(fd, 2), 24);
     if (name[0] == '#')
         p = name + 1;
     else
@@ -120,7 +120,7 @@ void map_parse_pet_say(int fd)
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
         return;
-    safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
+    safestrncpy(message, RFIFOP(fd, 4), len - 4);
     send_slave_say(sd, &sd->pd->bl, sd->pd->pet.name, message);
 }
 
@@ -184,7 +184,7 @@ void map_parse_homun_say(int fd)
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
         return;
-    safestrncpy(message, (char*)RFIFOP(fd, 4), len - 4);
+    safestrncpy(message, RFIFOP(fd, 4), len - 4);
     if (sd->md && sd->md->db)
         send_slave_say(sd, &sd->md->bl, sd->md->db->name, message);
     else if (sd->hd && homun_alive(sd->hd))
