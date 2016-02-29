@@ -117,6 +117,9 @@ void map_parse_pet_say(int fd)
     if (!sd || !sd->pd)
         return;
 
+    if (!pc->can_talk(sd))
+        return;
+
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
         return;
@@ -180,6 +183,8 @@ void map_parse_homun_say(int fd)
 
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd)
+        return;
+    if (!pc->can_talk(sd))
         return;
     const int len = RFIFOW(fd, 2);
     if (len > 500 || len < 6)
