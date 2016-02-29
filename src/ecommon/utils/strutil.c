@@ -46,7 +46,7 @@ struct strutil_data *strutil_split(const char *str,
 void strutil_free(struct strutil_data *data)
 {
     if (!data)
-        return NULL;
+        return;
     VECTOR_CLEAR(data->parts);
     aFree(data->str);
     aFree(data);
