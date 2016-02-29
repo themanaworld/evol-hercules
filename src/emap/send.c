@@ -324,7 +324,7 @@ void send_slave_say(TBL_PC *sd,
 
     snprintf(buf, len, "%s's %s : %s", sd->status.name, name, message);
     buf[len - 1] = 0;
-    clif->GlobalMessage(bl, buf);
+    clif->disp_overhead(bl, buf);
     aFree(buf);
 }
 
