@@ -4,6 +4,8 @@
 #ifndef EVOL_MAP_MOB
 #define EVOL_MAP_MOB
 
+#define MD_SURVIVE_WITHOUT_MASTER 0x0040000
+
 int emob_deleteslave_sub(struct block_list *bl, va_list ap);
 void emob_read_db_additional_fields(struct mob_db *entry,
                                     struct config_setting_t *it,

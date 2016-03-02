@@ -18,6 +18,8 @@
 #include "map/itemdb.h"
 #include "map/mob.h"
 
+#include "emap/mob.h"
+
 #include "emap/data/mobd.h"
 #include "emap/struct/mobdext.h"
 
@@ -38,7 +40,7 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
     const int id = va_arg(ap, int);
     if (md->master_id > 0 && md->master_id == id)
     {
-        if (md->db->status.mode & 0x8000)
+        if (md->db->status.mode & MD_SURVIVE_WITHOUT_MASTER)
         {
             md->master_id = 0;
             md->master_dist = 0;
@@ -78,7 +80,7 @@ int emob_read_db_mode_sub_post(int retVal,
     struct config_setting_t *t2;
 
     if ((t2 = libconfig->setting_get_member(t, "SurviveWithoutMaster")))
-        retVal |= libconfig->setting_get_bool(t2) ? 0x8000 : 0;
+        retVal |= libconfig->setting_get_bool(t2) ? MD_SURVIVE_WITHOUT_MASTER : 0;
 
     return retVal;
 }
