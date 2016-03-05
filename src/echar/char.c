@@ -269,14 +269,14 @@ void send_additional_slots(int fd, struct char_session_data* sd)
             case EQP_GARMENT:
                 type = 12;
                 break;
-            case EQP_ACC_L:     // not implimented
+            case EQP_ACC_L:
                 type = 0;
                 break;
             case EQP_ARMOR:
                 type = 17;
                 break;
-            case EQP_HAND_L:    // not implimented
-                type = 0;
+            case EQP_HAND_L:
+                type = 8;
                 break;
             case EQP_SHOES:
                 type = 9;
