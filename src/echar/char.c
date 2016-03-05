@@ -308,6 +308,8 @@ void send_additional_slots(int fd, struct char_session_data* sd)
                 break;
         }
 
+        if (type == 0)
+            continue;
         WFIFOHEAD (fd, 19);
         WFIFOW (fd, 0) = 0xb17;
         WFIFOL (fd, 2) = char_id;
