@@ -214,6 +214,15 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             send_changelook(sd, sd2, fd, id, field, item->look, 0, item, equip); \
     }
 
+#define equipPosId(index, field) \
+    equip = sd->equip_index[index]; \
+    if (equip >= 0) \
+    { \
+        item = sd->inventory_data[equip]; \
+        if (item && item->nameid) \
+            send_changelook(sd, sd2, fd, id, field, item->nameid, 0, item, equip); \
+    }
+
 static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
 {
     if (!sd || !sd2)
@@ -228,6 +237,8 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
     if (!data || data->invisible)
         return;
 
+    equipPosId(EQI_HAND_R, LOOK_WEAPON);
+    equipPosId(EQI_HAND_L, LOOK_SHIELD);
     equipPos(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
     equipPos(EQI_HEAD_TOP, LOOK_HEAD_TOP);
     equipPos(EQI_HEAD_MID, LOOK_HEAD_MID);
@@ -244,6 +255,7 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
 }
 
 #undef equipPos
+#undef equipPosId
 
 #define equipPos2(index, field) \
     equip = sd->equip_index[index]; \
@@ -253,6 +265,17 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
         if (item && item->look) \
         { \
             send_changelook2(sd, bl, bl->id, field, item->look, 0, item, equip, AREA); \
+        } \
+    }
+
+#define equipPos2Id(index, field) \
+    equip = sd->equip_index[index]; \
+    if (equip >= 0) \
+    { \
+        item = sd->inventory_data[equip]; \
+        if (item && item->nameid) \
+        { \
+            send_changelook2(sd, bl, bl->id, field, item->nameid, 0, item, equip, AREA); \
         } \
     }
 
@@ -268,6 +291,8 @@ static void eclif_send_additional_slots2(struct block_list *bl)
     if (!data || data->invisible)
         return;
 
+    equipPos2Id(EQI_HAND_R, LOOK_WEAPON);
+    equipPos2Id(EQI_HAND_L, LOOK_SHIELD);
     equipPos2(EQI_HEAD_LOW, LOOK_HEAD_BOTTOM);
     equipPos2(EQI_HEAD_TOP, LOOK_HEAD_TOP);
     equipPos2(EQI_HEAD_MID, LOOK_HEAD_MID);
@@ -284,6 +309,7 @@ static void eclif_send_additional_slots2(struct block_list *bl)
 }
 
 #undef equipPos2
+#undef equipPos2Id
 
 void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
 {
