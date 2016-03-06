@@ -143,8 +143,10 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
     equipPos2(EQP_COSTUME_HEAD_LOW, 15);
     equipPos2(EQP_COSTUME_GARMENT, 16);
     equipPos2(EQP_ARMOR, 17);
-    //skipping SHADOW slots
+    equipPos2(EQP_ACC_R, 18);
+    equipPos2(EQP_ACC_L, 19);
 
+    //skipping SHADOW slots
 }
 
 #undef equipPos
@@ -199,6 +201,8 @@ void epc_unequipitem_pos(TBL_PC *sd,
     unequipPos2(EQP_COSTUME_HEAD_LOW, 15);
     unequipPos2(EQP_COSTUME_GARMENT, 16);
     unequipPos2(EQP_ARMOR, 17);
+    unequipPos2(EQP_ACC_R, 18);
+    unequipPos2(EQP_ACC_L, 19);
     //skipping SHADOW slots
 }
 

@@ -270,7 +270,7 @@ void send_additional_slots(int fd, struct char_session_data* sd)
                 type = 12;
                 break;
             case EQP_ACC_L:
-                type = 0;
+                type = 19;
                 break;
             case EQP_ARMOR:
                 type = 17;
@@ -281,8 +281,8 @@ void send_additional_slots(int fd, struct char_session_data* sd)
             case EQP_SHOES:
                 type = 9;
                 break;
-            case EQP_ACC_R:     // not implimented
-                type = 0;
+            case EQP_ACC_R:
+                type = 18;
                 break;
             case EQP_HEAD_TOP:
                 type = 4;

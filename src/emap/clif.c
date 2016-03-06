@@ -238,6 +238,8 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
     equipPos(EQI_COSTUME_LOW, 15);
     equipPos(EQI_COSTUME_GARMENT, 16);
     equipPos(EQI_ARMOR, 17);
+    equipPos(EQI_ACC_R, 18);
+    equipPos(EQI_ACC_L, 19);
     //skipping SHADOW slots
 }
 
@@ -276,6 +278,8 @@ static void eclif_send_additional_slots2(struct block_list *bl)
     equipPos2(EQI_COSTUME_LOW, 15);
     equipPos2(EQI_COSTUME_GARMENT, 16);
     equipPos2(EQI_ARMOR, 17);
+    equipPos2(EQI_ACC_R, 18);
+    equipPos2(EQI_ACC_L, 19);
     //skipping SHADOW slots
 }
 
