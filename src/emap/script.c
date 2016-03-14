@@ -94,6 +94,13 @@ int escript_reload(void)
     return 0;
 }
 
+void escript_load_parameters(void)
+{
+    script->constdb_comment("Evol parameters");
+    script->set_constant("ClientVersion", 10000, true, false);
+    script->constdb_comment(NULL);
+}
+
 // stripped copy from script_load_translations without actual translation loading.
 void escript_load_translations(void)
 {
