@@ -225,6 +225,7 @@ HPExport void plugin_init (void)
     addHookPre("script->set_reg_ref_num", eset_reg_npcscope_num);
     addHookPre("script->set_reg_npc_str", eset_reg_npcscope_str);
     addHookPre("script->set_reg_ref_str", eset_reg_npcscope_str);
+    addHookPre("script->reload", escript_reload);
     addHookPre("status->calc_pc_additional", estatus_calc_pc_additional);
 
     addHookPost("clif->getareachar_unit", eclif_getareachar_unit_post);

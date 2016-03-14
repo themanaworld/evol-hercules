@@ -44,5 +44,6 @@ void map_alwaysVisible_delete(const struct block_list *bl);
 bool map_alwaysVisible_find(const struct block_list *bl);
 void map_alwaysVisible_send(TBL_PC *sd);
 void edo_final_maps(void);
+void map_clear_data(void);
 
 #endif  // EVOL_MAP_MAP

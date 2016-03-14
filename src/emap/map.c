@@ -555,7 +555,7 @@ void map_alwaysVisible_send(TBL_PC *sd)
     }
 }
 
-void edo_final_maps(void)
+void map_clear_data(void)
 {
     int f;
     for (f = 0; f < map->count; f++)
@@ -564,4 +564,9 @@ void edo_final_maps(void)
         if (data)
             VECTOR_CLEAR(data->npcs);
     }
+}
+
+void edo_final_maps(void)
+{
+    map_clear_data();
 }

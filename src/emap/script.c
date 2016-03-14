@@ -88,6 +88,12 @@
 
 extern int mountScriptId;
 
+int escript_reload(void)
+{
+    map_clear_data();
+    return 0;
+}
+
 void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
 {
     if (!strcmp(name, ".lang"))
