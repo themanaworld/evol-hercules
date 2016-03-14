@@ -94,6 +94,40 @@ int escript_reload(void)
     return 0;
 }
 
+// stripped copy from script_load_translations without actual translation loading.
+void escript_load_translations(void)
+{
+    if (map->minimal)
+    {
+        hookStop();
+        return;
+    }
+
+    script->translation_db = strdb_alloc(DB_OPT_DUP_KEY, NAME_LENGTH * 2 + 1);
+
+    if (script->languages)
+    {
+        int i;
+        for (i = 0; i < script->max_lang_id; i++)
+            aFree(script->languages[i]);
+        aFree(script->languages);
+    }
+    script->languages = NULL;
+    script->max_lang_id = 0;
+
+    script->add_language("English");
+
+    if (script->string_list)
+        aFree(script->string_list);
+
+    script->string_list = NULL;
+    script->string_list_pos = 0;
+    script->string_list_size = 0;
+
+    map->default_lang_id = 0;
+    hookStop();
+}
+
 void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
 {
     if (!strcmp(name, ".lang"))

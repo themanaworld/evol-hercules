@@ -5,6 +5,7 @@
 #define EVOL_MAP_SCRIPT
 
 int escript_reload(void);
+void escript_load_translations(void);
 void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val);
 int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data);
 void eset_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str);
