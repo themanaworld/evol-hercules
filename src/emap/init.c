@@ -171,6 +171,8 @@ HPExport void plugin_init (void)
     addHookPre("atcommand->msgsd", eatcommand_msgsd);
 
     addHookPre("bg->team_warp", ebg_team_warp);
+    addHookPre("pc->can_Adopt", epc_can_Adopt_pre);
+    addHookPre("pc->adoption", epc_adoption_pre);
     addHookPre("pc->readparam", epc_readparam_pre);
     addHookPre("pc->setregistry", epc_setregistry);
     addHookPre("pc->equipitem_pos", epc_equipitem_pos);

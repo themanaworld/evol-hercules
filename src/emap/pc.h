@@ -66,4 +66,12 @@ int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equ
 
 int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card, int *idx_equip);
 
+bool epc_can_Adopt_pre(struct map_session_data *p1_sd,
+                       struct map_session_data *p2_sd,
+                       struct map_session_data *b_sd);
+
+bool epc_adoption_pre(struct map_session_data *p1_sd,
+                      struct map_session_data *p2_sd,
+                      struct map_session_data *b_sd);
+
 #endif  // EVOL_MAP_PC

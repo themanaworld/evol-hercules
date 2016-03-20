@@ -570,3 +570,88 @@ int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card,
     }
     return retVal;
 }
+
+bool epc_can_Adopt_pre(struct map_session_data *p1_sd,
+                       struct map_session_data *p2_sd,
+                       struct map_session_data *b_sd)
+{
+    hookStop();
+
+    if (!p1_sd || !p2_sd || !b_sd)
+        return false;
+
+    if (b_sd->status.father || b_sd->status.mother || b_sd->adopt_invite)
+        return false; // already adopted baby / in adopt request
+
+    if (!p1_sd->status.partner_id || !p1_sd->status.party_id || p1_sd->status.party_id != b_sd->status.party_id)
+        return false; // You need to be married and in party with baby to adopt
+
+    if (p1_sd->status.partner_id != p2_sd->status.char_id || p2_sd->status.partner_id != p1_sd->status.char_id)
+        return false; // Not married, wrong married
+
+    if (p2_sd->status.party_id != p1_sd->status.party_id)
+        return false; // Both parents need to be in the same party
+
+    // Parents need to have their ring equipped
+//    if (!pc->isequipped(p1_sd, WEDDING_RING_M) && !pc->isequipped(p1_sd, WEDDING_RING_F))
+//        return false;
+
+//    if (!pc->isequipped(p2_sd, WEDDING_RING_M) && !pc->isequipped(p2_sd, WEDDING_RING_F))
+//        return false;
+
+    // Already adopted a baby
+    if (p1_sd->status.child || p2_sd->status.child)
+    {
+        clif->adopt_reply(p1_sd, 0);
+        hookStop();
+        return false;
+    }
+
+    // Parents need at least lvl 70 to adopt
+//    if (p1_sd->status.base_level < 70 || p2_sd->status.base_level < 70)
+//    {
+//        clif->adopt_reply(p1_sd, 1);
+//        hookStop();
+//        return false;
+//    }
+
+    if (b_sd->status.partner_id)
+    {
+        clif->adopt_reply(p1_sd, 2);
+        hookStop();
+        return false;
+    }
+
+//    if (!((b_sd->status.class_ >= JOB_NOVICE && b_sd->status.class_ <= JOB_THIEF) || b_sd->status.class_ == JOB_SUPER_NOVICE))
+//        return false;
+
+    hookStop();
+    return true;
+}
+
+bool epc_adoption_pre(struct map_session_data *p1_sd,
+                      struct map_session_data *p2_sd,
+                      struct map_session_data *b_sd)
+{
+    if (!pc->can_Adopt(p1_sd, p2_sd, b_sd))
+    {
+        hookStop();
+        return false;
+    }
+
+    p1_sd->status.child = b_sd->status.char_id;
+    p2_sd->status.child = b_sd->status.char_id;
+    b_sd->status.father = p1_sd->status.char_id;
+    b_sd->status.mother = p2_sd->status.char_id;
+
+    // Baby Skills
+    pc->skill(b_sd, WE_BABY, 1, SKILL_GRANT_PERMANENT);
+    pc->skill(b_sd, WE_CALLPARENT, 1, SKILL_GRANT_PERMANENT);
+
+    // Parents Skills
+    pc->skill(p1_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
+    pc->skill(p2_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
+
+    hookStop();
+    return true;
+}
