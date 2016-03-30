@@ -61,6 +61,7 @@
 #include "emap/pc.h"
 #include "emap/quest.h"
 #include "emap/script.h"
+#include "emap/script_buildins.h"
 #include "emap/skill.h"
 #include "emap/status.h"
 

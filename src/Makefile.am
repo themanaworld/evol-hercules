@@ -68,6 +68,8 @@ MAP_SRC = emap/atcommand.c \
     emap/quest.h \
     emap/script.c \
     emap/script.h \
+    emap/script_buildins.c \
+    emap/script_buildins.h \
     emap/scriptdefines.h \
     emap/send.c \
     emap/send.h \
