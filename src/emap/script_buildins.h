@@ -48,6 +48,7 @@ BUILDIN(failedRefIndex);
 BUILDIN(downRefIndex);
 BUILDIN(successRefIndex);
 BUILDIN(successRemoveCardsIndex);
+BUILDIN(failedRemoveCardsIndex);
 BUILDIN(isStr);
 BUILDIN(npcSit);
 BUILDIN(npcStand);

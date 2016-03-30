@@ -144,6 +144,7 @@ HPExport void plugin_init (void)
     addScriptCommand("downrefindex", "ii", downRefIndex);
     addScriptCommand("successrefindex", "ii", successRefIndex);
     addScriptCommand("successremovecardsindex", "i", successRemoveCardsIndex);
+    addScriptCommand("failedremovecardsindex", "ii", failedRemoveCardsIndex);
     addScriptCommand("isstr", "v", isStr);
     addScriptCommand("setbgteam", "ii", setBgTeam);
     addScriptCommand("checknpccell", "siii", checkNpcCell);

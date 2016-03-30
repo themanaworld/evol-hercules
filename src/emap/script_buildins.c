@@ -1247,6 +1247,91 @@ BUILDIN(successRemoveCardsIndex)
     return true;
 }
 
+/// <type>=0 : will destroy both the item and the cards.
+/// <type>=1 : will keep the item, but destroy the cards.
+/// <type>=2 : will keep the cards, but destroy the item.
+/// <type>=? : will just display the failure effect.
+BUILDIN(failedRemoveCardsIndex)
+{
+    int i = -1, c, cardflag = 0;
+
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+        return false;
+
+    i = n;
+
+    int typefail = script_getnum(st, 3);
+
+    if (itemdb_isspecial(sd->status.inventory[i].card[0]))
+        return true;
+
+    for (c = sd->inventory_data[i]->slot - 1; c >= 0; --c)
+    {
+        if (sd->status.inventory[i].card[c] && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD)
+        {
+            cardflag = 1;
+
+            if (typefail == 2)
+            {   // add cards to inventory, clear
+                int flag;
+                struct item item_tmp;
+
+                memset(&item_tmp, 0, sizeof(item_tmp));
+
+                item_tmp.nameid   = sd->status.inventory[i].card[c];
+                item_tmp.identify = 1;
+
+                if((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)))
+                {
+                    clif->additem(sd, 0, 0, flag);
+                    map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+                }
+            }
+        }
+    }
+
+    if (cardflag == 1)
+    {
+        if (typefail == 0 || typefail == 2)
+        {
+            // destroy the item
+            pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
+        }
+        else if (typefail == 1)
+        {
+            // destroy the card
+            int flag, j;
+            struct item item_tmp;
+
+            memset(&item_tmp, 0, sizeof(item_tmp));
+
+            item_tmp.nameid      = sd->status.inventory[i].nameid;
+            item_tmp.identify    = 1;
+            item_tmp.refine      = sd->status.inventory[i].refine;
+            item_tmp.attribute   = sd->status.inventory[i].attribute;
+            item_tmp.expire_time = sd->status.inventory[i].expire_time;
+            item_tmp.bound       = sd->status.inventory[i].bound;
+
+            for (j = sd->inventory_data[i]->slot; j < MAX_SLOTS; j++)
+                item_tmp.card[j] = sd->status.inventory[i].card[j];
+
+            pc->delitem(sd, i, 1, 0, DELITEM_FAILREFINE, LOG_TYPE_SCRIPT);
+
+            if((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)))
+            {
+                clif->additem(sd, 0, 0, flag);
+                map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+            }
+        }
+        clif->misceffect(&sd->bl, 2);
+    }
+
+    return true;
+}
+
 // return paramater type
 // 0 - int
 // 1 - string
