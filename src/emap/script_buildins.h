@@ -47,6 +47,7 @@ BUILDIN(isUnitWalking);
 BUILDIN(failedRefIndex);
 BUILDIN(downRefIndex);
 BUILDIN(successRefIndex);
+BUILDIN(successRemoveCardsIndex);
 BUILDIN(isStr);
 BUILDIN(npcSit);
 BUILDIN(npcStand);
