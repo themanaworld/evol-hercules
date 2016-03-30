@@ -21,7 +21,7 @@
 void horse_add_bonus(TBL_PC *sd)
 {
     struct SessionExt *data = session_get_bysd(sd);
-    if (!data || data->mount == 0)
+    if (!sd || !data || data->mount == 0)
         return;
 
     struct status_data *bstatus = &sd->base_status;

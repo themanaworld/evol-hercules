@@ -22,8 +22,13 @@
 #include "emap/struct/npcdext.h"
 #include "emap/npc.h"
 
-void enpc_parse_unknown_mapflag(const char *name, const char *w3, const char *w4, const char* start,
-                                const char* buffer, const char* filepath, int *retval)
+void enpc_parse_unknown_mapflag(const char *name,
+                                const char *w3,
+                                const char *w4,
+                                const char* start,
+                                const char* buffer,
+                                const char* filepath,
+                                int *retval)
 {
     if (!strcmpi(w3, "invisible"))
     {

@@ -26,6 +26,9 @@
 
 int format_sub(struct script_state* st, int translate)
 {
+    if (!st)
+        return 0;
+
     TBL_PC *sd = NULL;
     if (translate)
         sd = script->rid2sd(st);

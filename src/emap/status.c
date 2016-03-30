@@ -94,6 +94,9 @@ int estatus_calc_pc_additional(struct map_session_data* sd,
 
     hookStop();
 
+    if (!sd)
+        return 0;
+
     for (f = 0; f < MAX_INVENTORY; f ++)
     {
         struct item_data *const item = sd->inventory_data[f];

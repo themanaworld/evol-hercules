@@ -94,7 +94,7 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
 
     hookStop();
 
-    if (!id)
+    if (!id || !sd)
         return;
 
     if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON))
@@ -445,6 +445,8 @@ bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
     int f;
     if (retVal)
     {
+        if (!sd)
+            return retVal;
         struct ItemdExt *data = itemd_get(sd->inventory_data[*idx_equip]);
         if (!data || !data->allowedCards[0].id) // allow cards if AllowedCards list is empty
             return retVal;
@@ -484,7 +486,7 @@ static int tempAmount = 0;
 int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr)
 {
     const int n = *nPtr;
-    if (n < 0 || n >= MAX_INVENTORY)
+    if (!sd || n < 0 || n >= MAX_INVENTORY)
     {
         tempN = 0;
         tempId = 0;
@@ -542,8 +544,11 @@ int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_
 
 int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equip)
 {
-    if (!sd || *idx_equip < 0 || *idx_equip >= MAX_INVENTORY ||
-        *idx_card < 0 || *idx_card >= MAX_INVENTORY)
+    if (!sd ||
+        *idx_equip < 0 ||
+        *idx_equip >= MAX_INVENTORY ||
+        *idx_card < 0 ||
+        *idx_card >= MAX_INVENTORY)
     {
         tempN = 0;
         tempId = 0;

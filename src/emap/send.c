@@ -85,6 +85,8 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
 {
     struct SessionExt *tdata = session_get_bysd(sd2);
     int i;
+    if (!sd)
+        return;
     //ShowWarning("equip: for type %d = %d\n", type, val);
     if (!tdata || tdata->clientVersion < 9)
     {
@@ -318,6 +320,8 @@ void send_slave_say(TBL_PC *sd,
                     const char *const name,
                     const char *const message)
 {
+    if (!sd || !message)
+        return;
     const int len = 24 + 7 + strlen(message);
     char *buf = NULL;
     CREATE(buf, char, len);
@@ -343,6 +347,8 @@ void send_online_list(int fd, const char *buf, unsigned size)
 
 void send_client_command(TBL_PC *sd, const char *const command)
 {
+    if (!command)
+        return;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data || data->clientVersion < 8)
         return;
@@ -370,7 +376,7 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
     WBUFW(buf, 9) = val2;
     clif->send(buf, 11, bl, target);
     WBUFW(buf, 0) = 0xb17;
-    if (data)
+    if (data && sd)
     {
         //ShowWarning("equip: for type %d\n", type);
         for (i = 0; i < data->slot; i++ )

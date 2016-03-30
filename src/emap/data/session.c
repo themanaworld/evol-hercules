@@ -19,6 +19,8 @@
 
 struct SessionExt *session_get(int fd)
 {
+    if (fd < 0)
+        return NULL;
     struct SessionExt *data = getFromSession(sockt->session[fd], 0);
     if (!data)
     {

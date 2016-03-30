@@ -222,7 +222,7 @@ void send_additional_slots(int fd, struct char_session_data* sd)
     short card2;
     short card3;
 
-    if (sd->version < 9)
+    if (!sd || sd->version < 9)
         return;
 
     SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);

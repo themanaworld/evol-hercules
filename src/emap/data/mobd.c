@@ -34,7 +34,7 @@ struct MobdExt *mobd_get(struct mob_db *md)
 
 struct MobdExt *mobd_get_by_mob(TBL_MOB *md)
 {
-    if (!mob)
+    if (!md)
         return NULL;
 
     return mobd_get(mob->db_data[md->class_]);

@@ -77,7 +77,7 @@ static int craft_get_item_id(struct craft_db_entry *entry,
                              const char *const name,
                              const char *const fieldName)
 {
-    if (!strcmp(name, "Empty"))
+    if (!strcmp(name, "Empty") || !entry || !errorMessage)
         return 0;
 
     struct item_data* id = itemdb->search_name(name);
@@ -94,7 +94,7 @@ static void craft_read_source_inventory(struct craft_db_entry *entry,
 {
     int i32;
     int i = 0;
-    if (!tt || !config_setting_is_group(tt))
+    if (!entry || !tt || !config_setting_is_group(tt))
         return;
 
     struct config_setting_t *item;
@@ -139,7 +139,7 @@ static void craft_read_create_items(struct craft_db_entry *entry,
 {
     int i32;
     int i = 0;
-    if (!tt || !config_setting_is_group(tt))
+    if (!entry || !tt || !config_setting_is_group(tt))
         return;
 
     struct config_setting_t *item;
@@ -190,7 +190,7 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
 {
     int i32;
     int i = 0;
-    if (!t)
+    if (!entry || !t || !vector)
         return;
 
     struct config_setting_t *tt = libconfig->setting_get_member(t, fieldName);

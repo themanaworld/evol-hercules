@@ -79,7 +79,7 @@ int emap_addflooritem_post(int retVal,
         if (fitem->cleartimer != INVALID_TIMER)
         {
             int timeout = battle->bc->flooritem_lifetime;
-            struct ItemdExt *data =  itemd_get_by_item(item);
+            struct ItemdExt *data = itemd_get_by_item(item);
             if (data)
                 timeout = data->floorLifeTime;
             timer->delete(fitem->cleartimer, map->clearflooritem_timer);
@@ -184,6 +184,8 @@ void emap_online_list(int fd)
 static int getWalkMask(const struct block_list *bl)
 {
     int walkMask = 0;
+    if (!bl)
+        return 0;
     if (bl->type == BL_NPC)
     {
         TBL_NPC *nd = (TBL_NPC *)bl;
@@ -367,8 +369,12 @@ void emap_setgatcell2(int16 m, int16 x, int16 y, int gat)
 {
     int j;
 
-    if (m < 0 || m >= map->count ||
-        x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
+    if (m < 0 ||
+        m >= map->count ||
+        x < 0 ||
+        x >= map->list[m].xs ||
+        y < 0 ||
+        y >= map->list[m].ys)
     {
         return;
     }

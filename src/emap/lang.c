@@ -205,6 +205,8 @@ const char* lang_pctrans(const char *str, TBL_PC *sd)
 
 int lang_getId(const char *str)
 {
+    if (!str)
+        return -1;
     char *str1 = aStrdup(str);
     char *str2 = NULL;
     int f;

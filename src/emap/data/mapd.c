@@ -19,6 +19,9 @@
 
 struct MapdExt *mapd_get(int m)
 {
+    if (m < 0 || m >= map->count)
+        return NULL;
+
     struct map_data *md = &map->list[m];
     struct MapdExt *data = getFromMAPD(md, 0);
     if (!data)

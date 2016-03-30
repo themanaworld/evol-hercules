@@ -154,6 +154,8 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
 
 struct craft_vardata *craft_str_to_craft(const char *craftstr)
 {
+    if (!craftstr)
+        return false;
     struct strutil_data *craftdata = strutil_split(craftstr, '|', craft_inventory_size + 1);
     if (!craftdata)
         return false;
@@ -236,6 +238,8 @@ int str_to_craftvar(TBL_PC *sd, const char *craftstr)
 void craft_dump(TBL_PC *sd, const int id)
 {
     struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!sd)
+        return;
     if (!craft)
     {
         ShowError("Craft object with id %d not exists.\n", id);
@@ -312,6 +316,8 @@ struct craft_slot *craft_get_slot(const int id, const int slot)
 bool craft_validate(TBL_PC *sd, const int id)
 {
     struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!sd)
+        return false;
     if (!craft)
     {
         ShowError("Craft object with id %d not exists.\n", id);
@@ -364,6 +370,8 @@ static int find_inventory_item(TBL_PC *sd,
                                const int amount)
 {
     int i;
+    if (!sd)
+        return -1;
     for (i = 0; i < MAX_INVENTORY; i++)
     {
         if (sd->status.inventory[i].nameid == id &&
@@ -380,6 +388,8 @@ static int find_inventory_equipped_item(TBL_PC *sd,
                                         const int id)
 {
     int i;
+    if (!sd)
+        return -1;
     for (i = 0; i < MAX_INVENTORY; i++)
     {
         if (sd->status.inventory[i].nameid == id &&
@@ -396,6 +406,8 @@ static int find_local_inventory_item(struct item_pair *local_inventory,
                                      const int id)
 {
     int i;
+    if (!local_inventory)
+        return -1;
     for (i = 0; i < MAX_INVENTORY; i++)
     {
         struct item_pair *pair = &local_inventory[i];
@@ -413,6 +425,8 @@ static bool check_items_collection(struct item_pair *local_inventory,
 {
     int len = VECTOR_LENGTH(*vector);
     int i;
+    if (!local_inventory)
+        return false;
     if (len > 0)
     {
         for (i = 0; i < len; i ++)
@@ -467,6 +481,8 @@ static bool check_skills(TBL_PC *sd,
 {
     int len = VECTOR_LENGTH(*vector);
     int i;
+    if (!sd)
+        return false;
     if (len > 0)
     {
         for (i = 0; i < len; i ++)
@@ -487,6 +503,8 @@ static bool check_quests(TBL_PC *sd,
 {
     int len = VECTOR_LENGTH(*vector);
     int i;
+    if (!sd)
+        return false;
     if (len > 0)
     {
         for (i = 0; i < len; i ++)
@@ -508,6 +526,8 @@ static bool check_inventories(TBL_PC *sd,
                               struct craft_db_entry *entry,
                               struct item_pair *craft_inventory)
 {
+    if (!entry || !craft_inventory)
+        return false;
     int inv_count = VECTOR_LENGTH(entry->inventories);
     bool correct = true;
 
@@ -543,6 +563,8 @@ static void simplify_craftvar(TBL_PC *sd,
 {
     int i;
 
+    if (!craft || !craft_inventory)
+        return false;
     // combine different slots from inventory var into one slot with id and amount
     for (i = 0; i < craft_inventory_size; i ++)
     {
@@ -571,6 +593,8 @@ static void init_inventory_copy(TBL_PC *sd,
                                 struct item_pair *local_inventory)
 {
     int f;
+    if (!sd || !local_inventory)
+        return;
     for (f = 0; f < MAX_INVENTORY; f ++)
     {
         const int id = sd->status.inventory[f].nameid;
@@ -596,6 +620,8 @@ static bool apply_craft_inventory(struct craft_db_inventory *entry_inventory,
                                   struct item_pair *local_inventory)
 {
     int f;
+    if (!entry_inventory || !craft || !local_inventory)
+        return false;
     for (f = 0; f < craft_inventory_size; f ++)
     {
         struct item_pair *entryItem = &entry_inventory->items[f];
@@ -713,6 +739,8 @@ int craft_find_entry(TBL_PC *sd,
 static bool craft_delete_items(TBL_PC *sd,
                                struct craft_items_collection *vector)
 {
+    if (!sd || !vector)
+        return false;
     int len = VECTOR_LENGTH(*vector);
     int i;
     if (len > 0)
@@ -732,7 +760,8 @@ static bool craft_delete_items(TBL_PC *sd,
 static bool craft_create_items(TBL_PC *sd,
                                struct craft_db_entry *entry)
 {
-    // +++ for now used 0 index, but need select random
+    if (!sd || !entry)
+        return false;
     const int vars = VECTOR_LENGTH(entry->create_items);
     struct craft_items_collection *vector = &VECTOR_INDEX(entry->create_items,
         (rand() % (vars * 10)) / 10);
@@ -805,10 +834,12 @@ bool craft_use(TBL_PC *sd,
                const int id)
 {
     struct craft_vardata *craft = idb_get(craftvar_db, id);
+    if (!sd)
+        return false;
     if (!craft)
     {
         ShowError("Craft object with id %d not exists.\n", id);
-        return -1;
+        return false;
     }
     struct craft_db_entry *entry = idb_get(craftconf_db, craft->entry_id);
     if (!entry)
