@@ -13,6 +13,7 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/sql.h"
 #include "common/timer.h"
 #include "char/char.h"
 #include "char/geoip.h"

@@ -13,6 +13,7 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/sql.h"
 #include "common/timer.h"
 #include "char/char.h"
 #include "char/inter.h"
@@ -225,7 +226,7 @@ void send_additional_slots(int fd, struct char_session_data* sd)
     if (!sd || sd->version < 9)
         return;
 
-    SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
+    struct SqlStmt* stmt = SQL->StmtMalloc(inter->sql_handle);
     if (stmt == NULL)
     {
         SqlStmt_ShowDebug(stmt);

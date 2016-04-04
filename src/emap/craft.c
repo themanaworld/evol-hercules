@@ -47,8 +47,8 @@ static void delete_craft_var(struct craft_vardata *craft)
     }
 }
 
-static int delete_craftvar_sub(DBKey key __attribute__ ((unused)),
-                               DBData *data,
+static int delete_craftvar_sub(union DBKey key __attribute__ ((unused)),
+                               struct DBData *data,
                                va_list args __attribute__ ((unused)))
 {
     struct craft_vardata *craft = DB->data2ptr(data);
@@ -665,7 +665,7 @@ static int craft_get_recipe(TBL_PC *sd,
 
     init_inventory_copy(sd, &local_inventory[0]);
 
-    DBIterator* iter = db_iterator(craftconf_db);
+    struct DBIterator* iter = db_iterator(craftconf_db);
 
     for (entry = dbi_first(iter); dbi_exists(iter); entry = dbi_next(iter))
     {

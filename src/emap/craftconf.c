@@ -422,8 +422,8 @@ static void delete_craft_entry(struct craft_db_entry *entry)
     VECTOR_CLEAR(entry->create_items);
 }
 
-static int delete_craftconf_sub(DBKey key __attribute__ ((unused)),
-                                DBData *data,
+static int delete_craftconf_sub(union DBKey key __attribute__ ((unused)),
+                                struct DBData *data,
                                 va_list args __attribute__ ((unused)))
 {
     struct craft_db_entry *craft = DB->data2ptr(data);

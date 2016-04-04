@@ -37,8 +37,8 @@ void do_init_langs (void)
     langsdb_readdb ();
 }
 
-static int delete_lang_sub(DBKey key __attribute__ ((unused)),
-                           DBData *data,
+static int delete_lang_sub(union DBKey key __attribute__ ((unused)),
+                           struct DBData *data,
                            va_list args __attribute__ ((unused)))
 {
     int f;

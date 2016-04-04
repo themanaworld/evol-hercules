@@ -122,7 +122,7 @@ void emap_online_list(int fd)
     const int gpoupLevel = pc_get_group_level(ssd);
     data1->onlinelistlasttime = t;
 
-    DBIterator* iter = db_iterator(map->pc_db);
+    struct DBIterator* iter = db_iterator(map->pc_db);
 
     for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter))
     {
@@ -412,7 +412,7 @@ void emap_iwall_get(struct map_session_data *sd)
         return;
     }
 
-    DBIterator* iter = db_iterator(map->iwall_db);
+    struct DBIterator* iter = db_iterator(map->iwall_db);
     struct WallData *wall;
     for (wall = dbi_first(iter); dbi_exists(iter); wall = dbi_next(iter))
     {
