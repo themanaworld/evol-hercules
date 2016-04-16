@@ -14,6 +14,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "login/account.h"
+#include "login/lclif.h"
 #include "login/login.h"
 
 #include "elogin/config.h"
@@ -33,7 +34,7 @@ void login_parse_version(int fd)
 
     if (clientVersion < 2)
     {
-        login->login_error(fd, 5);
+        lclif->login_error(fd, 5);
         return;
     }
 
@@ -41,15 +42,14 @@ void login_parse_version(int fd)
     send_server_version(fd);
 }
 
-int elogin_parse_client_login_pre(int *fdPtr,
-                                  struct login_session_data* sd __attribute__ ((unused)),
-                                  const char *const ip __attribute__ ((unused)))
+int elogin_client_login_pre(int *fdPtr,
+                            struct login_session_data* sd __attribute__ ((unused)))
 {
     int fd = *fdPtr;
     uint16 command = RFIFOW(fd,0);
     if (command != 0x64)
     {
-        login->login_error(fd, 3);
+        lclif->login_error(fd, 3);
         hookStop();
         return 1;
     }
@@ -58,13 +58,13 @@ int elogin_parse_client_login_pre(int *fdPtr,
     int len = safestrnlen(username, NAME_LENGTH);
     if (clientVersion < 2)
     {
-        login->login_error(fd, 5);
+        lclif->login_error(fd, 5);
         hookStop();
         return 1;
     }
     else if (len >= 2 && username[len - 2] == '_' && memchr("FfMm", username[len - 1], 4))
     {
-        login->login_error(fd, 3);
+        lclif->login_error(fd, 3);
         hookStop();
         return 1;
     }
@@ -75,9 +75,8 @@ int elogin_parse_client_login_pre(int *fdPtr,
     return 0;
 }
 
-int elogin_parse_client_login_post(int retVal, int *fdPtr,
-                                   struct login_session_data* sd,
-                                   const char *const ip __attribute__ ((unused)))
+int elogin_client_login_post(int retVal, int *fdPtr,
+                             struct login_session_data* sd)
 {
     sd = (struct login_session_data*)sockt->session[*fdPtr]->session_data;
     if (sd)
@@ -98,7 +97,7 @@ void elogin_parse_client_login2(int fd)
     int len = safestrnlen(username, NAME_LENGTH);
     if (len < 2 || !(username[len - 2] == '_') || !memchr("FfMm", username[len - 1], 4))
     {
-        login->login_error(fd, 3);
+        lclif->login_error(fd, 3);
         return;
     }
 
@@ -123,7 +122,7 @@ void elogin_parse_client_login2(int fd)
     if (e_mail_check(email) == 0)
     {
         ShowNotice("Attempt to create an e-mail REFUSED - e-mail is invalid (ip: %s)\n", ip);
-        login->login_error(fd, 11);
+        lclif->login_error(fd, 11);
         return;
     }
 
