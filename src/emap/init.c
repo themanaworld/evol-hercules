@@ -188,6 +188,7 @@ HPExport void plugin_init (void)
     addHookPre("pc->dropitem", epc_dropitem_pre);
     addHookPre("pc->takeitem", epc_takeitem_pre);
     addHookPre("pc->insert_card", epc_insert_card_pre);
+    addHookPre("pc->process_chat_message", epc_process_chat_message_pre);
     addHookPre("mob->deleteslave_sub", emob_deleteslave_sub);
     addHookPre("mob->read_db_additional_fields", emob_read_db_additional_fields);
     addHookPre("npc->parse_unknown_mapflag", enpc_parse_unknown_mapflag);

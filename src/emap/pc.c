@@ -660,3 +660,39 @@ bool epc_adoption_pre(struct map_session_data *p1_sd,
     hookStop();
     return true;
 }
+
+// copy from pc_process_chat_message
+// exception only prevent call gm command if string start with ##
+bool epc_process_chat_message_pre(struct map_session_data *sd, const char *message)
+{
+    if (message && strlen(message) > 2 && message[0] == '#' && message[1] == '#')
+    {
+        // do nothing
+    }
+    else if (atcommand->exec(sd->fd, sd, message, true))
+    {
+        hookStop();
+        return false;
+    }
+
+    if (!pc->can_talk(sd))
+    {
+        hookStop();
+        return false;
+    }
+
+    if (battle->bc->min_chat_delay != 0)
+    {
+        if (DIFF_TICK(sd->cantalk_tick, timer->gettick()) > 0)
+        {
+            hookStop();
+            return false;
+        }
+        sd->cantalk_tick = timer->gettick() + battle->bc->min_chat_delay;
+    }
+
+    pc->update_idle_time(sd, BCIDLE_CHAT);
+
+    hookStop();
+    return true;
+}

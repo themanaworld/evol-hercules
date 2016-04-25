@@ -74,4 +74,7 @@ bool epc_adoption_pre(struct map_session_data *p1_sd,
                       struct map_session_data *p2_sd,
                       struct map_session_data *b_sd);
 
+bool epc_process_chat_message_pre(struct map_session_data *sd,
+                                  const char *message);
+
 #endif  // EVOL_MAP_PC
