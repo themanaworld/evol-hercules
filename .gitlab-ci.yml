@@ -1,0 +1,31 @@
+stages:
+  - build
+  - success
+  - failure
+
+before_script:
+  - uname -a
+
+# simple builds
+
+gcc-5:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc5.sh
+  image: debian:unstable
+
+# reports
+
+success:
+  stage: success
+  script:
+  - echo "do nothing"
+  image: debian:unstable
+  when: on_success
+
+failure:
+  stage: failure
+  script:
+  - echo "do nothing"
+  image: debian:unstable
+  when: on_failure
