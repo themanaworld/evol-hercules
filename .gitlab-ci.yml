@@ -17,7 +17,7 @@ gcc-5:
 
 # tests
 
-plugin_validator:
+plugin-validator:
   stage: test
   script:
   - ./tools/ci/jobs/validate.sh
