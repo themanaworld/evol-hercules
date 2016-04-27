@@ -71,10 +71,10 @@ function check_error {
 
 function run_configure_simple {
     echo "autoreconf -i"
+    mkdir m4
     autoreconf -i
     check_error $?
     mkdir build
-    mkdir m4
     cd build
     echo "../configure $*"
     ../configure $*
