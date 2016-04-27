@@ -313,29 +313,29 @@ char *MD5_saltcrypt(const char *key, const char *salt)
     if (!salt)
         return 0;
 
-	char buf[66], *sbuf = buf+32;
-	static char obuf[33];
+    char buf[66], *sbuf = buf+32;
+    static char obuf[33];
 
-	// hash the key then the salt
-	// buf ends up as a 64char null terminated string
-	MD5_String(key, buf);
-	MD5_String(salt, sbuf);
+    // hash the key then the salt
+    // buf ends up as a 64char null terminated string
+    MD5_String(key, buf);
+    MD5_String(salt, sbuf);
 
-	// Hash the buffer back into sbuf
-	MD5_String(buf, sbuf);
+    // Hash the buffer back into sbuf
+    MD5_String(buf, sbuf);
 
-	snprintf(obuf, 32, "!%s$%s", salt, sbuf);
-	return(obuf);
+    snprintf(obuf, 32, "!%s$%s", salt, sbuf);
+    return(obuf);
 }
 
 char *make_salt(void)
 {
-	static char salt[6];
-	int i;
-	for (i=0; i<5; i++)
-		salt[i] = (char)((mt_rand() % 78) + 48);
-	salt[5] = '\0';
-	return(salt);
+    static char salt[6];
+    int i;
+    for (i=0; i<5; i++)
+        salt[i] = (char)((mt_rand() % 78) + 48);
+    salt[5] = '\0';
+    return(salt);
 }
 
 int pass_ok(const char *password, const char *crypted)
@@ -343,9 +343,9 @@ int pass_ok(const char *password, const char *crypted)
     if (!password || !crypted)
         return 0;
 
-	char buf[40], *salt=buf+1;
+    char buf[40], *salt=buf+1;
 
-	strncpy(buf, crypted, 40);
+    strncpy(buf, crypted, 40);
     buf[39] = 0;
     char *ptr = strchr(buf, '$');
     if (ptr)
@@ -362,7 +362,7 @@ int pass_ok(const char *password, const char *crypted)
 //            return(1);
     }
 
-	return(0);
+    return(0);
 }
 
 // [M|h]ashes up an IP address and a secret key
