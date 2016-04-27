@@ -141,4 +141,14 @@ function clone_servercode {
     gitclone https://gitlab.com/evol/hercules.git server-code
 }
 
+function build_init {
+    clone_servercode
+    mkdir server-code/src/evol
+    mkdir -p server-data/plugins
+    cp -r evol-hercules/* server-code/src/evol/
+    check_error $?
+    cd server-code/src/evol
+    check_error $?
+}
+
 aptget_update

@@ -15,6 +15,18 @@ gcc-5:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
   image: debian:unstable
 
+gcc-6:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc6.sh --enable-werror
+  image: debian:unstable
+
+clang-3.9:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang39.sh --enable-werror
+  image: debian:unstable
+
 # tests
 
 plugin-validator:

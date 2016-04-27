@@ -1,12 +1,12 @@
 #!/bin/bash
 
-export CC=gcc-5
-export CXX=g++-5
-export LOGFILE=gcc5.log
+export CC=clang-3.9
+export CXX=clang++-3.9
+export LOGFILE=gcc6.log
 
 source ./tools/ci/scripts/init.sh
 
-aptget_install gcc-5 \
+aptget_install clang-3.9 \
     git-core \
     make autoconf automake autopoint \
     libtool libmysqlclient-dev libz-dev libpcre3-dev
