@@ -564,7 +564,7 @@ static void simplify_craftvar(TBL_PC *sd,
     int i;
 
     if (!craft || !craft_inventory)
-        return false;
+        return;
     // combine different slots from inventory var into one slot with id and amount
     for (i = 0; i < craft_inventory_size; i ++)
     {
