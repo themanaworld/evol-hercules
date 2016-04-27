@@ -74,6 +74,7 @@ function run_configure_simple {
     autoreconf -i
     check_error $?
     mkdir build
+    mkdir m4
     cd build
     echo "../configure $*"
     ../configure $*
