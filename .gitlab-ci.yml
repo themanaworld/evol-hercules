@@ -9,7 +9,7 @@ before_script:
 
 # simple builds
 
-.gcc-5:
+gcc-5:
   stage: build
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
