@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - success
   - failure
 
@@ -8,10 +9,18 @@ before_script:
 
 # simple builds
 
-gcc-5:
+.gcc-5:
   stage: build
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
+  image: debian:unstable
+
+# tests
+
+"plugin validator":
+  stage: test
+  script:
+  - ./tools/ci/jobs/validate.sh
   image: debian:unstable
 
 # reports

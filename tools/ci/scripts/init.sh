@@ -11,8 +11,8 @@ cat /etc/os-release
 rm ${ERRFILE}
 
 function do_init {
-    $CC --version
-    $CXX --version
+    cd ..
+    ln -s evol-hercules server-plugin
 }
 
 function aptget_update {
@@ -47,6 +47,19 @@ function aptget_install {
             apt-get -y -qq install $*
         fi
     fi
+}
+
+function gitclone {
+    git clone $*
+    if [ "$?" != 0 ]; then
+        sleep 1s
+        git clone $*
+        if [ "$?" != 0 ]; then
+            sleep 3s
+            git clone $*
+        fi
+    fi
+    check_error $?
 }
 
 function check_error {
@@ -117,6 +130,14 @@ function run_mplint {
     mplint/src/mplint $* >$ERRFILE
     check_error $?
     run_check_warnings
+}
+
+function clone_tool {
+    gitclone https://gitlab.com/evol/evol-tools.git tools
+}
+
+function clone_servercode {
+    gitclone https://gitlab.com/evol/hercules.git server-code
 }
 
 aptget_update
