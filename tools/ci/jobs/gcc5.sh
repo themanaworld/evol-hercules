@@ -14,6 +14,7 @@ aptget_install gcc-5 g++-5 \
 do_init
 clone_servercode
 mkdir server-code/src/evol
+mkdir -p server-data/plugins
 cp -r evol-hercules/* server-code/src/evol/
 check_error $?
 cd server-code/src/evol
