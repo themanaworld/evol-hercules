@@ -459,3 +459,18 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
     strcpy(WFIFOP (fd, 8), skin);
     WFIFOSET(fd, sz);
 }
+
+void send_pc_killed(int fd, struct block_list* bl)
+{
+    struct SessionExt *data = session_get(fd);
+    if (!data || data->clientVersion < 17)
+        return;
+
+    WFIFOHEAD (fd, 6);
+    WFIFOW(fd, 0) = 0xb1d;
+    if (bl)
+        WFIFOL(fd, 2) = bl->id;
+    else
+        WFIFOL(fd, 2) = 0;
+    WFIFOSET(fd, 6);
+}

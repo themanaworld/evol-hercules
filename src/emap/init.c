@@ -259,6 +259,7 @@ HPExport void plugin_init (void)
     addHookPost("pc->equipitem", epc_equipitem_post);
     addHookPost("pc->unequipitem", epc_unequipitem_post);
     addHookPost("pc->setnewpc", epc_setnewpc_post);
+    addHookPost("pc->dead", epc_dead_post);
     addHookPost("pc->delitem", epc_delitem_post);
     addHookPost("pc->dropitem", epc_dropitem_post);
     addHookPost("pc->takeitem", epc_takeitem_post);

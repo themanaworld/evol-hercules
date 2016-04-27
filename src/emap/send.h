@@ -48,5 +48,7 @@ void send_setwall_single(int fd,
 void send_pc_skin(int fd,
                   int npcId,
                   const char *const skin);
+void send_pc_killed(int fd,
+                    struct block_list* bl);
 
 #endif  // EVOL_MAP_SEND

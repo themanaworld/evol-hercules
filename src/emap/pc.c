@@ -696,3 +696,16 @@ bool epc_process_chat_message_pre(struct map_session_data *sd, const char *messa
     hookStop();
     return true;
 }
+
+int epc_dead_post(int retVal,
+                  struct map_session_data *sd,
+                  struct block_list *src)
+{
+    ShowInfo("epc_dead_post\n");
+    if (retVal > 0)
+    {
+        if (sd)
+            send_pc_killed(sd->fd, src);
+    }
+    return retVal;
+}
