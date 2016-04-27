@@ -9,7 +9,7 @@ source ./tools/ci/scripts/init.sh
 aptget_install gcc-5 g++-5 \
     git-core \
     make autoconf automake autopoint \
-    littool libmysqlclient-dev libz-dev libpcre3-dev
+    libtool libmysqlclient-dev libz-dev libpcre3-dev
 
 do_init
 clone_servercode
