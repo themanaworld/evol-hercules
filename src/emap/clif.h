@@ -45,7 +45,7 @@ void eclif_dropflooritem(struct flooritem_data* fitem);
 void eclif_sendbgemblem_area(struct map_session_data *sd);
 void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd);
 void eclif_disp_message(struct block_list* src,
-                        const char* mes, size_t *lenPtr,
+                        const char* mes,
                         enum send_target *targetPtr);
 
 void eclif_set_unit_idle_old(struct block_list* bl,

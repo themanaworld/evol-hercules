@@ -1307,18 +1307,19 @@ void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
 }
 
 void eclif_disp_message(struct block_list* src,
-                        const char* mes, size_t *lenPtr,
+                        const char* mes,
                         enum send_target *targetPtr)
 {
     unsigned char buf[256];
 
-    int len = *lenPtr;
+    nullpo_retv(mes);
+
+    int len = strlen(mes);
 
     if (len == 0 || !isInit)
         return;
 
     nullpo_retv(src);
-    nullpo_retv(mes);
 
     if (len > sizeof(buf) - 5)
     {
