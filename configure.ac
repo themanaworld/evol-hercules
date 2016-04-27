@@ -74,6 +74,26 @@ AC_ARG_ENABLE(
 )
 AM_CONDITIONAL(ENABLE_GPROF, test x$enable_gprof = xyes)
 
+AC_ARG_ENABLE(
+    [werror],
+    AC_HELP_STRING(
+        [--enable-werror],
+        [
+            Fail build if warning present]
+        ]
+    ),
+    [
+        enable_werror="$enableval"
+        case $enableval in
+            "no");;
+            "yes");;
+            *) AC_MSG_ERROR([[invalid argument --enable-werror=$disableval... stopping]]);;
+        esac
+    ],
+    [enable_werror="no"]
+)
+AM_CONDITIONAL(ENABLE_WERROR, test x$enable_werror = xyes)
+
 AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
     [
         AC_MSG_CHECKING([whether $CC supports -W$1])

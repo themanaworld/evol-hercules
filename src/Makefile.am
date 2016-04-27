@@ -142,6 +142,10 @@ if ENABLE_GPROF
 SHARED_CFLAGS += "-pg"
 endif
 
+if ENABLE_WERROR
+SHARED_CFLAGS += "-Werror"
+endif
+
 lib_LTLIBRARIES = libevol_char.la libevol_login.la libevol_map.la
 libevol_char_la_SOURCES = ${CHAR_SRC}
 libevol_char_la_LDFLAGS = ${SHARED_LDFLAGS}
