@@ -11,7 +11,7 @@ before_script:
 gcc-5:
   stage: build
   script:
-  - ./tools/ci/jobs/gcc5.sh
+  - ./tools/ci/jobs/gcc5.sh --enable-werror
   image: debian:unstable
 
 # reports
