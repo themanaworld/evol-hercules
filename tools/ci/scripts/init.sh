@@ -65,7 +65,7 @@ function gitclone {
 function check_error {
     if [ "$1" != 0 ]; then
         echo "error $1"
-        exit $result
+        exit $1
     fi
 }
 
