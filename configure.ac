@@ -35,24 +35,24 @@ AC_ARG_ENABLE(
 AM_CONDITIONAL(ENABLE_SANITIZE, test x$enable_sanitize = xyes)
 
 AC_ARG_ENABLE(
-    [static],
+    [static-build],
     AC_HELP_STRING(
-        [--enable-static],
+        [--enable-static-build],
         [
             Enables or Disables Statick Linking (STATIC is disabled by default)
         ]
     ),
     [
-        enable_static="$enableval"
+        enable_static_build="$enableval"
         case $enableval in
             "no");;
             "yes");;
-            *) AC_MSG_ERROR([[invalid argument --enable-static=$disableval... stopping]]);;
+            *) AC_MSG_ERROR([[invalid argument --enable-static-build=$disableval... stopping]]);;
         esac
     ],
-    [enable_static="no"]
+    [enable_static_build="no"]
 )
-AM_CONDITIONAL(ENABLE_STATIC, test x$enable_static = xyes)
+AM_CONDITIONAL(ENABLE_STATIC_BUILD, test x$enable_static_build = xyes)
 
 AC_ARG_ENABLE(
     [gprof],
@@ -93,6 +93,28 @@ AC_ARG_ENABLE(
     [enable_werror="no"]
 )
 AM_CONDITIONAL(ENABLE_WERROR, test x$enable_werror = xyes)
+
+OLD_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS -rdynamic"
+AC_MSG_CHECKING([whether $CC accepts -rdynamic])
+AC_LINK_IFELSE(
+    [AC_LANG_SOURCE([
+        int main(int argc, char **argv)
+        {
+            return 0;
+        }
+    ])],
+    [
+        AC_MSG_RESULT([yes])
+    ],
+    [
+        AC_MSG_RESULT([no])
+        LDFLAGS="$OLD_LDFLAGS"
+    ],
+    [
+        AC_MSG_RESULT([guessing no])
+    ]
+)
 
 AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
     [

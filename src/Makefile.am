@@ -112,7 +112,7 @@ MAP_SRC = emap/atcommand.c \
 
 # need remove -Wno-unused
 
-SHARED_CFLAGS = ${CFLAGS} -pipe -ffast-math -fvisibility=hidden -rdynamic -std=c99 -Wall -Wextra -Wno-sign-compare -Wno-unused \
+SHARED_CFLAGS = ${CFLAGS} -pipe -ffast-math -fvisibility=hidden -std=c99 -Wall -Wextra -Wno-sign-compare -Wno-unused \
     -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty -DPACKETVER=20150000
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
@@ -134,7 +134,7 @@ SHARED_LDFLAGS += -lasan -lubsan -fsanitize=address \
 -fsanitize=enum -fsanitize=vptr
 endif
 
-if ENABLE_STATIC
+if ENABLE_STATIC_BUILD
 SHARED_CFLAGS += "-static-libgcc"
 endif
 
