@@ -114,5 +114,5 @@ int mt_rand (void)
     while (r >> 16)
         r = (r & 0xFFFF) + (r >> 16);
 
-    return (r);
+    return (int)(r);
 }

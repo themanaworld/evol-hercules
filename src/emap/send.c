@@ -274,7 +274,7 @@ void send_changemusic_brodcast(const int map, const char *music)
         return;
 
     struct block_list bl;
-    const int sz = strlen (music) + 5;
+    const int sz = (int)strlen(music) + 5;
     char *buf;
 
     CREATE(buf, char, sz);
@@ -292,7 +292,7 @@ void send_changenpc_title (TBL_PC *sd, const int npcId, const char *name)
         return;
 
     const int fd = sd->fd;
-    const int len = strlen (name);
+    const int len = (int)strlen(name);
     const int sz = len + 5 + 4 + 2;
     WFIFOHEAD (fd, sz);
     WFIFOW (fd, 0) = 0xb06;
@@ -322,7 +322,7 @@ void send_slave_say(TBL_PC *sd,
 {
     if (!sd || !message)
         return;
-    const int len = 24 + 7 + strlen(message);
+    const int len = 24 + 7 + (int)strlen(message);
     char *buf = NULL;
     CREATE(buf, char, len);
 
@@ -353,7 +353,7 @@ void send_client_command(TBL_PC *sd, const char *const command)
     if (!data || data->clientVersion < 8)
         return;
 
-    const unsigned int len = strlen(command);
+    const unsigned int len = (unsigned int)strlen(command);
     const int fd = sd->fd;
     WFIFOHEAD (fd, len);
     WFIFOW (fd, 0) = 0xb16;
@@ -451,7 +451,7 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
     if (!data || data->clientVersion < 15)
         return;
 
-    const int sz = strlen(skin) + 9;
+    const int sz = (int)strlen(skin) + 9;
     WFIFOHEAD (fd, sz);
     WFIFOW(fd, 0) = 0xb1c;
     WFIFOW(fd, 2) = sz;

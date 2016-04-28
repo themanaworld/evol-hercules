@@ -34,7 +34,7 @@ void send_update_host(int fd)
 {
     if (!update_server)
         return;
-    const int sz = strlen(update_server);
+    const int sz = (int)strlen(update_server);
     WFIFOHEAD(fd, sz + 4);
     WFIFOW(fd, 0) = 0x63;
     WFIFOW(fd, 2) = sz + 4;

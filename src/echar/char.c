@@ -103,12 +103,14 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
 
 static int tmpVersion = 0;
 
-void echar_parse_char_connect_pre(int *fdPtr, struct char_session_data *sd, uint32 *ipl)
+void echar_parse_char_connect_pre(int *fdPtr,
+                                  struct char_session_data *sd __attribute__ ((unused)),
+                                  uint32 *ipl __attribute__ ((unused)))
 {
     tmpVersion = RFIFOW(*fdPtr, 14);
 }
 
-void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl)
+void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl __attribute__ ((unused)))
 {
     sd = (struct char_session_data*)sockt->session[*fdPtr]->session_data;
     if (sd)

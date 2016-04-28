@@ -483,7 +483,9 @@ static int tempN = 0;
 static int tempId = 0;
 static int tempAmount = 0;
 
-int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr)
+int epc_dropitem_pre(struct map_session_data *sd,
+                     int *nPtr,
+                     int *amountPtr __attribute__ ((unused)))
 {
     const int n = *nPtr;
     if (!sd || n < 0 || n >= MAX_INVENTORY)
@@ -513,7 +515,8 @@ int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *a
     return retVal;
 }
 
-int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem)
+int epc_takeitem_pre(struct map_session_data *sd  __attribute__ ((unused)),
+                     struct flooritem_data *fitem)
 {
     if (!fitem)
     {
@@ -527,7 +530,9 @@ int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem)
     return 1;
 }
 
-int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_data *fitem)
+int epc_takeitem_post(int retVal,
+                      struct map_session_data *sd,
+                      struct flooritem_data *fitem __attribute__ ((unused)))
 {
     if (retVal && tempN == -1 && tempId)
     {
@@ -561,7 +566,10 @@ int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equ
     return 1;
 }
 
-int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card, int *idx_equip)
+int epc_insert_card_post(int retVal,
+                         struct map_session_data* sd,
+                         int *idx_card __attribute__ ((unused)),
+                         int *idx_equip)
 {
     if (retVal && *idx_equip == tempN && tempId)
     {

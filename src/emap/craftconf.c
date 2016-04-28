@@ -27,7 +27,7 @@
 
 struct DBMap *craftconf_db = NULL;
 
-struct craft_db_entry *craft_create_db_entry(const int id)
+struct craft_db_entry *craft_create_db_entry(const int id __attribute__ ((unused)))
 {
     struct craft_db_entry *entry = aCalloc(sizeof(struct craft_db_entry), 1);
     if (!entry)
@@ -304,7 +304,9 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
         entry->var = def; \
     }
 
-static bool craft_read_db_sub(struct config_setting_t *craftt, int id, const char *source)
+static bool craft_read_db_sub(struct config_setting_t *craftt,
+                              int id __attribute__ ((unused)),
+                              const char *source)
 {
     int class_;
     int i32;

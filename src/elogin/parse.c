@@ -55,7 +55,7 @@ int elogin_client_login_pre(int *fdPtr,
     }
     char username[NAME_LENGTH];
     safestrncpy(username, RFIFOP(fd, 6), NAME_LENGTH);
-    int len = safestrnlen(username, NAME_LENGTH);
+    int len = (int)safestrnlen(username, NAME_LENGTH);
     if (clientVersion < 2)
     {
         lclif->login_error(fd, 5);
@@ -94,7 +94,7 @@ void elogin_parse_client_login2(int fd)
 
     safestrncpy(username, RFIFOP(fd, 2), NAME_LENGTH);
 
-    int len = safestrnlen(username, NAME_LENGTH);
+    int len = (int)safestrnlen(username, NAME_LENGTH);
     if (len < 2 || !(username[len - 2] == '_') || !memchr("FfMm", username[len - 1], 4))
     {
         lclif->login_error(fd, 3);

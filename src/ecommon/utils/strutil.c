@@ -28,7 +28,7 @@ struct strutil_data *strutil_split(const char *str,
     VECTOR_ENSURE(data->parts, len + 1, 1);
 
     data->len = sv->split(data->str,
-        strlen(data->str),
+        (int)strlen(data->str),
         0,
         separator,
         VECTOR_DATA(data->parts),

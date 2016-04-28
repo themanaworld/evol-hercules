@@ -97,14 +97,14 @@ int format_sub(struct script_state* st, int translate)
     }
 
     char *ptr = line;
-    int sz = strlen(line);
+    int sz = (int)strlen(line);
     while (script_hasdata(st, idx))
     {
         char *tmp = strstr(ptr, "@@");
         if (!tmp)
             break;
         const char *item = script_getstr(st, idx);
-        int len = strlen(item);
+        int len = (int)strlen(item);
         if (len > 50)
             break;
         sz += len - 2;

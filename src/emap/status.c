@@ -52,7 +52,7 @@ void estatus_set_viewdata_post(struct block_list *bl,
             if (npc->u.scr.script)
             {
                 // here some magic to set npc local variable .id to bl.id
-                const int num = reference_uid(script->add_str(".id"), 0);
+                const int num = (int)reference_uid(script->add_str(".id"), 0);
                 if (!npc->u.scr.script->local.vars)
                     npc->u.scr.script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
                 i64db_iput(npc->u.scr.script->local.vars, num, npc->bl.id);
@@ -135,8 +135,8 @@ int estatus_calc_pc_additional(struct map_session_data* sd,
 
 unsigned short estatus_calc_speed_post(unsigned short retVal,
                                        struct block_list *bl,
-                                       struct status_change *sc,
-                                       int *speed)
+                                       struct status_change *sc __attribute__ ((unused)),
+                                       int *speed __attribute__ ((unused)))
 {
     return horse_add_speed_bonus(BL_CAST(BL_PC, bl), retVal);
 }

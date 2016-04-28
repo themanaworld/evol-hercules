@@ -159,7 +159,8 @@ void eitemdb_readdb_additional_fields(int *itemid,
     hookStop();
 }
 
-void edestroy_item_data(struct item_data* self, int *free_selfPtr)
+void edestroy_item_data(struct item_data* self,
+                        int *free_selfPtr __attribute__ ((unused)))
 {
     struct ItemdExt *data = itemd_get(self);
     if (!data)

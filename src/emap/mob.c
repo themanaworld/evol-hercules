@@ -57,8 +57,8 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
 
 void emob_read_db_additional_fields(struct mob_db *entry,
                                     struct config_setting_t *it,
-                                    int *nPtr,
-                                    const char *source)
+                                    int *nPtr __attribute__ ((unused)),
+                                    const char *source  __attribute__ ((unused)))
 {
     int i32 = 0;
 
@@ -74,7 +74,7 @@ void emob_read_db_additional_fields(struct mob_db *entry,
 }
 
 int emob_read_db_mode_sub_post(int retVal,
-                               struct mob_db *entry,
+                               struct mob_db *entry  __attribute__ ((unused)),
                                struct config_setting_t *t)
 {
     struct config_setting_t *t2;

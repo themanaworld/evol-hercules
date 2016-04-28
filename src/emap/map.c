@@ -62,7 +62,7 @@ struct mapcell2
 };
 
 int emap_addflooritem_post(int retVal,
-                           const struct block_list *bl,
+                           const struct block_list *bl __attribute__ ((unused)),
                            struct item *item,
                            int *amount __attribute__ ((unused)),
                            int16 *m __attribute__ ((unused)),
@@ -169,7 +169,7 @@ void emap_online_list(int fd)
 
     }
     dbi_destroy(iter);
-    send_online_list(fd, buf, ptr - buf);
+    send_online_list(fd, buf, (unsigned int)(ptr - buf));
     aFree(buf);
 }
 
@@ -397,7 +397,13 @@ void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
     hookStop();
 }
 
-bool emap_iwall_set(int16 *m, int16 *x, int16 *y, int *size, int8 *dir, bool *shootable, const char* wall_name)
+bool emap_iwall_set(int16 *m __attribute__ ((unused)),
+                    int16 *x __attribute__ ((unused)),
+                    int16 *y __attribute__ ((unused)),
+                    int *size __attribute__ ((unused)),
+                    int8 *dir __attribute__ ((unused)),
+                    bool *shootable __attribute__ ((unused)),
+                    const char* wall_name __attribute__ ((unused)))
 {
     ShowError("Unsupported set wall function\n");
     hookStop();

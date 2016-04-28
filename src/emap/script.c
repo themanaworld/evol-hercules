@@ -20,7 +20,7 @@
 
 #define getExt2() \
     TBL_NPC *nd = NULL; \
-    int num = reference_uid(script->add_str(".id"), 0); \
+    int num = (int)reference_uid(script->add_str(".id"), 0); \
     int id = (int)i64db_iget(n->vars, num); \
     if (!id) \
         id = st->oid; \
@@ -33,7 +33,7 @@
 
 #define getExt2Ret(r) \
     TBL_NPC *nd = NULL; \
-    int num = reference_uid(script->add_str(".id"), 0); \
+    int num = (int)reference_uid(script->add_str(".id"), 0); \
     int id = (int)i64db_iget(n->vars, num); \
     if (!id) \
         id = st->oid; \
@@ -46,7 +46,7 @@
 
 #define getExt1() \
     TBL_NPC *nd = NULL; \
-    int num = reference_uid(script->add_str(".id"), 0); \
+    int num = (int)reference_uid(script->add_str(".id"), 0); \
     int id = (int)i64db_iget(n->vars, num); \
     if (!id) \
         id = st->oid; \
@@ -56,7 +56,7 @@
 
 #define getExt1Return(r) \
     TBL_NPC *nd = NULL; \
-    int num = reference_uid(script->add_str(".id"), 0); \
+    int num = (int)reference_uid(script->add_str(".id"), 0); \
     int id = (int)i64db_iget(n->vars, num); \
     if (!id) \
         id = st->oid; \
@@ -111,7 +111,11 @@ void escript_load_translations(void)
     hookStop();
 }
 
-void eset_reg_npcscope_num(struct script_state* st, struct reg_db *n, int64 *num, const char* name, int *val)
+void eset_reg_npcscope_num(struct script_state* st,
+                           struct reg_db *n,
+                           int64 *num __attribute__ ((unused)),
+                           const char* name,
+                           int *val)
 {
     if (!strcmp(name, ".lang"))
     {
@@ -297,7 +301,11 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
     return 0;
 }
 
-void eset_reg_npcscope_str(struct script_state* st, struct reg_db *n, int64 *num, const char* name, const char *str)
+void eset_reg_npcscope_str(struct script_state* st,
+                           struct reg_db *n,
+                           int64 *num __attribute__ ((unused)),
+                           const char* name,
+                           const char *str)
 {
     if (!strcmp(name, ".map$"))
     {

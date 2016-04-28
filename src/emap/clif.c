@@ -114,7 +114,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
             return;
         }
         const char *tr = lang_pctrans(((TBL_NPC*)bl)->name, sd);
-        const int trLen = strlen(tr);
+        const int trLen = (int)strlen(tr);
         const int len = 8 + trLen;
         // if no recipient specified just update nearby clients
         if (fd == 0)
@@ -177,7 +177,7 @@ void eclif_charnameack(int *fdPtr, struct block_list *bl)
                 break;
         }
         const char *tr = lang_pctrans(ptr, sd);
-        const int trLen = strlen(tr);
+        const int trLen = (int)strlen(tr);
         const int len = 8 + trLen;
 
         // if no recipient specified just update nearby clients
@@ -1314,7 +1314,7 @@ void eclif_disp_message(struct block_list* src,
 
     nullpo_retv(mes);
 
-    int len = strlen(mes);
+    int len = (int)strlen(mes);
 
     if (len == 0 || !isInit)
         return;

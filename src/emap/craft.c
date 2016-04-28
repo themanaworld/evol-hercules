@@ -522,7 +522,7 @@ static bool check_quests(TBL_PC *sd,
     return true;
 }
 
-static bool check_inventories(TBL_PC *sd,
+static bool check_inventories(TBL_PC *sd __attribute__ ((unused)),
                               struct craft_db_entry *entry,
                               struct item_pair *craft_inventory)
 {
@@ -871,7 +871,7 @@ bool craft_use(TBL_PC *sd,
     return true;
 }
 
-int craft_get_entry_code(TBL_PC *sd,
+int craft_get_entry_code(TBL_PC *sd __attribute__ ((unused)),
                          const int id)
 {
     struct craft_db_entry *entry = idb_get(craftconf_db, id);

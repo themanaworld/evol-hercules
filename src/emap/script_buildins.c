@@ -331,7 +331,7 @@ BUILDIN(requestItem)
 
         int item = 0;
 
-        if (!sd->npc_str)
+        if (!*sd->npc_str)
         {
             ShowWarning("npc string not found\n");
             script_pushint(st, 0);
@@ -379,7 +379,7 @@ BUILDIN(requestItems)
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
 
-        if (!sd->npc_str)
+        if (!*sd->npc_str)
         {
             ShowWarning("npc string not found\n");
             script_pushstr(st, aStrdup("0,0"));
@@ -416,7 +416,7 @@ BUILDIN(requestItemIndex)
 
         int item = -1;
 
-        if (!sd->npc_str)
+        if (!*sd->npc_str)
         {
             script_pushint(st, -1);
             ShowWarning("npc string not found\n");
@@ -467,7 +467,7 @@ BUILDIN(requestItemsIndex)
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
 
-        if (!sd->npc_str)
+        if (!*sd->npc_str)
         {
             script_pushstr(st, aStrdup("-1"));
             ShowWarning("npc string not found\n");
@@ -511,7 +511,7 @@ BUILDIN(requestCraft)
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
 
-        if (!sd->npc_str)
+        if (!*sd->npc_str)
         {
             ShowWarning("npc string not found\n");
             script->reportsrc(st);
