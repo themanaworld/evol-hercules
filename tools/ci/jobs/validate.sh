@@ -10,6 +10,8 @@ aptget_install git-core ca-certificates \
     make python
 
 do_init
+rm -rf tools
+rm -rf server-code
 clone_tool
 clone_servercode
 cd evol-hercules
