@@ -151,6 +151,66 @@ AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
     ]
 )
 
+AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
+    [
+        AC_MSG_CHECKING([whether $CC supports -fsanitize=$1])
+        OLD_CFLAGS="$CFLAGS"
+        CFLAGS="$CFLAGS -fsanitize=$1"
+        OLD_LDFLAGS="$LDFLAGS"
+        LDFLAGS="$LDFLAGS -fsanitize=$1"
+        AC_COMPILE_IFELSE(
+            [AC_LANG_SOURCE([int foo;])],
+            [
+                AC_MSG_RESULT([yes])
+            ],
+            [
+                AC_MSG_RESULT([no])
+
+                AC_MSG_CHECKING([whether $CC requires -fsanitize-undefined-trap-on-error for -fsanitize=$1])
+                CFLAGS="$CFLAGS -fsanitize-undefined-trap-on-error"
+                AC_COMPILE_IFELSE(
+                    [AC_LANG_SOURCE([int foo;])],
+                    [
+                        AC_MSG_RESULT([yes])
+                    ],
+                    [
+                        AC_MSG_RESULT([no])
+                        CFLAGS="$OLD_CFLAGS"
+                        LDFLAGS="$OLD_LDFLAGS"
+                    ]
+                )
+            ],
+            [
+                AC_MSG_RESULT([guessing no])
+                CFLAGS="$OLD_CFLAGS"
+                LDFLAGS="$OLD_LDFLAGS"
+            ]
+        )
+    ]
+)
+
+if test "$enable_sanitize" != "no" ; then
+    AC_CHECK_SANITIZER_FLAG(address)
+    # skipped because server have multiple issues: -fsanitize=alignment
+    AC_CHECK_SANITIZER_FLAG(shift)
+    AC_CHECK_SANITIZER_FLAG(integer-divide-by-zero)
+    AC_CHECK_SANITIZER_FLAG(unreachable)
+    AC_CHECK_SANITIZER_FLAG(vla-bound)
+    AC_CHECK_SANITIZER_FLAG(null)
+    AC_CHECK_SANITIZER_FLAG(return)
+    AC_CHECK_SANITIZER_FLAG(signed-integer-overflow)
+    AC_CHECK_SANITIZER_FLAG(bounds)
+    AC_CHECK_SANITIZER_FLAG(bounds-strict)
+    AC_CHECK_SANITIZER_FLAG(object-size)
+    AC_CHECK_SANITIZER_FLAG(float-divide-by-zero)
+    AC_CHECK_SANITIZER_FLAG(float-cast-overflow)
+    AC_CHECK_SANITIZER_FLAG(nonnull-attribute)
+    AC_CHECK_SANITIZER_FLAG(returns-nonnull-attribute)
+    AC_CHECK_SANITIZER_FLAG(bool)
+    AC_CHECK_SANITIZER_FLAG(enum)
+    AC_CHECK_SANITIZER_FLAG(vptr)
+fi
+
 AC_CHECK_COMPILER_WFLAG(empty-body)
 AC_CHECK_COMPILER_WFLAG(newline-eof)
 AC_CHECK_COMPILER_WFLAG(int-conversion)

@@ -12,12 +12,12 @@ mkdir m4
 autoreconf -i
 cd build
 if [[ "${CMD}" == "default" ]]; then
-    export CC=gcc-5
+    export CC=gcc
     ../configure --enable-sanitize
 elif [[ "${CMD}" == "old" ]]; then
     ../configure
 elif [[ "${CMD}" == "gprof" ]]; then
-    export CC=gcc-5
+    export CC=gcc
     ../configure --enable-gprof
 fi
 make -j3
