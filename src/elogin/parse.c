@@ -157,7 +157,7 @@ void elogin_parse_client_login2(int fd)
     return;
 }
 
-enum parsefunc_rcode elogin_parse_ping_pre(int *fd,
+enum parsefunc_rcode elogin_parse_ping_pre(int *fd __attribute__ ((unused)),
                                            struct login_session_data **sdPtr)
 {
     struct login_session_data *sd = *sdPtr;
