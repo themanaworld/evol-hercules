@@ -414,7 +414,7 @@ bool emap_iwall_set_pre(int16 *m __attribute__ ((unused)),
                         int *size __attribute__ ((unused)),
                         int8 *dir __attribute__ ((unused)),
                         bool *shootable __attribute__ ((unused)),
-                        const char *wall_namePtr __attribute__ ((unused)))
+                        const char **wall_namePtr __attribute__ ((unused)))
 {
     ShowError("Unsupported set wall function\n");
     hookStop();
