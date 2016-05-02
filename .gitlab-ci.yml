@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - success
   - failure
 
@@ -28,12 +27,6 @@ clang-3.9:
   image: debian:unstable
 
 # tests
-
-plugin-validator:
-  stage: test
-  script:
-  - ./tools/ci/jobs/validate.sh
-  image: debian:unstable
 
 # reports
 
