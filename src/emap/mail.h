@@ -4,6 +4,6 @@
 #ifndef EVOL_MAP_MAIL
 #define EVOL_MAP_MAIL
 
-bool email_invalid_operation(struct map_session_data *sd);
+bool email_invalid_operation_pre(struct map_session_data **sdPtr);
 
 #endif  // EVOL_MAP_MAIL

@@ -9,73 +9,117 @@ enum VarConst
     Const_ClientVersion = 10000
 };
 
-int epc_readparam_pre(TBL_PC* sd, int *type);
+int epc_readparam_pre(TBL_PC **sdPtr,
+                      int *type);
 
-int epc_setregistry(TBL_PC *sd, int64 *reg, int *val);
+int epc_setregistry_pre(TBL_PC **sdPtr,
+                        int64 *reg,
+                        int *val);
 
-void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr);
+void epc_equipitem_pos_pre(TBL_PC **sdPtr,
+                           struct item_data **idPtr,
+                           int *nPtr,
+                           int *posPtr);
 
-void epc_unequipitem_pos(TBL_PC *sd, int *nPtr, int *posPtr);
+void epc_unequipitem_pos_pre(TBL_PC **sdPtr,
+                             int *nPtr,
+                             int *posPtr);
 
-bool epc_can_attack (TBL_PC *sd, int *target_id);
+bool epc_can_attack_pre(TBL_PC **sdPtr,
+                        int *target_id);
 
-int epc_takeitem(TBL_PC *sd, TBL_ITEM *fitem);
+void epc_validate_levels_pre(void);
 
-void epc_validate_levels(void);
+int epc_isequip_post(int retVal,
+                     struct map_session_data *sd,
+                     int n);
 
-int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr);
+int epc_useitem_post(int retVal,
+                     struct map_session_data *sd,
+                     int n);
 
-int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr);
+int epc_equipitem_post(int retVal,
+                       struct map_session_data *sd,
+                       int n,
+                       int data);
 
-int epc_equipitem_post(int retVal, struct map_session_data *sd,
-                       int *nPtr, int *data);
+int epc_unequipitem_post(int retVal,
+                         struct map_session_data *sd,
+                         int n,
+                         int data);
 
-int epc_unequipitem_post(int retVal, struct map_session_data *sd,
-                         int *nPtr, int *data);
+int epc_check_job_name_pre(const char **namePtr);
 
-int epc_check_job_name(const char *name);
+int epc_setnewpc_post(int retVal,
+                      struct map_session_data *sd,
+                      int account_id,
+                      int char_id,
+                      int login_id1,
+                      unsigned int client_tick,
+                      int sex,
+                      int fd);
 
-int epc_setnewpc_post(int retVal, struct map_session_data *sd,
-                      int *account_id, int *char_id, int *login_id1,
-                      unsigned int *client_tick, int *sex, int *fd);
+int epc_additem_post(int retVal,
+                     struct map_session_data *sd,
+                     struct item *item_data,
+                     int amount,
+                     e_log_pick_type log_type);
 
-int epc_additem_post(int retVal, struct map_session_data *sd,
-                     struct item *item_data, int *amountPtr,
-                     e_log_pick_type *log_type);
-
-int epc_delitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr,
-                    int *typePtr, short *reasonPtr,
+int epc_delitem_pre(struct map_session_data **sdPtr,
+                    int *nPtr,
+                    int *amountPtr,
+                    int *typePtr,
+                    short *reasonPtr,
                     e_log_pick_type *log_type);
 
-int epc_delitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr,
-                     int *typePtr, short *reasonPtr,
-                     e_log_pick_type *log_type);
+int epc_delitem_post(int retVal,
+                     struct map_session_data *sd,
+                     int n,
+                     int amount,
+                     int type,
+                     short reason,
+                     e_log_pick_type log_type);
 
-bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
-                                   int *idx_card, int *idx_equip);
+bool epc_can_insert_card_into_post(bool retVal,
+                                   struct map_session_data* sd,
+                                   int idx_card,
+                                   int idx_equip);
 
-int epc_dropitem_pre(struct map_session_data *sd, int *nPtr, int *amountPtr);
+int epc_dropitem_pre(struct map_session_data **sdPtr,
+                     int *nPtr,
+                     int *amountPtr);
 
-int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr);
+int epc_dropitem_post(int retVal,
+                      struct map_session_data *sd,
+                      int n,
+                      int amount);
 
-int epc_takeitem_pre(struct map_session_data *sd, struct flooritem_data *fitem);
+int epc_takeitem_pre(struct map_session_data **sdPtr,
+                     struct flooritem_data **fitemPtr);
 
-int epc_takeitem_post(int retVal, struct map_session_data *sd, struct flooritem_data *fitem);
+int epc_takeitem_post(int retVal,
+                      struct map_session_data *sd,
+                      struct flooritem_data *fitem);
 
-int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equip);
+int epc_insert_card_pre(struct map_session_data **sdPtr,
+                        int *idx_card,
+                        int *idx_equip);
 
-int epc_insert_card_post(int retVal, struct map_session_data* sd, int *idx_card, int *idx_equip);
+int epc_insert_card_post(int retVal,
+                         struct map_session_data* sd,
+                         int idx_card,
+                         int idx_equip);
 
-bool epc_can_Adopt_pre(struct map_session_data *p1_sd,
-                       struct map_session_data *p2_sd,
-                       struct map_session_data *b_sd);
+bool epc_can_Adopt_pre(struct map_session_data **p1_sdPtr,
+                       struct map_session_data **p2_sdPtr,
+                       struct map_session_data **b_sdPtr);
 
-bool epc_adoption_pre(struct map_session_data *p1_sd,
-                      struct map_session_data *p2_sd,
-                      struct map_session_data *b_sd);
+bool epc_adoption_pre(struct map_session_data **p1_sdPtr,
+                      struct map_session_data **p2_sdPtr,
+                      struct map_session_data **b_sdPtr);
 
-bool epc_process_chat_message_pre(struct map_session_data *sd,
-                                  const char *message);
+bool epc_process_chat_message_pre(struct map_session_data **sdPtr,
+                                  const char **messagePtr);
 
 int epc_dead_post(int retVal,
                   struct map_session_data *sd,

@@ -6,7 +6,7 @@
 
 int eskill_check_condition_castend_post(int retVal,
                                         TBL_PC* sd,
-                                        uint16 *skill_id,
-                                        uint16 *skill_lv);
+                                        uint16 skill_id,
+                                        uint16 skill_lv);
 
 #endif  // EVOL_MAP_SKILL

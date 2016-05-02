@@ -24,14 +24,19 @@
 #include "emap/struct/npcdext.h"
 #include "emap/npc.h"
 
-void enpc_parse_unknown_mapflag(const char *name,
-                                const char *w3,
-                                const char *w4,
-                                const char* start,
-                                const char* buffer,
-                                const char* filepath,
-                                int *retval)
+void enpc_parse_unknown_mapflag_pre(const char **namePtr,
+                                    const char **w3Ptr,
+                                    const char **w4Ptr,
+                                    const char **startPtr,
+                                    const char **bufferPtr,
+                                    const char **filepathPtr,
+                                    int **retvalPtr)
 {
+    const char *name = *namePtr;
+    const char *w3 = *w3Ptr;
+    const char *w4 = *w4Ptr;
+    int *retval = *retvalPtr;
+
     if (!strcmpi(w3, "invisible"))
     {
         int16 m = map->mapname2mapid(name);
@@ -55,16 +60,22 @@ void enpc_parse_unknown_mapflag(const char *name,
     }
     else
     {
-        ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n", w3, filepath, strline(buffer,start-buffer));
+        ShowError("npc_parse_mapflag: unrecognized mapflag '%s' in file '%s', line '%d'.\n",
+            w3,
+            *filepathPtr,
+            strline(*bufferPtr, *startPtr - *bufferPtr));
         if (retval)
             *retval = EXIT_FAILURE;
     }
     hookStop();
 }
 
-int enpc_buysellsel(TBL_PC* sd, int *id, int *type)
+int enpc_buysellsel_pre(TBL_PC **sdPtr,
+                        int *id,
+                        int *type)
 {
     TBL_NPC *nd;
+    TBL_PC *sd = *sdPtr;
 
     if (!sd)
         return 1;
@@ -121,7 +132,7 @@ int enpc_buysellsel(TBL_PC* sd, int *id, int *type)
     return 0;
 }
 
-bool enpc_db_checkid(int *idPtr)
+bool enpc_db_checkid_pre(const int *idPtr)
 {
     const int id = *idPtr;
     hookStop();

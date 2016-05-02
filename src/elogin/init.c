@@ -15,6 +15,7 @@
 #include "common/timer.h"
 #include "common/mapindex.h"
 #include "login/lclif.h"
+#include "login/lclif.p.h"
 #include "login/login.h"
 
 #include "ecommon/init.h"
@@ -33,6 +34,11 @@ HPExport struct hplugin_info pinfo =
     HPM_VERSION
 };
 
+#define addHookPrePriv(ifname, type, funcname, hook) ( \
+        (void)((HPMHOOK_pre_ ## type ## _ ## funcname)0 == (hook)), \
+        HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
+        )
+
 HPExport void plugin_init (void)
 {
     interfaces_init_common();
@@ -40,10 +46,12 @@ HPExport void plugin_init (void)
     addPacket(0x7530, 22, login_parse_version, hpParse_Login);
     addPacket(0x027c, 91, elogin_parse_client_login2, hpParse_Login);
     addPacket(0x5000, 54, elogin_parse_change_paassword, hpParse_FromChar);
-    addHookPre("login->client_login", elogin_client_login_pre);
-    addHookPre("login->check_password", elogin_check_password);
-    addHookPre("lclif->p->parse_CA_CONNECT_INFO_CHANGED", elogin_parse_ping);
-    addHookPost("login->client_login", elogin_client_login_post);
+
+    addHookPre(login, client_login, elogin_client_login_pre);
+    addHookPre(login, check_password, elogin_check_password_pre);
+    addHookPrePriv(lclif->p, PRIV__lclif, parse_CA_CONNECT_INFO_CHANGED, elogin_parse_ping_pre);
+
+    addHookPost(login, client_login, elogin_client_login_post);
 }
 
 HPExport void server_preinit (void)

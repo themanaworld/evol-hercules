@@ -4,8 +4,12 @@
 #ifndef EVOL_MAP_ITEMDB
 #define EVOL_MAP_ITEMDB
 
-bool eitemdb_is_item_usable(struct item_data *item);
-void eitemdb_readdb_additional_fields(int *itemid, struct config_setting_t *it, int *n, const char *source);
-void edestroy_item_data(struct item_data* self, int *free_selfPtr);
+bool eitemdb_is_item_usable_pre(struct item_data **itemPtr);
+void eitemdb_readdb_additional_fields_pre(int *itemid,
+                                          struct config_setting_t **itPtr,
+                                          int *n,
+                                          const char **sourcePtr);
+void edestroy_item_data_pre(struct item_data **selfPtr,
+                            int *free_selfPtr);
 
 #endif  // EVOL_MAP_ITEMDB

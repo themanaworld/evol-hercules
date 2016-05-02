@@ -25,8 +25,10 @@
 #include "emap/data/mobd.h"
 #include "emap/struct/mobdext.h"
 
-int emob_deleteslave_sub(struct block_list *bl, va_list ap)
+int emob_deleteslave_sub_pre(struct block_list **blPtr,
+                             va_list ap)
 {
+    struct block_list *bl = *blPtr;
     if (!bl)
     {
         hookStop();
@@ -57,27 +59,27 @@ int emob_deleteslave_sub(struct block_list *bl, va_list ap)
     return 0;
 }
 
-void emob_read_db_additional_fields(struct mob_db *entry,
-                                    struct config_setting_t *it,
-                                    int *nPtr __attribute__ ((unused)),
-                                    const char *source  __attribute__ ((unused)))
+void emob_read_db_additional_fields_pre(struct mob_db **entryPtr,
+                                        struct config_setting_t **itPtr,
+                                        int *nPtr __attribute__ ((unused)),
+                                        const char **sourcePtr __attribute__ ((unused)))
 {
     int i32 = 0;
 
-    struct MobdExt *data = mobd_get(entry);
+    struct MobdExt *data = mobd_get(*entryPtr);
     if (!data)
     {
         hookStop();
         return;
     }
 
-    if (mob->lookup_const(it, "WalkMask", &i32))
+    if (mob->lookup_const(*itPtr, "WalkMask", &i32))
         data->walkMask = i32;
 }
 
-int emob_read_db_mode_sub_post(int retVal,
-                               struct mob_db *entry  __attribute__ ((unused)),
-                               struct config_setting_t *t)
+uint32 emob_read_db_mode_sub_post(uint32 retVal,
+                                  struct mob_db *entry  __attribute__ ((unused)),
+                                  struct config_setting_t *t)
 {
     struct config_setting_t *t2;
 

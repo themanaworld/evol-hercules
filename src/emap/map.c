@@ -66,14 +66,14 @@ struct mapcell2
 int emap_addflooritem_post(int retVal,
                            const struct block_list *bl __attribute__ ((unused)),
                            struct item *item,
-                           int *amount __attribute__ ((unused)),
-                           int16 *m __attribute__ ((unused)),
-                           int16 *x __attribute__ ((unused)),
-                           int16 *y __attribute__ ((unused)),
-                           int *first_charid __attribute__ ((unused)),
-                           int *second_charid __attribute__ ((unused)),
-                           int *third_charid __attribute__ ((unused)),
-                           int *flags __attribute__ ((unused)))
+                           int amount __attribute__ ((unused)),
+                           int16 m __attribute__ ((unused)),
+                           int16 x __attribute__ ((unused)),
+                           int16 y __attribute__ ((unused)),
+                           int first_charid __attribute__ ((unused)),
+                           int second_charid __attribute__ ((unused)),
+                           int third_charid __attribute__ ((unused)),
+                           int flags __attribute__ ((unused)))
 {
     TBL_ITEM* fitem = (TBL_ITEM*)idb_get(map->id_db, retVal);
     if (fitem)
@@ -241,11 +241,14 @@ static bool isWallCell(const struct block_list *bl, struct mapcell2 cell)
 
 #define strangeCast(type, val) *((type*)(&val))
 
-int emap_getcellp(struct map_data* m,
-                  const struct block_list *bl,
-                  int16 *xPtr, int16 *yPtr,
-                  cell_chk *cellchkPtr)
+int emap_getcellp_pre(struct map_data **mPtr,
+                      const struct block_list **blPtr,
+                      int16 *xPtr,
+                      int16 *yPtr,
+                      cell_chk *cellchkPtr)
 {
+    struct map_data *m = *mPtr;
+    const struct block_list *bl = *blPtr;
     if (bl && m)
     {
         const int x = *xPtr;
@@ -297,7 +300,7 @@ int emap_getcellp(struct map_data* m,
     return 0;
 }
 
-struct mapcell emap_gat2cell(int *gatPtr)
+struct mapcell emap_gat2cell_pre(int *gatPtr)
 {
     struct mapcell2 cell;
     const int gat = *gatPtr;
@@ -350,7 +353,7 @@ struct mapcell emap_gat2cell(int *gatPtr)
     return strangeCast(struct mapcell, cell);
 }
 
-int emap_cell2gat(struct mapcell *cellPtr)
+int emap_cell2gat_pre(struct mapcell *cellPtr)
 {
     struct mapcell2 cell = *((struct mapcell2*)cellPtr);
     hookStop();
@@ -367,7 +370,10 @@ int emap_cell2gat(struct mapcell *cellPtr)
     return 1;
 }
 
-void emap_setgatcell2(int16 m, int16 x, int16 y, int gat)
+void emap_setgatcell2(int16 m,
+                      int16 x,
+                      int16 y,
+                      int gat)
 {
     int j;
 
@@ -393,27 +399,32 @@ void emap_setgatcell2(int16 m, int16 x, int16 y, int gat)
     cell2->wall = cell->wall;
 }
 
-void emap_setgatcell(int16 *mPtr, int16 *xPtr, int16 *yPtr, int *gatPtr)
+void emap_setgatcell_pre(int16 *mPtr,
+                         int16 *xPtr,
+                         int16 *yPtr,
+                         int *gatPtr)
 {
     emap_setgatcell2(*mPtr, *xPtr, *yPtr, *gatPtr);
     hookStop();
 }
 
-bool emap_iwall_set(int16 *m __attribute__ ((unused)),
-                    int16 *x __attribute__ ((unused)),
-                    int16 *y __attribute__ ((unused)),
-                    int *size __attribute__ ((unused)),
-                    int8 *dir __attribute__ ((unused)),
-                    bool *shootable __attribute__ ((unused)),
-                    const char* wall_name __attribute__ ((unused)))
+bool emap_iwall_set_pre(int16 *m __attribute__ ((unused)),
+                        int16 *x __attribute__ ((unused)),
+                        int16 *y __attribute__ ((unused)),
+                        int *size __attribute__ ((unused)),
+                        int8 *dir __attribute__ ((unused)),
+                        bool *shootable __attribute__ ((unused)),
+                        const char *wall_namePtr __attribute__ ((unused)))
 {
     ShowError("Unsupported set wall function\n");
     hookStop();
     return false;
 }
 
-void emap_iwall_get(struct map_session_data *sd)
+void emap_iwall_get_pre(struct map_session_data **sdPtr)
 {
+    struct map_session_data *sd = *sdPtr;
+
     if (!sd || map->list[sd->bl.m].iwall_num < 1)
     {
         hookStop();
@@ -432,9 +443,10 @@ void emap_iwall_get(struct map_session_data *sd)
     hookStop();
 }
 
-void emap_iwall_remove(const char *name)
+void emap_iwall_remove_pre(const char **namePtr)
 {
     struct WallData *wall;
+    const char *name = *namePtr;
 
     if ((wall = (struct WallData *)strdb_get(map->iwall_db, name)) == NULL)
     {
@@ -466,7 +478,14 @@ void emap_iwall_remove(const char *name)
     hookStop();
 }
 
-bool emap_iwall_set2(int m, int layer, int x1, int y1, int x2, int y2, int mask, const char *name)
+bool emap_iwall_set2(int m,
+                     int layer,
+                     int x1,
+                     int y1,
+                     int x2,
+                     int y2,
+                     int mask,
+                     const char *name)
 {
     struct WallData *wall;
 
@@ -580,7 +599,7 @@ void map_clear_data(void)
     }
 }
 
-void edo_final_maps(void)
+void edo_final_maps_pre(void)
 {
     map_clear_data();
 }

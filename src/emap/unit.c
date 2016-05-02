@@ -24,11 +24,12 @@
 
 #include "emap/unit.h"
 
-int eunit_can_move(struct block_list *bl)
+int eunit_can_move_pre(struct block_list **blPtr)
 {
     TBL_PC *sd;
     struct unit_data *ud;
     struct status_change *sc;
+    struct block_list *bl = *blPtr;
 
     if (!bl)
     {
@@ -149,11 +150,12 @@ int eunit_can_move(struct block_list *bl)
     return 1;
 }
 
-int eunit_walktoxy(struct block_list *bl  __attribute__ ((unused)),
-                   short *x  __attribute__ ((unused)),
-                   short *y  __attribute__ ((unused)),
-                   int *flagPtr)
+int eunit_walktoxy_pre(struct block_list **blPtr  __attribute__ ((unused)),
+                       short *x  __attribute__ ((unused)),
+                       short *y  __attribute__ ((unused)),
+                       int *flagPtr)
 {
+    struct block_list *bl = *blPtr;
     // reset flag "Search for an unoccupied cell and cancel if none available"
     // this reduce CPU usage and allow mobs to walk on each other.
     if ((*flagPtr)&8)

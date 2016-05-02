@@ -24,19 +24,22 @@
 #include "emap/struct/itemdext.h"
 #include "emap/npc.h"
 
-bool eitemdb_is_item_usable(struct item_data *item)
+bool eitemdb_is_item_usable_pre(struct item_data **itemPtr)
 {
+    struct item_data *item = *itemPtr;
     hookStop();
     if (!item)
         return false;
     return item->type == IT_HEALING || item->type == IT_USABLE || item->type == IT_CASH || item->type == IT_PETEGG;
 }
 
-void eitemdb_readdb_additional_fields(int *itemid,
-                                      struct config_setting_t *it,
-                                      int *n __attribute__ ((unused)),
-                                      const char *source)
+void eitemdb_readdb_additional_fields_pre(int *itemid,
+                                          struct config_setting_t **itPtr,
+                                          int *n __attribute__ ((unused)),
+                                          const char **sourcePtr)
 {
+    struct config_setting_t *it = *itPtr;
+    const char *source = *sourcePtr;
     struct item_data *item = itemdb->exists(*itemid);
     int i32 = 0;
     const char *str = NULL;
@@ -161,9 +164,10 @@ void eitemdb_readdb_additional_fields(int *itemid,
     hookStop();
 }
 
-void edestroy_item_data(struct item_data* self,
-                        int *free_selfPtr __attribute__ ((unused)))
+void edestroy_item_data_pre(struct item_data **selfPtr,
+                            int *free_selfPtr __attribute__ ((unused)))
 {
+    struct item_data *self = *selfPtr;
     struct ItemdExt *data = itemd_get(self);
     if (!data)
         return;

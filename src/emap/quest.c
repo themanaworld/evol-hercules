@@ -30,13 +30,17 @@
  * @return The parsed quest entry.
  * @retval NULL in case of errors.
  */
-struct quest_db *equest_read_db_sub(struct config_setting_t *cs, int *nPtr, const char *source)
+struct quest_db *equest_read_db_sub_pre(struct config_setting_t **csPtr,
+                                        int *nPtr,
+                                        const char **sourcePtr)
 {
     struct quest_db *entry = NULL;
     struct config_setting_t *t = NULL;
     int i32 = 0, quest_id;
     const char *str = NULL;
     const int n = *nPtr;
+    struct config_setting_t *cs = *csPtr;
+    const char *source = *sourcePtr;
 
     /*
      * Id: Quest ID                    [int]

@@ -44,8 +44,8 @@ void login_parse_version(int fd)
     send_server_version(fd);
 }
 
-int elogin_client_login_pre(int *fdPtr,
-                            struct login_session_data* sd __attribute__ ((unused)))
+bool elogin_client_login_pre(int *fdPtr,
+                             struct login_session_data **sdPtr __attribute__ ((unused)))
 {
     int fd = *fdPtr;
     uint16 command = RFIFOW(fd,0);
@@ -53,7 +53,7 @@ int elogin_client_login_pre(int *fdPtr,
     {
         lclif->login_error(fd, 3);
         hookStop();
-        return 1;
+        return true;
     }
     char username[NAME_LENGTH];
     safestrncpy(username, RFIFOP(fd, 6), NAME_LENGTH);
@@ -62,25 +62,26 @@ int elogin_client_login_pre(int *fdPtr,
     {
         lclif->login_error(fd, 5);
         hookStop();
-        return 1;
+        return true;
     }
     else if (len >= 2 && username[len - 2] == '_' && memchr("FfMm", username[len - 1], 4))
     {
         lclif->login_error(fd, 3);
         hookStop();
-        return 1;
+        return true;
     }
 
     short *ptr = (short*)RFIFOP(fd, 2);
     if (*ptr == 20)
         *ptr = clientVersion;
-    return 0;
+    return false;
 }
 
-int elogin_client_login_post(int retVal, int *fdPtr,
-                             struct login_session_data* sd)
+bool elogin_client_login_post(bool retVal,
+                              int fd,
+                              struct login_session_data* sd)
 {
-    sd = (struct login_session_data*)sockt->session[*fdPtr]->session_data;
+    sd = (struct login_session_data*)sockt->session[fd]->session_data;
     if (sd)
         sd->version = clientVersion;
     return retVal;
@@ -156,19 +157,21 @@ void elogin_parse_client_login2(int fd)
     return;
 }
 
-void elogin_parse_ping(int *fd, struct login_session_data* sd)
+enum parsefunc_rcode elogin_parse_ping_pre(int *fd,
+                                           struct login_session_data **sdPtr)
 {
+    struct login_session_data *sd = *sdPtr;
     RFIFOSKIP(*fd, 26);
     if (!sd)
     {
         hookStop();
-        return;
+        return PACKET_VALID;
     }
     struct online_login_data* data = (struct online_login_data*)idb_get(login->online_db, sd->account_id);
     if (data == NULL)
     {
         hookStop();
-        return;
+        return PACKET_VALID;
     }
     if (data->waiting_disconnect != INVALID_TIMER)
     {
@@ -176,6 +179,7 @@ void elogin_parse_ping(int *fd, struct login_session_data* sd)
         data->waiting_disconnect = timer->add(timer->gettick() + 30000, login->waiting_disconnect_timer, sd->account_id, 0);
     }
     hookStop();
+    return PACKET_VALID;
 }
 
 void elogin_parse_change_paassword(int fd)

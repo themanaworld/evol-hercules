@@ -21,8 +21,9 @@
 
 #include "plugins/HPMHooking.h"
 
-bool email_invalid_operation(struct map_session_data *sd)
+bool email_invalid_operation_pre(struct map_session_data **sdPtr)
 {
+    struct map_session_data *sd = *sdPtr;
     if (!sd)
     {
         hookStop();

@@ -4,6 +4,9 @@
 #ifndef EVOL_LOGIN_LOGIN
 #define EVOL_LOGIN_LOGIN
 
-bool elogin_check_password(const char* md5key, int *passwdenc, const char* passwd, const char* refpass);
+bool elogin_check_password_pre(const char **md5key,
+                               int *passwdenc,
+                               const char **passwdPtr,
+                               const char **refpassPtr);
 
 #endif  // EVOL_LOGIN_SEND

@@ -4,6 +4,8 @@
 #ifndef EVOL_MAP_QUEST
 #define EVOL_MAP_QUEST
 
-struct quest_db *equest_read_db_sub(struct config_setting_t *cs, int *nPtr, const char *source);
+struct quest_db *equest_read_db_sub_pre(struct config_setting_t **csPtr,
+                                        int *nPtr,
+                                        const char **sourcePtr);
 
 #endif  // EVOL_MAP_QUEST

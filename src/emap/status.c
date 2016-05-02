@@ -37,7 +37,7 @@ void status_init(void)
 }
 
 void estatus_set_viewdata_post(struct block_list *bl,
-                               int *class_ __attribute__ ((unused)))
+                               int class_ __attribute__ ((unused)))
 {
     if (!bl)
         return;
@@ -63,19 +63,18 @@ void estatus_set_viewdata_post(struct block_list *bl,
     }
 }
 
-void estatus_read_job_db_sub(int *idxPtr,
-                             const char *name __attribute__ ((unused)),
-                             struct config_setting_t *jdb)
+void estatus_read_job_db_sub_post(int idx,
+                                  const char *name __attribute__ ((unused)),
+                                  struct config_setting_t *jdb)
 {
     int i32 = 0;
-    const int idx = *idxPtr;
     if (itemdb->lookup_const(jdb, "MoveSpeed", &i32))
         class_move_speed[idx] = i32;
 }
 
 int estatus_calc_pc__post(int retVal,
                           struct map_session_data *sd,
-                          enum e_status_calc_opt *opt __attribute__ ((unused)))
+                          enum e_status_calc_opt opt __attribute__ ((unused)))
 {
     if (!sd)
         return retVal;
@@ -88,16 +87,18 @@ int estatus_calc_pc__post(int retVal,
     return retVal;
 }
 
-int estatus_calc_pc_additional(struct map_session_data* sd,
-                               enum e_status_calc_opt *opt __attribute__ ((unused)))
+void estatus_calc_pc_additional_pre(struct map_session_data **sdPtr,
+                                    enum e_status_calc_opt *optPtr __attribute__ ((unused)))
 {
     int f;
     int k;
-
-    hookStop();
+    struct map_session_data *sd = *sdPtr;
 
     if (!sd)
-        return 0;
+    {
+        hookStop();
+        return;
+    }
 
     for (f = 0; f < MAX_INVENTORY; f ++)
     {
@@ -132,13 +133,13 @@ int estatus_calc_pc_additional(struct map_session_data* sd,
 
     horse_add_bonus(sd);
 
-    return 0;
+    hookStop();
 }
 
 unsigned short estatus_calc_speed_post(unsigned short retVal,
                                        struct block_list *bl,
                                        struct status_change *sc __attribute__ ((unused)),
-                                       int *speed __attribute__ ((unused)))
+                                       int speed __attribute__ ((unused)))
 {
     return horse_add_speed_bonus(BL_CAST(BL_PC, bl), retVal);
 }

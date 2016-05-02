@@ -23,10 +23,11 @@
 #include "echar/char.h"
 #include "echar/config.h"
 
-void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
+void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data **sdPtr)
 {
     // ignore char creation disable option
     const int fd = *fdPtr;
+    struct char_session_data *sd = *sdPtr;
     uint16 race = 0;
     uint16 look = 0;
     uint8 sex = 0;
@@ -106,15 +107,17 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data* sd)
 static int tmpVersion = 0;
 
 void echar_parse_char_connect_pre(int *fdPtr,
-                                  struct char_session_data *sd __attribute__ ((unused)),
-                                  uint32 *ipl __attribute__ ((unused)))
+                                  struct char_session_data **sd,
+                                  uint32 *ipl)
 {
     tmpVersion = RFIFOW(*fdPtr, 14);
 }
 
-void echar_parse_char_connect_post(int *fdPtr, struct char_session_data *sd, uint32 *ipl __attribute__ ((unused)))
+void echar_parse_char_connect_post(int fd,
+                                   struct char_session_data *sd,
+                                   uint32 ipl __attribute__ ((unused)))
 {
-    sd = (struct char_session_data*)sockt->session[*fdPtr]->session_data;
+    sd = (struct char_session_data*)sockt->session[fd]->session_data;
     if (sd)
         sd->version = tmpVersion;
 }
@@ -180,14 +183,16 @@ void echar_parse_login_password_change_ack(int charFd)
     }
 }
 
-void echar_mmo_char_send099d(int *fdPtr, struct char_session_data *sd)
+void echar_mmo_char_send099d_post(int fd, struct char_session_data *sd)
 {
-    send_additional_slots(*fdPtr, sd);
+    send_additional_slots(fd, sd);
 }
 
-int echar_mmo_char_send_characters_post(int retVal, int *fdPtr, struct char_session_data* sd)
+int echar_mmo_char_send_characters_post(int retVal,
+                                        int fd,
+                                        struct char_session_data* sd)
 {
-    send_additional_slots(*fdPtr, sd);
+    send_additional_slots(fd, sd);
     return retVal;
 }
 

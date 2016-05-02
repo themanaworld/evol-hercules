@@ -33,11 +33,12 @@
 int langScriptId;
 int mountScriptId;
 
-int epc_readparam_pre(TBL_PC* sd, int *type)
+int epc_readparam_pre(TBL_PC **sdPtr,
+                      int *type)
 {
     if (*type == Const_ClientVersion)
     {
-        struct SessionExt *data = session_get_bysd(sd);
+        struct SessionExt *data = session_get_bysd(*sdPtr);
         hookStop();
         if (!data)
             return 0;
@@ -46,8 +47,12 @@ int epc_readparam_pre(TBL_PC* sd, int *type)
     return 0;
 }
 
-int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
+int epc_setregistry_pre(TBL_PC **sdPtr,
+                        int64 *reg,
+                        int *val)
 {
+    TBL_PC *sd = *sdPtr;
+
     if (*reg == langScriptId)
     {
         struct SessionExt *data = session_get_bysd(sd);
@@ -89,10 +94,15 @@ int epc_setregistry(TBL_PC *sd, int64 *reg, int *val)
             eclif_changelook2(&sd->bl, lookf, 0, id, n); \
     }
 
-void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
+void epc_equipitem_pos_pre(TBL_PC **sdPtr,
+                           struct item_data **idPtr,
+                           int *nPtr,
+                           int *posPtr)
 {
     const int n = *nPtr;
     int pos = *posPtr;
+    TBL_PC *sd = *sdPtr;
+    struct item_data *id = *idPtr;
 
     hookStop();
 
@@ -165,10 +175,11 @@ void epc_equipitem_pos(TBL_PC *sd, struct item_data *id, int *nPtr, int *posPtr)
     if (pos & (mask)) \
         eclif_changelook2(&sd->bl, lookf, 0, 0, n);
 
-void epc_unequipitem_pos(TBL_PC *sd,
-                         int *nPtr,
-                         int *posPtr)
+void epc_unequipitem_pos_pre(TBL_PC **sdPtr,
+                             int *nPtr,
+                             int *posPtr)
 {
+    TBL_PC *sd = *sdPtr;
     if (!sd)
         return;
 
@@ -211,8 +222,10 @@ void epc_unequipitem_pos(TBL_PC *sd,
 #undef unequipPos
 #undef unequipPos2
 
-bool epc_can_attack (TBL_PC *sd, int *target_id)
+bool epc_can_attack_pre(TBL_PC **sdPtr,
+                        int *target_id)
 {
+    TBL_PC *sd = *sdPtr;
     if (!sd)
         return false;
 
@@ -230,25 +243,8 @@ bool epc_can_attack (TBL_PC *sd, int *target_id)
     return true;
 }
 
-int epc_takeitem(TBL_PC *sd __attribute__ ((unused)),
-                 TBL_ITEM *fitem)
-{
-    if (!fitem)
-        return 0;
 
-    struct ItemdExt *data = itemd_get_by_item(&fitem->item_data);
-    if (!data)
-        return 1;
-
-    if (!data->allowPickup)
-    {
-        hookStop();
-        return 0;
-    }
-    return 1;
-}
-
-void epc_validate_levels(void)
+void epc_validate_levels_pre(void)
 {
     int i;
     for (i = 0; i < 7; i++) {
@@ -264,9 +260,10 @@ void epc_validate_levels(void)
     hookStop();
 }
 
-int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr)
+int epc_isequip_post(int retVal,
+                     struct map_session_data *sd,
+                     int n)
 {
-    const int n = *nPtr;
     if (retVal)
     {
         if (!sd)
@@ -301,9 +298,10 @@ int epc_isequip_post(int retVal, struct map_session_data *sd, int *nPtr)
     return retVal;
 }
 
-int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr)
+int epc_useitem_post(int retVal,
+                     struct map_session_data *sd,
+                     int n)
 {
-    const int n = *nPtr;
     if (!sd)
         return retVal;
 
@@ -320,7 +318,10 @@ int epc_useitem_post(int retVal, struct map_session_data *sd, int *nPtr)
     return retVal;
 }
 
-static void equippost_effect(struct map_session_data *const sd, const int n, const bool retVal, const bool equip)
+static void equippost_effect(struct map_session_data *const sd,
+                             const int n,
+                             const bool retVal,
+                             const bool equip)
 {
     if (!sd)
         return;
@@ -343,23 +344,28 @@ static void equippost_effect(struct map_session_data *const sd, const int n, con
     return;
 }
 
-int epc_equipitem_post(int retVal, struct map_session_data *sd,
-                       int *nPtr, int *data __attribute__ ((unused)))
+int epc_equipitem_post(int retVal,
+                       struct map_session_data *sd,
+                       int n,
+                       int data __attribute__ ((unused)))
 {
-    equippost_effect(sd, *nPtr, retVal, true);
+    equippost_effect(sd, n, retVal, true);
     return retVal;
 }
 
-int epc_unequipitem_post(int retVal, struct map_session_data *sd,
-                         int *nPtr, int *data __attribute__ ((unused)))
+int epc_unequipitem_post(int retVal,
+                         struct map_session_data *sd,
+                         int n,
+                         int data __attribute__ ((unused)))
 {
-    equippost_effect(sd, *nPtr, retVal, false);
+    equippost_effect(sd, n, retVal, false);
     return retVal;
 }
 
-int epc_check_job_name(const char *name)
+int epc_check_job_name_pre(const char **namePtr)
 {
     int val = -1;
+    const char *name = *namePtr;
     if (script->get_constant(name, &val))
     {
         hookStop();
@@ -369,13 +375,14 @@ int epc_check_job_name(const char *name)
     return -1;
 }
 
-int epc_setnewpc_post(int retVal, struct map_session_data *sd,
-                      int *account_id __attribute__ ((unused)),
-                      int *char_id __attribute__ ((unused)),
-                      int *login_id1 __attribute__ ((unused)),
-                      unsigned int *client_tick  __attribute__ ((unused)),
-                      int *sex __attribute__ ((unused)),
-                      int *fd __attribute__ ((unused)))
+int epc_setnewpc_post(int retVal,
+                      struct map_session_data *sd,
+                      int account_id __attribute__ ((unused)),
+                      int char_id __attribute__ ((unused)),
+                      int login_id1 __attribute__ ((unused)),
+                      unsigned int client_tick  __attribute__ ((unused)),
+                      int sex __attribute__ ((unused)),
+                      int fd __attribute__ ((unused)))
 {
     if (sd)
     {
@@ -385,10 +392,11 @@ int epc_setnewpc_post(int retVal, struct map_session_data *sd,
     return retVal;
 }
 
-int epc_additem_post(int retVal, struct map_session_data *sd,
+int epc_additem_post(int retVal,
+                     struct map_session_data *sd,
                      struct item *item_data,
-                     int *amountPtr __attribute__ ((unused)),
-                     e_log_pick_type *log_type __attribute__ ((unused)))
+                     int amount __attribute__ ((unused)),
+                     e_log_pick_type log_type __attribute__ ((unused)))
 {
     if (!retVal)
     {
@@ -401,12 +409,14 @@ int epc_additem_post(int retVal, struct map_session_data *sd,
 
 static bool calcPc = false;
 
-int epc_delitem_pre(struct map_session_data *sd,
-                    int *nPtr, int *amountPtr,
+int epc_delitem_pre(struct map_session_data **sdPtr,
+                    int *nPtr,
+                    int *amountPtr,
                     int *typePtr __attribute__ ((unused)),
                     short *reasonPtr __attribute__ ((unused)),
                     e_log_pick_type *log_type __attribute__ ((unused)))
 {
+    struct map_session_data *sd = *sdPtr;
     if (!sd)
         return 1;
     const int n = *nPtr;
@@ -429,11 +439,11 @@ int epc_delitem_pre(struct map_session_data *sd,
 
 int epc_delitem_post(int retVal,
                      struct map_session_data *sd,
-                     int *nPtr __attribute__ ((unused)),
-                     int *amountPtr __attribute__ ((unused)),
-                     int *typePtr __attribute__ ((unused)),
-                     short *reasonPtr __attribute__ ((unused)),
-                     e_log_pick_type *log_type __attribute__ ((unused)))
+                     int n __attribute__ ((unused)),
+                     int amount __attribute__ ((unused)),
+                     int type __attribute__ ((unused)),
+                     short reason __attribute__ ((unused)),
+                     e_log_pick_type log_type __attribute__ ((unused)))
 {
     if (!retVal && calcPc && sd)
         status_calc_pc(sd, SCO_NONE);
@@ -441,19 +451,21 @@ int epc_delitem_post(int retVal,
     return retVal;
 }
 
-bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
-                                   int *idx_card, int *idx_equip)
+bool epc_can_insert_card_into_post(bool retVal,
+                                   struct map_session_data* sd,
+                                   int idx_card,
+                                   int idx_equip)
 {
     int f;
     if (retVal)
     {
         if (!sd)
             return retVal;
-        struct ItemdExt *data = itemd_get(sd->inventory_data[*idx_equip]);
+        struct ItemdExt *data = itemd_get(sd->inventory_data[idx_equip]);
         if (!data || !data->allowedCards[0].id) // allow cards if AllowedCards list is empty
             return retVal;
 
-        const int newCardId = sd->status.inventory[*idx_card].nameid;
+        const int newCardId = sd->status.inventory[idx_card].nameid;
         int cardAmountLimit = 0;
 
         for (f = 0; f < 100 && data->allowedCards[f].id; f ++)
@@ -468,10 +480,10 @@ bool epc_can_insert_card_into_post(bool retVal, struct map_session_data* sd,
             return false;
 
         int cardsAmount = 0;
-        const int slots = sd->inventory_data[*idx_equip]->slot;
+        const int slots = sd->inventory_data[idx_equip]->slot;
         for (f = 0; f < slots; f ++)
         {
-            const int cardId = sd->status.inventory[*idx_equip].card[f];
+            const int cardId = sd->status.inventory[idx_equip].card[f];
             if (cardId == newCardId)
                 cardsAmount ++;
         }
@@ -485,10 +497,11 @@ static int tempN = 0;
 static int tempId = 0;
 static int tempAmount = 0;
 
-int epc_dropitem_pre(struct map_session_data *sd,
+int epc_dropitem_pre(struct map_session_data **sdPtr,
                      int *nPtr,
                      int *amountPtr __attribute__ ((unused)))
 {
+    struct map_session_data *sd = *sdPtr;
     const int n = *nPtr;
     if (!sd || n < 0 || n >= MAX_INVENTORY)
     {
@@ -502,9 +515,12 @@ int epc_dropitem_pre(struct map_session_data *sd,
     return 1;
 }
 
-int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *amountPtr)
+int epc_dropitem_post(int retVal,
+                      struct map_session_data *sd,
+                      int n,
+                      int amount)
 {
-    if (retVal && *nPtr == tempN && tempId)
+    if (retVal && n == tempN && tempId)
     {
         struct item_data *item = itemdb->search(tempId);
         if (!item)
@@ -512,20 +528,37 @@ int epc_dropitem_post(int retVal, struct map_session_data *sd, int *nPtr, int *a
         struct ItemdExt *data = itemd_get(item);
         if (!data)
             return retVal;
-        script_run_item_amount_script(sd, data->dropScript, tempId, *amountPtr);
+        script_run_item_amount_script(sd, data->dropScript, tempId, amount);
     }
     return retVal;
 }
 
-int epc_takeitem_pre(struct map_session_data *sd  __attribute__ ((unused)),
-                     struct flooritem_data *fitem)
+int epc_takeitem_pre(struct map_session_data **sdPtr  __attribute__ ((unused)),
+                     struct flooritem_data **fitemPtr)
 {
+    struct flooritem_data *fitem = *fitemPtr;
     if (!fitem)
     {
         tempN = 0;
         tempId = 0;
         return 0;
     }
+
+    struct ItemdExt *data = itemd_get_by_item(&fitem->item_data);
+    if (!data)
+    {
+        tempN = -1;
+        tempId = fitem->item_data.nameid;
+        tempAmount = fitem->item_data.amount;
+        return 1;
+    }
+
+    if (!data->allowPickup)
+    {
+        hookStop();
+        return 0;
+    }
+
     tempN = -1;
     tempId = fitem->item_data.nameid;
     tempAmount = fitem->item_data.amount;
@@ -549,8 +582,11 @@ int epc_takeitem_post(int retVal,
     return retVal;
 }
 
-int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equip)
+int epc_insert_card_pre(struct map_session_data **sdPtr,
+                        int *idx_card,
+                        int *idx_equip)
 {
+    struct map_session_data *sd = *sdPtr;
     if (!sd ||
         *idx_equip < 0 ||
         *idx_equip >= MAX_INVENTORY ||
@@ -570,10 +606,10 @@ int epc_insert_card_pre(struct map_session_data* sd, int *idx_card, int *idx_equ
 
 int epc_insert_card_post(int retVal,
                          struct map_session_data* sd,
-                         int *idx_card __attribute__ ((unused)),
-                         int *idx_equip)
+                         int idx_card __attribute__ ((unused)),
+                         int idx_equip)
 {
-    if (retVal && *idx_equip == tempN && tempId)
+    if (retVal && idx_equip == tempN && tempId)
     {
         struct item_data *item = itemdb->search(tempId);
         if (!item)
@@ -586,10 +622,14 @@ int epc_insert_card_post(int retVal,
     return retVal;
 }
 
-bool epc_can_Adopt_pre(struct map_session_data *p1_sd,
-                       struct map_session_data *p2_sd,
-                       struct map_session_data *b_sd)
+bool epc_can_Adopt_pre(struct map_session_data **p1_sdPtr,
+                       struct map_session_data **p2_sdPtr,
+                       struct map_session_data **b_sdPtr)
 {
+    struct map_session_data *p1_sd = *p1_sdPtr;
+    struct map_session_data *p2_sd = *p2_sdPtr;
+    struct map_session_data *b_sd = *b_sdPtr;
+
     hookStop();
 
     if (!p1_sd || !p2_sd || !b_sd)
@@ -644,10 +684,14 @@ bool epc_can_Adopt_pre(struct map_session_data *p1_sd,
     return true;
 }
 
-bool epc_adoption_pre(struct map_session_data *p1_sd,
-                      struct map_session_data *p2_sd,
-                      struct map_session_data *b_sd)
+bool epc_adoption_pre(struct map_session_data **p1_sdPtr,
+                      struct map_session_data **p2_sdPtr,
+                      struct map_session_data **b_sdPtr)
 {
+    struct map_session_data *p1_sd = *p1_sdPtr;
+    struct map_session_data *p2_sd = *p2_sdPtr;
+    struct map_session_data *b_sd = *b_sdPtr;
+
     if (!pc->can_Adopt(p1_sd, p2_sd, b_sd))
     {
         hookStop();
@@ -673,8 +717,11 @@ bool epc_adoption_pre(struct map_session_data *p1_sd,
 
 // copy from pc_process_chat_message
 // exception only prevent call gm command if string start with ##
-bool epc_process_chat_message_pre(struct map_session_data *sd, const char *message)
+bool epc_process_chat_message_pre(struct map_session_data **sdPtr,
+                                  const char **messagePtr)
 {
+    struct map_session_data *sd = *sdPtr;
+    const char *message = *messagePtr;
     if (message && strlen(message) > 2 && message[0] == '#' && message[1] == '#')
     {
         // do nothing

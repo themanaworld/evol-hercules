@@ -66,13 +66,13 @@
     if (!nd) \
         return r;
 
-int escript_reload(void)
+int escript_reload_pre(void)
 {
     map_clear_data();
     return 0;
 }
 
-void escript_load_parameters(void)
+void escript_load_parameters_pre(void)
 {
     script->constdb_comment("Evol parameters");
     script->set_constant("ClientVersion", 10000, true, false);
@@ -80,7 +80,7 @@ void escript_load_parameters(void)
 }
 
 // stripped copy from script_load_translations without actual translation loading.
-void escript_load_translations(void)
+void escript_load_translations_pre(void)
 {
     if (map->minimal)
     {
@@ -113,12 +113,16 @@ void escript_load_translations(void)
     hookStop();
 }
 
-void eset_reg_npcscope_num(struct script_state* st,
-                           struct reg_db *n,
-                           int64 *num __attribute__ ((unused)),
-                           const char* name,
-                           int *val)
+void eset_reg_npcscope_num_pre(struct script_state **stPtr,
+                               struct reg_db **nPtr,
+                               int64 *num __attribute__ ((unused)),
+                               const char **namePtr,
+                               int *val)
 {
+    struct script_state *st = *stPtr;
+    struct reg_db *n = *nPtr;
+    const char *name = *namePtr;
+
     if (!strcmp(name, ".lang"))
     {
         getExt2();
@@ -218,8 +222,13 @@ void eset_reg_npcscope_num(struct script_state* st,
     }
 }
 
-int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct script_data* data)
+int eget_val_npcscope_num_pre(struct script_state **stPtr,
+                              struct reg_db **nPtr,
+                              struct script_data **dataPtr)
 {
+    struct script_state *st = *stPtr;
+    struct reg_db *n = *nPtr;
+    struct script_data *data = *dataPtr;
     const char *name = reference_getname(data);
     if (!strcmp(name, ".lang"))
     {
@@ -303,12 +312,17 @@ int eget_val_npcscope_num(struct script_state* st, struct reg_db *n, struct scri
     return 0;
 }
 
-void eset_reg_npcscope_str(struct script_state* st,
-                           struct reg_db *n,
-                           int64 *num __attribute__ ((unused)),
-                           const char* name,
-                           const char *str)
+void eset_reg_npcscope_str_pre(struct script_state **stPtr,
+                               struct reg_db **nPtr,
+                               int64 *num __attribute__ ((unused)),
+                               const char **namePtr,
+                               const char **strPtr)
 {
+    struct script_state *st = *stPtr;
+    struct reg_db *n = *nPtr;
+    const char *name = *namePtr;
+    const char *str = *strPtr;
+
     if (!strcmp(name, ".map$"))
     {
         ShowWarning("you cant assign '.map$'.\n");
@@ -333,8 +347,13 @@ void eset_reg_npcscope_str(struct script_state* st,
     }
 }
 
-char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct script_data* data)
+char *eget_val_npcscope_str_pre(struct script_state **stPtr,
+                                struct reg_db **nPtr,
+                                struct script_data **dataPtr)
 {
+    struct script_state *st = *stPtr;
+    struct reg_db *n = *nPtr;
+    struct script_data *data = *dataPtr;
     const char *name = reference_getname(data);
     if (!strcmp(name, ".map$"))
     {
@@ -357,7 +376,10 @@ char *eget_val_npcscope_str(struct script_state* st, struct reg_db *n, struct sc
     return NULL;
 }
 
-void script_run_item_amount_script(TBL_PC *sd, struct script_code *itemScript, int itemId, int amount)
+void script_run_item_amount_script(TBL_PC *sd,
+                                   struct script_code *itemScript,
+                                   int itemId,
+                                   int amount)
 {
     if (!itemScript)
         return;
@@ -371,7 +393,10 @@ void script_run_item_amount_script(TBL_PC *sd, struct script_code *itemScript, i
     script->current_item_id = 0;
 }
 
-void script_run_card_script(TBL_PC *sd, struct script_code *itemScript, int itemId, int cardId)
+void script_run_card_script(TBL_PC *sd,
+                            struct script_code *itemScript,
+                            int itemId,
+                            int cardId)
 {
     if (!itemScript)
         return;

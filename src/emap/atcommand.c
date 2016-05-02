@@ -24,9 +24,11 @@
 #include "emap/atcommand.h"
 #include "emap/lang.h"
 
-const char* eatcommand_msgsd(struct map_session_data *sd, int *msgPtr)
+const char* eatcommand_msgsd_pre(struct map_session_data **sdPtr,
+                                 int *msgPtr)
 {
     const int msg_number = *msgPtr;
+    struct map_session_data *sd = *sdPtr;
     if (!(msg_number >= 0 && msg_number < MAX_MSG))
     {
         hookStop();
@@ -48,7 +50,8 @@ const char* eatcommand_msgsd(struct map_session_data *sd, int *msgPtr)
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
 }
 
-const char* eatcommand_msgfd(int *fdPtr, int *msgPtr)
+const char* eatcommand_msgfd_pre(int *fdPtr,
+                                 int *msgPtr)
 {
     const int msg_number = *msgPtr;
     const int fd = *fdPtr;

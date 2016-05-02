@@ -39,8 +39,10 @@
 
 extern bool isInit;
 
-void eclif_quest_send_list(TBL_PC *sd)
+void eclif_quest_send_list_pre(TBL_PC **sdPtr)
 {
+    TBL_PC *sd = *sdPtr;
+
     if (!sd)
     {
         hookStop();
@@ -72,7 +74,14 @@ void eclif_quest_send_list(TBL_PC *sd)
     hookStop();
 }
 
-void eclif_quest_add(TBL_PC *sd, struct quest *qd)
+void eclif_quest_add_pre(TBL_PC **sdPtr,
+                         struct quest **qdPtr)
+{
+    eclif_quest_add(*sdPtr, *qdPtr);
+}
+
+void eclif_quest_add(TBL_PC *sd,
+                     struct quest *qd)
 {
     if (!sd || !qd)
     {
@@ -99,8 +108,10 @@ void eclif_quest_add(TBL_PC *sd, struct quest *qd)
     hookStop();
 }
 
-void eclif_charnameack(int *fdPtr, struct block_list *bl)
+void eclif_charnameack_pre(int *fdPtr,
+                           struct block_list **blPtr)
 {
+    struct block_list *bl = *blPtr;
     if (!bl)
     {
         hookStop();
@@ -313,7 +324,8 @@ static void eclif_send_additional_slots2(struct block_list *bl)
 #undef equipPos2
 #undef equipPos2Id
 
-void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
+void eclif_getareachar_unit_post(TBL_PC *sd,
+                                 struct block_list *bl)
 {
     if (!bl || !sd)
         return;
@@ -324,7 +336,8 @@ void eclif_getareachar_unit_post(TBL_PC* sd, struct block_list *bl)
     }
 }
 
-bool eclif_spawn_post(bool retVal, struct block_list *bl)
+bool eclif_spawn_post(bool retVal,
+                      struct block_list *bl)
 {
     if (!bl)
         return retVal;
@@ -349,13 +362,13 @@ void eclif_authok_post(TBL_PC *sd)
 }
 
 void eclif_changemap_post(TBL_PC *sd,
-                          short *m,
-                          int *x __attribute__ ((unused)),
-                          int *y __attribute__ ((unused)))
+                          short m,
+                          int x __attribute__ ((unused)),
+                          int y __attribute__ ((unused)))
 {
     if (!sd)
         return;
-    struct MapdExt *data = mapd_get(*m);
+    struct MapdExt *data = mapd_get(m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);
 }
@@ -370,23 +383,26 @@ void eclif_handle_invisible_map(struct block_list *bl,
         hookStop();
 }
 
-void eclif_sendlook(struct block_list *bl,
-                    int *id __attribute__ ((unused)),
-                    int *type __attribute__ ((unused)),
-                    int *val __attribute__ ((unused)),
-                    int *val2 __attribute__ ((unused)),
-                    enum send_target *target)
+void eclif_sendlook_pre(struct block_list **blPtr,
+                        int *id __attribute__ ((unused)),
+                        int *type __attribute__ ((unused)),
+                        int *val __attribute__ ((unused)),
+                        int *val2 __attribute__ ((unused)),
+                        enum send_target *target)
 {
+    struct block_list *bl = *blPtr;
     if (*target == SELF)
         return;
     eclif_handle_invisible_map(bl, *target);
 }
 
-bool eclif_send(const void* buf __attribute__ ((unused)),
-                int *len __attribute__ ((unused)),
-                struct block_list* bl,
-                enum send_target *type)
+bool eclif_send_pre(const void **bufPtr,
+                    int *len __attribute__ ((unused)),
+                    struct block_list **blPtr,
+                    enum send_target *type)
 {
+    struct block_list *bl = *blPtr;
+    const void *buf = *bufPtr;
     if (*type == SELF)
     {
         if (*len >= 2)
@@ -423,16 +439,23 @@ bool eclif_send(const void* buf __attribute__ ((unused)),
     return true;
 }
 
-void eclif_set_unit_idle(struct block_list* bl, TBL_PC *tsd, enum send_target *target)
+void eclif_set_unit_idle_pre(struct block_list **blPtr,
+                             TBL_PC **tsdPtr,
+                             enum send_target *target)
 {
+    struct block_list *bl = *blPtr;
+    TBL_PC *tsd = *tsdPtr;
     if (tsd && bl && bl->id == tsd->bl.id && *target == SELF)
         return;
 
     eclif_handle_invisible_map(bl, *target);
 }
 
-int eclif_send_actual(int *fd, void *buf, int *len)
+int eclif_send_actual_pre(int *fd,
+                          void **bufPtr,
+                          int *len)
 {
+    void *buf = *bufPtr;
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
@@ -577,29 +600,35 @@ int eclif_send_actual(int *fd, void *buf, int *len)
 
 uint16 GetWord(uint32 val, int idx)
 {
-	switch( idx )
-	{
-	case 0: return (uint16)( (val & 0x0000FFFF)         );
-	case 1: return (uint16)( (val & 0xFFFF0000) >> 0x10 );
-	default:
+    switch( idx )
+    {
+        case 0: return (uint16)( (val & 0x0000FFFF)         );
+        case 1: return (uint16)( (val & 0xFFFF0000) >> 0x10 );
+        default:
 #if defined(DEBUG)
-		ShowDebug("GetWord: invalid index (idx=%d)\n", idx);
+            ShowDebug("GetWord: invalid index (idx=%d)\n", idx);
 #endif
-		return 0;
-	}
+            return 0;
+    }
 }
 
 //To make the assignation of the level based on limits clearer/easier. [Skotlex]
-static int clif_setlevel_sub(int lv) {
-	if( lv < battle->bc->max_lv ) {
-		;
-	} else if( lv < battle->bc->aura_lv ) {
-		lv = battle->bc->max_lv - 1;
-	} else {
-		lv = battle->bc->max_lv;
-	}
+static int clif_setlevel_sub(int lv)
+{
+    if (lv < battle->bc->max_lv)
+    {
+        ;
+    }
+    else if (lv < battle->bc->aura_lv)
+    {
+        lv = battle->bc->max_lv - 1;
+    }
+    else
+    {
+        lv = battle->bc->max_lv;
+    }
 
-	return lv;
+    return lv;
 }
 
 static int clif_setlevel(struct block_list* bl)
@@ -971,35 +1000,35 @@ void eclif_damage_old(struct block_list* src,
     }
 }
 
-void eclif_set_unit_idle_post(struct block_list* bl,
+void eclif_set_unit_idle_post(struct block_list *bl,
                               TBL_PC *tsd,
-                              enum send_target *target)
+                              enum send_target target)
 {
     if (!bl || !tsd)
         return;
 
-    eclif_set_unit_idle_old(bl, tsd, *target);
+    eclif_set_unit_idle_old(bl, tsd, target);
 
     if (bl->type == BL_MOB)
-        send_mob_info(bl, &tsd->bl, *target);
+        send_mob_info(bl, &tsd->bl, target);
     else if (bl->type == BL_PC)
-        send_pc_info(bl, &tsd->bl, *target);
+        send_pc_info(bl, &tsd->bl, target);
     else if (bl->type == BL_NPC)
-        send_npc_info(bl, &tsd->bl, *target);
+        send_npc_info(bl, &tsd->bl, target);
 }
 
-void eclif_set_unit_walking_pre(struct block_list* bl,
-                                TBL_PC *tsd,
-                                struct unit_data* ud,
+void eclif_set_unit_walking_pre(struct block_list **blPtr,
+                                TBL_PC **tsdPtr,
+                                struct unit_data **udPtr,
                                 enum send_target *target)
 {
-    eclif_set_unit_walking_old(bl, tsd, ud, *target);
+    eclif_set_unit_walking_old(*blPtr, *tsdPtr, *udPtr, *target);
 }
 
-void eclif_set_unit_walking_post(struct block_list* bl,
+void eclif_set_unit_walking_post(struct block_list *bl,
                                  TBL_PC *tsd,
                                  struct unit_data* ud,
-                                 enum send_target *target)
+                                 enum send_target target)
 {
     if (!ud)
         return;
@@ -1007,29 +1036,29 @@ void eclif_set_unit_walking_post(struct block_list* bl,
     if (!sd || !pc_isinvisible(sd))
     {
         if (ud->walktimer != INVALID_TIMER)
-            send_advmoving(ud, true, tsd ? &tsd->bl : bl, *target);
+            send_advmoving(ud, true, tsd ? &tsd->bl : bl, target);
         else
-            send_advmoving(ud, false, tsd ? &tsd->bl : bl, *target);
+            send_advmoving(ud, false, tsd ? &tsd->bl : bl, target);
     }
 }
 
 int eclif_damage_post(int retVal,
                       struct block_list* src,
                       struct block_list* dst,
-                      int *sdelay,
-                      int *ddelay,
-                      int64 *in_damage,
-                      short *div,
-                      unsigned char *type,
-                      int64 *in_damage2)
+                      int sdelay,
+                      int ddelay,
+                      int64 in_damage,
+                      short div,
+                      unsigned char type,
+                      int64 in_damage2)
 {
     eclif_damage_old(src, dst,
-        *sdelay, *ddelay, *in_damage,
-        *div, *type, *in_damage2);
+        sdelay, ddelay, in_damage,
+        div, type, in_damage2);
     return retVal;
 }
 
-void eclif_move(struct unit_data *ud)
+void eclif_move_post(struct unit_data *ud)
 {
     if (!ud)
         return;
@@ -1038,23 +1067,25 @@ void eclif_move(struct unit_data *ud)
         send_advmoving(ud, false, ud->bl, AREA_WOS);
 }
 
-void eclif_spawn_unit_pre(struct block_list* bl, enum send_target *target)
+void eclif_spawn_unit_pre(struct block_list **blPtr,
+                          enum send_target *target)
 {
-    eclif_spawn_unit_old(bl, *target);
+    eclif_spawn_unit_old(*blPtr, *target);
 }
 
 bool tempChangeMap;
 
 void eclif_parse_LoadEndAck_pre(int *fdPtr __attribute__ ((unused)),
-                                struct map_session_data *sd)
+                                struct map_session_data **sdPtr)
 {
+    struct map_session_data *sd = *sdPtr;
     if (!sd)
         return;
     sd->state.warp_clean = 0;
     tempChangeMap = sd->state.changemap;
 }
 
-void eclif_parse_LoadEndAck_post(int *fdPtr __attribute__ ((unused)),
+void eclif_parse_LoadEndAck_post(int fd __attribute__ ((unused)),
                                  struct map_session_data *sd)
 {
     if (!tempChangeMap)
@@ -1201,10 +1232,12 @@ static inline int itemtype(const int type)
     }
 }
 
-void eclif_getareachar_item(struct map_session_data *sd,
-                            struct flooritem_data *fitem)
+void eclif_getareachar_item_pre(struct map_session_data **sdPtr,
+                                struct flooritem_data **fitemPtr)
 {
     int view;
+    struct map_session_data *sd = *sdPtr;
+    struct flooritem_data *fitem = *fitemPtr;
     if (!sd || !fitem)
         return;
     int fd = sd->fd;
@@ -1234,10 +1267,11 @@ void eclif_getareachar_item(struct map_session_data *sd,
     hookStop();
 }
 
-void eclif_dropflooritem(struct flooritem_data* fitem)
+void eclif_dropflooritem_pre(struct flooritem_data **fitemPtr)
 {
     char buf[28];
     int view;
+    struct flooritem_data *fitem = *fitemPtr;
 
     if (!fitem)
         return;
@@ -1274,9 +1308,10 @@ void eclif_dropflooritem(struct flooritem_data* fitem)
     clif->send(&buf, 28, &fitem->bl, AREA);
 }
 
-void eclif_sendbgemblem_area(struct map_session_data *sd)
+void eclif_sendbgemblem_area_pre(struct map_session_data **sdPtr)
 {
     unsigned char buf[34];
+    struct map_session_data *sd = *sdPtr;
     struct SessionExt *data = session_get_bysd(sd);
     if (!sd || !data || data->clientVersion < 12)
         return;
@@ -1289,9 +1324,11 @@ void eclif_sendbgemblem_area(struct map_session_data *sd)
     clif->send(buf, 34, &sd->bl, AREA);
 }
 
-void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
+void eclif_sendbgemblem_single_pre(int *fdPtr,
+                                   struct map_session_data **sdPtr)
 {
     int fd = *fdPtr;
+    struct map_session_data *sd = *sdPtr;
     struct SessionExt *data = session_get_bysd(sd);
     struct SessionExt *ddata = session_get_bysd(sd);
     if (!sd || !data || !ddata || ddata->clientVersion < 12)
@@ -1308,11 +1345,13 @@ void eclif_sendbgemblem_single(int *fdPtr, struct map_session_data *sd)
     return;
 }
 
-void eclif_disp_message(struct block_list* src,
-                        const char* mes,
-                        enum send_target *targetPtr)
+void eclif_disp_message_pre(struct block_list **srcPtr,
+                            const char **mesPtr,
+                            enum send_target *targetPtr)
 {
     unsigned char buf[256];
+    struct block_list *src = *srcPtr;
+    const char *mes = *mesPtr;
 
     nullpo_retv(mes);
 

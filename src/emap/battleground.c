@@ -24,7 +24,10 @@
 #include "emap/struct/bgdext.h"
 #include "emap/struct/sessionext.h"
 
-bool ebg_team_warp(int *bg_idPtr, unsigned short *map_index, short *x, short *y)
+bool ebg_team_warp_pre(int *bg_idPtr,
+                       unsigned short *map_index,
+                       short *x,
+                       short *y)
 {
     int i;
     int bg_id = *bg_idPtr;
