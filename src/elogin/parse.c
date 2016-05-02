@@ -161,7 +161,6 @@ enum parsefunc_rcode elogin_parse_ping_pre(int *fd,
                                            struct login_session_data **sdPtr)
 {
     struct login_session_data *sd = *sdPtr;
-    RFIFOSKIP(*fd, 26);
     if (!sd)
     {
         hookStop();
