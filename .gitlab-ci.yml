@@ -20,6 +20,12 @@ gcc-6:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
   image: debian:unstable
 
+gcc-6_lto:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto
+  image: debian:unstable
+
 clang-3.9:
   stage: build
   script:
