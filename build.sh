@@ -13,7 +13,7 @@ autoreconf -i
 cd build
 if [[ "${CMD}" == "default" ]]; then
     export CC=gcc
-    ../configure --enable-sanitize
+    ../configure --enable-sanitize --enable-lto
 elif [[ "${CMD}" == "old" ]]; then
     ../configure
 elif [[ "${CMD}" == "gprof" ]]; then

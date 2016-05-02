@@ -94,6 +94,25 @@ AC_ARG_ENABLE(
 )
 AM_CONDITIONAL(ENABLE_WERROR, test x$enable_werror = xyes)
 
+AC_ARG_ENABLE(
+    [lto],
+        AC_HELP_STRING(
+        [--enable-lto],
+        [
+            Enables or Disables Linktime Code Optimization (LTO is disabled by default)
+        ]
+    ),
+    [
+        enable_lto="$enableval"
+        case $enableval in
+            "no");;
+            "yes");;
+            *) AC_MSG_ERROR([[invalid argument --enable-lto=$enableval... stopping]]);;
+        esac
+    ],
+    [enable_lto="no"]
+)
+
 OLD_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS -rdynamic"
 AC_MSG_CHECKING([whether $CC accepts -rdynamic])
@@ -150,6 +169,34 @@ AC_DEFUN([AC_CHECK_COMPILER_WFLAG],
         )
     ]
 )
+
+if test "$enable_lto" != "no" ; then
+    OLD_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -flto -ffat-lto-objects"
+
+    OLD_LDFLAGS="$LDFLAGS"
+    LDFLAGS="$LDFLAGS -flto -ffat-lto-objects"
+
+    AC_MSG_CHECKING([whether $CC supports -flto])
+    AC_RUN_IFELSE(
+        [AC_LANG_SOURCE([
+            int main(int argc, char **argv){
+                return 0;
+            }
+        ])],
+        [
+            AC_MSG_RESULT([yes])
+        ],
+        [
+            AC_MSG_RESULT([no])
+            CFLAGS="$OLD_CFLAGS"
+            LDFLAGS="$OLD_LDFLAGS"
+        ],
+        [
+            AC_MSG_RESULT([guessing no])
+        ]
+    )
+fi
 
 AC_DEFUN([AC_CHECK_SANITIZER_FLAG],
     [
