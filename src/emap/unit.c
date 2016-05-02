@@ -20,6 +20,8 @@
 #include "map/skill.h"
 #include "map/status.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/unit.h"
 
 int eunit_can_move(struct block_list *bl)

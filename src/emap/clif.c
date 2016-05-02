@@ -23,6 +23,8 @@
 #include "map/pc.h"
 #include "map/quest.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/clif.h"
 #include "emap/lang.h"
 #include "emap/map.h"

@@ -14,6 +14,8 @@
 #include "common/strlib.h"
 #include "login/login.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "elogin/md5calc.h"
 
 bool elogin_check_password(const char* md5key __attribute__ ((unused)),

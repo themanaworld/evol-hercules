@@ -19,6 +19,8 @@
 #include "map/map.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 bool email_invalid_operation(struct map_session_data *sd)
 {
     if (!sd)

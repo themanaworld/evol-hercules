@@ -65,6 +65,7 @@
 #include "emap/skill.h"
 #include "emap/status.h"
 
+#include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 extern int langScriptId;

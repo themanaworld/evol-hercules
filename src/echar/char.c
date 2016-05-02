@@ -18,6 +18,8 @@
 #include "char/char.h"
 #include "char/inter.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "echar/char.h"
 #include "echar/config.h"
 

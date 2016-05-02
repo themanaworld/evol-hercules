@@ -17,6 +17,8 @@
 #include "map/script.h"
 #include "map/quest.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/quest.h"
 
 /**

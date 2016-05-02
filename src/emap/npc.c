@@ -16,6 +16,8 @@
 #include "map/npc.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/data/mapd.h"
 #include "emap/data/npcd.h"
 #include "emap/struct/mapdext.h"

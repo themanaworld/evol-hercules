@@ -17,6 +17,8 @@
 #include "login/lclif.h"
 #include "login/login.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "elogin/config.h"
 #include "elogin/md5calc.h"
 #include "elogin/parse.h"

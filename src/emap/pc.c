@@ -17,6 +17,8 @@
 #include "map/npc.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/clif.h"
 #include "emap/pc.h"
 #include "emap/send.h"

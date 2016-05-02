@@ -21,6 +21,8 @@
 #include "map/npc.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/permission.h"
 #include "emap/send.h"
 #include "emap/data/itemd.h"

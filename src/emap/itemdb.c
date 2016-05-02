@@ -18,6 +18,8 @@
 #include "map/npc.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/data/itemd.h"
 #include "emap/struct/itemdext.h"
 #include "emap/npc.h"

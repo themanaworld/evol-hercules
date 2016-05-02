@@ -19,6 +19,8 @@
 #include "map/script.h"
 #include "map/status.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/horse.h"
 #include "emap/data/itemd.h"
 #include "emap/data/npcd.h"

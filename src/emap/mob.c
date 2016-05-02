@@ -18,6 +18,8 @@
 #include "map/itemdb.h"
 #include "map/mob.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/mob.h"
 
 #include "emap/data/mobd.h"

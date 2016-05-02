@@ -18,6 +18,9 @@
 #include "map/map.h"
 #include "map/pc.h"
 #include "map/skill.h"
+
+#include "plugins/HPMHooking.h"
+
 #include "emap/atcommand.h"
 #include "emap/lang.h"
 

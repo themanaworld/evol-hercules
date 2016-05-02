@@ -13,6 +13,8 @@
 #include "map/pc.h"
 #include "map/script.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/script.h"
 #include "emap/map.h"
 #include "emap/data/npcd.h"
