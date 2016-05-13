@@ -81,5 +81,9 @@ void eclif_set_unit_idle_old(struct block_list* bl,
                              enum send_target target);
 void eclif_spawn_unit_pre(struct block_list **blPtr,
                           enum send_target *target);
+void eclif_addcards_post(unsigned char *buf,
+                         struct item *item);
+void eclif_addcards2_post(unsigned short *cards,
+                          struct item *item);
 
 #endif  // EVOL_MAP_CLIF

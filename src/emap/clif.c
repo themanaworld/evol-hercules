@@ -1373,3 +1373,29 @@ void eclif_disp_message_pre(struct block_list **srcPtr,
     safestrncpy(WBUFP(buf, 4), mes, len + 1);
     clif->send(buf, WBUFW(buf, 2), src, *targetPtr);
 }
+
+void eclif_addcards_post(unsigned char *buf, struct item *item)
+{
+    if (!buf || !item)
+        return;
+    if (item->card[0] == CARD0_PET)
+    {
+        WBUFW(buf, 0) = item->card[0];
+        WBUFW(buf, 2) = item->card[1];
+        WBUFW(buf, 4) = item->card[2];
+        WBUFW(buf, 6) = item->card[3];
+    }
+}
+
+void eclif_addcards2_post(unsigned short *cards, struct item *item)
+{
+    if (!cards || !item)
+        return;
+    if (item->card[0] == CARD0_PET)
+    {
+        cards[0] = item->card[0];
+        cards[1] = item->card[1];
+        cards[2] = item->card[2];
+        cards[3] = item->card[3];
+    }
+}
