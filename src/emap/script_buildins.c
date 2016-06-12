@@ -1427,16 +1427,16 @@ BUILDIN(npcWalkTo)
             status_calc_npc(nd, SCO_NONE);
         }
         nd->vd->dead_sit = 0;
-        unit->walktoxy(&nd->bl,x,y,0);
+        script_pushint(st, unit->walktoxy(&nd->bl,x,y,0));
+        return true;
     }
     else
     {
         ShowWarning("npc not found\n");
         script->reportsrc(st);
+        script_pushint(st, 0);
         return false;
     }
-
-    return true;
 }
 
 BUILDIN(setBgTeam)
