@@ -22,6 +22,7 @@
 #include "emap/craft.h"
 #include "emap/lang.h"
 #include "emap/map.h"
+#include "emap/hashtable.h"
 #include "emap/scriptdefines.h"
 #include "emap/send.h"
 #include "emap/data/bgd.h"
@@ -1803,3 +1804,183 @@ BUILDIN(setLook)
     send_changelook2(sd, &sd->bl, sd->bl.id, type, val, 0, NULL, 0, AREA);
     return true;
 }
+
+#define checkHashTableExists(id) \
+    if (!htreg->hashtable_exists(id)) \
+    { \
+        ShowError("%s: hashtable with id=%ld does not exist\n", __func__, id); \
+        script_pushint(st, 0); \
+        return false; \
+    }
+
+BUILDIN(htNew)
+{
+    int64 id = htreg->new_hashtable();
+    script_pushint(st, id);
+    return true;
+}
+
+BUILDIN(htGet)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    struct DBData defval_s;
+    struct DBData *defval = &defval_s;
+    const char * key = script_getstr(st, 3);
+
+    if (script_hasdata(st, 4))
+    {
+        if (script_isstringtype(st, 4))
+        {
+            defval->type = DB_DATA_PTR;
+            defval->u.ptr = (void*)script_getstr(st, 4);
+        }
+        else if (script_isinttype(st, 4))
+        {
+            defval->type = DB_DATA_INT;
+            defval->u.i = script_getnum(st, 4);
+        }
+        else
+        {
+            ShowError("usage: htget(<id>, <strkey>[ ,<defval>])\n");
+            return false;
+        }
+    }
+    else
+    {
+        defval = NULL;
+    }
+
+    const struct DBData *result = htreg->hashtable_getvalue(id, key, defval);
+    if (result)
+    {
+        switch(result->type)
+        {
+            case DB_DATA_INT:
+            case DB_DATA_UINT:
+                script_pushint(st, result->u.i);
+                break;
+            case DB_DATA_PTR:
+                script_pushstrcopy(st, result->u.ptr);
+                break;
+        }
+    }
+    else
+    {
+        script_pushint(st, 0);
+    }
+
+    return true;
+}
+
+BUILDIN(htPut)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    struct DBData value;
+    const char * key = script_getstr(st, 3);
+
+    if (script_isstringtype(st, 4))
+    {
+        value.type = DB_DATA_PTR;
+        value.u.ptr = (void*)aStrdup(script_getstr(st, 4));
+    }
+    else if (script_isinttype(st, 4))
+    {
+        value.type = DB_DATA_INT;
+        value.u.i = script_getnum(st, 4);
+    }
+    else
+    {
+        ShowError("usage: htput(<id>, <strkey>, <newval>)\n");
+        return false;
+    }
+
+    htreg->hashtable_setvalue(id, key, value);
+    return true;
+}
+
+BUILDIN(htClear)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    htreg->clear_hashtable(id);
+    return true;
+}
+
+BUILDIN(htDelete)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    htreg->destroy_hashtable(id);
+    return true;
+}
+
+BUILDIN(htSize)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    script_pushint(st, htreg->hashtable_size(id));
+    return true;
+}
+
+BUILDIN(htIterator)
+{
+    int64 id = script_getnum(st, 2);
+    checkHashTableExists(id);
+
+    script_pushint(st, htreg->create_iterator(id));
+    return true;
+}
+
+#undef checkHashTableExists
+
+#define checkHtIteratorExists(id) \
+    if (!htreg->iterator_exists(id)) \
+    { \
+        ShowError("%s: htIterator with id=%ld does not exist\n", __func__, id); \
+        script_pushint(st, 0); \
+        return false; \
+    }
+
+BUILDIN(htiNextKey)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    const char * key = htreg->iterator_nextkey(id);
+    if (key)
+        script_pushstrcopy(st, key);
+    else
+        script_pushstrcopy(st, "");
+    return true;
+}
+
+BUILDIN(htiCheck)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    if (htreg->iterator_check(id))
+        script_pushint(st, 1);
+    else
+        script_pushint(st, 0);
+
+    return true;
+}
+
+BUILDIN(htiDelete)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    htreg->destroy_iterator(id);
+    return true;
+}
+
+#undef checkHtIteratorExists

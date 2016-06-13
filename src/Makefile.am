@@ -42,6 +42,8 @@ MAP_SRC = emap/atcommand.c \
     emap/craft.h \
     emap/craftconf.c \
     emap/craftconf.h \
+    emap/hashtable.c \
+    emap/hashtable.h \
     emap/horse.c \
     emap/horse.h \
     emap/init.c \

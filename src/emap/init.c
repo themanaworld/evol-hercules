@@ -49,6 +49,7 @@
 #include "emap/config.h"
 #include "emap/craft.h"
 #include "emap/craftconf.h"
+#include "emap/hashtable.h"
 #include "emap/itemdb.h"
 #include "emap/lang.h"
 #include "emap/mail.h"
@@ -84,6 +85,7 @@ HPExport void plugin_init (void)
 {
     isInit = false;
     status_init();
+    htreg_init();
 
     addAtcommand("setskill", setSkill);
     addAtcommand("slide", slide);
@@ -155,6 +157,16 @@ HPExport void plugin_init (void)
     addScriptCommand("setskin", "s", setSkin);
     addScriptCommand("emotion", "i??", emotion);
     addScriptCommand("setlook", "ii", setLook);
+    addScriptCommand("htnew", "", htNew);
+    addScriptCommand("htget", "is?", htGet);
+    addScriptCommand("htput", "isv", htPut);
+    addScriptCommand("htclear", "i", htClear);
+    addScriptCommand("htdelete", "i", htDelete);
+    addScriptCommand("htsize", "i", htSize);
+    addScriptCommand("htiterator", "i", htIterator);
+    addScriptCommand("htinextkey", "i", htiNextKey);
+    addScriptCommand("hticheck", "i", htiCheck);
+    addScriptCommand("htidelete", "i", htiDelete);
 
     do_init_langs();
 
@@ -276,6 +288,7 @@ HPExport void plugin_init (void)
 HPExport void server_preinit (void)
 {
     interfaces_init_common();
+    htreg_defaults();
 
     setDefaultMap();
     addMapInterConf("default_map", config_default_map);
@@ -301,5 +314,6 @@ HPExport void plugin_final (void)
     do_final_craft();
     do_final_craftconf();
     commonClean();
+    htreg_final();
     isInit = false;
 }

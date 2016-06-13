@@ -71,5 +71,15 @@ BUILDIN(findCraftEntry);
 BUILDIN(useCraft);
 BUILDIN(getCraftCode);
 BUILDIN(setLook);
+BUILDIN(htNew);
+BUILDIN(htGet);
+BUILDIN(htPut);
+BUILDIN(htClear);
+BUILDIN(htDelete);
+BUILDIN(htSize);
+BUILDIN(htIterator);
+BUILDIN(htiNextKey);
+BUILDIN(htiCheck);
+BUILDIN(htiDelete);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS
