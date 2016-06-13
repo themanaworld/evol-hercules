@@ -15,6 +15,22 @@ function do_init {
     ln -s evol-hercules server-plugin
 }
 
+function update_repos {
+    if [ "$CI_SERVER" == "" ];
+    then
+        return
+    fi
+
+    export DATA=$(cat /etc/resolv.conf|grep "nameserver 1.10.100.101")
+    if [ "$DATA" != "" ];
+    then
+        echo "Detected local runner"
+        sed -i 's!http://httpredir.debian.org/debian!http://1.10.100.103/debian!' /etc/apt/sources.list
+    else
+        echo "Detected non local runner"
+    fi
+}
+
 function aptget_update {
     echo "apt-get update"
     apt-get update
@@ -151,4 +167,5 @@ function build_init {
     check_error $?
 }
 
+update_repos
 aptget_update
