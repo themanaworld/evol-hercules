@@ -150,10 +150,12 @@ function run_mplint {
 }
 
 function clone_tool {
+    rm -rf tools
     gitclone https://gitlab.com/evol/evol-tools.git tools
 }
 
 function clone_servercode {
+    rm -rf server-code
     gitclone https://gitlab.com/evol/hercules.git server-code
 }
 
