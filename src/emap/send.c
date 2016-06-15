@@ -118,6 +118,10 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
                     //ShowWarning("card %d\n", data->nameid);
                     WFIFOW (fd, 11 + i * 2) = data->nameid;
                 }
+                else
+                {
+                    WFIFOW (fd, 11 + i * 2) = 0;
+                }
             }
             for (i = data->slot; i < MAX_SLOTS; i ++)
                 WFIFOW (fd, 11 + i * 2) = 0;
@@ -388,6 +392,10 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
             {
                 //ShowWarning("card %d\n", data->nameid);
                 WBUFW(buf, 11 + i * 2) = data->nameid;
+            }
+            else
+            {
+                WBUFW(buf, 11 + i * 2) = 0;
             }
         }
         for (i = data->slot; i < MAX_SLOTS; i ++)
