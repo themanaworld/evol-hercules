@@ -609,7 +609,7 @@ BUILDIN(setNpcDir)
         newdir = 7;
 
     nd->dir = newdir;
-    npc->enable (nd->name, 1);
+    npc->enable(nd->exname, 1);
 
     return true;
 }
