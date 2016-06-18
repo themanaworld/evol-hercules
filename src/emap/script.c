@@ -154,7 +154,7 @@ void eset_reg_npcscope_num_pre(struct script_state **stPtr,
             newdir = 7;
 
         nd->dir = newdir;
-        npc->enable(nd->name, 1);
+        npc->enable(nd->exname, 1);
         hookStop();
     }
     else if (!strcmp(name, ".x"))
