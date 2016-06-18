@@ -10,6 +10,7 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "map/itemdb.h"
@@ -20,6 +21,8 @@
 #include "map/status.h"
 
 #include "plugins/HPMHooking.h"
+
+#include "emap/npc.h"
 
 #include "emap/horse.h"
 #include "emap/data/itemd.h"
@@ -52,13 +55,7 @@ void estatus_set_viewdata_post(struct block_list *bl,
         if (npc->subtype == SCRIPT)
         {
             if (npc->u.scr.script)
-            {
-                // here some magic to set npc local variable .id to bl.id
-                const int num = (int)reference_uid(script->add_str(".id"), 0);
-                if (!npc->u.scr.script->local.vars)
-                    npc->u.scr.script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
-                i64db_iput(npc->u.scr.script->local.vars, num, npc->bl.id);
-            }
+                enpc_set_var_num(npc, ".id", npc->bl.id);
         }
     }
 }

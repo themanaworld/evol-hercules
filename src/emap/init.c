@@ -205,6 +205,8 @@ HPExport void plugin_init (void)
     addHookPre(npc, parse_unknown_mapflag, enpc_parse_unknown_mapflag_pre);
     addHookPre(npc, buysellsel, enpc_buysellsel_pre);
     addHookPre(npc, db_checkid, enpc_db_checkid_pre);
+    addHookPre(npc, duplicate_script_sub, enpc_duplicate_script_sub_pre);
+    addHookPre(npc, unload, enpc_unload_pre);
     addHookPre(clif, quest_send_list, eclif_quest_send_list_pre);
     addHookPre(clif, quest_add, eclif_quest_add_pre);
     addHookPre(clif, charnameack, eclif_charnameack_pre);

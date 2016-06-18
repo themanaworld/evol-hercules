@@ -18,4 +18,20 @@ int enpc_buysellsel_pre(TBL_PC **sdPtr,
 
 bool enpc_db_checkid_pre(const int *idPtr);
 
+bool enpc_duplicate_script_sub_pre(struct npc_data **ndPtr,
+                                   const struct npc_data **sndPtr,
+                                   int *xsPtr,
+                                   int *ysPtr,
+                                   int *optionsPtr);
+
+void enpc_set_var_num(TBL_NPC *const npc,
+                      const char *var,
+                      const int val);
+
+int enpc_get_var_num(const TBL_NPC *const npc,
+                     const char *var);
+
+int enpc_unload_pre(struct npc_data** ndPtr,
+                    bool *singlePtr);
+
 #endif  // EVOL_MAP_NPC

@@ -10,8 +10,10 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/timer.h"
 #include "map/map.h"
 #include "map/npc.h"
 #include "map/pc.h"
@@ -145,4 +147,139 @@ bool enpc_db_checkid_pre(const int *idPtr)
         return true;
     // Anything else is invalid
     return false;
+}
+
+bool enpc_duplicate_script_sub_pre(struct npc_data **ndPtr,
+                                   const struct npc_data **sndPtr,
+                                   int *xsPtr,
+                                   int *ysPtr,
+                                   int *optionsPtr __attribute__ ((unused)))
+{
+    struct npc_data *nd = *ndPtr;
+    const struct npc_data *snd = *sndPtr;
+
+    hookStop();
+    nullpo_retr(false, nd);
+    nullpo_retr(false, snd);
+
+    int xs = *xsPtr;
+    int ys = *ysPtr;
+
+    int i;
+    bool retval = true;
+
+    ++npc->npc_script;
+    nd->u.scr.xs = xs;
+    nd->u.scr.ys = ys;
+    nd->u.scr.script = snd->u.scr.script;
+    nd->u.scr.label_list = snd->u.scr.label_list;
+    nd->u.scr.label_list_num = snd->u.scr.label_list_num;
+    nd->u.scr.shop = snd->u.scr.shop;
+    nd->u.scr.trader = snd->u.scr.trader;
+
+    struct script_code *code;
+    const int sz = snd->u.scr.script->script_size;
+    CREATE(code, struct script_code, 1);
+    code->script_buf = (unsigned char *)aMalloc(sz * sizeof(unsigned char));
+    memcpy(code->script_buf, snd->u.scr.script->script_buf, sz);
+    code->script_size = sz;
+    code->local.vars = NULL;
+    code->local.arrays = NULL;
+    nd->u.scr.script = code;
+
+    enpc_set_var_num(nd, ".parent", snd->bl.id);
+
+    //add the npc to its location
+    npc->add_to_location(nd);
+
+    // Loop through labels to export them as necessary
+    for (i = 0; i < nd->u.scr.label_list_num; i++)
+    {
+        if (npc->event_export(nd, i))
+        {
+            ShowWarning("npc_parse_duplicate: duplicate event %s::%s in file '%s'.\n",
+                nd->exname, nd->u.scr.label_list[i].name, nd->path);
+            retval = false;
+        }
+        npc->timerevent_export(nd, i);
+    }
+
+    nd->u.scr.timerid = INVALID_TIMER;
+
+// run OnInit always
+//    if (options&NPO_ONINIT)
+    {
+        // From npc_parse_script
+        char evname[EVENT_NAME_LENGTH];
+        struct event_data *ev;
+
+        snprintf(evname, ARRAYLENGTH(evname), "%s::OnInit", nd->exname);
+
+        if ((ev = (struct event_data*)strdb_get(npc->ev_db, evname)) != NULL)
+        {
+            //Execute OnInit
+            script->run_npc(nd->u.scr.script,ev->pos,0,nd->bl.id);
+        }
+    }
+    hookStop();
+    return retval;
+}
+
+void enpc_set_var_num(TBL_NPC *const npc,
+                      const char *var,
+                      const int val)
+{
+    const int num = (int)reference_uid(script->add_str(var), 0);
+    if (!npc->u.scr.script->local.vars)
+        npc->u.scr.script->local.vars = i64db_alloc(DB_OPT_RELEASE_DATA);
+    i64db_iput(npc->u.scr.script->local.vars, num, val);
+}
+
+int enpc_get_var_num(const TBL_NPC *const npc,
+                     const char *var)
+{
+    const int num = (int)reference_uid(script->add_str(var), 0);
+    if (npc->u.scr.script->local.vars)
+    {
+        return i64db_iget(npc->u.scr.script->local.vars, num);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+int enpc_unload_pre(struct npc_data** ndPtr,
+                    bool *singlePtr __attribute__ ((unused)))
+{
+    struct npc_data *nd = *ndPtr;
+    nullpo_ret(nd);
+    if (nd->subtype == SCRIPT)
+    {
+        if (nd->src_id != 0)
+        {
+            ShowWarning("npc_unload 5: %d\n", nd->bl.id);
+            if (nd->u.scr.script)
+            {
+                script->free_code(nd->u.scr.script);
+                nd->u.scr.script = NULL;
+            }
+/*
+// this need to clean if we copy this structs too.
+            if (nd->u.scr.label_list)
+            {
+                aFree(nd->u.scr.label_list);
+                nd->u.scr.label_list = NULL;
+                nd->u.scr.label_list_num = 0;
+            }
+            if (nd->u.scr.shop)
+            {
+                if(nd->u.scr.shop->item)
+                    aFree(nd->u.scr.shop->item);
+                aFree(nd->u.scr.shop);
+            }
+*/
+        }
+    }
+    return 0;
 }
