@@ -220,6 +220,12 @@ void eset_reg_npcscope_num_pre(struct script_state **stPtr,
             map_alwaysVisible_delete(&nd->bl);
         hookStop();
     }
+    else if (!strcmp(name, ".srcId"))
+    {
+        ShowWarning("you cant assign '.srcId'\n");
+        script->reportsrc(st);
+        hookStop();
+    }
 }
 
 int eget_val_npcscope_num_pre(struct script_state **stPtr,
@@ -308,6 +314,12 @@ int eget_val_npcscope_num_pre(struct script_state **stPtr,
         bool res = map_alwaysVisible_find(&nd->bl);
         hookStop();
         return res;
+    }
+    else if (!strcmp(name, ".srcId"))
+    {
+        getExt1Return(0);
+        hookStop();
+        return nd->src_id;
     }
     return 0;
 }
