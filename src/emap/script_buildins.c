@@ -1805,6 +1805,36 @@ BUILDIN(setLook)
     return true;
 }
 
+BUILDIN(setFakeCells)
+{
+    const int x1 = script_getnum(st, 2);
+    const int y1 = script_getnum(st, 3);
+    int x2 = x1, y2 = y1, block_type = 0;
+
+    if (script_hasdata(st, 6))
+    {
+        if (script_isinttype(st, 5) && script_isinttype(st, 6))
+        {
+            x2 = script_getnum(st, 4);
+            y2 = script_getnum(st, 5);
+            block_type = script_getnum(st, 6);
+        }
+        else
+        {
+            ShowError("all arguments must be of type int");
+            return false;
+        }
+    }
+    else
+    {
+        block_type = script_getnum(st, 4);
+    }
+
+    getSD();
+    send_setwall_single(sd->fd, sd->bl.m, 0, x1, y1, x2, y2, block_type);
+    return true;
+}
+
 #define checkHashTableExists(id) \
     if (!htreg->hashtable_exists(id)) \
     { \

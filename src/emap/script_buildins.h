@@ -81,5 +81,6 @@ BUILDIN(htIterator);
 BUILDIN(htiNextKey);
 BUILDIN(htiCheck);
 BUILDIN(htiDelete);
+BUILDIN(setFakeCells);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS
