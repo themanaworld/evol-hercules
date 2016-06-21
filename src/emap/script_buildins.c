@@ -258,7 +258,7 @@ BUILDIN(getItemLink)
         }
         else if (i_data)
         {
-            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
         }
         else if (item_id > 0)
         {
@@ -272,7 +272,7 @@ BUILDIN(getItemLink)
     else
     {
         if (i_data)
-            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[%s]", i_data->jname);
         else
             sprintf(item_name, "[Unknown Item]");
     }
@@ -1804,7 +1804,7 @@ BUILDIN(getInvIndexLink)
         }
         else if (i_data)
         {
-            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
         }
         else if (item_id > 0)
         {
@@ -1818,7 +1818,7 @@ BUILDIN(getInvIndexLink)
     else
     {
         if (i_data)
-            sprintf(item_name, "[%s]", lang_pctrans (i_data->jname, sd));
+            sprintf(item_name, "[%s]", i_data->jname);
         else
             sprintf(item_name, "[Unknown Item]");
     }
