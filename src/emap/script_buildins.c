@@ -1370,6 +1370,43 @@ BUILDIN(getCardByIndex)
     return true;
 }
 
+BUILDIN(removeCardByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+    {
+        ShowWarning("zero amount\n");
+        script_pushint(st, -1);
+        return false;
+    }
+
+    if (sd->status.inventory[n].equip)
+    {
+        ShowWarning("item equipped\n");
+        script_pushint(st, -1);
+        return false;
+    }
+
+    const int c = script_getnum(st, 3);
+    if (c < 0 || c >= MAX_SLOTS)
+    {
+        ShowWarning("wrong slot id\n");
+        script_pushint(st, -1);
+        return false;
+    }
+
+    const int amount = sd->status.inventory[n].amount;
+    clif->delitem(sd, n, amount, DELITEM_FAILREFINE);
+    sd->status.inventory[n].card[c] = 0;
+    clif->additem(sd, n, amount, 0);
+    status_calc_pc(sd, SCO_NONE);
+
+    script_pushint(st, 0);
+    return true;
+}
+
 // return paramater type
 // 0 - int
 // 1 - string

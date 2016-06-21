@@ -50,6 +50,7 @@ BUILDIN(successRefIndex);
 BUILDIN(successRemoveCardsIndex);
 BUILDIN(failedRemoveCardsIndex);
 BUILDIN(getCardByIndex);
+BUILDIN(removeCardByIndex);
 BUILDIN(isStr);
 BUILDIN(npcSit);
 BUILDIN(npcStand);
