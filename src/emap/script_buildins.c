@@ -1333,6 +1333,43 @@ BUILDIN(failedRemoveCardsIndex)
     return true;
 }
 
+BUILDIN(getCardByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int c = script_getnum(st, 3);
+    if (c < 0 || c >= MAX_SLOTS)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    if (itemdb_isspecial(sd->status.inventory[n].card[0]))
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+
+    const int card = sd->status.inventory[n].card[c];
+    if (card && itemdb_type(card) == IT_CARD)
+    {
+        script_pushint(st, card);
+    }
+    else
+    {
+        script_pushint(st, 0);
+    }
+
+    return true;
+}
+
 // return paramater type
 // 0 - int
 // 1 - string
