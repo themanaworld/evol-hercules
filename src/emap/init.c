@@ -250,6 +250,7 @@ HPExport void plugin_init (void)
     addHookPre(script, reload, escript_reload_pre);
     addHookPre(script, load_translations, escript_load_translations_pre);
     addHookPre(script, load_parameters, escript_load_parameters_pre);
+    addHookPre(script, hardcoded_constants, escript_hardcoded_constants_pre);
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
 
     addHookPost(clif, addcards, eclif_addcards_post);

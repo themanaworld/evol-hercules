@@ -79,6 +79,13 @@ void escript_load_parameters_pre(void)
     script->constdb_comment(NULL);
 }
 
+void escript_hardcoded_constants_pre(void)
+{
+    script->constdb_comment("Evol constants");
+    script->set_constant("MAX_SLOTS", MAX_SLOTS, false, false);
+    script->constdb_comment(NULL);
+}
+
 // stripped copy from script_load_translations without actual translation loading.
 void escript_load_translations_pre(void)
 {

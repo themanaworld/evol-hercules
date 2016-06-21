@@ -7,6 +7,7 @@
 int escript_reload_pre(void);
 void escript_load_translations_pre(void);
 void escript_load_parameters_pre(void);
+void escript_hardcoded_constants_pre(void);
 void eset_reg_npcscope_num_pre(struct script_state **stPtr,
                                struct reg_db **nPtr,
                                int64 *numPtr,
