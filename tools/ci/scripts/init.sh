@@ -65,14 +65,33 @@ function aptget_install {
     fi
 }
 
+function gitclone1 {
+    echo git clone $2 $3
+    git clone $2 $3
+    if [ "$?" != 0 ]; then
+        echo git clone $1 $3
+        git clone $1 $3
+        return $?
+    fi
+    return $?
+}
+
 function gitclone {
-    git clone $*
+    export name1=$1/$2
+    export name2=${CI_BUILD_REPO##*@}
+    export name2=https://${name2%/*}/$2
+
+    gitclone1 "$name1" "$name2" $3
     if [ "$?" != 0 ]; then
         sleep 1s
-        git clone $*
+        gitclone1 "$name1" "$name2" $3
         if [ "$?" != 0 ]; then
             sleep 3s
-            git clone $*
+            gitclone1 "$name1" "$name2" $3
+            if [ "$?" != 0 ]; then
+                sleep 5s
+                gitclone1 "$name1" "$name2" $3
+            fi
         fi
     fi
     check_error $?
@@ -151,12 +170,12 @@ function run_mplint {
 
 function clone_tool {
     rm -rf tools
-    gitclone https://gitlab.com/evol/evol-tools.git tools
+    gitclone https://gitlab.com/evol evol-tools.git tools
 }
 
 function clone_servercode {
     rm -rf server-code
-    gitclone https://gitlab.com/evol/hercules.git server-code
+    gitclone https://gitlab.com/evol hercules.git server-code
 }
 
 function build_init {
