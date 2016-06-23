@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - success
   - failure
 
@@ -57,6 +58,36 @@ clang-3.9-i386:
   image: vicamo/debian:sid-i386
 
 # tests
+
+gcc-4.8-sanitize:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-sanitize
+  image: debian:stable
+
+gcc-4.9-sanitize:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
+gcc-5-sanitize:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
+gcc-6-sanitize:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
+gcc-6_lto-sanitize:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto --enable-sanitize
+  image: debian:unstable
 
 # reports
 
