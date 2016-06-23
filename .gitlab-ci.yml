@@ -12,7 +12,7 @@ gcc-4.8:
   stage: build
   script:
   - ./tools/ci/jobs/gcc48.sh --enable-werror
-  image: debian:unstable
+  image: debian:stable
 
 gcc-4.9:
   stage: build
