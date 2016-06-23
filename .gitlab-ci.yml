@@ -53,12 +53,6 @@ clang-3.9-i386:
 
 # tests
 
-gcc-4.8-sanitize:
-  stage: test
-  script:
-  - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-sanitize
-  image: debian:stable
-
 gcc-4.9-sanitize:
   stage: test
   script:
