@@ -1912,7 +1912,7 @@ BUILDIN(setFakeCells)
 #define checkHashTableExists(id) \
     if (!htreg->hashtable_exists(id)) \
     { \
-        ShowError("%s: hashtable with id=%ld does not exist\n", __func__, (int)id); \
+        ShowError("%s: hashtable with id=%d does not exist\n", __func__, (int)id); \
         script_pushint(st, 0); \
         return false; \
     }
