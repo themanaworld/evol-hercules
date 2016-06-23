@@ -2047,7 +2047,7 @@ BUILDIN(htIterator)
 #define checkHtIteratorExists(id) \
     if (!htreg->iterator_exists(id)) \
     { \
-        ShowError("%s: htIterator with id=%ld does not exist\n", __func__, id); \
+        ShowError("%s: htIterator with id=%d does not exist\n", __func__, (int)id); \
         script_pushint(st, 0); \
         return false; \
     }
