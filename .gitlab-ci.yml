@@ -26,6 +26,12 @@ gcc-5:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
   image: debian:unstable
 
+gcc-5-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc5.sh --enable-werror
+  image: vicamo/debian:sid-i386
+
 gcc-6:
   stage: build
   script:
@@ -43,6 +49,12 @@ clang-3.9:
   script:
   - ./tools/ci/jobs/clang39.sh --enable-werror
   image: debian:unstable
+
+clang-3.9-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang39.sh --enable-werror
+  image: vicamo/debian:sid-i386
 
 # tests
 
