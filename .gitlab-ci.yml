@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - legacy
   - success
   - failure
 
@@ -112,6 +113,26 @@ gcc-6_lto:
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto
   image: debian:unstable
+
+# legacy
+
+gcc-4.9_stable_lto-sanitize:
+  stage: legacy
+  script:
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  image: debian:stable
+
+gcc-4.9_testing_lto-sanitize:
+  stage: legacy
+  script:
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  image: debian:testing
+
+gcc-5_testing_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize --enable-sanitize
+  image: debian:testing
 
 # reports
 
