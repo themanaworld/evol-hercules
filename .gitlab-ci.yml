@@ -71,6 +71,18 @@ gcc-6-sanitize:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
+gcc-4.9_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  image: debian:unstable
+
+gcc-5_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize --enable-sanitize
+  image: debian:unstable
+
 gcc-6_lto-sanitize:
   stage: test
   script:
