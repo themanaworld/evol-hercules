@@ -10,6 +10,18 @@ before_script:
 
 # simple builds
 
+gcc-snapshot:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
+  image: debian:unstable
+
+gcc-snapshot-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
+  image: vicamo/debian:sid-i386
+
 gcc-4.8:
   stage: build
   script:
@@ -54,6 +66,18 @@ clang-3.9-i386:
 
 # tests
 
+gcc-snapshot_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-lto --enable-sanitize
+  image: debian:unstable
+
+gcc-snapshot-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
 gcc-4.9-sanitize:
   stage: test
   script:
@@ -75,13 +99,13 @@ gcc-6-sanitize:
 gcc-4.9_lto-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-5_lto-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize --enable-sanitize
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-6_lto-sanitize:
@@ -114,24 +138,30 @@ gcc-6_lto:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto
   image: debian:unstable
 
+gcc-4.6:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc46.sh --enable-werror
+  image: debian:oldstable
+
 # legacy
 
 gcc-4.9_stable_lto-sanitize:
   stage: legacy
   script:
-  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:stable
 
 gcc-4.9_testing_lto-sanitize:
   stage: legacy
   script:
-  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize --enable-sanitize
+  - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:testing
 
 gcc-5_testing_lto-sanitize:
-  stage: test
+  stage: legacy
   script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize --enable-sanitize
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:testing
 
 # reports
