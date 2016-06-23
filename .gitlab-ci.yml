@@ -78,6 +78,13 @@ gcc-snapshot-sanitize:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
+gcc-4.8-sanitize:
+  stage: test
+  script:
+  - echo "should disable sanitize"
+  - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-sanitize
+  image: debian:stable
+
 gcc-4.9-sanitize:
   stage: test
   script:
@@ -145,6 +152,13 @@ gcc-4.6:
   image: debian:oldstable
 
 # legacy
+
+gcc-4.8_stable_lto-sanitize:
+  stage: legacy
+  script:
+  - echo "should disable lto and sanitize"
+  - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-lto --enable-sanitize
+  image: debian:stable
 
 gcc-4.9_stable_lto-sanitize:
   stage: legacy
