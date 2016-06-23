@@ -185,7 +185,20 @@ if test "$enable_lto" != "no" ; then
             }
         ])],
         [
-            AC_MSG_RESULT([yes])
+            if test -n "$CC"; then
+                case `($CC --version) 2>/dev/null` in
+                  *gcc*4.9-*| \
+                  *gcc*4.9.0*| \
+                  *gcc*4.9.1*| \
+                  *gcc*4.9.2*)
+                    AC_MSG_RESULT([no])
+                    CFLAGS="$OLD_CFLAGS"
+                    LDFLAGS="$OLD_LDFLAGS"
+                      ;;
+                  *)
+                    AC_MSG_RESULT([yes])
+                esac
+            fi
         ],
         [
             AC_MSG_RESULT([no])
