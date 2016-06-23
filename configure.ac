@@ -26,7 +26,20 @@ AC_ARG_ENABLE(
         enable_sanitize="$enableval"
         case $enableval in
             "no");;
-            "yes");;
+            "yes")
+                if test -n "$CC"; then
+                    case `($CC --version) 2>/dev/null` in
+                      *gcc*4.4*| \
+                      *gcc*4.5*| \
+                      *gcc*4.6*| \
+                      *gcc*4.7*| \
+                      *gcc*4.8*)
+                        enable_sanitize="no"
+                          ;;
+                      *);;
+                    esac
+                fi
+            ;;
             *) AC_MSG_ERROR([[invalid argument --enable-sanitize=$disableval... stopping]]);;
         esac
     ],
