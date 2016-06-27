@@ -758,7 +758,6 @@ int epc_dead_post(int retVal,
                   struct map_session_data *sd,
                   struct block_list *src)
 {
-    ShowInfo("epc_dead_post\n");
     if (retVal > 0)
     {
         if (sd)
