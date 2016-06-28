@@ -178,11 +178,12 @@ bool enpc_duplicate_script_sub_pre(struct npc_data **ndPtr,
     nd->u.scr.trader = snd->u.scr.trader;
 
     struct script_code *code;
-    const int sz = snd->u.scr.script->script_size;
     CREATE(code, struct script_code, 1);
-    code->script_buf = (unsigned char *)aMalloc(sz * sizeof(unsigned char));
-    memcpy(code->script_buf, snd->u.scr.script->script_buf, sz);
-    code->script_size = sz;
+
+    const int sz = VECTOR_LENGTH(snd->u.scr.script->script_buf);
+    VECTOR_ENSURE(code->script_buf, sz , 1);
+    VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(snd->u.scr.script->script_buf), sz);
+
     code->local.vars = NULL;
     code->local.arrays = NULL;
     nd->u.scr.script = code;
@@ -259,7 +260,6 @@ int enpc_unload_pre(struct npc_data** ndPtr,
     {
         if (nd->src_id != 0)
         {
-            ShowWarning("npc_unload 5: %d\n", nd->bl.id);
             if (nd->u.scr.script)
             {
                 script->free_code(nd->u.scr.script);
