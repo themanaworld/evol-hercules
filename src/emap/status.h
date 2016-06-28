@@ -5,6 +5,8 @@
 #define EVOL_MAP_STATUS
 
 void status_init(void);
+void estatus_set_viewdata_pre(struct block_list **blPtr,
+                              int *classPtr_ __attribute__ ((unused)));
 void estatus_set_viewdata_post(struct block_list *bl,
                                int class_);
 void estatus_read_job_db_sub_post(int idx,

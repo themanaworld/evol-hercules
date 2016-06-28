@@ -39,6 +39,17 @@ void status_init(void)
         class_move_speed[f] = 150;
 }
 
+void estatus_set_viewdata_pre(struct block_list **blPtr,
+                              int *classPtr_ __attribute__ ((unused)))
+{
+    struct block_list *bl = *blPtr;
+    if (bl->type != BL_NPC)
+        return;
+    TBL_NPC *const npc = (TBL_NPC*)bl;
+    aFree(npc->vd);
+    npc->vd = NULL;
+}
+
 void estatus_set_viewdata_post(struct block_list *bl,
                                int class_ __attribute__ ((unused)))
 {
