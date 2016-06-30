@@ -6,6 +6,7 @@ if [[ -z "${CMD}" ]]; then
     export CMD="default"
 fi
 
+export LANG=C
 source tools/vars.sh
 
 mkdir build
