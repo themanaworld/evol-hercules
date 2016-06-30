@@ -32,6 +32,10 @@ function update_repos {
 }
 
 function aptget_update {
+    if [ "$CI_SERVER" == "" ];
+    then
+        return
+    fi
     echo "apt-get update"
     apt-get update
     if [ "$?" != 0 ]; then
@@ -49,6 +53,10 @@ function aptget_update {
 }
 
 function aptget_install {
+    if [ "$CI_SERVER" == "" ];
+    then
+        return
+    fi
     echo "apt-get -y -qq install $*"
     apt-get -y -qq install $*
     if [ "$?" != 0 ]; then
@@ -111,13 +119,13 @@ function run_configure_simple {
     check_error $?
     mkdir build
     cd build
-    echo "../configure $*"
-    ../configure $*
+    echo "../configure $* CPPFLAGS="${VARS}""
+    ../configure $* CPPFLAGS="${VARS}"
     check_error $?
 }
 
 function run_configure {
-    run_configure_simple $* CPPFLAGS="${VARS}"
+    run_configure_simple $*
 }
 
 function run_make {
