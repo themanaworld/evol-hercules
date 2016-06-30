@@ -61,6 +61,7 @@ HPExport void server_preinit (void)
 
 HPExport void server_online (void)
 {
+    common_online();
 }
 
 HPExport void plugin_final (void)

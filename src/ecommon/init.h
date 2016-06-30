@@ -7,5 +7,6 @@
 void interfaces_init_common(void);
 void setDefaultMap(void);
 void commonClean(void);
+void common_online(void);
 
 #endif  // EVOL_COMMON_INTERFACES

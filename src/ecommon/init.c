@@ -33,3 +33,19 @@ void commonClean(void)
     aFree(mapindex->default_map);
     mapindex->default_map = NULL;
 }
+
+#define checkVar(name, value) \
+    if (name != value) \
+    { \
+        ShowError(#name" wrong value. Found %d but must be %d.\n", \
+            name, \
+            value); \
+    }
+
+void common_online(void)
+{
+    checkVar(MAX_SKILL, 1500);
+    checkVar(MAX_SKILL_ID, 10037);
+    checkVar(SC_MAX, 647);
+    checkVar(SI_MAX, 971);
+}

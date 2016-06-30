@@ -314,6 +314,7 @@ HPExport void server_online (void)
 {
     do_init_craft();
     do_init_craftconf();
+    common_online();
 }
 
 HPExport void plugin_final (void)
