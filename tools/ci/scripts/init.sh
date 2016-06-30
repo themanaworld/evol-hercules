@@ -184,8 +184,8 @@ function build_init {
     mkdir -p server-data/plugins
     cp -r evol-hercules/* server-code/src/evol/
     check_error $?
-    source tools/vars.sh
     cd server-code/src/evol
+    source tools/vars.sh
     check_error $?
 }
 
