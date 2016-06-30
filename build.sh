@@ -6,6 +6,8 @@ if [[ -z "${CMD}" ]]; then
     export CMD="default"
 fi
 
+source tools/vars.sh
+
 mkdir build
 # this need for some outdated os
 mkdir m4
@@ -13,12 +15,12 @@ autoreconf -i
 cd build
 if [[ "${CMD}" == "default" ]]; then
     export CC=gcc
-    ../configure --enable-sanitize --enable-lto
+    ../configure --enable-sanitize --enable-lto CPPFLAGS="${VARS}"
 elif [[ "${CMD}" == "old" ]]; then
-    ../configure
+    ../configure CPPFLAGS="${VARS}"
 elif [[ "${CMD}" == "gprof" ]]; then
     export CC=gcc
-    ../configure --enable-gprof
+    ../configure --enable-gprof CPPFLAGS="${VARS}"
 fi
 make -j3
 export RET=$?
