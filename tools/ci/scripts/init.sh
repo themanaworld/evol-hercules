@@ -117,7 +117,7 @@ function run_configure_simple {
 }
 
 function run_configure {
-    run_configure_simple $*
+    run_configure_simple $* CPPFLAGS="${VARS}"
 }
 
 function run_make {
@@ -184,6 +184,7 @@ function build_init {
     mkdir -p server-data/plugins
     cp -r evol-hercules/* server-code/src/evol/
     check_error $?
+    source tools/vars.sh
     cd server-code/src/evol
     check_error $?
 }
