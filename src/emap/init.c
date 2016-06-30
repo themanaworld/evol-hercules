@@ -287,6 +287,16 @@ HPExport void plugin_init (void)
     addHookPost(pc, can_insert_card_into, epc_can_insert_card_into_post);
     addHookPost(pc, insert_card, epc_insert_card_post);
 
+    skill->additional_effect_unknown = eskill_additional_effect_unknown;
+    skill->counter_additional_effect_unknown = eskill_counter_additional_effect_unknown;
+    skill->attack_combo2_unknown = eskill_attack_combo2_unknown;
+    skill->attack_post_unknown = eskill_attack_post_unknown;
+    skill->timerskill_notarget_unknown = eskill_timerskill_notarget_unknown;
+    skill->unitsetting1_unknown = eskill_unitsetting1_unknown;
+    skill->unit_onplace_unknown = eskill_unit_onplace_unknown;
+    skill->check_condition_castend_unknown = eskill_check_condition_castend_unknown;
+    skill->get_requirement_unknown = eskill_get_requirement_unknown;
+
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");
 
