@@ -12,6 +12,7 @@
 #include "map/mob.h"
 #include "map/skill.h"
 
+#include "emap/effects.h"
 #include "emap/skill_ground.h"
 
 static int eskill_massprovoke_sub(struct block_list *bl,
@@ -41,6 +42,7 @@ static int eskill_massprovoke_sub(struct block_list *bl,
     {
         dstmd->state.provoke_flag = src->id;
         mob->target(dstmd, src, dist);
+        clif->misceffect(bl, EFFECT_PROVOKE);
         (*cnt) ++;
     }
 
