@@ -24,6 +24,18 @@
 
 #include "plugins/HPMHooking.h"
 
+int eskill_get_index_post(int retVal,
+                          uint16 skill_id)
+{
+    if (skill_id >= EVOL_FIRST_SKILL && skill_id < EVOL_FIRST_SKILL + MAX_EVOL_SKILLS)
+    {
+        // 1478 + skill_id - 20000
+        skill_id = OLD_MAX_SKILL_DB + skill_id - EVOL_FIRST_SKILL;
+        return skill_id;
+    }
+    return retVal;
+}
+
 int eskill_check_condition_castend_post(int retVal,
                                         TBL_PC* sd,
                                         uint16 skill_id,
@@ -143,7 +155,7 @@ bool eskill_castend_pos2_unknown(struct block_list* src,
 {
     switch (*skill_id)
     {
-        case EVOL_MASSPROVOKE:
+        case EVOL_MASS_PROVOKE:
             return eskill_massprovoke_castend(src, x, y, skill_id, skill_lv, tick, flag);
         default:
             ShowWarning("skill_castend_pos2: Unknown skill used:%d\n", *skill_id);

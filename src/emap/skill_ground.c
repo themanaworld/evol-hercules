@@ -64,6 +64,8 @@ bool eskill_massprovoke_castend(struct block_list* src,
     map->foreachinarea(eskill_massprovoke_sub, src->m, *x - r, *y - r, *x + r, *y + r, BL_MOB,
         src, dist, &cnt);
     if (cnt == 0)
+    {
         unit->skillcastcancel(src, 1);
+    }
     return false;
 }

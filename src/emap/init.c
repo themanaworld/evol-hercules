@@ -273,6 +273,7 @@ HPExport void plugin_init (void)
     addHookPost(mob, read_db_mode_sub, emob_read_db_mode_sub_post);
     addHookPost(npc, get_viewdata, enpc_get_viewdata_post);
     addHookPost(skill, check_condition_castend, eskill_check_condition_castend_post);
+    addHookPost(skill, get_index, eskill_get_index_post);
     addHookPost(pc, additem, epc_additem_post);
     addHookPost(pc, isequip, epc_isequip_post);
     addHookPost(pc, isUseitem, epc_isequip_post);
