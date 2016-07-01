@@ -296,6 +296,7 @@ HPExport void plugin_init (void)
     skill->unit_onplace_unknown = eskill_unit_onplace_unknown;
     skill->check_condition_castend_unknown = eskill_check_condition_castend_unknown;
     skill->get_requirement_unknown = eskill_get_requirement_unknown;
+    skill->castend_pos2_unknown = eskill_castend_pos2_unknown;
 
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");

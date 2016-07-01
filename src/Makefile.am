@@ -77,6 +77,10 @@ MAP_SRC = emap/atcommand.c \
     emap/send.h \
     emap/skill.c \
     emap/skill.h \
+    emap/skill_const.c \
+    emap/skill_const.h \
+    emap/skill_ground.c \
+    emap/skill_ground.h \
     emap/status.c \
     emap/status.h \
     emap/unit.c \

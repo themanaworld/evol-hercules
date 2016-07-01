@@ -18,6 +18,10 @@
 #include "map/npc.h"
 #include "map/script.h"
 
+#include "emap/skill.h"
+#include "emap/skill_const.h"
+#include "emap/skill_ground.h"
+
 #include "plugins/HPMHooking.h"
 
 int eskill_check_condition_castend_post(int retVal,
@@ -127,4 +131,22 @@ void eskill_get_requirement_unknown(struct status_change *sc __attribute__ ((unu
                                     uint16 *skill_lv __attribute__ ((unused)),
                                     struct skill_condition *req __attribute__ ((unused)))
 {
+}
+
+bool eskill_castend_pos2_unknown(struct block_list* src,
+                                 int *x,
+                                 int *y,
+                                 uint16 *skill_id,
+                                 uint16 *skill_lv,
+                                 int64 *tick,
+                                 int *flag)
+{
+    switch (*skill_id)
+    {
+        case EVOL_MASSPROVOKE:
+            return eskill_massprovoke_castend(src, x, y, skill_id, skill_lv, tick, flag);
+        default:
+            ShowWarning("skill_castend_pos2: Unknown skill used:%d\n", *skill_id);
+            return true;
+    }
 }

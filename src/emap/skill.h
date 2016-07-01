@@ -73,4 +73,12 @@ void eskill_get_requirement_unknown(struct status_change *sc,
                                     uint16 *skill_lv,
                                     struct skill_condition *req);
 
+bool eskill_castend_pos2_unknown(struct block_list* src,
+                                 int *x,
+                                 int *y,
+                                 uint16 *skill_id,
+                                 uint16 *skill_lv,
+                                 int64 *tick,
+                                 int *flag);
+
 #endif  // EVOL_MAP_SKILL

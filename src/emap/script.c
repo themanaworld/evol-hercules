@@ -19,6 +19,7 @@
 #include "emap/map.h"
 #include "emap/data/npcd.h"
 #include "emap/struct/npcdext.h"
+#include "emap/skill_const.h"
 
 #define getExt2() \
     TBL_NPC *nd = NULL; \
@@ -84,6 +85,7 @@ void escript_hardcoded_constants_pre(void)
     script->constdb_comment("Evol constants");
     script->set_constant("MAX_SLOTS", MAX_SLOTS, false, false);
     script->constdb_comment(NULL);
+    eskill_addskill_conststants();
 }
 
 // stripped copy from script_load_translations without actual translation loading.
