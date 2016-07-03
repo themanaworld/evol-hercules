@@ -84,7 +84,6 @@ HPExport struct hplugin_info pinfo =
 HPExport void plugin_init (void)
 {
     isInit = false;
-    status_init();
     htreg_init();
 
     addAtcommand("setskill", setSkill);
@@ -265,10 +264,15 @@ HPExport void plugin_init (void)
     addHookPost(clif, damage, eclif_damage_post);
     addHookPost(clif, set_unit_walking, eclif_set_unit_walking_post);
     addHookPost(clif, move, eclif_move_post);
+    addHookPost(status, init, estatus_init_post);
     addHookPost(status, set_viewdata, estatus_set_viewdata_post);
     addHookPost(status, read_job_db_sub, estatus_read_job_db_sub_post);
     addHookPost(status, calc_pc_, estatus_calc_pc__post);
     addHookPost(status, calc_speed, estatus_calc_speed_post);
+    addHookPost(status, calc_def, estatus_calc_def_post);
+    addHookPost(status, calc_fix_aspd, estatus_calc_fix_aspd_post);
+    addHookPost(status, change_start, estatus_change_start_post);
+    addHookPost(status, change_end_, estatus_change_end__post);
     addHookPost(map, addflooritem, emap_addflooritem_post);
     addHookPost(mob, read_db_mode_sub, emob_read_db_mode_sub_post);
     addHookPost(npc, get_viewdata, enpc_get_viewdata_post);
@@ -288,6 +292,7 @@ HPExport void plugin_init (void)
     addHookPost(pc, can_insert_card_into, epc_can_insert_card_into_post);
     addHookPost(pc, insert_card, epc_insert_card_post);
 
+    skill->castend_nodamage_id_unknown = eskill_castend_nodamage_id_unknown;
     skill->additional_effect_unknown = eskill_additional_effect_unknown;
     skill->counter_additional_effect_unknown = eskill_counter_additional_effect_unknown;
     skill->attack_combo2_unknown = eskill_attack_combo2_unknown;
