@@ -36,28 +36,12 @@
 
 int class_move_speed[CLASS_COUNT];
 
-// copy of set_sc from map/status.c, because it's not exported
-static void eset_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag)
-{
-    uint16 idx;
-    if( (idx = skill->get_index(skill_id)) == 0 ) {
-        ShowError("eset_sc: Unsupported skill id %d\n", skill_id);
-        return;
-    }
-    if( sc < 0 || sc >= SC_MAX ) {
-        ShowError("eset_sc: Unsupported status change id %d\n", sc);
-        return;
-    }
-
-    status->dbs->SkillChangeTable[sc] = skill_id;
-    status->dbs->IconChangeTable[sc] = icon;
-    status->dbs->ChangeFlagTable[sc] |= flag;
-    status->dbs->Skill2SCTable[idx] = sc;
-}
-
 void eInitChangeTables(void)
 {
-    eset_sc(EVOL_PHYSICAL_SHIELD, (sc_type)SC_PHYSICAL_SHIELD, SI_PHYSICAL_SHIELD, SCB_DEF|SCB_DEF2|SCB_ASPD);
+    status->set_sc(EVOL_PHYSICAL_SHIELD,
+        (sc_type)SC_PHYSICAL_SHIELD,
+        SI_PHYSICAL_SHIELD,
+        SCB_DEF | SCB_DEF2 | SCB_ASPD);
 }
 
 int estatus_init_post(int retVal,
