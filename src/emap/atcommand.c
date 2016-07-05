@@ -129,3 +129,14 @@ ACMD2(slide)
     unit->movepos(&sd->bl, x, y, 1, 0);
     return true;
 }
+
+ACMD1(mapExit)
+{
+    int code = 0;
+    if (!*message || sscanf(message, "%5d", &code) < 1)
+        code = 0;
+
+    map->retval = code;
+    map->do_shutdown();
+    return true;
+}
