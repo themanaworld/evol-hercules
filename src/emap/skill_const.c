@@ -11,5 +11,6 @@ void eskill_addskill_conststants(void)
 {
     script->constdb_comment("Evol skills");
     script->set_constant("EVOL_MASS_PROVOKE", EVOL_MASS_PROVOKE, false, false);
+    script->set_constant("EVOL_PHYSICAL_SHIELD", EVOL_PHYSICAL_SHIELD, false, false);
     script->constdb_comment(NULL);
 }

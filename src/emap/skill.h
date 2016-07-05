@@ -12,6 +12,13 @@ int eskill_check_condition_castend_post(int retVal,
                                         uint16 skill_id,
                                         uint16 skill_lv);
 
+bool eskill_castend_nodamage_id_unknown(struct block_list *src,
+                                        struct block_list *bl,
+                                        uint16 *skill_id,
+                                        uint16 *skill_lv,
+                                        int64 *tick,
+                                        int *flag);
+
 void eskill_additional_effect_unknown(struct block_list* src,
                                       struct block_list *bl,
                                       uint16 *skill_id,

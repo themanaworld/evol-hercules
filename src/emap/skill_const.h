@@ -6,7 +6,8 @@
 
 enum
 {
-    EVOL_MASS_PROVOKE = 20000
+    EVOL_MASS_PROVOKE = 20000,
+    EVOL_PHYSICAL_SHIELD,
 };
 
 void eskill_addskill_conststants(void);

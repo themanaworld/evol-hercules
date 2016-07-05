@@ -13,6 +13,7 @@
 #include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/utils.h"
 #include "map/itemdb.h"
 #include "map/map.h"
 #include "map/npc.h"
@@ -24,7 +25,10 @@
 
 #include "emap/npc.h"
 
+#include "emap/effects.h"
 #include "emap/horse.h"
+#include "emap/skill_const.h"
+#include "emap/status.h"
 #include "emap/data/itemd.h"
 #include "emap/data/npcd.h"
 #include "emap/struct/itemdext.h"
@@ -32,11 +36,39 @@
 
 int class_move_speed[CLASS_COUNT];
 
-void status_init(void)
+// copy of set_sc from map/status.c, because it's not exported
+static void eset_sc(uint16 skill_id, sc_type sc, int icon, unsigned int flag)
+{
+    uint16 idx;
+    if( (idx = skill->get_index(skill_id)) == 0 ) {
+        ShowError("eset_sc: Unsupported skill id %d\n", skill_id);
+        return;
+    }
+    if( sc < 0 || sc >= SC_MAX ) {
+        ShowError("eset_sc: Unsupported status change id %d\n", sc);
+        return;
+    }
+
+    status->dbs->SkillChangeTable[sc] = skill_id;
+    status->dbs->IconChangeTable[sc] = icon;
+    status->dbs->ChangeFlagTable[sc] |= flag;
+    status->dbs->Skill2SCTable[idx] = sc;
+}
+
+void eInitChangeTables(void)
+{
+    eset_sc(EVOL_PHYSICAL_SHIELD, (sc_type)SC_PHYSICAL_SHIELD, SI_PHYSICAL_SHIELD, SCB_DEF|SCB_DEF2|SCB_ASPD);
+}
+
+int estatus_init_post(int retVal,
+                      bool minimal __attribute__ ((unused)))
 {
     int f;
     for (f = 0; f < CLASS_COUNT; f ++)
         class_move_speed[f] = 150;
+
+    eInitChangeTables();
+    return retVal;
 }
 
 void estatus_set_viewdata_pre(struct block_list **blPtr,
@@ -150,4 +182,80 @@ unsigned short estatus_calc_speed_post(unsigned short retVal,
                                        int speed __attribute__ ((unused)))
 {
     return horse_add_speed_bonus(BL_CAST(BL_PC, bl), retVal);
+}
+
+defType estatus_calc_def_post(defType retVal,
+                              struct block_list *bl __attribute__ ((unused)),
+                              struct status_change *sc,
+                              int def __attribute__ ((unused)),
+                              bool viewable __attribute__ ((unused)))
+{
+    if (!sc)
+        return retVal;
+
+    if (sc->data[SC_PHYSICAL_SHIELD])
+        retVal += sc->data[SC_PHYSICAL_SHIELD]->val1;
+
+    return (defType)cap_value(retVal, DEFTYPE_MIN, DEFTYPE_MAX);
+}
+
+short estatus_calc_fix_aspd_post(short retVal,
+                                 struct block_list *bl __attribute__ ((unused)),
+                                 struct status_change *sc,
+                                 int aspd __attribute__ ((unused)))
+{
+    if (!sc)
+        return retVal;
+
+    if (sc->data[SC_PHYSICAL_SHIELD])
+        retVal -= sc->data[SC_PHYSICAL_SHIELD]->val2;
+
+    return (short)cap_value(retVal, 0, 2000);
+}
+
+int estatus_change_start_post(int retVal,
+                              struct block_list *src __attribute__ ((unused)),
+                              struct block_list *bl __attribute__ ((unused)),
+                              enum sc_type type,
+                              int rate __attribute__ ((unused)),
+                              int val1 __attribute__ ((unused)),
+                              int val2 __attribute__ ((unused)),
+                              int val3 __attribute__ ((unused)),
+                              int val4 __attribute__ ((unused)),
+                              int tick __attribute__ ((unused)),
+                              int flag __attribute__ ((unused)))
+{
+    if (!retVal)
+        return retVal;
+
+    switch ((esc_type)type)
+    {
+        case SC_PHYSICAL_SHIELD:
+            clif->misceffect(bl, EFFECT_MAGIC_SHIELD);
+            break;
+        default:
+            break;
+    }
+    return retVal;
+}
+
+int estatus_change_end__post(int retVal,
+                             struct block_list* bl __attribute__ ((unused)),
+                             enum sc_type type,
+                             int tid __attribute__ ((unused)),
+                             const char* file __attribute__ ((unused)),
+                             int line __attribute__ ((unused)))
+{
+    if (!retVal)
+        return retVal;
+
+    switch ((esc_type)type)
+    {
+        case SC_PHYSICAL_SHIELD:
+            clif->misceffect(bl, EFFECT_MAGIC_SHIELD_ENDS);
+            break;
+        default:
+            break;
+    }
+    return retVal;
 }

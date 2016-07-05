@@ -21,6 +21,8 @@
 #include "emap/skill.h"
 #include "emap/skill_const.h"
 #include "emap/skill_ground.h"
+#include "emap/skill_targeted.h"
+#include "emap/status.h"
 
 #include "plugins/HPMHooking.h"
 
@@ -61,6 +63,27 @@ int eskill_check_condition_castend_post(int retVal,
         }
     }
     return retVal;
+}
+
+bool eskill_castend_nodamage_id_unknown(struct block_list *src,
+                                        struct block_list *bl,
+                                        uint16 *skill_id,
+                                        uint16 *skill_lv,
+                                        int64 *tick __attribute__ ((unused)),
+                                        int *flag __attribute__ ((unused)))
+{
+    switch (*skill_id)
+    {
+        case EVOL_PHYSICAL_SHIELD:
+            eskill_physical_shield(src, bl, *skill_id, *skill_lv);
+            break;
+
+        default:
+            clif->skill_nodamage(src, bl, *skill_id, *skill_lv, 1);
+            break;
+    }
+    map->freeblock_unlock();
+    return true;
 }
 
 void eskill_additional_effect_unknown(struct block_list* src __attribute__ ((unused)),
