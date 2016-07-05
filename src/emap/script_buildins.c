@@ -329,6 +329,7 @@ BUILDIN(requestItem)
     {
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
+        st->state = RUN;
 
         int item = 0;
 
@@ -349,7 +350,6 @@ BUILDIN(requestItem)
         }
 
         script_pushint(st, item);
-        st->state = RUN;
     }
     return true;
 }
@@ -379,6 +379,7 @@ BUILDIN(requestItems)
     {
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
+        st->state = RUN;
 
         if (!*sd->npc_str)
         {
@@ -389,7 +390,6 @@ BUILDIN(requestItems)
         }
 
         script_pushstr(st, aStrdup(sd->npc_str));
-        st->state = RUN;
     }
     return true;
 }
@@ -405,7 +405,7 @@ BUILDIN(requestItemIndex)
         st->state = RERUNLINE;
 
         // send item request
-        if (client || client->clientVersion >= 11)
+        if (client && client->clientVersion >= 11)
             send_npccommand(sd, st->oid, 11);
         else
             clif->scriptinputstr(sd, st->oid);
@@ -414,6 +414,7 @@ BUILDIN(requestItemIndex)
     {
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
+        st->state = RUN;
 
         int item = -1;
 
@@ -434,7 +435,6 @@ BUILDIN(requestItemIndex)
         }
 
         script_pushint(st, item);
-        st->state = RUN;
     }
     return true;
 }
@@ -458,7 +458,7 @@ BUILDIN(requestItemsIndex)
         st->state = RERUNLINE;
 
         // send item request with limit count
-        if (client || client->clientVersion >= 11)
+        if (client && client->clientVersion >= 11)
             send_npccommand2(sd, st->oid, 11, count, 0, 0);
         else
             clif->scriptinputstr(sd, st->oid);
@@ -467,6 +467,7 @@ BUILDIN(requestItemsIndex)
     {
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
+        st->state = RUN;
 
         if (!*sd->npc_str)
         {
@@ -477,7 +478,6 @@ BUILDIN(requestItemsIndex)
         }
 
         script_pushstr(st, aStrdup(sd->npc_str));
-        st->state = RUN;
     }
     return true;
 }
@@ -502,7 +502,7 @@ BUILDIN(requestCraft)
         st->state = RERUNLINE;
 
         // send item request with limit count
-        if (client || client->clientVersion >= 16)
+        if (client && client->clientVersion >= 16)
             send_npccommand2(sd, st->oid, 12, count, 0, 0);
         else
             clif->scriptinputstr(sd, st->oid);
@@ -511,6 +511,7 @@ BUILDIN(requestCraft)
     {
         // take received text/value and store it in the designated variable
         sd->state.menu_or_input = 0;
+        st->state = RUN;
 
         if (!*sd->npc_str)
         {
@@ -521,7 +522,6 @@ BUILDIN(requestCraft)
         }
 
         script_pushstr(st, aStrdup(sd->npc_str));
-        st->state = RUN;
     }
     return true;
 }
