@@ -66,6 +66,8 @@
 #include "emap/skill.h"
 #include "emap/status.h"
 
+#include "emap/data/skilld.h"
+
 #include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
@@ -85,6 +87,7 @@ HPExport void plugin_init (void)
 {
     isInit = false;
     htreg_init();
+    skilld_init();
 
     addAtcommand("setskill", setSkill);
     addAtcommand("slide", slide);
@@ -304,6 +307,7 @@ HPExport void plugin_init (void)
     skill->check_condition_castend_unknown = eskill_check_condition_castend_unknown;
     skill->get_requirement_unknown = eskill_get_requirement_unknown;
     skill->castend_pos2_unknown = eskill_castend_pos2_unknown;
+    skill->validate_additional_fields = eskill_validate_additional_fields;
 
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");

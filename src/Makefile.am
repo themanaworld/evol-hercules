@@ -89,6 +89,7 @@ MAP_SRC = emap/atcommand.c \
     emap/unit.c \
     emap/unit.h \
     emap/const/craft.h \
+    emap/const/skilldmaxeffects.h \
     emap/data/bgd.c \
     emap/data/bgd.h \
     emap/data/itemd.c \
@@ -101,6 +102,8 @@ MAP_SRC = emap/atcommand.c \
     emap/data/npcd.h \
     emap/data/session.c \
     emap/data/session.h \
+    emap/data/skilld.c \
+    emap/data/skilld.h \
     emap/struct/bgdext.h \
     emap/struct/craft.h \
     emap/struct/itemdext.h \
@@ -108,6 +111,7 @@ MAP_SRC = emap/atcommand.c \
     emap/struct/mobdext.h \
     emap/struct/npcdext.h \
     emap/struct/sessionext.h \
+    emap/struct/skilldext.h \
     emap/utils/formatutils.c \
     emap/utils/formatutils.h \
     ecommon/config.c \
