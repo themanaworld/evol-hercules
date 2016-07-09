@@ -91,4 +91,11 @@ bool eskill_castend_pos2_unknown(struct block_list* src,
                                  int64 *tick,
                                  int *flag);
 
+void eskill_validate_additional_fields(struct config_setting_t *conf,
+                                       struct s_skill_db *sk);
+
+bool eskill_lookup_const(const struct config_setting_t *it,
+                         const char *name,
+                         int *value);
+
 #endif  // EVOL_MAP_SKILL

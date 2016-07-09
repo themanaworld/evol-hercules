@@ -7,10 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "common/conf.h"
 #include "common/db.h"
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -23,6 +25,8 @@
 #include "emap/skill_ground.h"
 #include "emap/skill_targeted.h"
 #include "emap/status.h"
+#include "emap/data/skilld.h"
+#include "emap/struct/skilldext.h"
 
 #include "plugins/HPMHooking.h"
 
@@ -183,5 +187,74 @@ bool eskill_castend_pos2_unknown(struct block_list* src,
         default:
             ShowWarning("skill_castend_pos2: Unknown skill used:%d\n", *skill_id);
             return true;
+    }
+}
+
+// probably this function must be implimented in server
+bool eskill_lookup_const(const struct config_setting_t *it,
+                         const char *name,
+                         int *value)
+{
+    nullpo_retr(false, name);
+    nullpo_retr(false, value);
+    if (libconfig->setting_lookup_int(it, name, value))
+    {
+        return true;
+    }
+    else
+    {
+        const char *str = NULL;
+        if (libconfig->setting_lookup_string(it, name, &str))
+        {
+            if (*str && script->get_constant(str, value))
+                return true;
+        }
+    }
+    return false;
+}
+
+void eskill_validate_additional_fields(struct config_setting_t *conf,
+                                       struct s_skill_db *sk)
+{
+    nullpo_retv(conf);
+    nullpo_retv(sk);
+    Assert_retv(sk->nameid >= 0 && sk->nameid < MAX_SKILL_ID);
+
+    int i32 = 0;
+    struct config_setting_t *t = NULL;
+    struct SkilldExt *skilld = skilld_get_id(sk->nameid);
+    nullpo_retv(skilld);
+
+    if ((t = libconfig->setting_get_member(conf, "MiscEffects")))
+    {
+        if (config_setting_is_array(t))
+        {
+            for (int i = 0; i < libconfig->setting_length(t) && i < SKILLD_MAXMISCEFFECTS; i++)
+            {
+                skilld->miscEffects[i] = libconfig->setting_get_int_elem(t, i);
+            }
+        }
+        else
+        {
+            if (eskill_lookup_const(conf, "MiscEffects", &i32) && i32 >= 0)
+            {
+                for (int i = 0; i < SKILLD_MAXMISCEFFECTS; i++)
+                {
+                    skilld->miscEffects[i] = i32;
+                }
+            }
+        }
+    }
+    if (eskill_lookup_const(conf, "TargetMiscEffect", &i32) && i32 >= 0)
+    {
+        skilld->miscEffects[0] = i32;
+    }
+    else if (eskill_lookup_const(conf, "TargetMiscEffect1", &i32) && i32 >= 0)
+    {
+        skilld->miscEffects[0] = i32;
+    }
+    if (eskill_lookup_const(conf, "TargetMiscEffect2", &i32) && i32 >= 0)
+    {
+        skilld->miscEffects[1] = i32;
     }
 }

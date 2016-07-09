@@ -6,8 +6,13 @@
 
 struct SkilldExt;
 
-struct SkilldExt *skilld_init(void);
+void skilld_init(void);
 
-struct SkilldExt *skilld_get(const int skill_idx);
+struct SkilldExt *skilld_get(const int idx);
+
+struct SkilldExt *skilld_get_id(const int skill_id);
+
+int skilld_get_misceffect(const int skill_id,
+                          const int effect_idx);
 
 #endif  // EVOL_MAP_SKILLD

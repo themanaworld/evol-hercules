@@ -12,8 +12,9 @@
 #include "map/mob.h"
 #include "map/skill.h"
 
-#include "emap/effects.h"
 #include "emap/skill_ground.h"
+#include "emap/data/skilld.h"
+#include "emap/struct/skilldext.h"
 
 static int eskill_massprovoke_sub(struct block_list *bl,
                                   va_list ap)
@@ -26,6 +27,7 @@ static int eskill_massprovoke_sub(struct block_list *bl,
     struct block_list* src = va_arg(ap, struct block_list*);
     int dist = va_arg(ap, int);
     int *cnt = va_arg(ap, int*);
+    int effect = va_arg(ap, int);
     struct status_change *tsc = status->get_sc(bl);
     struct mob_data *dstmd = BL_UCAST(BL_MOB, bl);
 
@@ -42,7 +44,8 @@ static int eskill_massprovoke_sub(struct block_list *bl,
     {
         dstmd->state.provoke_flag = src->id;
         mob->target(dstmd, src, dist);
-        clif->misceffect(bl, EFFECT_PROVOKE);
+        if (effect >= 0)
+            clif->misceffect(bl, effect);
         (*cnt) ++;
     }
 
@@ -61,8 +64,9 @@ bool eskill_massprovoke_castend(struct block_list* src,
     const int r = skill->get_splash(*skill_id, *skill_lv);
     const int dist = skill->get_range2(src, *skill_id, *skill_lv);
     int cnt = 0;
+    int effect = skilld_get_misceffect(*skill_id, 0);
     map->foreachinarea(eskill_massprovoke_sub, src->m, *x - r, *y - r, *x + r, *y + r, BL_MOB,
-        src, dist, &cnt);
+        src, dist, &cnt, effect);
     if (cnt == 0)
     {
         unit->skillcastcancel(src, 1);
