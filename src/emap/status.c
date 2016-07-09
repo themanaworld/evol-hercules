@@ -200,7 +200,7 @@ short estatus_calc_fix_aspd_post(short retVal,
 int estatus_change_start_post(int retVal,
                               struct block_list *src __attribute__ ((unused)),
                               struct block_list *bl __attribute__ ((unused)),
-                              enum sc_type type,
+                              enum sc_type type __attribute__ ((unused)),
                               int rate __attribute__ ((unused)),
                               int val1 __attribute__ ((unused)),
                               int val2 __attribute__ ((unused)),
@@ -212,20 +212,19 @@ int estatus_change_start_post(int retVal,
     if (!retVal)
         return retVal;
 
+/*
     switch ((esc_type)type)
     {
-        case SC_PHYSICAL_SHIELD:
-            clif->misceffect(bl, EFFECT_MAGIC_SHIELD);
-            break;
         default:
             break;
     }
+*/
     return retVal;
 }
 
 int estatus_change_end__post(int retVal,
                              struct block_list* bl __attribute__ ((unused)),
-                             enum sc_type type,
+                             enum sc_type type __attribute__ ((unused)),
                              int tid __attribute__ ((unused)),
                              const char* file __attribute__ ((unused)),
                              int line __attribute__ ((unused)))
@@ -233,13 +232,12 @@ int estatus_change_end__post(int retVal,
     if (!retVal)
         return retVal;
 
+/*
     switch ((esc_type)type)
     {
-        case SC_PHYSICAL_SHIELD:
-            clif->misceffect(bl, EFFECT_MAGIC_SHIELD_ENDS);
-            break;
         default:
             break;
     }
+*/
     return retVal;
 }
