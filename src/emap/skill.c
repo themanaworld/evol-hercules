@@ -218,7 +218,7 @@ void eskill_validate_additional_fields(struct config_setting_t *conf,
 {
     nullpo_retv(conf);
     nullpo_retv(sk);
-    Assert_retv(sk->nameid >= 0 && sk->nameid < MAX_SKILL_ID);
+    Assert_retv(sk->nameid < MAX_SKILL_ID);
 
     int i32 = 0;
     struct config_setting_t *t = NULL;
