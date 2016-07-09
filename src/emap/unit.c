@@ -163,7 +163,10 @@ int eunit_walktoxy_pre(struct block_list **blPtr  __attribute__ ((unused)),
 
     TBL_PC *sd = BL_CAST(BL_PC, bl);
     if (sd && pc_issit(sd))
+    {
         pc->setstand(sd);
+        skill->sit(sd, 0);
+    }
 
     return 1;
 }
