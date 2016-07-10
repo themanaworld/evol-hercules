@@ -249,8 +249,8 @@ int estatus_change_end__post(int retVal,
 
 bool estatus_readdb_scconfig_post(bool retVal,
                                   char* fields[],
-                                  int columns,
-                                  int current)
+                                  int columns __attribute__ ((unused)),
+                                  int current __attribute__ ((unused)))
 {
     if (retVal == true)
     {
