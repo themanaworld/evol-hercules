@@ -246,24 +246,3 @@ int estatus_change_end__post(int retVal,
 */
     return retVal;
 }
-
-bool estatus_readdb_scconfig_post(bool retVal,
-                                  char* fields[],
-                                  int columns __attribute__ ((unused)),
-                                  int current __attribute__ ((unused)))
-{
-    if (retVal == true)
-    {
-        char *type = fields[0];
-        int val = 0;
-        script->get_constant(type, &val);
-        // own field in sc_config.txt
-        if (status->dbs->sc_conf[val] & 0x100)
-        {
-            // allow show this sc always
-            status->dbs->DisplayType[val] = true;
-        }
-    }
-
-    return retVal;
-}

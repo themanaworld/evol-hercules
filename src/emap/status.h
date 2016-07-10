@@ -44,9 +44,4 @@ int estatus_change_end__post(int retVal,
                              enum sc_type type, int tid,
                              const char* file, int line);
 
-bool estatus_readdb_scconfig_post(bool retVal,
-                                  char* fields[],
-                                  int columns,
-                                  int current);
-
 #endif  // EVOL_MAP_STATUS
