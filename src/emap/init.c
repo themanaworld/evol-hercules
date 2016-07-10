@@ -277,6 +277,7 @@ HPExport void plugin_init (void)
     addHookPost(status, calc_fix_aspd, estatus_calc_fix_aspd_post);
     addHookPost(status, change_start, estatus_change_start_post);
     addHookPost(status, change_end_, estatus_change_end__post);
+    addHookPost(status, readdb_scconfig, estatus_readdb_scconfig_post);
     addHookPost(map, addflooritem, emap_addflooritem_post);
     addHookPost(mob, read_db_mode_sub, emob_read_db_mode_sub_post);
     addHookPost(npc, get_viewdata, enpc_get_viewdata_post);

@@ -7,14 +7,21 @@
 
 #include "emap/effects.h"
 #include "emap/skill_const.h"
+#include "emap/enum/esctype.h"
 
 void eskill_addskill_conststants(void)
 {
     script->constdb_comment("Evol skills");
+    // skills
     script->set_constant("EVOL_MASS_PROVOKE", EVOL_MASS_PROVOKE, false, false);
     script->set_constant("EVOL_PHYSICAL_SHIELD", EVOL_PHYSICAL_SHIELD, false, false);
+
+    // effects
     script->set_constant("EFFECT_PROVOKE", EFFECT_PROVOKE, false, false);
     script->set_constant("EFFECT_MAGIC_SHIELD", EFFECT_MAGIC_SHIELD, false, false);
     script->set_constant("EFFECT_MAGIC_SHIELD_ENDS", EFFECT_MAGIC_SHIELD_ENDS, false, false);
+
+    // sc
+    script->set_constant("SC_PHYSICAL_SHIELD", SC_PHYSICAL_SHIELD, false, false);
     script->constdb_comment(NULL);
 }

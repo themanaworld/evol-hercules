@@ -104,6 +104,8 @@ MAP_SRC = emap/atcommand.c \
     emap/data/session.h \
     emap/data/skilld.c \
     emap/data/skilld.h \
+    emap/enum/esctype.h \
+    emap/enum/esitype.h \
     emap/struct/bgdext.h \
     emap/struct/craft.h \
     emap/struct/itemdext.h \

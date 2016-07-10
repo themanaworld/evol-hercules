@@ -4,14 +4,6 @@
 #ifndef EVOL_MAP_STATUS
 #define EVOL_MAP_STATUS
 
-typedef enum esc_type {
-    SC_PHYSICAL_SHIELD = 642,
-} esc_type;
-
-enum esi_type {
-    SI_PHYSICAL_SHIELD = 966,
-};
-
 int estatus_init_post(int retVal, bool minimal);
 void estatus_set_viewdata_pre(struct block_list **blPtr,
                               int *classPtr_ __attribute__ ((unused)));
@@ -51,5 +43,10 @@ int estatus_change_end__post(int retVal,
                              struct block_list* bl,
                              enum sc_type type, int tid,
                              const char* file, int line);
+
+bool estatus_readdb_scconfig_post(bool retVal,
+                                  char* fields[],
+                                  int columns,
+                                  int current);
 
 #endif  // EVOL_MAP_STATUS

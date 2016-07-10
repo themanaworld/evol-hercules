@@ -34,6 +34,9 @@
 #include "emap/struct/itemdext.h"
 #include "emap/struct/npcdext.h"
 
+#include "emap/enum/esctype.h"
+#include "emap/enum/esitype.h"
+
 int class_move_speed[CLASS_COUNT];
 
 void eInitChangeTables(void)
@@ -42,6 +45,8 @@ void eInitChangeTables(void)
         (sc_type)SC_PHYSICAL_SHIELD,
         SI_PHYSICAL_SHIELD,
         SCB_DEF | SCB_DEF2 | SCB_ASPD);
+
+//    status->dbs->DisplayType[SC_PHYSICAL_SHIELD] = true;
 }
 
 int estatus_init_post(int retVal,
@@ -239,5 +244,26 @@ int estatus_change_end__post(int retVal,
             break;
     }
 */
+    return retVal;
+}
+
+bool estatus_readdb_scconfig_post(bool retVal,
+                                  char* fields[],
+                                  int columns,
+                                  int current)
+{
+    if (retVal == true)
+    {
+        char *type = fields[0];
+        int val = 0;
+        script->get_constant(type, &val);
+        // own field in sc_config.txt
+        if (status->dbs->sc_conf[val] & 0x100)
+        {
+            // allow show this sc always
+            status->dbs->DisplayType[val] = true;
+        }
+    }
+
     return retVal;
 }
