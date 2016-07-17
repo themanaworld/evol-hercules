@@ -33,12 +33,12 @@
 int langScriptId;
 int mountScriptId;
 
-int epc_readparam_pre(TBL_PC **sdPtr,
+int epc_readparam_pre(const TBL_PC **sdPtr,
                       int *type)
 {
     if (*type == Const_ClientVersion)
     {
-        struct SessionExt *data = session_get_bysd(*sdPtr);
+        struct SessionExt *data = session_get_bysd((TBL_PC*)(*sdPtr));
         hookStop();
         if (!data)
             return 0;
