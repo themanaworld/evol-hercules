@@ -85,5 +85,13 @@ void eclif_addcards_post(unsigned char *buf,
                          struct item *item);
 void eclif_addcards2_post(unsigned short *cards,
                           struct item *item);
+void eclif_useskill(struct block_list* bl,
+                    int src_id,
+                    int dst_id,
+                    int dst_x,
+                    int dst_y,
+                    uint16 skill_id,
+                    uint16 skill_lv,
+                    int casttime);
 
 #endif  // EVOL_MAP_CLIF

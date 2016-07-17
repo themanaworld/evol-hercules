@@ -594,6 +594,29 @@ int eclif_send_actual_pre(int *fd,
                 return 0;
             }
         }
+        if (packet == 0xb1e)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 18)
+            {   // not sending new packets to old clients
+//                ShowWarning("skip packet %d\n", packet);
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0x7fb)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion >= 18)
+            {   // not sending old packets to new clients
+                hookStop();
+                return 0;
+            }
+        }
     }
     return 0;
 }
@@ -1397,5 +1420,65 @@ void eclif_addcards2_post(unsigned short *cards, struct item *item)
         cards[1] = item->card[1];
         cards[2] = item->card[2];
         cards[3] = item->card[3];
+    }
+}
+
+void eclif_useskill(struct block_list* bl,
+                    int src_id,
+                    int dst_id,
+                    int dst_x,
+                    int dst_y,
+                    uint16 skill_id,
+                    uint16 skill_lv,
+                    int casttime)
+{
+    const int cmd = 0x7fb;
+    unsigned char buf[50];
+    int property = skill->get_ele(skill_id, skill_lv);
+
+    // for client < 18
+    WBUFW(buf, 0) = cmd;
+    WBUFL(buf, 2) = src_id;
+    WBUFL(buf, 6) = dst_id;
+    WBUFW(buf, 10) = dst_x;
+    WBUFW(buf, 12) = dst_y;
+    WBUFW(buf, 14) = skill_id;
+    WBUFL(buf, 16) = property < 0 ? 0 : property; //Avoid sending negatives as element [Skotlex]
+    WBUFL(buf, 20) = casttime;
+    WBUFB(buf, 24) = 0;  // isDisposable
+
+    if (clif->isdisguised(bl))
+    {
+        clif->send(buf, 25, bl, AREA_WOS);
+        WBUFL(buf, 2) = -src_id;
+        clif->send(buf, 25, bl, SELF);
+    }
+    else
+    {
+        clif->send(buf, 25, bl, AREA);
+    }
+
+    // for client >= 18
+    const int len = 30;
+    WBUFW(buf, 0) = 0xb1e;
+    WBUFW(buf, 2) = len;
+    WBUFL(buf, 4) = src_id;
+    WBUFL(buf, 8) = dst_id;
+    WBUFW(buf, 12) = dst_x;
+    WBUFW(buf, 14) = dst_y;
+    WBUFW(buf, 16) = skill_id;
+    WBUFL(buf, 18) = property < 0 ? 0 : property; //Avoid sending negatives as element [Skotlex]
+    WBUFL(buf, 22) = casttime;
+    WBUFL(buf, 26) = skill->get_range2(bl, skill_id, skill_lv);
+
+    if (clif->isdisguised(bl))
+    {
+        clif->send(buf, len, bl, AREA_WOS);
+        WBUFL(buf, 2) = -src_id;
+        clif->send(buf, len, bl, SELF);
+    }
+    else
+    {
+        clif->send(buf, len, bl, AREA);
     }
 }
