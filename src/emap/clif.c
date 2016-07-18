@@ -1459,7 +1459,7 @@ void eclif_useskill(struct block_list* bl,
     }
 
     // for client >= 18
-    const int len = 30;
+    const int len = 32;
     WBUFW(buf, 0) = 0xb1e;
     WBUFW(buf, 2) = len;
     WBUFL(buf, 4) = src_id;
@@ -1467,9 +1467,10 @@ void eclif_useskill(struct block_list* bl,
     WBUFW(buf, 12) = dst_x;
     WBUFW(buf, 14) = dst_y;
     WBUFW(buf, 16) = skill_id;
-    WBUFL(buf, 18) = property < 0 ? 0 : property; //Avoid sending negatives as element [Skotlex]
-    WBUFL(buf, 22) = casttime;
-    WBUFL(buf, 26) = skill->get_splash(skill_id, skill_lv);
+    WBUFW(buf, 18) = skill_lv;
+    WBUFL(buf, 20) = property < 0 ? 0 : property; //Avoid sending negatives as element [Skotlex]
+    WBUFL(buf, 24) = casttime;
+    WBUFL(buf, 28) = skill->get_splash(skill_id, skill_lv);
 
     if (clif->isdisguised(bl))
     {
