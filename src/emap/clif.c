@@ -1469,7 +1469,7 @@ void eclif_useskill(struct block_list* bl,
     WBUFW(buf, 16) = skill_id;
     WBUFL(buf, 18) = property < 0 ? 0 : property; //Avoid sending negatives as element [Skotlex]
     WBUFL(buf, 22) = casttime;
-    WBUFL(buf, 26) = skill->get_range2(bl, skill_id, skill_lv);
+    WBUFL(buf, 26) = skill->get_splash(skill_id, skill_lv);
 
     if (clif->isdisguised(bl))
     {
