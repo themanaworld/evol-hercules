@@ -93,5 +93,6 @@ void eclif_useskill(struct block_list* bl,
                     uint16 skill_id,
                     uint16 skill_lv,
                     int casttime);
+void eclif_skillinfoblock_pre(struct map_session_data **sdPtr);
 
 #endif  // EVOL_MAP_CLIF

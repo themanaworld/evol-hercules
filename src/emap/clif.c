@@ -1484,3 +1484,69 @@ void eclif_useskill(struct block_list* bl,
         clif->send(buf, len, bl, AREA);
     }
 }
+
+void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
+{
+    struct map_session_data *sd = *sdPtr;
+    nullpo_retv(sd);
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 18)
+        return;
+
+    int fd = sd->fd;
+    if (!fd)
+        return;
+
+    WFIFOHEAD(fd, MAX_SKILL * 41 + 4);
+    WFIFOW(fd, 0) = 0x10f;
+    int len = 4;
+    int i;
+    for (i = 0; i < MAX_SKILL; i++)
+    {
+        int id = sd->status.skill[i].id;
+        if (id != 0)
+        {
+            const int skillSize = 41;
+            if (len + skillSize > 16384)
+                break;
+
+            WFIFOW(fd, len) = id;
+            WFIFOL(fd, len + 2) = skill->get_inf(id);
+            WFIFOL(fd, len + 6) = skill->get_inf2(id);
+            const int level = sd->status.skill[i].lv;
+            WFIFOW(fd, len + 10) = level;
+            if (level)
+            {
+                WFIFOW(fd, len + 12) = skill->get_sp(id, level);
+                WFIFOW(fd, len + 14) = skill->get_range2(&sd->bl, id, level);
+            }
+            else
+            {
+                WFIFOW(fd, len + 12) = 0;
+                WFIFOW(fd, len + 14) = 0;
+            }
+            safestrncpy(WFIFOP(fd, len + 16), skill->get_name(id), NAME_LENGTH);
+            if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
+                WFIFOB(fd, len + 40) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class_)) ? 1 : 0;
+            else
+                WFIFOB(fd, len + 40) = 0;
+            len += skillSize;
+        }
+    }
+    WFIFOW(fd, 2) = len;
+    WFIFOSET(fd, len);
+
+    // workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
+    for ( ; i < MAX_SKILL; i++)
+    {
+        int id = sd->status.skill[i].id;
+        if (id != 0)
+        {
+            clif->addskill(sd, id);
+            clif->skillinfo(sd, id, 0);
+        }
+    }
+    hookStop();
+}
