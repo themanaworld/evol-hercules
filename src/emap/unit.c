@@ -46,11 +46,11 @@ int eunit_can_move_pre(struct block_list **blPtr)
         return 0;
     }
 
-    if (ud->skilltimer != INVALID_TIMER
-        && ud->skill_id != LG_EXEEDBREAK
-        && (!sd
-        || !pc->checkskill(sd, SA_FREECAST)
-        || skill->get_inf2(ud->skill_id)&INF2_GUILD_SKILL))
+    if (ud->skilltimer != INVALID_TIMER &&
+        ud->skill_id != LG_EXEEDBREAK &&
+        (!sd ||
+        (!pc->checkskill(sd, SA_FREECAST) &&
+        (skill->get_inf2(ud->skill_id) & (INF2_GUILD_SKILL | INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) == 0)))
     {
         hookStop();
         return 0; // prevent moving while casting
