@@ -96,5 +96,8 @@ void eclif_useskill(struct block_list* bl,
 void eclif_skillinfoblock_pre(struct map_session_data **sdPtr);
 void eclif_addskill_pre(struct map_session_data **sdPtr,
                         int *idPtr);
+void eclif_skillinfo_pre(struct map_session_data **sdPtr,
+                         int *skill_idPtr,
+                         int *infPtr);
 
 #endif  // EVOL_MAP_CLIF
