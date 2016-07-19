@@ -1550,3 +1550,61 @@ void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
     }
     hookStop();
 }
+
+void eclif_addskill_pre(struct map_session_data **sdPtr,
+                        int *idPtr)
+{
+    struct map_session_data *sd = *sdPtr;
+    nullpo_retv(sd);
+    int id = *idPtr;
+
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 18)
+        return;
+
+    int fd = sd->fd;
+    if (!fd)
+    {
+        hookStop();
+        return;
+    }
+
+    const int idx = skill->get_index(id);
+
+    if (sd->status.skill[idx].id <= 0)
+    {
+        hookStop();
+        return;
+    }
+
+    const int skill_lv = sd->status.skill[idx].lv;
+    const int sz = 45;
+
+    WFIFOHEAD(fd, sz);
+    WFIFOW(fd, 0) = 0xb1f;
+    WFIFOW(fd, 2) = sz;
+    WFIFOW(fd, 4) = id;
+    WFIFOL(fd, 6) = skill->get_inf(id);
+    WFIFOL(fd, 10) = skill->get_inf2(id);
+    WFIFOW(fd, 14) = skill_lv;
+    if (skill_lv > 0)
+    {
+        WFIFOW(fd, 16) = skill->get_sp(id, skill_lv);
+        WFIFOW(fd, 18) = skill->get_range2(&sd->bl, id, skill_lv);
+    }
+    else
+    {
+        WFIFOW(fd, 16) = 0;
+        WFIFOW(fd, 18) = 0;
+    }
+    safestrncpy(WFIFOP(fd, 20), skill->get_name(id), NAME_LENGTH);
+    if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
+        WFIFOB(fd, 44) = (skill_lv < skill->tree_get_max(id, sd->status.class_)) ? 1 : 0;
+    else
+        WFIFOB(fd, 44) = 0;
+    WFIFOSET(fd, sz);
+
+    hookStop();
+}
