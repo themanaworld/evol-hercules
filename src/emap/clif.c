@@ -14,7 +14,6 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/cbasetypes.h"
-//#include "common/utils.h"
 #include "common/random.h"
 #include "common/timer.h"
 #include "map/guild.h"
@@ -38,6 +37,39 @@
 #include "emap/struct/sessionext.h"
 
 extern bool isInit;
+
+static inline void RBUFPOS(const uint8 *p,
+                           unsigned short pos,
+                           short *x,
+                           short *y,
+                           unsigned char *dir)
+{
+    p += pos;
+
+    if (x)
+    {
+        x[0] = ((p[0] & 0xff) << 2) | (p[1] >> 6);
+    }
+
+    if (y)
+    {
+        y[0] = ((p[1] & 0x3f) << 4) | (p[2] >> 4);
+    }
+
+    if (dir)
+    {
+        dir[0] = (p[2] & 0x0f);
+    }
+}
+
+static inline void RFIFOPOS(int fd,
+                            unsigned short pos,
+                            short *x,
+                            short *y,
+                            unsigned char *dir)
+{
+    RBUFPOS(RFIFOP(fd,pos), 0, x, y, dir);
+}
 
 void eclif_quest_send_list_pre(TBL_PC **sdPtr)
 {
@@ -1650,4 +1682,51 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
     else
         WFIFOB(fd, 20) = 0;
     WFIFOSET(fd, sz);
+}
+
+void eclif_parse_WalkToXY(int fd,
+                          struct map_session_data *sd)
+{
+    short x, y;
+
+    if (pc_isdead(sd))
+    {
+        clif->clearunit_area(&sd->bl, CLR_DEAD);
+        return;
+    }
+
+    if (sd->sc.opt1 && (sd->sc.opt1 == OPT1_STONEWAIT || sd->sc.opt1 == OPT1_BURNING))
+        ; //You CAN walk on this OPT1 value.
+    /*else if( sd->progressbar.npc_id )
+        clif->progressbar_abort(sd);*/
+    else if (pc_cant_act(sd))
+        return;
+
+    if(sd->sc.data[SC_RUN] || sd->sc.data[SC_WUGDASH])
+        return;
+
+    pc->delinvincibletimer(sd);
+
+    RFIFOPOS(fd, 2, &x, &y, NULL);
+
+    //Set last idle time... [Skotlex]
+    pc->update_idle_time(sd, BCIDLE_WALK);
+
+    if (sd->ud.state.change_walk_target == 0)
+    {
+        if (unit->walktoxy(&sd->bl, x, y, 4) &&
+            sd->ud.state.change_walk_target == 1)
+        {
+            struct SessionExt *data = session_get_bysd(sd);
+            if (!data)
+                return;
+            if (data->clientVersion < 18)
+                return;
+            send_walk_fail(sd->fd, x, y);
+        }
+    }
+    else
+    {
+        unit->walktoxy(&sd->bl, x, y, 4);
+    }
 }

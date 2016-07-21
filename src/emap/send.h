@@ -50,5 +50,8 @@ void send_pc_skin(int fd,
                   const char *const skin);
 void send_pc_killed(int fd,
                     struct block_list* bl);
+void send_walk_fail(int fd,
+                    int x,
+                    int y);
 
 #endif  // EVOL_MAP_SEND

@@ -12,6 +12,7 @@
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
+#include "common/timer.h"
 #include "map/clif.h"
 #include "map/mob.h"
 #include "map/npc.h"
@@ -481,4 +482,14 @@ void send_pc_killed(int fd, struct block_list* bl)
     else
         WFIFOL(fd, 2) = 0;
     WFIFOSET(fd, 6);
+}
+
+void send_walk_fail(int fd, int x, int y)
+{
+    WFIFOHEAD(fd, 10);
+    WFIFOW(fd,0) = 0xb21;
+    WFIFOL(fd, 2) = (unsigned int)timer->gettick();
+    WFIFOW(fd, 6) = x;
+    WFIFOW(fd, 8) = y;
+    WFIFOSET(fd, 10);
 }

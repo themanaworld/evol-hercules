@@ -312,6 +312,7 @@ HPExport void plugin_init (void)
     skill->castend_pos2_unknown = eskill_castend_pos2_unknown;
     skill->validate_additional_fields = eskill_validate_additional_fields;
     clif->useskill = eclif_useskill;
+    clif->pWalkToXY = eclif_parse_WalkToXY;
 
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");
