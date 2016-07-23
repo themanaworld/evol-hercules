@@ -112,9 +112,8 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
             for (i = 0; i < data->slot; i++ )
             {
                 struct item_data *data;
-                if (!sd->status.inventory[n].card[i])
-                    continue;
-                if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+                if (sd->status.inventory[n].card[i] &&
+                    (data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
                 {
                     //ShowWarning("card %d\n", data->nameid);
                     WFIFOW (fd, 11 + i * 2) = data->nameid;
@@ -387,9 +386,8 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
         for (i = 0; i < data->slot; i++ )
         {
             struct item_data *data;
-            if (!sd->status.inventory[n].card[i])
-                continue;
-            if ((data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
+            if (sd->status.inventory[n].card[i] &&
+                (data = itemdb->exists(sd->status.inventory[n].card[i])) != NULL)
             {
                 //ShowWarning("card %d\n", data->nameid);
                 WBUFW(buf, 11 + i * 2) = data->nameid;
