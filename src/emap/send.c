@@ -10,10 +10,12 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "map/clif.h"
+#include "map/homunculus.h"
 #include "map/mob.h"
 #include "map/npc.h"
 #include "map/pc.h"
@@ -25,7 +27,7 @@
 #include "emap/data/session.h"
 #include "emap/struct/sessionext.h"
 
-void send_npccommand (TBL_PC *sd, int npcId, int cmd)
+void send_npccommand (struct map_session_data *sd, int npcId, int cmd)
 {
     if (!sd)
         return;
@@ -42,7 +44,7 @@ void send_npccommand (TBL_PC *sd, int npcId, int cmd)
 }
 
 // 0 - get client lang
-void send_npccommand2 (TBL_PC *sd, int npcId, int cmd, int id, int x, int y)
+void send_npccommand2 (struct map_session_data *sd, int npcId, int cmd, int id, int x, int y)
 {
     if (!sd)
         return;
@@ -184,12 +186,12 @@ void send_pc_info(struct block_list* bl1,
         return;
 
     char buf[14];
-    TBL_PC *sd = (TBL_PC *)bl1;
+    struct map_session_data *sd = (struct map_session_data *)bl1;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
         return;
 
-    TBL_PC *tsd = (TBL_PC *)bl2;
+    struct map_session_data *tsd = (struct map_session_data *)bl2;
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
@@ -215,7 +217,7 @@ void send_npc_info(struct block_list* bl1,
     if (!bl1 || bl1->type != BL_NPC)
         return;
 
-    TBL_PC *tsd = (TBL_PC *)bl2;
+    struct map_session_data *tsd = (struct map_session_data *)bl2;
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
@@ -290,7 +292,7 @@ void send_changemusic_brodcast(const int map, const char *music)
     aFree(buf);
 }
 
-void send_changenpc_title (TBL_PC *sd, const int npcId, const char *name)
+void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name)
 {
     if (!sd || !name)
         return;
@@ -319,7 +321,7 @@ void send_join_ack(int fd, const char *const name, int flag)
     WFIFOSET (fd, 27);
 }
 
-void send_slave_say(TBL_PC *sd,
+void send_slave_say(struct map_session_data *sd,
                     struct block_list *bl,
                     const char *const name,
                     const char *const message)
@@ -349,7 +351,7 @@ void send_online_list(int fd, const char *buf, unsigned size)
     WFIFOSET (fd, len);
 }
 
-void send_client_command(TBL_PC *sd, const char *const command)
+void send_client_command(struct map_session_data *sd, const char *const command)
 {
     if (!command)
         return;
@@ -489,5 +491,23 @@ void send_walk_fail(int fd, int x, int y)
     WFIFOL(fd, 2) = (unsigned int)timer->gettick();
     WFIFOW(fd, 6) = x;
     WFIFOW(fd, 8) = y;
+    WFIFOSET(fd, 10);
+}
+
+void send_homun_exp(struct homun_data *hd,
+                    const int exp)
+{
+    nullpo_retv(hd);
+    nullpo_retv(hd->master);
+
+    const int fd = hd->master->fd;
+    struct SessionExt *data = session_get(fd);
+    if (!data || data->clientVersion < 18)
+        return;
+
+    WFIFOHEAD(fd, 10);
+    WFIFOW(fd, 0) = 0xb22;
+    WFIFOL(fd, 2) = exp;
+    WFIFOL(fd, 6) = 0;
     WFIFOSET(fd, 10);
 }

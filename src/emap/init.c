@@ -50,6 +50,7 @@
 #include "emap/craft.h"
 #include "emap/craftconf.h"
 #include "emap/hashtable.h"
+#include "emap/homunculus.h"
 #include "emap/itemdb.h"
 #include "emap/lang.h"
 #include "emap/mail.h"
@@ -259,6 +260,7 @@ HPExport void plugin_init (void)
     addHookPre(script, hardcoded_constants, escript_hardcoded_constants_pre);
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
     addHookPre(status, set_viewdata, estatus_set_viewdata_pre);
+    addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
 
     addHookPost(clif, addcards, eclif_addcards_post);
     addHookPost(clif, addcards2, eclif_addcards2_post);

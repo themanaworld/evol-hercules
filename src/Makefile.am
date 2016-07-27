@@ -45,6 +45,8 @@ MAP_SRC = emap/atcommand.c \
     emap/effects.h \
     emap/hashtable.c \
     emap/hashtable.h \
+    emap/homunculus.c \
+    emap/homunculus.h \
     emap/horse.c \
     emap/horse.h \
     emap/init.c \
