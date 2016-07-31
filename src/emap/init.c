@@ -44,6 +44,7 @@
 #include "ecommon/config.h"
 #include "ecommon/init.h"
 #include "emap/atcommand.h"
+#include "emap/battle.h"
 #include "emap/battleground.h"
 #include "emap/clif.h"
 #include "emap/config.h"
@@ -262,6 +263,7 @@ HPExport void plugin_init (void)
     addHookPre(status, set_viewdata, estatus_set_viewdata_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
 
+    addHookPost(battle, check_arrows, ebattle_check_arrows_post);
     addHookPost(clif, addcards, eclif_addcards_post);
     addHookPost(clif, addcards2, eclif_addcards2_post);
     addHookPost(clif, getareachar_unit, eclif_getareachar_unit_post);

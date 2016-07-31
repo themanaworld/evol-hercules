@@ -32,6 +32,8 @@ LOGIN_SRC = elogin/config.c \
 
 MAP_SRC = emap/atcommand.c \
     emap/atcommand.h \
+    emap/battle.c \
+    emap/battle.h \
     emap/battleground.c \
     emap/battleground.h \
     emap/clif.c \

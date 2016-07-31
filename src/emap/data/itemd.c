@@ -72,6 +72,7 @@ struct ItemdExt *itemd_create(void)
     data->takeScript = NULL;
     data->insertScript = NULL;
     VECTOR_INIT(data->allowedCards);
+    VECTOR_INIT(data->allowedAmmo);
     data->subX = 8;
     data->subY = 8;
     return data;

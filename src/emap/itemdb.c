@@ -167,6 +167,23 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
         }
     }
 
+    group = libconfig->setting_get_member(it, "AllowAmmo");
+    if (group)
+    {
+        int idx = 0;
+        struct config_setting_t *it2 = NULL;
+        int cnt = VECTOR_LENGTH(data->allowedAmmo);
+        while ((it2 = libconfig->setting_get_elem(group, idx ++)))
+        {
+            const char *name = config_setting_name(it2);
+            if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
+                continue;
+            VECTOR_ENSURE(data->allowedAmmo, cnt + 1, 1);
+            VECTOR_PUSH(data->allowedAmmo, atoi(name + 2));
+            cnt ++;
+        }
+    }
+
     hookStop();
 }
 
