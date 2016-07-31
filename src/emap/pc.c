@@ -462,17 +462,23 @@ bool epc_can_insert_card_into_post(bool retVal,
         if (!sd)
             return retVal;
         struct ItemdExt *data = itemd_get(sd->inventory_data[idx_equip]);
-        if (!data || !data->allowedCards[0].id) // allow cards if AllowedCards list is empty
+        if (!data)
+            return retVal;
+
+        const int sz = VECTOR_LENGTH(data->allowedCards);
+
+        if (sz == 0) // allow cards if AllowedCards list is empty
             return retVal;
 
         const int newCardId = sd->status.inventory[idx_card].nameid;
         int cardAmountLimit = 0;
 
-        for (f = 0; f < 100 && data->allowedCards[f].id; f ++)
+        for (f = 0; f < sz; f ++)
         {
-            if (data->allowedCards[f].id == newCardId)
+            struct ItemCardExt *const card = &VECTOR_INDEX(data->allowedCards, f);
+            if (card->id == newCardId)
             {
-                cardAmountLimit = data->allowedCards[f].amount;
+                cardAmountLimit = card->amount;
                 break;
             }
         }

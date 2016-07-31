@@ -9,6 +9,7 @@
 
 #include "common/conf.h"
 #include "common/HPMi.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/socket.h"
@@ -140,22 +141,27 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
     {
         int idx = 0;
         struct config_setting_t *it2 = NULL;
-        int cnt = 0;
+        int cnt = VECTOR_LENGTH(data->allowedCards);
         while ((it2 = libconfig->setting_get_elem(group, idx ++)))
         {
             const char *name = config_setting_name(it2);
             if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
                 continue;
             const int val = libconfig->setting_get_int(it2);
+
+            VECTOR_ENSURE(data->allowedCards, cnt + 1, 1);
+            VECTOR_INSERTZEROED(data->allowedCards, cnt);
+            struct ItemCardExt *allowedCard = &VECTOR_INDEX(data->allowedCards, cnt);
+
             if (name)
             {
-                data->allowedCards[cnt].id = atoi(name + 2);
-                data->allowedCards[cnt].amount = val;
+                allowedCard->id = atoi(name + 2);
+                allowedCard->amount = val;
             }
             else
             {
-                data->allowedCards[cnt].id = val;
-                data->allowedCards[cnt].amount = 1;
+                allowedCard->id = val;
+                allowedCard->amount = 1;
             }
             cnt ++;
         }

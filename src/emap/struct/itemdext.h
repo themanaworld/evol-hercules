@@ -34,7 +34,7 @@ struct ItemdExt
     int unequipEffect;
     int unequipFailEffect;
 
-    struct ItemCardExt allowedCards[100];
+    VECTOR_DECL(struct ItemCardExt) allowedCards;
     struct script_code *dropScript;
     struct script_code *takeScript;
     struct script_code *insertScript;

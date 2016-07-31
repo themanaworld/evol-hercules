@@ -71,7 +71,7 @@ struct ItemdExt *itemd_create(void)
     data->dropScript = NULL;
     data->takeScript = NULL;
     data->insertScript = NULL;
-    memset(&data->allowedCards, 0, sizeof(data->allowedCards));
+    VECTOR_INIT(data->allowedCards);
     data->subX = 8;
     data->subY = 8;
     return data;
