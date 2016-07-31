@@ -201,4 +201,6 @@ void edestroy_item_data_pre(struct item_data **selfPtr,
         script->free_code(data->takeScript);
     if (data->insertScript)
         script->free_code(data->insertScript);
+    VECTOR_CLEAR(data->allowedCards);
+    VECTOR_CLEAR(data->allowedAmmo);
 }
