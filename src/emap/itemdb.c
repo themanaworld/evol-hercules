@@ -149,7 +149,7 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
                 continue;
             const int val = libconfig->setting_get_int(it2);
 
-            VECTOR_ENSURE(data->allowedCards, cnt + 1, 1);
+            VECTOR_ENSURE(data->allowedCards, 1, 1);
             VECTOR_INSERTZEROED(data->allowedCards, cnt);
             struct ItemCardExt *allowedCard = &VECTOR_INDEX(data->allowedCards, cnt);
 
@@ -178,7 +178,7 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
             const char *name = config_setting_name(it2);
             if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
                 continue;
-            VECTOR_ENSURE(data->allowedAmmo, cnt + 1, 1);
+            VECTOR_ENSURE(data->allowedAmmo, 1, 1);
             VECTOR_PUSH(data->allowedAmmo, atoi(name + 2));
             cnt ++;
         }

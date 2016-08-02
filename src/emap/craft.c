@@ -205,7 +205,7 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
                 strutil_free(craftdata);
                 return false;
             }
-            VECTOR_ENSURE(crslot->items, slot + 1, 1);
+            VECTOR_ENSURE(crslot->items, 1, 1);
             VECTOR_INSERTZEROED(crslot->items, slot);
             struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
             pair->index = index;

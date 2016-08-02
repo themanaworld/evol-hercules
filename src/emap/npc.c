@@ -181,6 +181,7 @@ bool enpc_duplicate_script_sub_pre(struct npc_data **ndPtr,
     CREATE(code, struct script_code, 1);
 
     const int sz = VECTOR_LENGTH(snd->u.scr.script->script_buf);
+    VECTOR_INIT(code->script_buf);
     VECTOR_ENSURE(code->script_buf, sz , 1);
     VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(snd->u.scr.script->script_buf), sz);
 

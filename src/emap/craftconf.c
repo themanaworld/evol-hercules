@@ -100,7 +100,7 @@ static void craft_read_source_inventory(struct craft_db_entry *entry,
     struct config_setting_t *item;
 
     int invLen = VECTOR_LENGTH(entry->inventories);
-    VECTOR_ENSURE(entry->inventories, invLen + 1, 1);
+    VECTOR_ENSURE(entry->inventories, 1, 1);
     VECTOR_INSERTZEROED(entry->inventories, invLen);
     struct craft_db_inventory *inventory = &VECTOR_INDEX(entry->inventories, invLen);
 
@@ -145,7 +145,7 @@ static void craft_read_create_items(struct craft_db_entry *entry,
     struct config_setting_t *item;
 
     int invLen = VECTOR_LENGTH(entry->create_items);
-    VECTOR_ENSURE(entry->create_items, invLen + 1, 1);
+    VECTOR_ENSURE(entry->create_items, 1, 1);
     VECTOR_INSERTZEROED(entry->create_items, invLen);
     struct craft_items_collection *collection = &VECTOR_INDEX(entry->create_items, invLen);
     VECTOR_INIT(*collection);
@@ -171,7 +171,7 @@ static void craft_read_create_items(struct craft_db_entry *entry,
             continue;
         }
 
-        VECTOR_ENSURE(*collection, collecitonLen + 1, 1);
+        VECTOR_ENSURE(*collection, 1, 1);
         VECTOR_INSERTZEROED(*collection, collecitonLen);
         struct item_pair *pair = &VECTOR_INDEX(*collection, collecitonLen);
         pair->index = itemId;
@@ -282,7 +282,7 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
             continue;
         }
 
-        VECTOR_ENSURE(*vector, len + 1, 1);
+        VECTOR_ENSURE(*vector, 1, 1);
         VECTOR_INSERTZEROED(*vector, len);
         struct item_pair *pair = &VECTOR_INDEX(*vector, len);
         len ++;
