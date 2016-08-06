@@ -50,5 +50,5 @@ bool ebattle_check_arrows_post(bool retVal,
         clif->arrow_fail(sd, 0);
         return false;
     }
-    return true;
+    return false;
 }
