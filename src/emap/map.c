@@ -47,16 +47,17 @@ struct mapcell2
 
     // dynamic flags
     unsigned char
-        npc       : 1,
-        basilica  : 1,
+        npc           : 1,
+        basilica      : 1,
         landprotector : 1,
-        novending : 1,
-        nochat    : 1,
-        icewall   : 1,
-        noicewall : 1,
+        novending     : 1,
+        nochat        : 1,
+        icewall       : 1,
+        noicewall     : 1,
 
-        wall      : 1,
-        air       : 1;
+        wall        : 1,
+        air         : 1,
+        monsterWall : 1;
 
 #ifdef CELL_NOSTACK
     int cell_bl; //Holds amount of bls in this cell.
@@ -182,7 +183,6 @@ void emap_online_list(int fd)
 // 0010 0x2 - water walk
 // 0100 0x4 - air walk
 
-
 static int getWalkMask(const struct block_list *bl)
 {
     int walkMask = 0;
@@ -207,6 +207,11 @@ static int getWalkMask(const struct block_list *bl)
 
 static bool isWalkCell(const struct block_list *bl, struct mapcell2 cell)
 {
+    if (bl->type == BL_MOB)
+    {
+        if (cell.monsterWall)
+            return false;
+    }
     if (cell.walkable)
         return true;
     const int walkMask = getWalkMask(bl);
@@ -225,6 +230,11 @@ static bool isWalkCell(const struct block_list *bl, struct mapcell2 cell)
 
 static bool isWallCell(const struct block_list *bl, struct mapcell2 cell)
 {
+    if (bl->type == BL_MOB)
+    {
+        if (cell.monsterWall)
+            return true;
+    }
     if (cell.walkable || cell.shootable)
         return false;
     const int walkMask = getWalkMask(bl);
@@ -310,39 +320,46 @@ struct mapcell emap_gat2cell_pre(int *gatPtr)
     switch (gat)
     {
         case 0: // walkable ground
-            cell.walkable  = 1;
-            cell.shootable = 1;
-            cell.water     = 0;
-            cell.air       = 0;
-            cell.wall      = 0;
+        case 5: // should not happened
+        case 4: // sit, walkable ground
+            cell.walkable    = 1;
+            cell.shootable   = 1;
+            cell.water       = 0;
+            cell.air         = 0;
+            cell.wall        = 0;
+            cell.monsterWall = 0;
             break;
         case 1: // wall
-            cell.walkable  = 0;
-            cell.shootable = 0;
-            cell.water     = 0;
-            cell.air       = 0;
-            cell.wall      = 1;
+            cell.walkable    = 0;
+            cell.shootable   = 0;
+            cell.water       = 0;
+            cell.air         = 0;
+            cell.wall        = 1;
+            cell.monsterWall = 0;
             break;
         case 2: // air allowed
-            cell.walkable  = 0;
-            cell.shootable = 0;
-            cell.water     = 0;
-            cell.air       = 1;
-            cell.wall      = 0;
+            cell.walkable    = 0;
+            cell.shootable   = 0;
+            cell.water       = 0;
+            cell.air         = 1;
+            cell.wall        = 0;
+            cell.monsterWall = 0;
             break;
         case 3: // unwalkable water
-            cell.walkable  = 0;
-            cell.shootable = 1;
-            cell.water     = 1;
-            cell.air       = 0;
-            cell.wall      = 0;
+            cell.walkable    = 0;
+            cell.shootable   = 1;
+            cell.water       = 1;
+            cell.air         = 0;
+            cell.wall        = 0;
+            cell.monsterWall = 0;
             break;
-        case 4: // sit, walkable ground
-            cell.walkable  = 1;
-            cell.shootable = 1;
-            cell.water     = 0;
-            cell.air       = 0;
-            cell.wall      = 0;
+        case 6: // any monster cant walk, all other can
+            cell.walkable    = 1;
+            cell.shootable   = 1;
+            cell.water       = 0;
+            cell.air         = 0;
+            cell.wall        = 0;
+            cell.monsterWall = 1;
             break;
         default:
             ShowWarning("map_gat2cell: unrecognized gat type '%d'\n", gat);
@@ -357,14 +374,16 @@ int emap_cell2gat_pre(struct mapcell *cellPtr)
 {
     struct mapcell2 cell = *((struct mapcell2*)cellPtr);
     hookStop();
-    if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0)
+    if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 && cell.monsterWall == 0)
         return 0;
-    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 0)
+    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 0 && cell.monsterWall == 0)
         return 1;
-    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 1)
+    if (cell.walkable == 0 && cell.shootable == 0 && cell.water == 0 && cell.air == 1 && cell.monsterWall == 0)
         return 2;
-    if (cell.walkable == 0 && cell.shootable == 1 && cell.water == 1)
+    if (cell.walkable == 0 && cell.shootable == 1 && cell.water == 1 && cell.monsterWall == 0)
         return 3;
+    if (cell.walkable == 1 && cell.shootable == 1 && cell.water == 0 && cell.monsterWall == 1)
+        return 6;
 
     ShowWarning("map_cell2gat: cell has no matching gat type\n");
     return 1;
