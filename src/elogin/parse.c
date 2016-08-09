@@ -214,3 +214,20 @@ void elogin_parse_change_paassword(int fd)
     }
     send_char_password_change_ack(fd, accountId, status);
 }
+
+void elogin_parse_serverexit(int fd)
+{
+    const int code = RFIFOW(fd, 2);
+    switch (code)
+    {
+        case 100:  // all exit
+        case 101:  // all restart
+            core->shutdown_callback();
+            break;
+        case 102:  // restart char and map server
+        case 103:  // restart map server
+            break;
+        default:
+            ShowWarning("Unknown termination code: %d\n", code);
+    }
+}

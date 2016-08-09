@@ -14,6 +14,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/sql.h"
+#include "common/utils.h"
 #include "common/timer.h"
 #include "char/char.h"
 #include "char/inter.h"
@@ -319,4 +320,31 @@ void echar_parse_frommap_request_stats_report_pre(int *fdPtr)
     RFIFOSKIP(fd, RFIFOW(fd,2));  /* skip this packet */
     RFIFOFLUSH(fd);
     hookStop();
+}
+
+void echar_parse_map_serverexit(int mapFd)
+{
+    const int code = RFIFOW(mapFd, 2);
+    switch (code)
+    {
+        case 100:  // all exit
+        case 101:  // all restart
+        case 102:  // restart char and map server
+            echat_send_login_serverexit(code);
+            HSleep(1);
+            core->shutdown_callback();
+            break;
+        case 103:  // restart map server
+            break;
+        default:
+            ShowWarning("Unknown termination code: %d\n", code);
+    }
+}
+
+void echat_send_login_serverexit(const int code)
+{
+    WFIFOHEAD(chr->login_fd, 4);
+    WFIFOW(chr->login_fd, 0) = 0x5003;
+    WFIFOW(chr->login_fd, 2) = code;
+    WFIFOSET(chr->login_fd, 4);
 }

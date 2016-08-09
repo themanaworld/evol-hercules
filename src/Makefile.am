@@ -52,6 +52,8 @@ MAP_SRC = emap/atcommand.c \
     emap/horse.c \
     emap/horse.h \
     emap/init.c \
+    emap/inter.c \
+    emap/inter.h \
     emap/itemdb.c \
     emap/itemdb.h \
     emap/lang.c \

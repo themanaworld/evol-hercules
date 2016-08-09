@@ -94,6 +94,7 @@ HPExport void plugin_init (void)
     addAtcommand("setskill", setSkill);
     addAtcommand("slide", slide);
     addAtcommand("mapexit", mapExit);
+    addAtcommand("serverexit", serverExit);
 
     addScriptCommand("chatjoin", "i*", chatJoin);
     addScriptCommand("setcamnpc", "*", setCamNpc);

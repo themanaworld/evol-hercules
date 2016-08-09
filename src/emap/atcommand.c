@@ -23,6 +23,7 @@
 
 #include "emap/atcommand.h"
 #include "emap/lang.h"
+#include "emap/inter.h"
 
 const char* eatcommand_msgsd_pre(struct map_session_data **sdPtr,
                                  int *msgPtr)
@@ -132,11 +133,29 @@ ACMD2(slide)
 
 ACMD1(mapExit)
 {
-    int code = 0;
+    int code = 1;
     if (!*message || sscanf(message, "%5d", &code) < 1)
-        code = 0;
+        code = 1;
 
     map->retval = code;
     map->do_shutdown();
+    return true;
+}
+
+// 100 - terminate all servers
+// 101 - restart all servers
+// 102 - restart char and map servers
+// 103 - restart map server
+ACMD1(serverExit)
+{
+    int code = 0;
+    if (!*message || sscanf(message, "%5d", &code) < 1)
+        return false;
+
+    send_char_exit(code);
+
+    map->retval = code;
+    map->do_shutdown();
+
     return true;
 }

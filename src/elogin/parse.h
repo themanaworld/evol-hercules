@@ -14,5 +14,6 @@ void elogin_parse_client_login2(int fd);
 enum parsefunc_rcode elogin_parse_ping_pre(int *fd,
                                            struct login_session_data **sdPtr);
 void elogin_parse_change_paassword(int fd);
+void elogin_parse_serverexit(int fd);
 
 #endif  // EVOL_LOGIN_PARSE

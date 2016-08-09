@@ -22,5 +22,6 @@ const char* eatcommand_msgfd_pre(int *fdPtr,
 ACMD2(setSkill);
 ACMD2(slide);
 ACMD1(mapExit);
+ACMD1(serverExit);
 
 #endif  // EVOL_MAP_ATCOMMAND
