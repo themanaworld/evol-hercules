@@ -146,6 +146,7 @@ ACMD1(mapExit)
 // 101 - restart all servers
 // 102 - restart char and map servers
 // 103 - restart map server
+// 104 - git pull and restart all servers
 ACMD1(serverExit)
 {
     int code = 0;
