@@ -225,6 +225,7 @@ void elogin_parse_serverexit(int fd)
         case 104:  // git pull and all restart
         case 105:  // build all
         case 106:  // rebuild all
+        case 107:  // git pull and build all
             core->shutdown_callback();
             break;
         case 102:  // restart char and map server
