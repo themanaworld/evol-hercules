@@ -40,6 +40,8 @@ MAP_SRC = emap/atcommand.c \
     emap/clif.h \
     emap/config.c \
     emap/config.h \
+    emap/console.c \
+    emap/console.h \
     emap/craft.c \
     emap/craft.h \
     emap/craftconf.c \

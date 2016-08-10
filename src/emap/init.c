@@ -48,6 +48,7 @@
 #include "emap/battleground.h"
 #include "emap/clif.h"
 #include "emap/config.h"
+#include "emap/console.h"
 #include "emap/craft.h"
 #include "emap/craftconf.h"
 #include "emap/hashtable.h"
@@ -95,6 +96,8 @@ HPExport void plugin_init (void)
     addAtcommand("slide", slide);
     addAtcommand("mapexit", mapExit);
     addAtcommand("serverexit", serverExit);
+
+    addCPCommand("serverexit", serverExit);
 
     addScriptCommand("chatjoin", "i*", chatJoin);
     addScriptCommand("setcamnpc", "*", setCamNpc);
