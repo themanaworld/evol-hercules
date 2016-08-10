@@ -336,6 +336,7 @@ void echar_parse_map_serverexit(int mapFd)
         case 107:  // git pull and build all
         case 108:  // git pull and rebuild all
         case 109:  // build plugin
+        case 110:  // git pull and build plugin
             echat_send_login_serverexit(code);
             HSleep(1);
             core->shutdown_callback();
