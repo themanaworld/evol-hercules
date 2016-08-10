@@ -151,6 +151,7 @@ ACMD1(mapExit)
 // 106 - rebuild all
 // 107 - git pull and build all
 // 108 - git pull and rebuild all
+// 109 - build plugin
 ACMD1(serverExit)
 {
     int code = 0;
