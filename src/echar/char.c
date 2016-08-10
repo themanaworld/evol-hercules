@@ -329,8 +329,9 @@ void echar_parse_map_serverexit(int mapFd)
     {
         case 100:  // all exit
         case 101:  // all restart
-        case 104:  // git pull and all restart
         case 102:  // restart char and map server
+        case 104:  // git pull and all restart
+        case 105:  // build all
             echat_send_login_serverexit(code);
             HSleep(1);
             core->shutdown_callback();
