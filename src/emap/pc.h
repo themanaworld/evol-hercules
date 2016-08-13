@@ -125,4 +125,8 @@ int epc_dead_post(int retVal,
                   struct map_session_data *sd,
                   struct block_list *src);
 
+int epc_jobchange(struct map_session_data *sd,
+                  int job,
+                  int upper);
+
 #endif  // EVOL_MAP_PC

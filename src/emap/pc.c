@@ -10,9 +10,13 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "map/chrif.h"
+#include "map/homunculus.h"
+#include "map/elemental.h"
 #include "map/itemdb.h"
 #include "map/npc.h"
 #include "map/pc.h"
@@ -770,4 +774,221 @@ int epc_dead_post(int retVal,
             send_pc_killed(sd->fd, src);
     }
     return retVal;
+}
+
+/*==========================================
+ * Called when player changes job
+ * Rewrote to make it tidider [Celest]
+ *------------------------------------------*/
+int epc_jobchange(struct map_session_data *sd,
+                  int job,
+                  int upper __attribute__ ((unused)))
+{
+    int i, fame_flag=0;
+    int b_class, idx = 0;
+
+    nullpo_ret(sd);
+
+    if (job < 0)
+        return 1;
+
+    //Normalize job.
+    b_class = pc->jobid2mapid(job);
+    if (b_class == -1)
+        return 1;
+/*
+    switch (upper)
+    {
+        case 1:
+            b_class|= JOBL_UPPER;
+            break;
+        case 2:
+            b_class|= JOBL_BABY;
+            break;
+    }
+    //This will automatically adjust bard/dancer classes to the correct gender
+    //That is, if you try to jobchange into dancer, it will turn you to bard.
+    job = pc->mapid2jobid(b_class, sd->status.sex);
+    if (job == -1)
+        return 1;
+*/
+
+    if ((unsigned short)b_class == sd->class_)
+        return 1; //Nothing to change.
+
+/*
+    // changing from 1st to 2nd job
+    if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
+    {
+        sd->change_level_2nd = sd->status.job_level;
+        pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+    }
+    // changing from 2nd to 3rd job
+    else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD))
+    {
+        sd->change_level_3rd = sd->status.job_level;
+        pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+    }
+*/
+
+    if(sd->cloneskill_id)
+    {
+        idx = skill->get_index(sd->cloneskill_id);
+        if (sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED)
+        {
+            sd->status.skill[idx].id = 0;
+            sd->status.skill[idx].lv = 0;
+            sd->status.skill[idx].flag = 0;
+            clif->deleteskill(sd, sd->cloneskill_id);
+        }
+        sd->cloneskill_id = 0;
+        pc_setglobalreg(sd, script->add_str("CLONE_SKILL"), 0);
+        pc_setglobalreg(sd, script->add_str("CLONE_SKILL_LV"), 0);
+    }
+
+    if(sd->reproduceskill_id)
+    {
+        idx = skill->get_index(sd->reproduceskill_id);
+        if (sd->status.skill[idx].flag == SKILL_FLAG_PLAGIARIZED)
+        {
+            sd->status.skill[idx].id = 0;
+            sd->status.skill[idx].lv = 0;
+            sd->status.skill[idx].flag = 0;
+            clif->deleteskill(sd, sd->reproduceskill_id);
+        }
+        sd->reproduceskill_id = 0;
+        pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL"),0);
+        pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL_LV"),0);
+    }
+
+/*
+    if ((b_class&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK))
+    { //Things to remove when changing class tree.
+        const int class_ = pc->class2idx(sd->status.class_);
+        short id;
+        for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_][i].id) > 0; i++)
+        {
+            //Remove status specific to your current tree skills.
+            enum sc_type sc = status->skill2sc(id);
+            if (sc > SC_COMMON_MAX && sd->sc.data[sc])
+                status_change_end(&sd->bl, sc, INVALID_TIMER);
+        }
+    }
+
+    if ((sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && (b_class&MAPID_UPPERMASK) != MAPID_STAR_GLADIATOR)
+    {
+        // going off star glad lineage, reset feel to not store no-longer-used vars in the database
+        pc->resetfeel(sd);
+    }
+*/
+
+    sd->status.class_ = job;
+    fame_flag = pc->famerank(sd->status.char_id, sd->class_ & MAPID_UPPERMASK);
+    sd->class_ = (unsigned short)b_class;
+//    sd->status.job_level = 1;
+//    sd->status.job_exp = 0;
+
+    if (sd->status.base_level > pc->maxbaselv(sd))
+    {
+        sd->status.base_level = pc->maxbaselv(sd);
+        sd->status.base_exp=0;
+        pc->resetstate(sd);
+        clif->updatestatus(sd, SP_STATUSPOINT);
+        clif->updatestatus(sd, SP_BASELEVEL);
+        clif->updatestatus(sd, SP_BASEEXP);
+        clif->updatestatus(sd, SP_NEXTBASEEXP);
+    }
+
+    clif->updatestatus(sd, SP_JOBLEVEL);
+    clif->updatestatus(sd, SP_JOBEXP);
+    clif->updatestatus(sd, SP_NEXTJOBEXP);
+
+    for (i = 0; i < EQI_MAX; i ++)
+    {
+        if (sd->equip_index[i] >= 0)
+        {
+            if (!pc->isequip(sd, sd->equip_index[i]))
+                pc->unequipitem(sd, sd->equip_index[i], PCUNEQUIPITEM_FORCE); // unequip invalid item for class
+        }
+    }
+
+    //Change look, if disguised, you need to undisguise
+    //to correctly calculate new job sprite without
+    if (sd->disguise != -1)
+        pc->disguise(sd, -1);
+
+    status->set_viewdata(&sd->bl, job);
+    send_changelook2(sd, &sd->bl, sd->bl.id, LOOK_BASE, sd->vd.class_, 0, NULL, 0, AREA);
+//    clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
+    if (sd->vd.cloth_color)
+        clif->changelook(&sd->bl, LOOK_CLOTHES_COLOR, sd->vd.cloth_color);
+    if (sd->vd.body_style)
+        clif->changelook(&sd->bl, LOOK_BODY2, sd->vd.body_style);
+
+    //Update skill tree.
+    pc->calc_skilltree(sd);
+    clif->skillinfoblock(sd);
+
+    if (sd->ed)
+        elemental->delete(sd->ed, 0);
+    if (sd->state.vending)
+        vending->close(sd);
+
+    map->foreachinmap(pc->jobchange_killclone, sd->bl.m, BL_MOB, sd->bl.id);
+
+    //Remove peco/cart/falcon
+    i = sd->sc.option;
+    if (i & OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
+        i &= ~ OPTION_RIDING;
+    if (i & OPTION_FALCON && !pc->checkskill(sd, HT_FALCON))
+        i &= ~ OPTION_FALCON;
+    if (i & OPTION_DRAGON && !pc->checkskill(sd,RK_DRAGONTRAINING))
+        i &= ~ OPTION_DRAGON;
+    if (i & OPTION_WUGRIDER && !pc->checkskill(sd,RA_WUGMASTERY))
+        i &= ~ OPTION_WUGRIDER;
+    if (i & OPTION_WUG && !pc->checkskill(sd,RA_WUGMASTERY))
+        i &= ~ OPTION_WUG;
+    if (i & OPTION_MADOGEAR) //You do not need a skill for this.
+        i &= ~ OPTION_MADOGEAR;
+//#ifndef NEW_CARTS
+//    if (i & OPTION_CART && !pc->checkskill(sd, MC_PUSHCART))
+//        i &= ~ OPTION_CART;
+//#else
+    if (sd->sc.data[SC_PUSH_CART] && !pc->checkskill(sd, MC_PUSHCART))
+        pc->setcart(sd, 0);
+//#endif
+    if (i != sd->sc.option)
+        pc->setoption(sd, i);
+
+    if (homun_alive(sd->hd) && !pc->checkskill(sd, AM_CALLHOMUN))
+        homun->vaporize(sd, HOM_ST_REST);
+
+    if (sd->status.manner < 0)
+        clif->changestatus(sd, SP_MANNER, sd->status.manner);
+
+    status_calc_pc(sd, SCO_FORCE);
+    pc->checkallowskill(sd);
+    pc->equiplookall(sd);
+
+    //if you were previously famous, not anymore.
+    if (fame_flag)
+    {
+        chrif->save(sd, 0);
+        chrif->buildfamelist();
+    }
+    else if (sd->status.fame > 0)
+    {
+        //It may be that now they are famous?
+        switch (sd->class_&MAPID_UPPERMASK)
+        {
+            case MAPID_BLACKSMITH:
+            case MAPID_ALCHEMIST:
+            case MAPID_TAEKWON:
+                chrif->save(sd, 0);
+                chrif->buildfamelist();
+            break;
+        }
+    }
+
+    return 0;
 }
