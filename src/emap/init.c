@@ -179,6 +179,8 @@ HPExport void plugin_init (void)
     addScriptCommand("hticheck", "i", htiCheck);
     addScriptCommand("htidelete", "i", htiDelete);
     addScriptCommand("setfakecells", "iii??", setFakeCells);
+    addScriptCommand("getlabel", "l", getLabel);
+    addScriptCommand("tolabel", "i", toLabel);
 
     do_init_langs();
 

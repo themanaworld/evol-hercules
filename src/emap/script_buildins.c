@@ -2088,3 +2088,15 @@ BUILDIN(htiDelete)
 }
 
 #undef checkHtIteratorExists
+
+BUILDIN(getLabel)
+{
+    script_pushint(st, script_getnum(st, 2));
+    return true;
+}
+
+BUILDIN(toLabel)
+{
+    script_pushlabel(st, script_getnum(st, 2));
+    return true;
+}

@@ -123,4 +123,7 @@
     if (!nd) \
         return def; \
 
+#define script_pushlabel(st, val) \
+    (script->push_val((st)->stack, C_POS, (val),NULL))
+
 #endif  // EVOL_MAP_SCRIPTDEFINES
