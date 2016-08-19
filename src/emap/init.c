@@ -281,6 +281,7 @@ HPExport void plugin_init (void)
     addHookPost(clif, damage, eclif_damage_post);
     addHookPost(clif, set_unit_walking, eclif_set_unit_walking_post);
     addHookPost(clif, move, eclif_move_post);
+    addHookPost(clif, party_info, eclif_party_info_post);
     addHookPost(status, init, estatus_init_post);
     addHookPost(status, set_viewdata, estatus_set_viewdata_post);
     addHookPost(status, read_job_db_sub, estatus_read_job_db_sub_post);

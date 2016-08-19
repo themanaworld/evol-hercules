@@ -1730,3 +1730,12 @@ void eclif_parse_WalkToXY(int fd,
         unit->walktoxy(&sd->bl, x, y, 4);
     }
 }
+
+void eclif_party_info_post(struct party_data *p,
+                           struct map_session_data *sd)
+{
+    if (sd)
+    {
+        clif->party_option(p, sd, 2);
+    }
+}

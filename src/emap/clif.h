@@ -101,4 +101,6 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
                          int *infPtr);
 void eclif_parse_WalkToXY(int fd,
                           struct map_session_data *sd) __attribute__((nonnull (2)));
+void eclif_party_info_post(struct party_data *p,
+                           struct map_session_data *sd);
 #endif  // EVOL_MAP_CLIF
