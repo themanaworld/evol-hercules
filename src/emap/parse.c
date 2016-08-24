@@ -218,7 +218,7 @@ void map_parse_homun_emote(int fd)
 void map_parse_homun_dir(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd || !sd->pd)
+    if (!sd)
         return;
     if (sd->md && sd->md->db)
         unit->setdir(&sd->md->bl, RFIFOB(fd, 8));
