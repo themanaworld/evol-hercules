@@ -7,6 +7,7 @@
 struct MobdExt
 {
     int walkMask;
+    int weaponAttacks[MAX_WEAPON_TYPE];
 };
 
 #endif  // EVOL_MAP_MOBDEXT

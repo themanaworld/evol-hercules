@@ -269,6 +269,7 @@ HPExport void plugin_init (void)
     addHookPre(status, set_viewdata, estatus_set_viewdata_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
 
+    addHookPost(battle, calc_weapon_attack, ebattle_calc_weapon_attack_post);
     addHookPost(battle, check_arrows, ebattle_check_arrows_post);
     addHookPost(clif, addcards, eclif_addcards_post);
     addHookPost(clif, addcards2, eclif_addcards2_post);
