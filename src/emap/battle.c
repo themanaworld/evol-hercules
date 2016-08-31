@@ -85,8 +85,8 @@ bool ebattle_check_arrows_post(bool retVal,
 
 struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
                                               struct block_list *src,
-                                              struct block_list *target __attribute__ ((unused)),
-                                              uint16 skill_id __attribute__ ((unused)),
+                                              struct block_list *target,
+                                              uint16 skill_id,
                                               uint16 skill_lv __attribute__ ((unused)),
                                               int wflag __attribute__ ((unused)))
 {
@@ -105,9 +105,17 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
     if (data == NULL)
         return retVal;
 
-    const int mod = data->weaponAttacks[sd->weapontype1];
+    int mod = 0;
+    if (skill_id > 0)
+    {
+        const int idx = skill->get_index(skill_id);
+        mod = data->skillAttacks[idx];
+    }
+    else
+    {
+        mod = data->weaponAttacks[sd->weapontype1];
+    }
     retVal.damage = apply_percentrate64(retVal.damage, mod, 10000);
     retVal.damage2 = apply_percentrate64(retVal.damage2, mod, 10000);
-
     return retVal;
 }

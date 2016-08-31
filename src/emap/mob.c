@@ -18,6 +18,7 @@
 #include "map/battle.h"
 #include "map/itemdb.h"
 #include "map/mob.h"
+#include "map/script.h"
 
 #include "plugins/HPMHooking.h"
 
@@ -199,6 +200,23 @@ static void emob_load_weaponattacks(const char *type,
     data->weaponAttacks[key] = val;
 }
 
+static void emob_load_skillattacks(const char *type,
+                                   int val,
+                                   struct MobdExt *data,
+                                   struct mob_db *entry)
+{
+    int skill_id = 0;
+    if (script->get_constant(type, &skill_id))
+    {
+        const int idx = skill->get_index(skill_id);
+        data->skillAttacks[idx] = val;
+    }
+    else
+    {
+        ShowError("Mob %d. Unknown skill name %s\n", entry->mob_id, type);
+    }
+}
+
 void emob_read_db_additional_fields_pre(struct mob_db **entryPtr,
                                         struct config_setting_t **itPtr,
                                         int *nPtr __attribute__ ((unused)),
@@ -225,6 +243,18 @@ void emob_read_db_additional_fields_pre(struct mob_db **entryPtr,
         while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL)
         {
             emob_load_weaponattacks(config_setting_name(wpt), libconfig->setting_get_int(wpt), data, *entryPtr);
+        }
+    }
+
+    tt = libconfig->setting_get_member(*itPtr, "SkillAttacks");
+
+    if (tt && config_setting_is_group(tt))
+    {
+        int j = 0;
+        struct config_setting_t *wpt = NULL;
+        while ((wpt = libconfig->setting_get_elem(tt, j++)) != NULL)
+        {
+            emob_load_skillattacks(config_setting_name(wpt), libconfig->setting_get_int(wpt), data, *entryPtr);
         }
     }
 }

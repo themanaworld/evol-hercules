@@ -49,5 +49,7 @@ struct MobdExt *mobd_create(void)
     data->walkMask = 0;
     for (int f = 0; f < MAX_WEAPON_TYPE; f ++)
         data->weaponAttacks[f] = 10000;
+    for (int f = 0; f < MAX_SKILL_DB; f ++)
+        data->skillAttacks[f] = 10000;
     return data;
 }
