@@ -77,6 +77,7 @@
 extern int langScriptId;
 extern int mountScriptId;
 bool isInit;
+char global_npc_str[1001];
 
 HPExport struct hplugin_info pinfo =
 {
@@ -89,6 +90,7 @@ HPExport struct hplugin_info pinfo =
 HPExport void plugin_init (void)
 {
     isInit = false;
+    *global_npc_str = 0;
     htreg_init();
     skilld_init();
 
@@ -327,6 +329,7 @@ HPExport void plugin_init (void)
     skill->validate_additional_fields = eskill_validate_additional_fields;
     clif->useskill = eclif_useskill;
     clif->pWalkToXY = eclif_parse_WalkToXY;
+    clif->pNpcStringInput = eclif_parse_NpcStringInput;
     pc->jobchange = epc_jobchange;
 
     langScriptId = script->add_str("Lang");

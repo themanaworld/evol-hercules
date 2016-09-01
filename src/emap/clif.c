@@ -37,6 +37,7 @@
 #include "emap/struct/sessionext.h"
 
 extern bool isInit;
+extern char global_npc_str[1001];
 
 static inline void RBUFPOS(const uint8 *p,
                            unsigned short pos,
@@ -1738,4 +1739,23 @@ void eclif_party_info_post(struct party_data *p,
     {
         clif->party_option(p, sd, 2);
     }
+}
+
+/// NPC text input dialog value (CZ_INPUT_EDITDLGSTR).
+/// 01d5 <packet len>.W <npc id>.L <string>.?B
+void eclif_parse_NpcStringInput(int fd,
+                                struct map_session_data* sd)
+{
+    int message_len = RFIFOW(fd, 2) - 8;
+    int npcid = RFIFOL(fd, 4);
+    const char *message = RFIFOP(fd, 8);
+
+    if (message_len <= 0)
+        return; // invalid input
+
+    if (message_len > 1000)
+        message_len = 1000;
+
+    safestrncpy(global_npc_str, message, message_len);
+    npc->scriptcont(sd, npcid, false);
 }

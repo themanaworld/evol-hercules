@@ -103,4 +103,6 @@ void eclif_parse_WalkToXY(int fd,
                           struct map_session_data *sd) __attribute__((nonnull (2)));
 void eclif_party_info_post(struct party_data *p,
                            struct map_session_data *sd);
+void eclif_parse_NpcStringInput(int fd,
+                                struct map_session_data* sd) __attribute__((nonnull (2)));
 #endif  // EVOL_MAP_CLIF

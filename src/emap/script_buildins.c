@@ -34,6 +34,7 @@
 #include "emap/utils/formatutils.h"
 
 extern int mountScriptId;
+extern char global_npc_str[1001];
 
 uint32 MakeDWord(uint16 word0, uint16 word1)
 {
@@ -304,8 +305,8 @@ BUILDIN(requestLang)
         sd->state.menu_or_input = 0;
 
         int lng = -1;
-        if (*sd->npc_str)
-            lng = lang_getId(sd->npc_str);
+        if (*global_npc_str)
+            lng = lang_getId(global_npc_str);
         script_pushint(st, lng);
         st->state = RUN;
     }
@@ -333,7 +334,7 @@ BUILDIN(requestItem)
 
         int item = 0;
 
-        if (!*sd->npc_str)
+        if (!*global_npc_str)
         {
             ShowWarning("npc string not found\n");
             script_pushint(st, 0);
@@ -341,7 +342,7 @@ BUILDIN(requestItem)
             return false;
         }
 
-        if (sscanf (sd->npc_str, "%5d", &item) < 1)
+        if (sscanf (global_npc_str, "%5d", &item) < 1)
         {
             ShowWarning("input data is not item id\n");
             script_pushint(st, 0);
@@ -381,7 +382,7 @@ BUILDIN(requestItems)
         sd->state.menu_or_input = 0;
         st->state = RUN;
 
-        if (!*sd->npc_str)
+        if (!*global_npc_str)
         {
             ShowWarning("npc string not found\n");
             script_pushstr(st, aStrdup("0,0"));
@@ -389,7 +390,7 @@ BUILDIN(requestItems)
             return false;
         }
 
-        script_pushstr(st, aStrdup(sd->npc_str));
+        script_pushstr(st, aStrdup(global_npc_str));
     }
     return true;
 }
@@ -418,7 +419,7 @@ BUILDIN(requestItemIndex)
 
         int item = -1;
 
-        if (!*sd->npc_str)
+        if (!*global_npc_str)
         {
             script_pushint(st, -1);
             ShowWarning("npc string not found\n");
@@ -426,7 +427,7 @@ BUILDIN(requestItemIndex)
             return false;
         }
 
-        if (sscanf (sd->npc_str, "%5d", &item) < 1)
+        if (sscanf (global_npc_str, "%5d", &item) < 1)
         {
             script_pushint(st, -1);
             ShowWarning("input data is not item id\n");
@@ -469,7 +470,7 @@ BUILDIN(requestItemsIndex)
         sd->state.menu_or_input = 0;
         st->state = RUN;
 
-        if (!*sd->npc_str)
+        if (!*global_npc_str)
         {
             script_pushstr(st, aStrdup("-1"));
             ShowWarning("npc string not found\n");
@@ -477,7 +478,7 @@ BUILDIN(requestItemsIndex)
             return false;
         }
 
-        script_pushstr(st, aStrdup(sd->npc_str));
+        script_pushstr(st, aStrdup(global_npc_str));
     }
     return true;
 }
@@ -513,7 +514,7 @@ BUILDIN(requestCraft)
         sd->state.menu_or_input = 0;
         st->state = RUN;
 
-        if (!*sd->npc_str)
+        if (!*global_npc_str)
         {
             ShowWarning("npc string not found\n");
             script->reportsrc(st);
@@ -521,7 +522,7 @@ BUILDIN(requestCraft)
             return false;
         }
 
-        script_pushstr(st, aStrdup(sd->npc_str));
+        script_pushstr(st, aStrdup(global_npc_str));
     }
     return true;
 }
@@ -2098,5 +2099,72 @@ BUILDIN(getLabel)
 BUILDIN(toLabel)
 {
     script_pushlabel(st, script_getnum(st, 2));
+    return true;
+}
+
+// replace default input with bigger text buffer
+/// Get input from the player.
+/// For numeric inputs the value is capped to the range [min,max]. Returns 1 if
+/// the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
+/// For string inputs it returns 1 if the string was longer than 'max', -1 is
+/// shorter than 'min' and 0 otherwise.
+///
+/// input(<var>{,<min>{,<max>}}) -> <int>
+BUILDIN(input)
+{
+    struct script_data* data;
+    int64 uid;
+    const char* name;
+    int min;
+    int max;
+    struct map_session_data *sd = script->rid2sd(st);
+    if (sd == NULL)
+        return true;
+
+    data = script_getdata(st, 2);
+    if (!data_isreference(data))
+    {
+        ShowError("script:input: not a variable\n");
+        script->reportdata(data);
+        st->state = END;
+        return false;
+    }
+    uid = reference_getuid(data);
+    name = reference_getname(data);
+    min = (script_hasdata(st,3) ? script_getnum(st,3) : script->config.input_min_value);
+    max = (script_hasdata(st,4) ? script_getnum(st,4) : script->config.input_max_value);
+
+#ifdef SECURE_NPCTIMEOUT
+    sd->npc_idle_type = NPCT_WAIT;
+#endif
+
+    if (!sd->state.menu_or_input)
+    {
+        // first invocation, display npc input box
+        sd->state.menu_or_input = 1;
+        st->state = RERUNLINE;
+        if (is_string_variable(name))
+            clif->scriptinputstr(sd, st->oid);
+        else
+            clif->scriptinput(sd, st->oid);
+    }
+    else
+    {
+        // take received text/value and store it in the designated variable
+        sd->state.menu_or_input = 0;
+        if (is_string_variable(name))
+        {
+            int len = (int)strlen(global_npc_str);
+            script->set_reg(st, sd, uid, name, global_npc_str, script_getref(st,2));
+            script_pushint(st, (len > max ? 1 : len < min ? -1 : 0));
+        }
+        else
+        {
+            int amount = sd->npc_amount;
+            script->set_reg(st, sd, uid, name, (const void *)h64BPTRSIZE(cap_value(amount,min,max)), script_getref(st,2));
+            script_pushint(st, (amount > max ? 1 : amount < min ? -1 : 0));
+        }
+        st->state = RUN;
+    }
     return true;
 }
