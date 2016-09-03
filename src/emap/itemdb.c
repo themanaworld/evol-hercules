@@ -184,6 +184,9 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
         }
     }
 
+    if (itemdb->lookup_const(it, "MinRange", &i32))
+        data->minRange = i32;
+
     hookStop();
 }
 

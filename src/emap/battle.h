@@ -12,5 +12,9 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
                                               uint16 skill_id,
                                               uint16 skill_lv,
                                               int wflag);
+enum damage_lv ebattle_weapon_attack_pre(struct block_list **srcPtr,
+                                         struct block_list **targetPtr,
+                                         int64 *tickPtr,
+                                         int *flagPtr);
 
 #endif  // EVOL_MAP_BATTLE

@@ -34,6 +34,8 @@ struct ItemdExt
     int unequipEffect;
     int unequipFailEffect;
 
+    int minRange;
+
     VECTOR_DECL(int) allowedAmmo;
     VECTOR_DECL(struct ItemCardExt) allowedCards;
     struct script_code *dropScript;

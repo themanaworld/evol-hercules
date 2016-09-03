@@ -15,6 +15,8 @@
 #include "map/mob.h"
 #include "map/pc.h"
 
+#include "plugins/HPMHooking.h"
+
 #include "emap/data/itemd.h"
 #include "emap/data/mobd.h"
 #include "emap/struct/itemdext.h"
@@ -61,6 +63,8 @@ bool ebattle_check_arrows_post(bool retVal,
             return true;
 
         const int weaponIndex = sd->equip_index[EQI_HAND_L];
+        if (weaponIndex < 0)
+            return true;
 
         struct ItemdExt *data = itemd_get(sd->inventory_data[weaponIndex]);
         if (!data)
@@ -118,4 +122,35 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
     retVal.damage = apply_percentrate64(retVal.damage, mod, 10000);
     retVal.damage2 = apply_percentrate64(retVal.damage2, mod, 10000);
     return retVal;
+}
+
+enum damage_lv ebattle_weapon_attack_pre(struct block_list **srcPtr,
+                                         struct block_list **targetPtr,
+                                         int64 *tickPtr __attribute__ ((unused)),
+                                         int *flagPtr __attribute__ ((unused)))
+{
+    struct block_list *src = *srcPtr;
+    struct block_list *target = *targetPtr;
+
+    nullpo_retr(ATK_NONE, src);
+    nullpo_retr(ATK_NONE, target);
+
+    struct map_session_data *sd = BL_CAST(BL_PC, src);
+    if (sd == NULL)
+        return ATK_NONE;
+
+    const int weaponIndex = sd->equip_index[EQI_HAND_L];
+    if (weaponIndex < 0)
+        return ATK_NONE;
+
+    struct ItemdExt *data = itemd_get(sd->inventory_data[weaponIndex]);
+    if (!data)
+        return ATK_NONE;
+
+    if (distance_bl(src, target) < data->minRange)
+    {   // if range between player and target > minRange, then dont attack
+        hookStop();
+        return ATK_NONE;
+    }
+    return ATK_NONE;
 }

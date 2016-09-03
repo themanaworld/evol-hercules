@@ -201,6 +201,7 @@ HPExport void plugin_init (void)
 
     addHookPre(atcommand, msgfd, eatcommand_msgfd_pre);
     addHookPre(atcommand, msgsd, eatcommand_msgsd_pre);
+    addHookPre(battle, weapon_attack, ebattle_weapon_attack_pre);
     addHookPre(bg, team_warp, ebg_team_warp_pre);
     addHookPre(pc, can_Adopt, epc_can_Adopt_pre);
     addHookPre(pc, adoption, epc_adoption_pre);

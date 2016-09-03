@@ -75,5 +75,6 @@ struct ItemdExt *itemd_create(void)
     VECTOR_INIT(data->allowedAmmo);
     data->subX = 8;
     data->subY = 8;
+    data->minRange = 0;
     return data;
 }
