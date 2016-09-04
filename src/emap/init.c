@@ -183,6 +183,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setfakecells", "iii??", setFakeCells);
     addScriptCommand("getlabel", "l", getLabel);
     addScriptCommand("tolabel", "i", toLabel);
+    addScriptCommand("input", "r??", input);
 
     do_init_langs();
 
