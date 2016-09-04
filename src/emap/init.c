@@ -108,6 +108,7 @@ HPExport void plugin_init (void)
     addScriptCommand("restorecam", "", restoreCam);
     addScriptCommand("npctalk3", "s", npcTalk3);
     addScriptCommand("closedialog", "", closeDialog);
+    addScriptCommand("closeclientdialog", "", closeClientDialog);
     addScriptCommand("shop", "s", shop);
     addScriptCommand("getitemlink", "v*", getItemLink);
     addScriptCommand("getinvindexlink", "i", getInvIndexLink);

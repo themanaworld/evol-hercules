@@ -12,6 +12,7 @@ BUILDIN(moveCam);
 BUILDIN(restoreCam);
 BUILDIN(npcTalk3);
 BUILDIN(closeDialog);
+BUILDIN(closeClientDialog);
 BUILDIN(shop);
 BUILDIN(getItemLink);
 BUILDIN(requestLang);

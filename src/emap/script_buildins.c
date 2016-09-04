@@ -186,6 +186,13 @@ BUILDIN(closeDialog)
     return true;
 }
 
+BUILDIN(closeClientDialog)
+{
+    getSD();
+    send_npccommand(sd, st->oid, 14);
+    return true;
+}
+
 BUILDIN(shop)
 {
     getSD();
