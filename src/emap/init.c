@@ -185,6 +185,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getlabel", "l", getLabel);
     addScriptCommand("tolabel", "i", toLabel);
     addScriptCommand("input", "r??", input);
+    addScriptCommand("slide", "ii", slide);
 
     do_init_langs();
 
