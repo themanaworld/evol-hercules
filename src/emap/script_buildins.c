@@ -2175,3 +2175,27 @@ BUILDIN(input)
     }
     return true;
 }
+
+BUILDIN(slide)
+{
+    getSDReturn(false);
+    const int x = script_getnum(st,2);
+    const int y = script_getnum(st,3);
+    const int16 m = sd->bl.m;
+
+    if (x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys)
+    {
+        ShowError("slide: attempt to place player %s (%d:%d) on invalid coordinates (%d,%d)\n", sd->status.name, sd->status.account_id, sd->status.char_id, x, y);
+        script->reportsrc(st);
+        return false;
+    }
+
+    if (map->getcell(m, &sd->bl, x, y, CELL_CHKNOPASS) && pc_get_group_level(sd) < battle->bc->gm_ignore_warpable_area)
+    {
+        return false;
+    }
+
+    clif->slide(&sd->bl, x, y);
+    unit->movepos(&sd->bl, x, y, 1, 0);
+    return true;
+}
