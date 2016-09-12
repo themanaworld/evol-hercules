@@ -465,6 +465,18 @@ bool eclif_send_pre(const void **bufPtr,
                     return true;
                 }
             }
+            if (packet == 0x9cb)
+            {
+                struct map_session_data *sd = BL_CAST(BL_PC, bl);
+                struct SessionExt *data = session_get_bysd(sd);
+                if (!data)
+                    return true;
+                if (data->clientVersion < 19)
+                {   // not sending new packet to old clients
+                    hookStop();
+                    return true;
+                }
+            }
         }
         return true;
     }
@@ -646,6 +658,17 @@ int eclif_send_actual_pre(int *fd,
                 return 0;
             if (data->clientVersion >= 18)
             {   // not sending old packets to new clients
+                hookStop();
+                return 0;
+            }
+        }
+        if (packet == 0x9cb)
+        {
+            struct SessionExt *data = session_get(*fd);
+            if (!data)
+                return 0;
+            if (data->clientVersion < 19)
+            {   // not sending new packets to old clients
                 hookStop();
                 return 0;
             }
