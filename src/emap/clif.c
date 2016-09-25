@@ -82,28 +82,56 @@ void eclif_quest_send_list_pre(TBL_PC **sdPtr)
         return;
     }
 
-    int fd = sd->fd;
-    int i;
-    int info_len = 15;
-    int len = sd->avail_quests * info_len + 8;
-    WFIFOHEAD(fd,len);
-    WFIFOW(fd, 0) = 0x97a;
-    WFIFOW(fd, 2) = len;
-    WFIFOL(fd, 4) = sd->avail_quests;
-
-    for (i = 0; i < sd->avail_quests; i++ )
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 20)
     {
-        struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-        if (!qi)
-            continue;
-        WFIFOL(fd, i * info_len + 8) = sd->quest_log[i].quest_id;
-        WFIFOB(fd, i * info_len + 12) = sd->quest_log[i].count[0]; // was state
-        WFIFOL(fd, i * info_len + 13) = sd->quest_log[i].time - qi->time;
-        WFIFOL(fd, i * info_len + 17) = sd->quest_log[i].time;
-        WFIFOW(fd, i * info_len + 21) = 0;
+        int fd = sd->fd;
+        int i;
+        int info_len = 15;
+        int len = sd->avail_quests * info_len + 8;
+        WFIFOHEAD(fd, len);
+        WFIFOW(fd, 0) = 0x97a;
+        WFIFOW(fd, 2) = len;
+        WFIFOL(fd, 4) = sd->avail_quests;
+        for (i = 0; i < sd->avail_quests; i++ )
+        {
+            struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
+            if (!qi)
+                continue;
+            WFIFOL(fd, i * info_len + 8) = sd->quest_log[i].quest_id;
+            WFIFOB(fd, i * info_len + 12) = sd->quest_log[i].count[0]; // was state
+            WFIFOL(fd, i * info_len + 13) = sd->quest_log[i].time - qi->time;
+            WFIFOL(fd, i * info_len + 17) = sd->quest_log[i].time;
+            WFIFOW(fd, i * info_len + 21) = 0;
+        }
+        WFIFOSET(fd, len);
+    }
+    else
+    {  // data->clientVersion >= 20
+        int fd = sd->fd;
+        int info_len = 4 + 1 + 3 * 4 + 4;
+        int len = sd->avail_quests * info_len + 8;
+        WFIFOHEAD(fd, len);
+        WFIFOW(fd, 0) = 0xb23;
+        WFIFOW(fd, 2) = len;
+        WFIFOL(fd, 4) = sd->avail_quests;
+        for (int i = 0; i < sd->avail_quests; i++ )
+        {
+            struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
+            if (!qi)
+                continue;
+            WFIFOL(fd, i * info_len + 8) = sd->quest_log[i].quest_id;
+            WFIFOB(fd, i * info_len + 12) = sd->quest_log[i].state;
+            WFIFOL(fd, i * info_len + 13) = sd->quest_log[i].count[0];
+            WFIFOL(fd, i * info_len + 17) = sd->quest_log[i].count[1];
+            WFIFOL(fd, i * info_len + 21) = sd->quest_log[i].count[2];
+            WFIFOL(fd, i * info_len + 25) = sd->quest_log[i].time;
+        }
+        WFIFOSET(fd, len);
     }
 
-    WFIFOSET(fd, len);
     hookStop();
 }
 
@@ -116,6 +144,7 @@ void eclif_quest_add_pre(TBL_PC **sdPtr,
 void eclif_quest_add(TBL_PC *sd,
                      struct quest *qd)
 {
+    // for new client need send here: id, 3 counts, time
     if (!sd || !qd)
     {
         hookStop();
@@ -130,14 +159,32 @@ void eclif_quest_add(TBL_PC *sd,
         return;
     }
 
-    WFIFOHEAD(fd, 107);
-    WFIFOW(fd, 0) = 0x2b3;
-    WFIFOL(fd, 2) = qd->quest_id;
-    WFIFOB(fd, 6) = qd->count[0]; // was state;
-    WFIFOB(fd, 7) = qd->time - qi->time;
-    WFIFOL(fd, 11) = qd->time;
-    WFIFOW(fd, 15) = 0;
-    WFIFOSET(fd, 107);
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 20)
+    {
+        WFIFOHEAD(fd, 107);
+        WFIFOW(fd, 0) = 0x2b3;
+        WFIFOL(fd, 2) = qd->quest_id;
+        WFIFOB(fd, 6) = qd->count[0]; // was state;
+        WFIFOB(fd, 7) = qd->time - qi->time;
+        WFIFOL(fd, 11) = qd->time;
+        WFIFOW(fd, 15) = 0;
+        WFIFOSET(fd, 107);
+    }
+    else
+    {  // data->clientVersion >= 20
+        WFIFOHEAD(fd, 23);
+        WFIFOW(fd, 0) = 0xb24;
+        WFIFOL(fd, 2) = qd->quest_id;
+        WFIFOB(fd, 6) = qd->state;
+        WFIFOL(fd, 7) = qd->count[0];
+        WFIFOL(fd, 11) = qd->count[1];
+        WFIFOL(fd, 15) = qd->count[2];
+        WFIFOL(fd, 19) = qd->time;
+        WFIFOSET(fd, 23);
+    }
     hookStop();
 }
 
