@@ -373,7 +373,7 @@ static bool craft_read_db_sub(struct config_setting_t *craftt,
 static void load_craft_db(const char *filename)
 {
     struct config_t craft_db_conf;
-    char filepath[256];
+    char filepath[300];
     struct config_setting_t *cdb;
     struct config_setting_t *t;
     int i = 0;
