@@ -130,7 +130,11 @@ HPExport void plugin_init (void)
     addScriptCommand("getcraftslotamount", "ii", getCraftSlotAmount);
     addScriptCommand("validatecraft", "i", validateCraft);
     addScriptCommand("getq", "i", getq);
-    addScriptCommand("setq", "ii", setq);
+    addScriptCommand("getq1", "i", getq);
+    addScriptCommand("getq2", "i", getq2);
+    addScriptCommand("getq3", "i", getq3);
+    addScriptCommand("getqtime", "i", getqTime);
+    addScriptCommand("setq", "ii*", setq);
     addScriptCommand("setnpcdir", "*", setNpcDir);
     addScriptCommand("npcsit", "*", npcSit);
     addScriptCommand("npcstand", "*", npcStand);

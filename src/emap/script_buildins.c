@@ -540,7 +540,6 @@ BUILDIN(setq)
     getSD();
 
     int quest_id = script_getnum(st, 2);
-    int quest_value = script_getnum(st, 3);
 
     if (quest->check(sd, quest_id, HAVEQUEST) < 0)
         quest->add(sd, quest_id);
@@ -552,7 +551,13 @@ BUILDIN(setq)
         return false;
     }
 
-    sd->quest_log[i].count[0] = quest_value;
+    sd->quest_log[i].count[0] = script_getnum(st, 3);
+    if (script_hasdata(st, 4))
+        sd->quest_log[i].count[1] = script_getnum(st, 4);
+    if (script_hasdata(st, 5))
+        sd->quest_log[i].count[2] = script_getnum(st, 5);
+    if (script_hasdata(st, 6))
+        sd->quest_log[i].time = script_getnum(st, 6);
     sd->save_quest = true;
     if (map->save_settings & 64)
         chrif->save(sd,0);
@@ -579,6 +584,69 @@ BUILDIN(getq)
         return true;
     }
     script_pushint(st, sd->quest_log[i].count[0]);
+    return true;
+}
+
+BUILDIN(getq2)
+{
+    int i;
+    getSDReturn(0);
+
+    int quest_id = script_getnum(st, 2);
+    if (quest->check(sd, quest_id, HAVEQUEST) < 0)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
+    if (i == sd->num_quests)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    script_pushint(st, sd->quest_log[i].count[1]);
+    return true;
+}
+
+BUILDIN(getq3)
+{
+    int i;
+    getSDReturn(0);
+
+    int quest_id = script_getnum(st, 2);
+    if (quest->check(sd, quest_id, HAVEQUEST) < 0)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
+    if (i == sd->num_quests)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    script_pushint(st, sd->quest_log[i].count[2]);
+    return true;
+}
+
+BUILDIN(getqTime)
+{
+    int i;
+    getSDReturn(0);
+
+    int quest_id = script_getnum(st, 2);
+    if (quest->check(sd, quest_id, HAVEQUEST) < 0)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
+    if (i == sd->num_quests)
+    {
+        script_pushint(st, 0);
+        return true;
+    }
+    script_pushint(st, sd->quest_log[i].time);
     return true;
 }
 
