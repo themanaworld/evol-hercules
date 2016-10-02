@@ -22,6 +22,7 @@
 
 #include "plugins/HPMHooking.h"
 
+#include "emap/map.h"
 #include "emap/mob.h"
 
 #include "emap/data/mobd.h"
@@ -257,6 +258,26 @@ void emob_read_db_additional_fields_pre(struct mob_db **entryPtr,
             emob_load_skillattacks(config_setting_name(wpt), libconfig->setting_get_int(wpt), data, *entryPtr);
         }
     }
+
+    if ((tt = libconfig->setting_get_member(*itPtr, "SpawnCollisionSize")))
+    {
+        if (config_setting_is_aggregate(tt))
+        {
+            data->collisionDx = libconfig->setting_get_int_elem(tt, 0);
+            if (libconfig->setting_length(tt) >= 2)
+                data->collisionDy = libconfig->setting_get_int_elem(tt, 1);
+            else if (libconfig->setting_length(tt) >= 1)
+                data->collisionDy = data->collisionDx;
+        }
+        else if (libconfig->setting_lookup_int(*itPtr, "SpawnCollisionSize", &i32))
+        {
+            data->collisionDx = i32;
+            data->collisionDy = i32;
+        }
+    }
+
+    if (mob->lookup_const(*itPtr, "SpawnCollisionMask", &i32))
+        data->collisionMask = i32;
 }
 
 uint32 emob_read_db_mode_sub_post(uint32 retVal,
@@ -269,4 +290,47 @@ uint32 emob_read_db_mode_sub_post(uint32 retVal,
         retVal |= libconfig->setting_get_bool(t2) ? MD_SURVIVE_WITHOUT_MASTER : 0;
 
     return retVal;
+}
+
+struct mob_data *emob_spawn_dataset_post(struct mob_data *retVal,
+                                         struct spawn_data *data __attribute__ ((unused)))
+{
+    if (retVal)
+    {
+        struct MobdExt *ext = mobd_get_by_mob(retVal);
+        const int dx = ext->collisionDx;
+        const int dy = ext->collisionDy;
+        if (ext && dx != -1 && dy != -1)
+        {
+            char name[100];
+            const int m = retVal->bl.m;
+            sprintf(name, "mob_spawn_%d_%d", m, retVal->bl.id);
+            emap_iwall_set2(m,
+                0,
+                retVal->bl.x - dx, retVal->bl.y - dy,
+                retVal->bl.x + dx, retVal->bl.y + dy,
+                ext->collisionMask,
+                name);
+        }
+    }
+    return retVal;
+}
+
+int emob_dead_pre(struct mob_data **mdPtr,
+                  struct block_list **srcPtr __attribute__ ((unused)),
+                  int *typePtr __attribute__ ((unused)))
+{
+    struct mob_data *md = *mdPtr;
+    if (md)
+    {
+        struct MobdExt *ext = mobd_get_by_mob(md);
+        if (ext)
+        {
+            char name[100];
+            const int m = md->bl.m;
+            sprintf(name, "mob_spawn_%d_%d", m, md->bl.id);
+            map->iwall_remove(name);
+        }
+    }
+    return 3;
 }

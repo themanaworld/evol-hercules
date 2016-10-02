@@ -226,6 +226,7 @@ HPExport void plugin_init (void)
     addHookPre(pc, process_chat_message, epc_process_chat_message_pre);
     addHookPre(mob, deleteslave_sub, emob_deleteslave_sub_pre);
     addHookPre(mob, read_db_additional_fields, emob_read_db_additional_fields_pre);
+    addHookPre(mob, dead, emob_dead_pre);
     addHookPre(npc, parse_unknown_mapflag, enpc_parse_unknown_mapflag_pre);
     addHookPre(npc, buysellsel, enpc_buysellsel_pre);
     addHookPre(npc, db_checkid, enpc_db_checkid_pre);
@@ -306,6 +307,7 @@ HPExport void plugin_init (void)
     addHookPost(status, change_end_, estatus_change_end__post);
     addHookPost(map, addflooritem, emap_addflooritem_post);
     addHookPost(mob, read_db_mode_sub, emob_read_db_mode_sub_post);
+    addHookPost(mob, spawn_dataset, emob_spawn_dataset_post);
     addHookPost(npc, get_viewdata, enpc_get_viewdata_post);
     addHookPost(skill, check_condition_castend, eskill_check_condition_castend_post);
     addHookPost(skill, get_index, eskill_get_index_post);

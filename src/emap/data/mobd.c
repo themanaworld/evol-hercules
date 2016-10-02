@@ -51,5 +51,8 @@ struct MobdExt *mobd_create(void)
         data->weaponAttacks[f] = 10000;
     for (int f = 0; f < MAX_SKILL_DB; f ++)
         data->skillAttacks[f] = 10000;
+    data->collisionDx = -1;
+    data->collisionDy = -1;
+    data->collisionMask = 1;
     return data;
 }
