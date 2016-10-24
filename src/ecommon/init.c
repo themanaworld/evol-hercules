@@ -44,11 +44,11 @@ void commonClean(void)
 
 void common_online(void)
 {
-    checkVar(MAX_SKILL, 1500);
+    checkVar(MAX_SKILL, 1532);
     checkVar(MAX_SKILL_ID, 20022);
-    checkVar(SC_MAX, 647);
+    checkVar(SC_MAX, 657);
     checkVar(SI_MAX, 971);
-    checkVar(OLD_MAX_SKILL_DB, 1478);
+    checkVar(OLD_MAX_SKILL_DB, 1510);
     checkVar(MAX_EVOL_SKILLS, 22);
     checkVar(EVOL_FIRST_SKILL, 20000);
 }
