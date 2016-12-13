@@ -77,7 +77,7 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data **sdP
 
         if (sd->version >= 4)
         {
-            char_dat.class_ = race;
+            char_dat.class = race;
             char_dat.sex = sex;
             char_dat.clothes_color = look;
 

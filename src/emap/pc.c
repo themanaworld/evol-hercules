@@ -781,51 +781,51 @@ int epc_dead_post(int retVal,
  * Rewrote to make it tidider [Celest]
  *------------------------------------------*/
 int epc_jobchange(struct map_session_data *sd,
-                  int job,
+                  int class,
                   int upper __attribute__ ((unused)))
 {
     int i, fame_flag=0;
-    int b_class, idx = 0;
+    int job, idx = 0;
 
     nullpo_ret(sd);
 
-    if (job < 0)
+    if (class < 0)
         return 1;
 
     //Normalize job.
-    b_class = pc->jobid2mapid(job);
-    if (b_class == -1)
+    job = pc->jobid2mapid(class);
+    if (job == -1)
         return 1;
 /*
     switch (upper)
     {
         case 1:
-            b_class|= JOBL_UPPER;
+            job |= JOBL_UPPER;
             break;
         case 2:
-            b_class|= JOBL_BABY;
+            job |= JOBL_BABY;
             break;
     }
     //This will automatically adjust bard/dancer classes to the correct gender
     //That is, if you try to jobchange into dancer, it will turn you to bard.
-    job = pc->mapid2jobid(b_class, sd->status.sex);
-    if (job == -1)
+    class = pc->mapid2jobid(job, sd->status.sex);
+    if (class == -1)
         return 1;
 */
 
-    if ((unsigned short)b_class == sd->class_)
+    if ((uint16)job == sd->job)
         return 1; //Nothing to change.
 
 /*
-    // changing from 1st to 2nd job
-    if ((b_class&JOBL_2) && !(sd->class_&JOBL_2) && (b_class&MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
+    if ((job & JOBL_2) && !(sd->job & JOBL_2) && (job & MAPID_UPPERMASK) != MAPID_SUPER_NOVICE)
     {
+        // changing from 1st to 2nd job
         sd->change_level_2nd = sd->status.job_level;
         pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
     }
-    // changing from 2nd to 3rd job
-    else if((b_class&JOBL_THIRD) && !(sd->class_&JOBL_THIRD))
+    else if ((job & JOBL_THIRD) != 0 && (sd->job & JOBL_THIRD) == 0)
     {
+        // changing from 2nd to 3rd job
         sd->change_level_3rd = sd->status.job_level;
         pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
     }
@@ -862,9 +862,9 @@ int epc_jobchange(struct map_session_data *sd,
     }
 
 /*
-    if ((b_class&MAPID_UPPERMASK) != (sd->class_&MAPID_UPPERMASK))
+    if ((job & MAPID_UPPERMASK) != (sd->job & MAPID_UPPERMASK))
     { //Things to remove when changing class tree.
-        const int class_ = pc->class2idx(sd->status.class_);
+        const int class_idx = pc->class2idx(sd->status.class_);
         short id;
         for (i = 0; i < MAX_SKILL_TREE && (id = pc->skill_tree[class_][i].id) > 0; i++)
         {
@@ -875,16 +875,21 @@ int epc_jobchange(struct map_session_data *sd,
         }
     }
 
-    if ((sd->class_&MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && (b_class&MAPID_UPPERMASK) != MAPID_STAR_GLADIATOR)
+    if ((sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR && (job & MAPID_UPPERMASK) != MAPID_STAR_GLADIATOR)
     {
         // going off star glad lineage, reset feel to not store no-longer-used vars in the database
         pc->resetfeel(sd);
     }
 */
 
-    sd->status.class_ = job;
-    fame_flag = pc->famerank(sd->status.char_id, sd->class_ & MAPID_UPPERMASK);
-    sd->class_ = (unsigned short)b_class;
+    sd->status.class = class;
+    {
+        int fame_list_type = pc->famelist_type(sd->job);
+        if (fame_list_type != RANKTYPE_UNKNOWN)
+            fame_flag = pc->fame_rank(sd->status.char_id, fame_list_type);
+    }
+    sd->job = (uint16)job;
+
 //    sd->status.job_level = 1;
 //    sd->status.job_exp = 0;
 
@@ -917,9 +922,9 @@ int epc_jobchange(struct map_session_data *sd,
     if (sd->disguise != -1)
         pc->disguise(sd, -1);
 
-    status->set_viewdata(&sd->bl, job);
-    send_changelook2(sd, &sd->bl, sd->bl.id, LOOK_BASE, sd->vd.class_, 0, NULL, 0, AREA);
-//    clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class_); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
+    status->set_viewdata(&sd->bl, class);
+    send_changelook2(sd, &sd->bl, sd->bl.id, LOOK_BASE, sd->vd.class, 0, NULL, 0, AREA);
+//    clif->changelook(&sd->bl, LOOK_BASE, sd->vd.class); // move sprite update to prevent client crashes with incompatible equipment [Valaris]
     if (sd->vd.cloth_color)
         clif->changelook(&sd->bl, LOOK_CLOTHES_COLOR, sd->vd.cloth_color);
     if (sd->vd.body_style)
@@ -938,7 +943,7 @@ int epc_jobchange(struct map_session_data *sd,
 
     //Remove peco/cart/falcon
     i = sd->sc.option;
-    if (i & OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->class_&MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
+    if (i & OPTION_RIDING && (!pc->checkskill(sd, KN_RIDING) || (sd->job & MAPID_THIRDMASK) == MAPID_RUNE_KNIGHT))
         i &= ~ OPTION_RIDING;
     if (i & OPTION_FALCON && !pc->checkskill(sd, HT_FALCON))
         i &= ~ OPTION_FALCON;
@@ -974,7 +979,7 @@ int epc_jobchange(struct map_session_data *sd,
     pc->equiplookall(sd);
 
     //if you were previously famous, not anymore.
-    if (fame_flag)
+    if (fame_flag != 0)
     {
         chrif->save(sd, 0);
         chrif->buildfamelist();
@@ -982,7 +987,7 @@ int epc_jobchange(struct map_session_data *sd,
     else if (sd->status.fame > 0)
     {
         //It may be that now they are famous?
-        switch (sd->class_&MAPID_UPPERMASK)
+        switch (sd->job & MAPID_UPPERMASK)
         {
             case MAPID_BLACKSMITH:
             case MAPID_ALCHEMIST:

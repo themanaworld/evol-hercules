@@ -801,13 +801,13 @@ static inline unsigned char clif_bl_type_old(struct block_list *bl)
     nullpo_retr(0x1, bl);
     switch (bl->type)
     {
-        case BL_PC:    return (disguised(bl) && !pc->db_checkid(status->get_viewdata(bl)->class_))? 0x1:0x0; //PC_TYPE
+        case BL_PC:    return (disguised(bl) && !pc->db_checkid(status->get_viewdata(bl)->class))? 0x1:0x0; //PC_TYPE
         case BL_ITEM:  return 0x2; //ITEM_TYPE
         case BL_SKILL: return 0x3; //SKILL_TYPE
         case BL_CHAT:  return 0x4; //UNKNOWN_TYPE
-        case BL_MOB:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x5; //NPC_MOB_TYPE
-        case BL_NPC:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x6; //NPC_EVT_TYPE
-        case BL_PET:   return pc->db_checkid(status->get_viewdata(bl)->class_)?0x0:0x7; //NPC_PET_TYPE
+        case BL_MOB:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x5; //NPC_MOB_TYPE
+        case BL_NPC:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x6; //NPC_EVT_TYPE
+        case BL_PET:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x7; //NPC_PET_TYPE
         case BL_HOM:   return 0x8; //NPC_HOM_TYPE
         case BL_MER:   return 0x9; //NPC_MERSOL_TYPE
         case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
@@ -847,13 +847,13 @@ void eclif_set_unit_idle_old(struct block_list* bl,
     p.bodyState = (sc) ? sc->opt1 : 0;
     p.healthState = (sc) ? sc->opt2 : 0;
     p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class_;
+    p.job = vd->class;
     p.head = vd->hair_style;
     p.weapon = vd->weapon;
     p.accessory = vd->head_bottom;
     p.accessory2 = vd->head_top;
     p.accessory3 = vd->head_mid;
-    if (bl->type == BL_NPC && vd->class_ == FLAG_CLASS)
+    if (bl->type == BL_NPC && vd->class == FLAG_CLASS)
     {   //The hell, why flags work like this?
         p.accessory = status->get_emblem_id(bl);
         p.accessory2 = GetWord(g_id, 1);
@@ -891,7 +891,7 @@ void eclif_set_unit_idle_old(struct block_list* bl,
 
     if (disguised(bl))
     {
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
         p.GID = -bl->id;
         clif->send(&p,sizeof(p),bl,SELF);
     }
@@ -920,13 +920,13 @@ void eclif_spawn_unit_old(struct block_list* bl, enum send_target target)
     p.bodyState = (sc) ? sc->opt1 : 0;
     p.healthState = (sc) ? sc->opt2 : 0;
     p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class_;
+    p.job = vd->class;
     p.head = vd->hair_style;
     p.weapon = vd->weapon;
     p.accessory = vd->head_bottom;
     p.accessory2 = vd->head_top;
     p.accessory3 = vd->head_mid;
-    if (bl->type == BL_NPC && vd->class_ == FLAG_CLASS)
+    if (bl->type == BL_NPC && vd->class == FLAG_CLASS)
     {   //The hell, why flags work like this?
         p.accessory = status->get_emblem_id(bl);
         p.accessory2 = GetWord(g_id, 1);
@@ -961,9 +961,9 @@ void eclif_spawn_unit_old(struct block_list* bl, enum send_target target)
     if (disguised(bl))
     {
         nullpo_retv(sd);
-        if (sd->status.class_ != sd->disguise)
+        if (sd->status.class != sd->disguise)
             clif->send(&p, sizeof(p), bl, target);
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
         p.GID = -bl->id;
         clif->send(&p, sizeof(p), bl, SELF);
     }
@@ -999,7 +999,7 @@ void eclif_set_unit_walking_old(struct block_list* bl,
     p.bodyState = (sc) ? sc->opt1 : 0;
     p.healthState = (sc) ? sc->opt2 : 0;
     p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class_;
+    p.job = vd->class;
     p.head = vd->hair_style;
     p.weapon = vd->weapon;
     p.accessory = vd->head_bottom;
@@ -1037,7 +1037,7 @@ void eclif_set_unit_walking_old(struct block_list* bl,
 
     if (disguised(bl))
     {
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class_) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
+        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
         p.GID = -bl->id;
         clif->send(&p, sizeof(p), bl, SELF);
     }
@@ -1632,7 +1632,7 @@ void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
             }
             safestrncpy(WFIFOP(fd, len + 16), skill->get_name(id), NAME_LENGTH);
             if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
-                WFIFOB(fd, len + 40) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class_)) ? 1 : 0;
+                WFIFOB(fd, len + 40) = (sd->status.skill[i].lv < skill->tree_get_max(id, sd->status.class)) ? 1 : 0;
             else
                 WFIFOB(fd, len + 40) = 0;
             len += skillSize;
@@ -1704,7 +1704,7 @@ void eclif_addskill_pre(struct map_session_data **sdPtr,
     }
     safestrncpy(WFIFOP(fd, 20), skill->get_name(id), NAME_LENGTH);
     if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-        WFIFOB(fd, 44) = (skill_lv < skill->tree_get_max(id, sd->status.class_)) ? 1 : 0;
+        WFIFOB(fd, 44) = (skill_lv < skill->tree_get_max(id, sd->status.class)) ? 1 : 0;
     else
         WFIFOB(fd, 44) = 0;
     WFIFOSET(fd, sz);
@@ -1749,7 +1749,7 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
         WFIFOW(fd, 18) = 0;
     }
     if (sd->status.skill[idx].flag == SKILL_FLAG_PERMANENT)
-        WFIFOB(fd, 20) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class_)) ? 1 : 0;
+        WFIFOB(fd, 20) = (skill_lv < skill->tree_get_max(skill_id, sd->status.class)) ? 1 : 0;
     else
         WFIFOB(fd, 20) = 0;
     WFIFOSET(fd, sz);

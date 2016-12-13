@@ -110,7 +110,7 @@ int estatus_calc_pc__post(int retVal,
 
     if (!sd->state.permanent_speed)
     {
-        const int idx = pc->class2idx(sd->status.class_);
+        const int idx = pc->class2idx(sd->status.class);
         sd->base_status.speed = class_move_speed[idx];
     }
     return retVal;
