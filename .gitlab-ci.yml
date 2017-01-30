@@ -160,11 +160,11 @@ gcc-4.8_stable_lto-sanitize:
   - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:stable
 
-gcc-5_testing_lto-sanitize:
+gcc-5_unstable_lto-sanitize:
   stage: legacy
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:testing
+  image: debian:unstable
 
 # reports
 
