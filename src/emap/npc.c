@@ -94,12 +94,22 @@ int enpc_buysellsel_pre(TBL_PC **sdPtr,
         return 1;
     }
 
-    if (*type == 0 && nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->type == NST_MARKET)
+    if (*type == 0 && nd->subtype == SCRIPT && nd->u.scr.shop)
     {
-        clif->npc_market_open(sd, nd);
-        sd->npc_shopid = nd->bl.id;
-        hookStop();
-        return 0;
+        if (nd->u.scr.shop->type == NST_MARKET)
+        {
+            clif->npc_market_open(sd, nd);
+            sd->npc_shopid = nd->bl.id;
+            hookStop();
+            return 0;
+        }
+        else if (nd->u.scr.shop->type == NST_CUSTOM)
+        {
+            clif->cashshop_show(sd, nd);
+            sd->npc_shopid = nd->bl.id;
+            hookStop();
+            return 0;
+        }
     }
 
     if (nd->subtype != SHOP && !(nd->subtype == SCRIPT && nd->u.scr.shop && nd->u.scr.shop->items))
