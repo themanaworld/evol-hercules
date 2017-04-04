@@ -64,7 +64,8 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data **sdP
         }
     }
 
-    const int result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE);
+    // +++ need remove addition sql query after this line for set sex
+    const int result = chr->make_new_char_sql(sd, RFIFOP(fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
     if (result < 0)
     {
         chr->creation_failed(fd, result);
