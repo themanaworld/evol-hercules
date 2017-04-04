@@ -212,7 +212,7 @@ void send_pc_info(struct block_list* bl1,
     if (tdata->clientVersion >= 21)
         WBUFW (buf, 14) = data->language;
 
-    clif->send(&buf, sizeof(buf), bl2, target);
+    clif->send(&buf, (int)sizeof(buf), bl2, target);
 }
 
 void send_npc_info(struct block_list* bl1,
