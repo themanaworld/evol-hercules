@@ -185,28 +185,33 @@ void send_pc_info(struct block_list* bl1,
     if (!bl1 || bl1->type != BL_PC)
         return;
 
-    char buf[14];
     struct map_session_data *sd = (struct map_session_data *)bl1;
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
         return;
 
     struct map_session_data *tsd = (struct map_session_data *)bl2;
-    if (tsd)
-    {
-        struct SessionExt *tdata = session_get_bysd(tsd);
-        if (!tdata || (bl1 != bl2 && tdata->clientVersion < 4))
-            return;
-    }
+    if (!tsd)
+        return;
+    struct SessionExt *tdata = session_get_bysd(tsd);
+    if (!tdata || (bl1 != bl2 && tdata->clientVersion < 4))
+        return;
 
+    int len = 14;
+    if (tdata->clientVersion >= 21)
+        len = 16;
+    char buf[len];
     WBUFW (buf, 0) = 0xb0a;
-    WBUFW (buf, 2) = 14; // len
+    WBUFW (buf, 2) = len;
     WBUFL (buf, 4) = sd->bl.id;
     if (pc_has_permission(sd, permission_send_gm_flag))
         WBUFL (buf, 8) = sd->group_id;
     else
         WBUFL (buf, 8) = 0;
     WBUFW (buf, 12) = data->mount;
+    if (tdata->clientVersion >= 21)
+        WBUFW (buf, 14) = data->language;
+
     clif->send(&buf, sizeof(buf), bl2, target);
 }
 
