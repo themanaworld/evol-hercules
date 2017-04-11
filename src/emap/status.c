@@ -151,12 +151,12 @@ void estatus_calc_pc_additional_pre(struct map_session_data **sdPtr,
         if (!pc->isequip(sd, f))
             continue;
 
-
         struct status_data *bstatus = &sd->base_status;
         bstatus->def += item->def;
 
         script->run_use_script(sd, item, 0);
 
+        // +++ TODO add item options bonuses too (for charm items)
         // here can be refine bonuses
     }
 
