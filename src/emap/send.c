@@ -452,7 +452,7 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
     if (!skin)
         return;
     struct SessionExt *data = session_get(fd);
-    if (!data || data->clientVersion < 15)
+    if (!data)
         return;
 
     const int sz = (int)strlen(skin) + 9;
