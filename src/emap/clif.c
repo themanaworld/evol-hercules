@@ -552,34 +552,13 @@ int eclif_send_actual_pre(int *fd,
     {
         const int packet = RBUFW (buf, 0);
         if (packet == 0x1d7 ||
-            packet == 0x84b)
+            packet == 0x84b ||
+            packet == 0x2dd)
         {
             // not sending old packets to new clients
             // probably useless
             hookStop();
             return 0;
-        }
-        if (packet == 0x2dd)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion >= 12)
-            {   // not sending old packets to new clients
-                hookStop();
-                return 0;
-            }
-        }
-        if (packet == 0xb1a)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 12)
-            {   // not sending new packets to old clients
-                hookStop();
-                return 0;
-            }
         }
         if (packet == 0xb1b)
         {
@@ -1367,7 +1346,7 @@ void eclif_sendbgemblem_area_pre(struct map_session_data **sdPtr)
     unsigned char buf[34];
     struct map_session_data *sd = *sdPtr;
     struct SessionExt *data = session_get_bysd(sd);
-    if (!sd || !data || data->clientVersion < 12)
+    if (!sd || !data)
         return;
 
     WBUFW(buf, 0) = 0xb1a;
@@ -1385,7 +1364,7 @@ void eclif_sendbgemblem_single_pre(int *fdPtr,
     struct map_session_data *sd = *sdPtr;
     struct SessionExt *data = session_get_bysd(sd);
     struct SessionExt *ddata = session_get_bysd(sd);
-    if (!sd || !data || !ddata || ddata->clientVersion < 12)
+    if (!sd || !data || !ddata)
         return;
 
     WFIFOHEAD(fd, 34);
