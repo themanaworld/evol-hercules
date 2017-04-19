@@ -68,7 +68,6 @@ MAP_SRC = emap/atcommand.c \
     emap/mob.h \
     emap/npc.c \
     emap/npc.h \
-    emap/packets_struct.h \
     emap/parse.c \
     emap/parse.h \
     emap/pc.c \

@@ -76,9 +76,6 @@ void eclif_disp_message_pre(struct block_list **srcPtr,
                             const char **mesPtr,
                             enum send_target *targetPtr);
 
-void eclif_set_unit_idle_old(struct block_list* bl,
-                             struct map_session_data *tsd,
-                             enum send_target target);
 void eclif_spawn_unit_pre(struct block_list **blPtr,
                           enum send_target *target);
 void eclif_addcards_post(unsigned char *buf,

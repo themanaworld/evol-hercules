@@ -502,10 +502,8 @@ BUILDIN(requestCraft)
         st->state = RERUNLINE;
 
         // send item request with limit count
-        if (client && client->clientVersion >= 16)
+        if (client)
             send_npccommand2(sd, st->oid, 12, count, 0, 0);
-        else
-            clif->scriptinputstr(sd, st->oid);
     }
     else
     {

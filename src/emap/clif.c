@@ -27,7 +27,6 @@
 #include "emap/clif.h"
 #include "emap/lang.h"
 #include "emap/map.h"
-#include "emap/packets_struct.h"
 #include "emap/send.h"
 #include "emap/data/itemd.h"
 #include "emap/data/mapd.h"
@@ -488,29 +487,14 @@ bool eclif_send_pre(const void **bufPtr,
         if (*len >= 2)
         {
             const int packet = RBUFW (buf, 0);
-            if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db || packet == 0x8c8)
+            if (packet == 0x915 ||
+                packet == 0x90f ||
+                packet == 0x914 ||
+                packet == 0x2e1)
             {
-                struct map_session_data *sd = BL_CAST(BL_PC, bl);
-                struct SessionExt *data = session_get_bysd(sd);
-                if (!data)
-                    return true;
-                if (data->clientVersion < 16)
-                {   // not sending new packet to old clients
-                    hookStop();
-                    return true;
-                }
-            }
-            if (packet == 0x915 || packet == 0x90f || packet == 0x914 || packet == 0x2e1)
-            {
-                struct map_session_data *sd = BL_CAST(BL_PC, bl);
-                struct SessionExt *data = session_get_bysd(sd);
-                if (!data)
-                    return true;
-                if (data->clientVersion >= 16)
-                {   // not sending old packet to new clients
-                    hookStop();
-                    return true;
-                }
+                // not sending old packet to new clients
+                hookStop();
+                return true;
             }
             if (packet == 0x9cb)
             {
@@ -553,34 +537,16 @@ int eclif_send_actual_pre(int *fd,
         const int packet = RBUFW (buf, 0);
         if (packet == 0x1d7 ||
             packet == 0x84b ||
-            packet == 0x2dd)
+            packet == 0x2dd ||
+            packet == 0x915 ||
+            packet == 0x90f ||
+            packet == 0x914 ||
+            packet == 0x2e1)
         {
             // not sending old packets to new clients
             // probably useless
             hookStop();
             return 0;
-        }
-        if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db || packet == 0x8c8)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 16)
-            {   // not sending new packets to old clients
-                hookStop();
-                return 0;
-            }
-        }
-        if (packet == 0x915 || packet == 0x90f || packet == 0x914 || packet == 0x2e1)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion >= 16)
-            {   // not sending old packets to new clients
-                hookStop();
-                return 0;
-            }
         }
         if (packet == 0xb1e)
         {
@@ -692,334 +658,11 @@ static inline void WBUFPOS2(uint8* p, unsigned short pos, short x0, short y0, sh
     p[5] = (uint8)((sx0<<4) | (sy0&0x0f));
 }
 
-static inline unsigned char clif_bl_type_old(struct block_list *bl)
-{
-    nullpo_retr(0x1, bl);
-    switch (bl->type)
-    {
-        case BL_PC:    return (disguised(bl) && !pc->db_checkid(status->get_viewdata(bl)->class))? 0x1:0x0; //PC_TYPE
-        case BL_ITEM:  return 0x2; //ITEM_TYPE
-        case BL_SKILL: return 0x3; //SKILL_TYPE
-        case BL_CHAT:  return 0x4; //UNKNOWN_TYPE
-        case BL_MOB:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x5; //NPC_MOB_TYPE
-        case BL_NPC:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x6; //NPC_EVT_TYPE
-        case BL_PET:   return pc->db_checkid(status->get_viewdata(bl)->class)?0x0:0x7; //NPC_PET_TYPE
-        case BL_HOM:   return 0x8; //NPC_HOM_TYPE
-        case BL_MER:   return 0x9; //NPC_MERSOL_TYPE
-        case BL_ELEM:  return 0xa; //NPC_ELEMENTAL_TYPE
-        default:       return 0x1; //NPC_TYPE
-    }
-}
-
 //Modifies the type of damage according to status changes [Skotlex]
 //Aegis data specifies that: 4 endure against single hit sources, 9 against multi-hit.
 static inline int clif_calc_delay(int type, int div, int damage, int delay)
 {
     return (delay == 0 && damage > 0) ? (div > 1 ? 9 : 4) : type;
-}
-
-// this function must be used only by clients version < 16
-void eclif_set_unit_idle_old(struct block_list* bl,
-                             struct map_session_data *tsd,
-                             enum send_target target)
-{
-    struct map_session_data* sd;
-    struct status_change* sc = status->get_sc(bl);
-    struct view_data* vd = status->get_viewdata(bl);
-    struct packet_idle_unit_old p;
-    int g_id = status->get_guild_id(bl);
-
-    nullpo_retv(bl);
-
-    sd = BL_CAST(BL_PC, bl);
-
-    p.PacketType = 0x915;
-    p.PacketLength = sizeof(p);
-    p.objecttype = clif_bl_type_old(bl);
-//    p.AID = bl->id;
-//    p.GID = (sd) ? sd->status.char_id : 0;    // CCODE
-    p.GID = bl->id;
-    p.speed = status->get_speed(bl);
-    p.bodyState = (sc) ? sc->opt1 : 0;
-    p.healthState = (sc) ? sc->opt2 : 0;
-    p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class;
-    p.head = vd->hair_style;
-    p.weapon = vd->weapon;
-    p.accessory = vd->head_bottom;
-    p.accessory2 = vd->head_top;
-    p.accessory3 = vd->head_mid;
-    if (bl->type == BL_NPC && vd->class == FLAG_CLASS)
-    {   //The hell, why flags work like this?
-        p.accessory = status->get_emblem_id(bl);
-        p.accessory2 = GetWord(g_id, 1);
-        p.accessory3 = GetWord(g_id, 0);
-    }
-    p.headpalette = vd->hair_color;
-    p.bodypalette = vd->cloth_color;
-    p.headDir = (sd)? sd->head_dir : 0;
-    p.robe = vd->robe;
-    p.GUID = g_id;
-    p.GEmblemVer = status->get_emblem_id(bl);
-    p.honor = (sd) ? sd->status.manner : 0;
-    p.virtue = (sc) ? sc->opt3 : 0;
-    p.isPKModeON = (sd && sd->status.karma) ? 1 : 0;
-    p.sex = vd->sex;
-    WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
-    p.xSize = p.ySize = (sd) ? 5 : 0;
-    p.state = vd->dead_sit;
-    p.clevel = clif_setlevel(bl);
-    p.font = (sd) ? sd->status.font : 0;
-    if (battle->bc->show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl))
-    {
-        p.maxHP = status_get_max_hp(bl);
-        p.HP = status_get_hp(bl);
-        p.isBoss = (((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss) ? 1 : 0;
-    }
-    else
-    {
-        p.maxHP = -1;
-        p.HP = -1;
-        p.isBoss = 0;
-    }
-
-    clif->send(&p,sizeof(p), tsd ? &tsd->bl : bl, target);
-
-    if (disguised(bl))
-    {
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
-        p.GID = -bl->id;
-        clif->send(&p,sizeof(p),bl,SELF);
-    }
-
-}
-
-void eclif_spawn_unit_old(struct block_list* bl, enum send_target target)
-{
-    struct map_session_data* sd;
-    struct status_change* sc = status->get_sc(bl);
-    struct view_data* vd = status->get_viewdata(bl);
-    struct packet_spawn_unit_old p;
-    int g_id = status->get_guild_id(bl);
-
-    nullpo_retv(bl);
-
-    sd = BL_CAST(BL_PC, bl);
-
-    p.PacketType = 0x90f;
-    p.PacketLength = sizeof(p);
-    p.objecttype = clif_bl_type_old(bl);
-//    p.AID = bl->id;
-//    p.GID = (sd) ? sd->status.char_id : 0;    // CCODE
-    p.GID = bl->id;
-    p.speed = status->get_speed(bl);
-    p.bodyState = (sc) ? sc->opt1 : 0;
-    p.healthState = (sc) ? sc->opt2 : 0;
-    p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class;
-    p.head = vd->hair_style;
-    p.weapon = vd->weapon;
-    p.accessory = vd->head_bottom;
-    p.accessory2 = vd->head_top;
-    p.accessory3 = vd->head_mid;
-    if (bl->type == BL_NPC && vd->class == FLAG_CLASS)
-    {   //The hell, why flags work like this?
-        p.accessory = status->get_emblem_id(bl);
-        p.accessory2 = GetWord(g_id, 1);
-        p.accessory3 = GetWord(g_id, 0);
-    }
-    p.headpalette = vd->hair_color;
-    p.bodypalette = vd->cloth_color;
-    p.headDir = (sd)? sd->head_dir : 0;
-    p.robe = vd->robe;
-    p.GUID = g_id;
-    p.GEmblemVer = status->get_emblem_id(bl);
-    p.honor = (sd) ? sd->status.manner : 0;
-    p.virtue = (sc) ? sc->opt3 : 0;
-    p.isPKModeON = (sd && sd->status.karma) ? 1 : 0;
-    p.sex = vd->sex;
-    WBUFPOS(&p.PosDir[0],0,bl->x,bl->y,unit->getdir(bl));
-    p.xSize = p.ySize = (sd) ? 5 : 0;
-    p.clevel = clif_setlevel(bl);
-    p.font = (sd) ? sd->status.font : 0;
-    if (battle->bc->show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl))
-    {
-        p.maxHP = status_get_max_hp(bl);
-        p.HP = status_get_hp(bl);
-        p.isBoss = (((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss) ? 1 : 0;
-    }
-    else
-    {
-        p.maxHP = -1;
-        p.HP = -1;
-        p.isBoss = 0;
-    }
-    if (disguised(bl))
-    {
-        nullpo_retv(sd);
-        if (sd->status.class != sd->disguise)
-            clif->send(&p, sizeof(p), bl, target);
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
-        p.GID = -bl->id;
-        clif->send(&p, sizeof(p), bl, SELF);
-    }
-    else
-    {
-        clif->send(&p, sizeof(p), bl, target);
-    }
-}
-
-void eclif_set_unit_walking_old(struct block_list* bl,
-                                struct map_session_data *tsd,
-                                struct unit_data* ud,
-                                enum send_target target)
-{
-    struct map_session_data* sd;
-    struct status_change* sc = status->get_sc(bl);
-    struct view_data* vd = status->get_viewdata(bl);
-    struct packet_unit_walking_old p;
-    int g_id = status->get_guild_id(bl);
-
-    nullpo_retv(bl);
-    nullpo_retv(ud);
-
-    sd = BL_CAST(BL_PC, bl);
-
-    p.PacketType = 0x914;
-    p.PacketLength = sizeof(p);
-    p.objecttype = clif_bl_type_old(bl);
-//    p.AID = bl->id;
-//    p.GID = (tsd) ? tsd->status.char_id : 0;    // CCODE
-    p.GID = bl->id;
-    p.speed = status->get_speed(bl);
-    p.bodyState = (sc) ? sc->opt1 : 0;
-    p.healthState = (sc) ? sc->opt2 : 0;
-    p.effectState = (sc) ? sc->option : bl->type == BL_NPC ? ((TBL_NPC*)bl)->option : 0;
-    p.job = vd->class;
-    p.head = vd->hair_style;
-    p.weapon = vd->weapon;
-    p.accessory = vd->head_bottom;
-    p.moveStartTime = (unsigned int)timer->gettick();
-    p.accessory2 = vd->head_top;
-    p.accessory3 = vd->head_mid;
-    p.headpalette = vd->hair_color;
-    p.bodypalette = vd->cloth_color;
-    p.headDir = (sd)? sd->head_dir : 0;
-    p.robe = vd->robe;
-    p.GUID = g_id;
-    p.GEmblemVer = status->get_emblem_id(bl);
-    p.honor = (sd) ? sd->status.manner : 0;
-    p.virtue = (sc) ? sc->opt3 : 0;
-    p.isPKModeON = (sd && sd->status.karma) ? 1 : 0;
-    p.sex = vd->sex;
-    WBUFPOS2(&p.MoveData[0], 0, bl->x, bl->y, ud->to_x, ud->to_y, 8, 8);
-    p.xSize = p.ySize = (sd) ? 5 : 0;
-    p.clevel = clif_setlevel(bl);
-    p.font = (sd) ? sd->status.font : 0;
-    if (battle->bc->show_monster_hp_bar && bl->type == BL_MOB && status_get_hp(bl) < status_get_max_hp(bl))
-    {
-        p.maxHP = status_get_max_hp(bl);
-        p.HP = status_get_hp(bl);
-        p.isBoss = (((TBL_MOB*)bl)->spawn && ((TBL_MOB*)bl)->spawn->state.boss) ? 1 : 0;
-    }
-    else
-    {
-        p.maxHP = -1;
-        p.HP = -1;
-        p.isBoss = 0;
-    }
-
-    clif->send(&p, sizeof(p), tsd ? &tsd->bl : bl, target);
-
-    if (disguised(bl))
-    {
-        p.objecttype = pc->db_checkid(status->get_viewdata(bl)->class) ? 0x0 : 0x5; //PC_TYPE : NPC_MOB_TYPE
-        p.GID = -bl->id;
-        clif->send(&p, sizeof(p), bl, SELF);
-    }
-}
-
-void eclif_damage_old(struct block_list* src,
-                      struct block_list* dst,
-                      int sdelay,
-                      int ddelay,
-                      int64 in_damage,
-                      short div,
-                      unsigned char type,
-                      int64 in_damage2)
-{
-    struct packet_damage_old p;
-    struct status_change *sc;
-    int damage,damage2;
-
-    nullpo_retv(src);
-    nullpo_retv(dst);
-
-    sc = status->get_sc(dst);
-
-    if (sc && sc->count && sc->data[SC_ILLUSION])
-    {
-        if(in_damage)
-            in_damage = in_damage*(sc->data[SC_ILLUSION]->val2); //+ rnd()%100;
-        if(in_damage2)
-            in_damage2 = in_damage2*(sc->data[SC_ILLUSION]->val2); //+ rnd()%100;
-    }
-
-    damage = (int)min(in_damage,INT_MAX);
-    damage2 = (int)min(in_damage2,INT_MAX);
-
-    type = clif_calc_delay(type,div,damage+damage2,ddelay);
-
-    p.PacketType = 0x2e1;
-    p.GID = src->id;
-    p.targetGID = dst->id;
-    p.startTime = (uint32)timer->gettick();
-    p.attackMT = sdelay;
-    p.attackedMT = ddelay;
-    p.count = div;
-    p.action = type;
-
-    if (battle->bc->hide_woe_damage && map_flag_gvg2(src->m))
-    {
-        p.damage = damage ? div : 0;
-        p.leftDamage = damage2 ? div : 0;
-    }
-    else
-    {
-        p.damage = damage;
-        p.leftDamage = damage2;
-    }
-//    p.is_sp_damaged = 0;    // [ToDo] IsSPDamage - Displays blue digits.
-
-    if (disguised(dst))
-    {
-        clif->send(&p, sizeof(p), dst, AREA_WOS);
-        p.targetGID = -dst->id;
-        clif->send(&p, sizeof(p), dst, SELF);
-    }
-    else
-    {
-        clif->send(&p, sizeof(p), dst, AREA);
-    }
-
-    if (disguised(src))
-    {
-        p.GID = -src->id;
-        if (disguised(dst))
-            p.targetGID = dst->id;
-
-        if(damage > 0)
-            p.damage = -1;
-        if(damage2 > 0)
-            p.leftDamage = -1;
-
-        clif->send(&p, sizeof(p), src, SELF);
-    }
-
-    if (src == dst)
-    {
-        unit->setdir(src, unit->getdir(src));
-    }
 }
 
 void eclif_set_unit_idle_post(struct block_list *bl,
@@ -1028,8 +671,6 @@ void eclif_set_unit_idle_post(struct block_list *bl,
 {
     if (!bl || !tsd)
         return;
-
-    eclif_set_unit_idle_old(bl, tsd, target);
 
     if (bl->type == BL_MOB)
         send_mob_info(bl, &tsd->bl, target);
@@ -1044,7 +685,6 @@ void eclif_set_unit_walking_pre(struct block_list **blPtr,
                                 struct unit_data **udPtr,
                                 enum send_target *target)
 {
-    eclif_set_unit_walking_old(*blPtr, *tsdPtr, *udPtr, *target);
 }
 
 void eclif_set_unit_walking_post(struct block_list *bl,
@@ -1074,9 +714,6 @@ int eclif_damage_post(int retVal,
                       unsigned char type,
                       int64 in_damage2)
 {
-    eclif_damage_old(src, dst,
-        sdelay, ddelay, in_damage,
-        div, type, in_damage2);
     return retVal;
 }
 
@@ -1092,7 +729,6 @@ void eclif_move_post(struct unit_data *ud)
 void eclif_spawn_unit_pre(struct block_list **blPtr,
                           enum send_target *target)
 {
-    eclif_spawn_unit_old(*blPtr, *target);
 }
 
 bool tempChangeMap;
