@@ -409,10 +409,8 @@ BUILDIN(requestItemIndex)
         st->state = RERUNLINE;
 
         // send item request
-        if (client && client->clientVersion >= 11)
+        if (client)
             send_npccommand(sd, st->oid, 11);
-        else
-            clif->scriptinputstr(sd, st->oid);
     }
     else
     {
@@ -462,10 +460,8 @@ BUILDIN(requestItemsIndex)
         st->state = RERUNLINE;
 
         // send item request with limit count
-        if (client && client->clientVersion >= 11)
+        if (client)
             send_npccommand2(sd, st->oid, 11, count, 0, 0);
-        else
-            clif->scriptinputstr(sd, st->oid);
     }
     else
     {

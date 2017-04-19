@@ -551,34 +551,13 @@ int eclif_send_actual_pre(int *fd,
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
-        if (packet == 0x1d7)
+        if (packet == 0x1d7 ||
+            packet == 0x84b)
         {
             // not sending old packets to new clients
             // probably useless
             hookStop();
             return 0;
-        }
-        if (packet == 0x84b)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion >= 10)
-            {   // not sending old packets to new clients
-                hookStop();
-                return 0;
-            }
-        }
-        if (packet == 0xb19)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 10)
-            {   // not sending new packets to old clients
-                hookStop();
-                return 0;
-            }
         }
         if (packet == 0x2dd)
         {
@@ -1318,7 +1297,7 @@ void eclif_getareachar_item_pre(struct map_session_data **sdPtr,
     int fd = sd->fd;
 
     struct SessionExt *data = session_get(fd);
-    if (!data || data->clientVersion < 10)
+    if (!data)
         return;
 
     WFIFOHEAD(fd, 28);
