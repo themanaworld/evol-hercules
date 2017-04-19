@@ -526,8 +526,7 @@ int eclif_send_actual_pre(int *fd,
     if (*len >= 2)
     {
         const int packet = RBUFW (buf, 0);
-        if (packet == 0x1d7 ||
-            packet == 0x2dd)
+        if (packet == 0x1d7)
         {
             // not sending old packets to new clients
             // probably useless
@@ -970,6 +969,7 @@ void eclif_sendbgemblem_area_pre(struct map_session_data **sdPtr)
     WBUFW(buf, 30) = sd->bg_id;
     WBUFW(buf, 32) = data->teamId;
     clif->send(buf, 34, &sd->bl, AREA);
+    hookStop();
 }
 
 void eclif_sendbgemblem_single_pre(int *fdPtr,
@@ -980,7 +980,10 @@ void eclif_sendbgemblem_single_pre(int *fdPtr,
     struct SessionExt *data = session_get_bysd(sd);
     struct SessionExt *ddata = session_get_bysd(sd);
     if (!sd || !data || !ddata)
+    {
+        hookStop();
         return;
+    }
 
     WFIFOHEAD(fd, 34);
     WFIFOW(fd, 0) = 0xb1a;
