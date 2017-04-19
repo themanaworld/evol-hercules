@@ -92,5 +92,9 @@ BUILDIN(getLabel);
 BUILDIN(toLabel);
 BUILDIN(input);
 BUILDIN(slide);
+BUILDIN(getItemOptionIdByIndex);
+BUILDIN(getItemOptionValueByIndex);
+BUILDIN(getItemOptionParamByIndex);
+BUILDIN(setItemOptionByIndex);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS

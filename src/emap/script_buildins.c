@@ -2267,3 +2267,127 @@ BUILDIN(slide)
     unit->movepos(&sd->bl, x, y, 1, 0);
     return true;
 }
+
+BUILDIN(getItemOptionIdByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optIndex = script_getnum(st, 3);
+    if (optIndex < 0 || optIndex >= MAX_ITEM_OPTIONS)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optType = sd->status.inventory[n].option[optIndex].index;
+    script_pushint(st, optType);
+
+    return true;
+}
+
+BUILDIN(getItemOptionValueByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optIndex = script_getnum(st, 3);
+    if (optIndex < 0 || optIndex >= MAX_ITEM_OPTIONS)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optValue = sd->status.inventory[n].option[optIndex].value;
+    script_pushint(st, optValue);
+
+    return true;
+}
+
+BUILDIN(getItemOptionParamByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optIndex = script_getnum(st, 3);
+    if (optIndex < 0 || optIndex >= MAX_ITEM_OPTIONS)
+    {
+        script_pushint(st, 0);
+        return false;
+    }
+
+    const int optParam = sd->status.inventory[n].option[optIndex].param;
+    script_pushint(st, optParam);
+
+    return true;
+}
+
+BUILDIN(setItemOptionByIndex)
+{
+    getSD()
+    getInventoryIndex(2)
+
+    if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
+        return false;
+
+    if (itemdb->isstackable2(sd->inventory_data[n]))
+        return false;
+
+    // not allow change equipped items
+    if (sd->status.inventory[n].equip != 0)
+        return false;
+
+    const int optIndex = script_getnum(st, 3);
+    if (optIndex < 0 || optIndex >= MAX_ITEM_OPTIONS)
+    {
+        ShowError("Wrong optIndex in setitemoptionbyindex\n");
+        return false;
+    }
+    int optType = 0;
+    int optValue = 0;
+    if (script_hasdata(st, 5))
+    {
+        optType = script_getnum(st, 4);
+        optValue = script_getnum(st, 5);
+    }
+    else
+    {
+        optType = sd->status.inventory[n].option[optIndex].index;
+        optValue = script_getnum(st, 4);
+    }
+
+    if (optType != 0 && itemdb->option_exists(optType) == NULL)
+    {
+        ShowError("Wrong optType in setitemoptionbyindex\n");
+        return false;
+    }
+
+    clif->delitem(sd, n, 1, DELITEM_MATERIALCHANGE);
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, -1, &sd->status.inventory[n], sd->inventory_data[n]);
+
+    sd->status.inventory[n].option[optIndex].index = optType;
+    sd->status.inventory[n].option[optIndex].value = optValue;
+
+    clif->additem(sd, n, 1, 0);
+    logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n], sd->inventory_data[n]);
+
+    return true;
+}

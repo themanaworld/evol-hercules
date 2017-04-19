@@ -190,6 +190,10 @@ HPExport void plugin_init (void)
     addScriptCommand("tolabel", "i", toLabel);
     addScriptCommand("input", "r??", input);
     addScriptCommand("slide", "ii", slide);
+    addScriptCommand("getitemoptionidbyindex", "ii", getItemOptionIdByIndex);
+    addScriptCommand("getitemoptionvaluebyindex", "ii", getItemOptionValueByIndex);
+    addScriptCommand("getitemoptionparambyindex", "ii", getItemOptionParamByIndex);
+    addScriptCommand("setitemoptionbyindex", "iii*", setItemOptionByIndex);
 
     do_init_langs();
 
