@@ -361,7 +361,7 @@ void send_client_command(struct map_session_data *sd, const char *const command)
     if (!command)
         return;
     struct SessionExt *data = session_get_bysd(sd);
-    if (!data || data->clientVersion < 8)
+    if (!data)
         return;
 
     const unsigned int len = (unsigned int)strlen(command);
