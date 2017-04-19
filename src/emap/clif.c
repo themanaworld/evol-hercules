@@ -527,7 +527,6 @@ int eclif_send_actual_pre(int *fd,
     {
         const int packet = RBUFW (buf, 0);
         if (packet == 0x1d7 ||
-            packet == 0x84b ||
             packet == 0x2dd)
         {
             // not sending old packets to new clients
@@ -919,7 +918,10 @@ void eclif_dropflooritem_pre(struct flooritem_data **fitemPtr)
     struct flooritem_data *fitem = *fitemPtr;
 
     if (!fitem)
+    {
+        hookStop();
         return;
+    }
     struct ItemdExt *itemData = itemd_get_by_item(&fitem->item_data);
     if (itemData)
     {
@@ -951,6 +953,7 @@ void eclif_dropflooritem_pre(struct flooritem_data **fitemPtr)
     WBUFB(buf, 27) = fitem->suby;
 
     clif->send(&buf, 28, &fitem->bl, AREA);
+    hookStop();
 }
 
 void eclif_sendbgemblem_area_pre(struct map_session_data **sdPtr)
