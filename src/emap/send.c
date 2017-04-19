@@ -226,7 +226,7 @@ void send_npc_info(struct block_list* bl1,
     if (tsd)
     {
         struct SessionExt *tdata = session_get_bysd(tsd);
-        if (!tdata || tdata->clientVersion < 5)
+        if (!tdata)
             return;
     }
 
