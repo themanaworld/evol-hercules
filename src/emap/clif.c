@@ -560,17 +560,6 @@ int eclif_send_actual_pre(int *fd,
             hookStop();
             return 0;
         }
-        if (packet == 0xb1b)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 14)
-            {   // not sending new packets to old clients
-                hookStop();
-                return 0;
-            }
-        }
         if (packet == 0x9dd || packet == 0x9dc || packet == 0x9db || packet == 0x8c8)
         {
             struct SessionExt *data = session_get(*fd);

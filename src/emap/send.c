@@ -432,7 +432,7 @@ void send_setwall(int m, int layer, int x1, int y1, int x2, int y2, int mask, en
 void send_setwall_single(int fd, int m, int layer, int x1, int y1, int x2, int y2, int mask)
 {
     struct SessionExt *data = session_get(fd);
-    if (!data || data->clientVersion < 14)
+    if (!data)
         return;
 
     WFIFOHEAD (fd, 34);
