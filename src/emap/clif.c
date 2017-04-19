@@ -585,36 +585,6 @@ uint16 GetWord(uint32 val, int idx)
     }
 }
 
-//To make the assignation of the level based on limits clearer/easier. [Skotlex]
-static int clif_setlevel_sub(int lv)
-{
-    if (lv < battle->bc->max_lv)
-    {
-        ;
-    }
-    else if (lv < battle->bc->aura_lv)
-    {
-        lv = battle->bc->max_lv - 1;
-    }
-    else
-    {
-        lv = battle->bc->max_lv;
-    }
-
-    return lv;
-}
-
-static int clif_setlevel(struct block_list* bl)
-{
-    int lv = status->get_lv(bl);
-    nullpo_retr(0, bl);
-    if (battle->bc->client_limit_unit_lv&bl->type)
-        return clif_setlevel_sub(lv);
-    if (bl->type == BL_NPC || bl->type == BL_PET)
-        return 0;
-    return lv;
-}
-
 //To identify disguised characters.
 static inline bool disguised(struct block_list* bl)
 {
@@ -665,13 +635,6 @@ void eclif_set_unit_idle_post(struct block_list *bl,
         send_npc_info(bl, &tsd->bl, target);
 }
 
-void eclif_set_unit_walking_pre(struct block_list **blPtr,
-                                TBL_PC **tsdPtr,
-                                struct unit_data **udPtr,
-                                enum send_target *target)
-{
-}
-
 void eclif_set_unit_walking_post(struct block_list *bl,
                                  TBL_PC *tsd,
                                  struct unit_data* ud,
@@ -689,19 +652,6 @@ void eclif_set_unit_walking_post(struct block_list *bl,
     }
 }
 
-int eclif_damage_post(int retVal,
-                      struct block_list* src,
-                      struct block_list* dst,
-                      int sdelay,
-                      int ddelay,
-                      int64 in_damage,
-                      short div,
-                      unsigned char type,
-                      int64 in_damage2)
-{
-    return retVal;
-}
-
 void eclif_move_post(struct unit_data *ud)
 {
     if (!ud)
@@ -709,11 +659,6 @@ void eclif_move_post(struct unit_data *ud)
     TBL_PC *sd = BL_CAST(BL_PC, ud->bl);
     if (!sd || !pc_isinvisible(sd))
         send_advmoving(ud, false, ud->bl, AREA_WOS);
-}
-
-void eclif_spawn_unit_pre(struct block_list **blPtr,
-                          enum send_target *target)
-{
 }
 
 bool tempChangeMap;

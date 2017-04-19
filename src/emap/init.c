@@ -247,10 +247,8 @@ HPExport void plugin_init (void)
     addHookPre(clif, sendbgemblem_area, eclif_sendbgemblem_area_pre);
     addHookPre(clif, sendbgemblem_single, eclif_sendbgemblem_single_pre);
     addHookPre(clif, set_unit_idle, eclif_set_unit_idle_pre);
-    addHookPre(clif, set_unit_walking, eclif_set_unit_walking_pre);
     addHookPre(clif, send_actual, eclif_send_actual_pre);
     addHookPre(clif, pLoadEndAck, eclif_parse_LoadEndAck_pre);
-    addHookPre(clif, spawn_unit, eclif_spawn_unit_pre);
     addHookPre(clif, skillinfoblock, eclif_skillinfoblock_pre);
     addHookPre(clif, addskill, eclif_addskill_pre);
     addHookPre(clif, skillinfo, eclif_skillinfo_pre);
@@ -296,7 +294,6 @@ HPExport void plugin_init (void)
     addHookPost(clif, set_unit_idle, eclif_set_unit_idle_post);
     addHookPost(clif, pLoadEndAck, eclif_parse_LoadEndAck_post);
     addHookPost(clif, spawn, eclif_spawn_post);
-    addHookPost(clif, damage, eclif_damage_post);
     addHookPost(clif, set_unit_walking, eclif_set_unit_walking_post);
     addHookPost(clif, move, eclif_move_post);
     addHookPost(clif, party_info, eclif_party_info_post);

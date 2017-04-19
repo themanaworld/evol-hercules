@@ -236,11 +236,6 @@ BUILDIN(getItemLink)
 
     if (sd)
     {
-        int version = 0;
-        struct SessionExt *data = session_get_bysd(sd);
-        if (data)
-            version = data->clientVersion;
-
         if (i_data)
         {
             if (!script_hasdata(st, 3))
@@ -1841,11 +1836,6 @@ BUILDIN(getInvIndexLink)
 
     if (sd)
     {
-        int version = 0;
-        struct SessionExt *data = session_get_bysd(sd);
-        if (data)
-            version = data->clientVersion;
-
         if (i_data)
         {
             const struct item *const item = &sd->status.inventory[index];

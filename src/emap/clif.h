@@ -39,23 +39,10 @@ void eclif_changemap_post(TBL_PC *sd,
 void eclif_set_unit_idle_post(struct block_list *bl,
                               TBL_PC *tsd,
                               enum send_target target);
-void eclif_set_unit_walking_pre(struct block_list **blPtr,
-                                TBL_PC **tsdPtr,
-                                struct unit_data **udPtr,
-                                enum send_target *target);
 void eclif_set_unit_walking_post(struct block_list *bl,
                                  TBL_PC *tsd,
                                  struct unit_data *ud,
                                  enum send_target target);
-int eclif_damage_post(int retVal,
-                      struct block_list *src,
-                      struct block_list *dst,
-                      int sdelay,
-                      int ddelay,
-                      int64 in_damage,
-                      short div,
-                      unsigned char type,
-                      int64 in_damage2);
 void eclif_move_post(struct unit_data *ud);
 void eclif_parse_LoadEndAck_pre(int *fdPtr,
                                 struct map_session_data **sdPtr);
@@ -76,8 +63,6 @@ void eclif_disp_message_pre(struct block_list **srcPtr,
                             const char **mesPtr,
                             enum send_target *targetPtr);
 
-void eclif_spawn_unit_pre(struct block_list **blPtr,
-                          enum send_target *target);
 void eclif_addcards_post(unsigned char *buf,
                          struct item *item);
 void eclif_addcards2_post(unsigned short *cards,
