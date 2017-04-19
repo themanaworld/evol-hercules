@@ -136,7 +136,7 @@ MAP_SRC = emap/atcommand.c \
 # need remove -Wno-unused
 
 SHARED_CFLAGS = ${CFLAGS} -O3 -pipe -ffast-math -std=c99 -Wall -Wextra -Wno-sign-compare -Wno-unused -fno-omit-frame-pointer \
-    -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty -DPACKETVER=20141022
+    -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty -DPACKETVER=20150513
 SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
 
 if ENABLE_STATIC_BUILD
