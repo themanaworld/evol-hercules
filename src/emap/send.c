@@ -91,17 +91,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
     if (!sd)
         return;
     //ShowWarning("equip: for type %d = %d\n", type, val);
-    if (!tdata || tdata->clientVersion < 9)
-    {
-        WFIFOHEAD (fd, 11);
-        WFIFOW (fd, 0) = 0x1d7;
-        WFIFOL (fd, 2) = id;
-        WFIFOB (fd, 6) = type;
-        WFIFOW (fd, 7) = val;
-        WFIFOW (fd, 9) = val2;
-        WFIFOSET (fd, 11);
-    }
-    else
+    if (tdata)
     {
         WFIFOHEAD (fd, 19);
         WFIFOW (fd, 0) = 0xb17;
