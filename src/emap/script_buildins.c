@@ -241,7 +241,7 @@ BUILDIN(getItemLink)
         if (data)
             version = data->clientVersion;
 
-        if (i_data && version >= 7)
+        if (i_data)
         {
             if (!script_hasdata(st, 3))
             {
@@ -263,10 +263,6 @@ BUILDIN(getItemLink)
                 }
                 strcat(item_name, "|@@]");
             }
-        }
-        else if (i_data)
-        {
-            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
         }
         else if (item_id > 0)
         {
@@ -1856,7 +1852,7 @@ BUILDIN(getInvIndexLink)
         if (data)
             version = data->clientVersion;
 
-        if (i_data && version >= 7)
+        if (i_data)
         {
             const struct item *const item = &sd->status.inventory[index];
             if (item->card[0] == CARD0_PET ||
@@ -1877,10 +1873,6 @@ BUILDIN(getInvIndexLink)
                 }
                 strcat(item_name, "|@@]");
             }
-        }
-        else if (i_data)
-        {
-            sprintf(item_name, "[@@%u|%s@@]", (unsigned)i_data->nameid, i_data->jname);
         }
         else if (item_id > 0)
         {
