@@ -370,13 +370,11 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
     unsigned char buf[32];
     int i;
 
-    WBUFW(buf, 0) = 0x1d7;
+    WBUFW(buf, 0) = 0xb17;
     WBUFL(buf, 2) = id;
     WBUFB(buf, 6) = type;
     WBUFW(buf, 7) = val;
     WBUFW(buf, 9) = val2;
-    clif->send(buf, 11, bl, target);
-    WBUFW(buf, 0) = 0xb17;
     if (data && sd)
     {
         //ShowWarning("equip: for type %d\n", type);

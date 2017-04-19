@@ -487,15 +487,6 @@ bool eclif_send_pre(const void **bufPtr,
         if (*len >= 2)
         {
             const int packet = RBUFW (buf, 0);
-            if (packet == 0x915 ||
-                packet == 0x90f ||
-                packet == 0x914 ||
-                packet == 0x2e1)
-            {
-                // not sending old packet to new clients
-                hookStop();
-                return true;
-            }
             if (packet == 0x9cb)
             {
                 struct map_session_data *sd = BL_CAST(BL_PC, bl);
@@ -537,11 +528,7 @@ int eclif_send_actual_pre(int *fd,
         const int packet = RBUFW (buf, 0);
         if (packet == 0x1d7 ||
             packet == 0x84b ||
-            packet == 0x2dd ||
-            packet == 0x915 ||
-            packet == 0x90f ||
-            packet == 0x914 ||
-            packet == 0x2e1)
+            packet == 0x2dd)
         {
             // not sending old packets to new clients
             // probably useless
