@@ -36,32 +36,29 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data **sdP
     if (!sd)
         return;
 
-    if (sd->version >= 4)
+    race = RFIFOW(fd, 31);
+    if (race < min_char_class || race > max_char_class)
     {
-        race = RFIFOW(fd, 31);
-        if (race < min_char_class || race > max_char_class)
-        {
-            chr->creation_failed(fd, -10);
-            RFIFOSKIP(fd, 31 + 5);
-            hookStop();
-            return;
-        }
-        sex = RFIFOB(fd, 33);
-        if (sex != 0 && sex != 1 && sex != 3 && sex != 99)
-        {
-            chr->creation_failed(fd, -11);
-            RFIFOSKIP(fd, 31 + 5);
-            hookStop();
-            return;
-        }
-        look = RFIFOW(fd, 34);
-        if (look < min_look || look > max_look)
-        {
-            chr->creation_failed(fd, -12);
-            RFIFOSKIP(fd, 31 + 5);
-            hookStop();
-            return;
-        }
+        chr->creation_failed(fd, -10);
+        RFIFOSKIP(fd, 31 + 5);
+        hookStop();
+        return;
+    }
+    sex = RFIFOB(fd, 33);
+    if (sex != 0 && sex != 1 && sex != 3 && sex != 99)
+    {
+        chr->creation_failed(fd, -11);
+        RFIFOSKIP(fd, 31 + 5);
+        hookStop();
+        return;
+    }
+    look = RFIFOW(fd, 34);
+    if (look < min_look || look > max_look)
+    {
+        chr->creation_failed(fd, -12);
+        RFIFOSKIP(fd, 31 + 5);
+        hookStop();
+        return;
     }
 
     // +++ need remove addition sql query after this line for set sex
@@ -76,33 +73,27 @@ void echar_parse_char_create_new_char(int *fdPtr, struct char_session_data **sdP
         struct mmo_charstatus char_dat;
         chr->mmo_char_fromsql(result, &char_dat, false); //Only the short data is needed.
 
-        if (sd->version >= 4)
+        char_dat.class = race;
+        char_dat.sex = sex;
+        char_dat.clothes_color = look;
+
+        chr->mmo_char_tosql(result, &char_dat);
+        char cSex = 'U';
+        if (sex == SEX_MALE)
+            cSex = 'M';
+        else if (sex == SEX_FEMALE)
+            cSex = 'F';
+
+        if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", "char", cSex, char_dat.char_id))
         {
-            char_dat.class = race;
-            char_dat.sex = sex;
-            char_dat.clothes_color = look;
-
-            chr->mmo_char_tosql(result, &char_dat);
-            char cSex = 'U';
-            if (sex == SEX_MALE)
-                cSex = 'M';
-            else if (sex == SEX_FEMALE)
-                cSex = 'F';
-
-            if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `sex` = '%c' WHERE `char_id` = '%d'", "char", cSex, char_dat.char_id))
-            {
-                Sql_ShowDebug(inter->sql_handle);
-            }
+            Sql_ShowDebug(inter->sql_handle);
         }
         chr->creation_ok(fd, &char_dat);
 
         // add new entry to the chars list
         sd->found_char[char_dat.slot] = result; // the char_id of the new char
     }
-    if (sd->version >= 4)
-        RFIFOSKIP(fd, 31 + 5);
-    else
-        RFIFOSKIP(fd, 31);
+    RFIFOSKIP(fd, 31 + 5);
     hookStop();
 }
 
