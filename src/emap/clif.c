@@ -585,41 +585,6 @@ uint16 GetWord(uint32 val, int idx)
     }
 }
 
-//To identify disguised characters.
-static inline bool disguised(struct block_list* bl)
-{
-    return (bool)(bl &&
-        bl->type == BL_PC &&
-        ((TBL_PC*)bl)->disguise != -1);
-}
-
-static inline void WBUFPOS(uint8* p, unsigned short pos, short x, short y, unsigned char dir)
-{
-    p += pos;
-    p[0] = (uint8)(x >> 2);
-    p[1] = (uint8)((x << 6) | ((y >> 4) & 0x3f));
-    p[2] = (uint8)((y << 4) | (dir & 0xf));
-}
-
-// client-side: x0+=sx0*0.0625-0.5 and y0+=sy0*0.0625-0.5
-static inline void WBUFPOS2(uint8* p, unsigned short pos, short x0, short y0, short x1, short y1, unsigned char sx0, unsigned char sy0)
-{
-    p += pos;
-    p[0] = (uint8)(x0>>2);
-    p[1] = (uint8)((x0<<6) | ((y0>>4)&0x3f));
-    p[2] = (uint8)((y0<<4) | ((x1>>6)&0x0f));
-    p[3] = (uint8)((x1<<2) | ((y1>>8)&0x03));
-    p[4] = (uint8)y1;
-    p[5] = (uint8)((sx0<<4) | (sy0&0x0f));
-}
-
-//Modifies the type of damage according to status changes [Skotlex]
-//Aegis data specifies that: 4 endure against single hit sources, 9 against multi-hit.
-static inline int clif_calc_delay(int type, int div, int damage, int delay)
-{
-    return (delay == 0 && damage > 0) ? (div > 1 ? 9 : 4) : type;
-}
-
 void eclif_set_unit_idle_post(struct block_list *bl,
                               TBL_PC *tsd,
                               enum send_target target)
