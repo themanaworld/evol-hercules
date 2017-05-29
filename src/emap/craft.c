@@ -431,7 +431,7 @@ static bool check_items_collection(struct item_pair *local_inventory,
     {
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
             int needAmount = itemPair->amount;
             while (needAmount > 0)
             {
@@ -468,7 +468,7 @@ static bool check_equips(TBL_PC *sd,
     {
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
             if (find_inventory_equipped_item(sd, itemPair->index) < 0)
                 return false;
         }
@@ -487,7 +487,7 @@ static bool check_skills(TBL_PC *sd,
     {
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
             const int index = skill->get_index(itemPair->index);
             if (!index)
                 return false;
@@ -509,7 +509,7 @@ static bool check_quests(TBL_PC *sd,
     {
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
 
             int n;
             ARR_FIND(0, sd->avail_quests, n, sd->quest_log[n].quest_id == itemPair->index);
@@ -747,7 +747,7 @@ static bool craft_delete_items(TBL_PC *sd,
     {
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
             const int index = find_inventory_item(sd, itemPair->index, itemPair->amount);
             if (!index)
                 return false;
@@ -773,11 +773,13 @@ static bool craft_create_items(TBL_PC *sd,
         struct item it;
         for (i = 0; i < len; i ++)
         {
-            struct item_pair *itemPair = &VECTOR_INDEX(*vector, i);
+            struct item_pair2 *itemPair = &VECTOR_INDEX(*vector, i);
             memset(&it, 0, sizeof(it));
             it.nameid = itemPair->index;
             it.amount = itemPair->amount;
             it.identify = 1;
+            for (int f = 0; f < MAX_SLOTS; f ++)
+                it.card[f] = itemPair->cards[f];
             pc->additem(sd, &it, itemPair->amount, LOG_TYPE_PRODUCE);
         }
     }

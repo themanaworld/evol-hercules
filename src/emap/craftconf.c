@@ -154,15 +154,70 @@ static void craft_read_create_items(struct craft_db_entry *entry,
     while((item = libconfig->setting_get_elem(tt, i)))
     {
         int amount = 0;
+        int cards[MAX_SLOTS];
         const char *name = config_setting_name(item);
-        int itemId = craft_get_item_id(entry, "Wrong item name in craft %d in field %s in: %s\n", name, "CreateItems");
+        int itemId = itemId = craft_get_item_id(entry, "Wrong item name in craft %d in field %s in: %s\n", name, "CreateItems");
+        int cardIdx = 0;
+        for (int f = 0; f < MAX_SLOTS; f ++)
+            cards[f] = 0;
+
+        if (config_setting_is_group(item))
+        {
+            struct config_setting_t *itemField;
+            int fieldIndex = 0;
+            while((itemField = libconfig->setting_get_elem(item, fieldIndex)))
+            {
+                const char *fieldName = config_setting_name(itemField);
+                if (strcmp(fieldName, "Amount") == 0)
+                {
+                    if (craft_get_const(itemField, &i32) && i32 >= 0)
+                        amount = i32;
+                }
+                else if (strcmp(fieldName, "Cards") == 0)
+                {
+                    if (config_setting_is_aggregate(itemField))
+                    {
+                        int sz = libconfig->setting_length(itemField);
+                        if (sz <= 0 || sz > MAX_SLOTS)
+                            ShowWarning("Wrong item cards amount in craft %d in field CreateItems.\n", entry->id);
+                        if (sz > MAX_SLOTS)
+                            sz = MAX_SLOTS;
+                        for (int f = 0; f < sz && cardIdx < sz; f ++)
+                        {
+                            const char *cardName = libconfig->setting_get_string_elem(itemField, f);
+                            if (cardName == NULL)
+                            {
+                                ShowWarning("Wrong item cards field format in craft %d in field CreateItems.\n", entry->id);
+                                continue;
+                            }
+                            const int cardId = craft_get_item_id(entry, "Wrong card name in craft %d in field %s in: %s\n", cardName, "CreateItems");
+                            if (cardId == 0)
+                                continue;
+                            cards[cardIdx] = cardId;
+                            cardIdx ++;
+                        }
+                    }
+                    else
+                    {
+                        ShowWarning("Wrong item cards field format in craft %d in field CreateItems.\n", entry->id);
+                    }
+                }
+                else
+                {
+                    ShowWarning("Wrong item field %s in craft %d in field CreateItems.\n", fieldName, entry->id);
+                }
+                fieldIndex ++;
+            }
+        }
+        else if (craft_get_const(item, &i32) && i32 >= 0)
+        {
+            amount = i32;
+        }
         if (!itemId)
         {
             i ++;
             continue;
         }
-        if (craft_get_const(item, &i32) && i32 >= 0)
-            amount = i32;
 
         if (amount < 1)
         {
@@ -173,9 +228,11 @@ static void craft_read_create_items(struct craft_db_entry *entry,
 
         VECTOR_ENSURE(*collection, 1, 1);
         VECTOR_INSERTZEROED(*collection, collecitonLen);
-        struct item_pair *pair = &VECTOR_INDEX(*collection, collecitonLen);
+        struct item_pair2 *pair = &VECTOR_INDEX(*collection, collecitonLen);
         pair->index = itemId;
         pair->amount = amount;
+        for (int f = 0; f < MAX_SLOTS; f ++)
+            pair->cards[f] = cards[f];
 
         collecitonLen ++;
         i ++;
@@ -284,7 +341,7 @@ static void craft_read_items_collection(struct craft_db_entry *entry,
 
         VECTOR_ENSURE(*vector, 1, 1);
         VECTOR_INSERTZEROED(*vector, len);
-        struct item_pair *pair = &VECTOR_INDEX(*vector, len);
+        struct item_pair2 *pair = &VECTOR_INDEX(*vector, len);
         len ++;
 
         pair->index = itemId;
