@@ -42,7 +42,6 @@ BUILDIN(setNpcDialogTitle);
 BUILDIN(getMapName);
 BUILDIN(unequipById);
 BUILDIN(isPcDead);
-BUILDIN(areaTimer);
 BUILDIN(getAreaDropItem);
 BUILDIN(setMount);
 BUILDIN(clientCommand);

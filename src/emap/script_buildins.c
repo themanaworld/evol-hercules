@@ -979,47 +979,6 @@ BUILDIN(isPcDead)
     return true;
 }
 
-static int areatimer_sub(struct block_list *bl, va_list ap)
-{
-    int tick;
-    char *event;
-    TBL_PC *sd;
-
-    tick = va_arg(ap, int);
-    event = va_arg(ap, char*);
-
-    sd = (TBL_PC *)bl;
-    if (!pc->addeventtimer(sd, tick, event))
-    {
-        if (sd)
-            ShowWarning("buildin_addtimer: Event timer is full, can't add new event timer. (cid:%d timer:%s)\n", sd->status.char_id, event);
-    }
-    return 0;
-}
-
-BUILDIN(areaTimer)
-{
-    const char *const mapname = script_getstr(st, 2);
-    const int x1 = script_getnum(st, 3);
-    const int y1 = script_getnum(st, 4);
-    const int x2 = script_getnum(st, 5);
-    const int y2 = script_getnum(st, 6);
-    const int time = script_getnum(st, 7);
-    const char *const eventName = script_getstr(st, 8);
-    int m;
-
-    if ((m = map->mapname2mapid(mapname)) < 0)
-    {
-        ShowWarning("map not found\n");
-        script->reportsrc(st);
-        return false;
-    }
-
-    map->foreachinarea(areatimer_sub, m, x1, y1, x2, y2, BL_PC, time, eventName);
-
-    return true;
-}
-
 static int buildin_getareadropitem_sub_del(struct block_list *bl, va_list ap)
 {
     if (!bl)
