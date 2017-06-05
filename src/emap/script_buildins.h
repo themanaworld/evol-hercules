@@ -28,7 +28,6 @@ BUILDIN(getqTime);
 BUILDIN(setq);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
-BUILDIN(miscEffect);
 BUILDIN(setMapMask);
 BUILDIN(getMapMask);
 BUILDIN(addMapMask);

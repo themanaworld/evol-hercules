@@ -702,36 +702,6 @@ BUILDIN(rif)
     return true;
 }
 
-BUILDIN(miscEffect)
-{
-    int type = script_getnum(st, 2);
-    struct block_list *bl = NULL;
-
-    if (script_hasdata(st, 3))
-    {
-        if (script_isstring(st, 3))
-        {
-            TBL_PC *sd = map->nick2sd(script_getstr(st, 3));
-            if (sd)
-                bl = &sd->bl;
-        }
-        else if (script_isint(st, 3))
-        {
-            bl = map->id2bl(script_getnum(st, 3));
-        }
-    }
-
-    if (!bl)
-    {
-        TBL_PC *sd = script->rid2sd (st);
-        if (sd)
-            bl = &sd->bl;
-    }
-    if (bl)
-        clif->specialeffect(bl, type, AREA);
-    return true;
-}
-
 BUILDIN(setMapMask)
 {
     const char *const mapName = script_getstr(st, 2);
