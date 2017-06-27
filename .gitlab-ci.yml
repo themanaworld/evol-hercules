@@ -26,25 +26,25 @@ gcc-4.8:
   stage: build
   script:
   - ./tools/ci/jobs/gcc48.sh --enable-werror
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-4.9:
   stage: build
   script:
   - ./tools/ci/jobs/gcc49.sh --enable-werror
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-5:
   stage: build
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
-  image: debian:stable
+  image: debian:unstable
 
 gcc-5-i386:
   stage: build
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror
-  image: vicamo/debian:stretch-i386
+  image: vicamo/debian:sid-i386
 
 gcc-6:
   stage: build
@@ -83,19 +83,19 @@ gcc-4.8-sanitize:
   script:
   - echo "should disable sanitize"
   - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-sanitize
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-4.9-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-sanitize
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-5-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize
-  image: debian:stable
+  image: debian:unstable
 
 gcc-6-sanitize:
   stage: test
@@ -107,13 +107,13 @@ gcc-4.9_lto-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-5_lto-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:stable
+  image: debian:unstable
 
 gcc-6_lto-sanitize:
   stage: test
@@ -125,19 +125,19 @@ gcc-4.8-lto:
   stage: test
   script:
   - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-lto
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-4.9-lto:
   stage: test
   script:
   - ./tools/ci/jobs/gcc49.sh --enable-werror --enable-lto
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-5-lto:
   stage: test
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto
-  image: debian:stable
+  image: debian:unstable
 
 gcc-6_lto:
   stage: test
@@ -149,7 +149,7 @@ gcc-4.6:
   stage: test
   script:
   - ./tools/ci/jobs/gcc46.sh --enable-werror
-  image: debian:oldstable
+  image: debian:wheezy
 
 # legacy
 
@@ -158,13 +158,13 @@ gcc-4.8_stable_lto-sanitize:
   script:
   - echo "should disable lto and sanitize"
   - ./tools/ci/jobs/gcc48.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:oldstable
+  image: debian:jessie
 
 gcc-5_unstable_lto-sanitize:
   stage: legacy
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:stable
+  image: debian:unstable
 
 # reports
 
