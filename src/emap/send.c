@@ -294,7 +294,7 @@ void send_changenpc_title (struct map_session_data *sd, const int npcId, const c
 
     const int fd = sd->fd;
     const int len = (int)strlen(name);
-    const int sz = len + 5 + 4 + 2;
+    const int sz = len + 10;
     WFIFOHEAD (fd, sz);
     WFIFOW (fd, 0) = 0xb06;
     WFIFOW (fd, 2) = sz;
