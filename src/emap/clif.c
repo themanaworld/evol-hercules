@@ -435,6 +435,7 @@ void eclif_authok_post(TBL_PC *sd)
 
     eclif_send_additional_slots(sd, sd);
     send_pc_info(&sd->bl, &sd->bl, SELF);
+    send_pc_own_flags(&sd->bl);
     struct MapdExt *data = mapd_get(sd->bl.m);
     int mask = data ? data->mask : 1;
     send_mapmask(sd->fd, mask);

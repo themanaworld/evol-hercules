@@ -1566,6 +1566,7 @@ BUILDIN(setMount)
     pc_setglobalreg(sd, mountScriptId, mount);
     status_calc_pc(sd, SCO_NONE);
     send_pc_info(&sd->bl, &sd->bl, AREA);
+    send_pc_own_flags(&sd->bl);
     return true;
 }
 

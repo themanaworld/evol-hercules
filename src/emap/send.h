@@ -25,6 +25,7 @@ void send_advmoving(struct unit_data* ud, bool moving, struct block_list *tbl, e
 void send_changemusic_brodcast(const int map, const char *music);
 void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name);
 void send_join_ack(int fd, const char *const name, int flag);
+void send_pc_own_flags(struct block_list* bl);
 void send_pc_info(struct block_list* bl1,
                   struct block_list* bl2,
                   enum send_target target);

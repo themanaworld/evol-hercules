@@ -168,6 +168,26 @@ void send_mob_info(struct block_list* bl1, struct block_list* bl2,
     clif->send(&buf, sizeof(buf), bl2, target);
 }
 
+void send_pc_own_flags(struct block_list* bl)
+{
+    if (!bl || bl->type != BL_PC)
+        return;
+
+    struct map_session_data *sd = (struct map_session_data *)bl;
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 22)
+        return;
+
+    const int fd = sd->fd;
+    WFIFOHEAD(fd, 8);
+    WFIFOW(fd, 0) = 0xb25;
+    WFIFOW(fd, 2) = 8;
+    WFIFOL(fd, 4) = sd->group_id;
+    WFIFOSET(fd, 8);
+}
+
 void send_pc_info(struct block_list* bl1,
                   struct block_list* bl2,
                   enum send_target target)

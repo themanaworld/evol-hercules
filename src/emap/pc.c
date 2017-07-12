@@ -64,6 +64,7 @@ int epc_setregistry_pre(TBL_PC **sdPtr,
             return 0;
         data->language = *val;
         send_pc_info(&sd->bl, &sd->bl, AREA);
+        send_pc_own_flags(&sd->bl);
     }
     else if (*reg == mountScriptId)
     {
@@ -74,6 +75,7 @@ int epc_setregistry_pre(TBL_PC **sdPtr,
         {
             data->mount = *val;
             send_pc_info(&sd->bl, &sd->bl, SELF);
+            send_pc_own_flags(&sd->bl);
         }
     }
 
