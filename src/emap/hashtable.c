@@ -117,6 +117,7 @@ bool htreg_destroy_iterator(int64 id)
     if (it)
     {
         dbi_destroy(it);
+        i64db_remove(htreg->iterators, id);
         return true;
     }
     return false;
@@ -160,23 +161,29 @@ void htreg_init(void)
  */
 void htreg_final(void)
 {
-    struct DBIterator *iter = db_iterator(htreg->htables);
-    struct DBMap *ht;
 
-    for(ht=dbi_first(iter); dbi_exists(iter); ht=dbi_next(iter))
-        db_destroy(ht);
+    if (htreg->htables != NULL)
+    {
+        struct DBMap *ht;
+        struct DBIterator *iter = db_iterator(htreg->htables);
+        for (ht = dbi_first(iter); dbi_exists(iter); ht = dbi_next(iter))
+            db_destroy(ht);
 
-    dbi_destroy(iter);
+        dbi_destroy(iter);
+    }
     db_destroy(htreg->htables);
 
     // NOTE: maybe I should destroy iteratos before hashtables
-    struct DBIterator *it;
-    iter = db_iterator(htreg->iterators);
 
-    for (it=dbi_first(iter); dbi_exists(iter); it=dbi_next(iter))
-        dbi_destroy(it);
+    if (htreg->iterators != NULL)
+    {
+        struct DBIterator *it;
+        struct DBIterator *iter = db_iterator(htreg->iterators);
+        for (it = dbi_first(iter); dbi_exists(iter); it = dbi_next(iter))
+            dbi_destroy(it);
 
-    dbi_destroy(iter);
+        dbi_destroy(iter);
+    }
     db_destroy(htreg->iterators);
 }
 
