@@ -527,7 +527,7 @@ BUILDIN(setq)
     int quest_id = script_getnum(st, 2);
 
     if (quest->check(sd, quest_id, HAVEQUEST) < 0)
-        quest->add(sd, quest_id);
+        quest->add(sd, quest_id, 0);
     ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
     if (i == sd->num_quests)
     {
