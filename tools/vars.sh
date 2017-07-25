@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # MAX_SKILL    1510  + 22 = 1532
 # MAX_SKILL_ID 10015 + 22 + 9963 = 20022
