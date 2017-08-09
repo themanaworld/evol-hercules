@@ -76,5 +76,6 @@ struct ItemdExt *itemd_create(void)
     data->subX = 8;
     data->subY = 8;
     data->minRange = 0;
+    data->tmpUseType = 0;
     return data;
 }

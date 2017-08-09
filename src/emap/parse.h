@@ -16,5 +16,6 @@ void map_parse_pet_dir(int fd);
 void map_parse_homun_say(int fd);
 void map_parse_homun_emote(int fd);
 void map_parse_homun_dir(int fd);
+void map_clif_parse_useitem2(int fd);
 
 #endif  // EVOL_MAP_PARSE

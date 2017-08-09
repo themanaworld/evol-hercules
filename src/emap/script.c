@@ -9,6 +9,7 @@
 
 #include "common/HPMi.h"
 #include "common/memmgr.h"
+#include "common/nullpo.h"
 #include "map/npc.h"
 #include "map/pc.h"
 #include "map/script.h"
@@ -17,7 +18,9 @@
 
 #include "emap/script.h"
 #include "emap/map.h"
+#include "emap/data/itemd.h"
 #include "emap/data/npcd.h"
+#include "emap/struct/itemdext.h"
 #include "emap/struct/npcdext.h"
 #include "emap/skill_const.h"
 
@@ -395,6 +398,41 @@ char *eget_val_npcscope_str_pre(struct script_state **stPtr,
         return nd->exname;
     }
     return NULL;
+}
+
+void escript_run_use_script_pre(struct map_session_data **sdPtr,
+                                struct item_data **itemDataPtr,
+                                int *oidPtr)
+{
+    nullpo_retv(*itemDataPtr);
+    struct map_session_data *sd = *sdPtr;
+    struct item_data *itemData = *itemDataPtr;
+    const int oid = *oidPtr;
+    if (oid == 0)
+    {
+        pc->setreg(sd, script->add_str("@useType"), 0);
+        script->current_item_id = itemData->nameid;
+        script->run(itemData->script, 0, sd->bl.id, oid);
+        script->current_item_id = 0;
+    }
+    else
+    {
+        struct ItemdExt *data = itemd_get(itemData);
+        if (!data)
+        {
+            data->tmpUseType = 0;
+            hookStop();
+            return;
+        }
+
+        pc->setreg(sd, script->add_str("@useType"), data->tmpUseType);
+        script->current_item_id = itemData->nameid;
+        script->run(itemData->script, 0, sd->bl.id, oid);
+        script->current_item_id = 0;
+        pc->setreg(sd, script->add_str("@useType"), 0);
+        data->tmpUseType = 0;
+    }
+    hookStop();
 }
 
 void script_run_item_amount_script(TBL_PC *sd,

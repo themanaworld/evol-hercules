@@ -36,6 +36,8 @@ struct ItemdExt
 
     int minRange;
 
+    int tmpUseType;
+
     VECTOR_DECL(int) allowedAmmo;
     VECTOR_DECL(struct ItemCardExt) allowedCards;
     struct script_code *dropScript;

@@ -24,6 +24,9 @@ void eset_reg_npcscope_str_pre(struct script_state **stPtr,
 char *eget_val_npcscope_str_pre(struct script_state **stPtr,
                                 struct reg_db **nPtr,
                                 struct script_data **dataPtr);
+void escript_run_use_script_pre(struct map_session_data **sdPtr,
+                                struct item_data **itemDataPtr,
+                                int *oidPtr);
 void script_run_item_amount_script(TBL_PC *sd,
                                    struct script_code *itemScript,
                                    int itemId,

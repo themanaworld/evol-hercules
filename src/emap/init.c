@@ -206,6 +206,7 @@ HPExport void plugin_init (void)
     addPacket(0xb13, -1, map_parse_homun_say, hpClif_Parse);
     addPacket(0xb14, 3, map_parse_homun_emote, hpClif_Parse);
     addPacket(0xb15, 9, map_parse_homun_dir, hpClif_Parse);
+    addPacket(0xb26, 6, map_clif_parse_useitem2, hpClif_Parse);
 
     addHookPre(atcommand, msgfd, eatcommand_msgfd_pre);
     addHookPre(atcommand, msgsd, eatcommand_msgsd_pre);
@@ -275,6 +276,7 @@ HPExport void plugin_init (void)
     addHookPre(script, load_translations, escript_load_translations_pre);
     addHookPre(script, load_parameters, escript_load_parameters_pre);
     addHookPre(script, hardcoded_constants, escript_hardcoded_constants_pre);
+    addHookPre(script, run_use_script, escript_run_use_script_pre);
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
     addHookPre(status, set_viewdata, estatus_set_viewdata_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);

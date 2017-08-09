@@ -23,7 +23,9 @@
 #include "emap/parse.h"
 #include "emap/send.h"
 #include "emap/map.h"
+#include "emap/data/itemd.h"
 #include "emap/data/session.h"
+#include "emap/struct/itemdext.h"
 #include "emap/struct/sessionext.h"
 
 void map_parse_version(int fd)
@@ -224,4 +226,38 @@ void map_parse_homun_dir(int fd)
         unit->setdir(&sd->md->bl, RFIFOB(fd, 8));
     else if (sd->hd && homun_alive(sd->hd))
         unit->setdir(&sd->hd->bl, RFIFOB(fd, 8));
+}
+
+void map_clif_parse_useitem2(int fd)
+{
+    TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
+    if (!sd)
+        return;
+
+    if (pc_isdead(sd))
+    {
+        clif->clearunit_area(&sd->bl, CLR_DEAD);
+        return;
+    }
+
+    if ((!sd->npc_id && pc_istrading(sd)) || sd->chat_id != 0)
+        return;
+
+    // Whether the item is used or not is irrelevant, the char ain't idle. [Skotlex]
+    pc->update_idle_time(sd, BCIDLE_USEITEM);
+    const int n = RFIFOW(fd, 2) - 2;
+    if (n < 0 || n >= MAX_INVENTORY)
+        return;
+
+    struct item_data *item = itemdb->exists(sd->inventory_data[n]->nameid);
+
+    if (!item)
+        return;
+    struct ItemdExt *data = itemd_get(item);
+    if (!data)
+        return;
+
+    data->tmpUseType = RFIFOW(fd, 4);
+    if (!pc->useitem(sd, n))
+        clif->useitemack(sd, n, 0, false); //Send an empty ack packet or the client gets stuck.
 }
