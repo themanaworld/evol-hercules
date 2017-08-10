@@ -6,7 +6,7 @@
 
 typedef enum esc_type
 {
-    SC_PHYSICAL_SHIELD = 652,
+    SC_PHYSICAL_SHIELD = 653,
 } esc_type;
 
 #endif  // EVOL_MAP_ENUM_ESCTYPE

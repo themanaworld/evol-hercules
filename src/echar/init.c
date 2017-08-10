@@ -26,6 +26,7 @@
 #include "char/int_party.h"
 #include "char/int_pet.h"
 #include "char/int_quest.h"
+#include "char/int_rodex.h"
 #include "char/int_storage.h"
 #include "char/inter.h"
 #include "char/loginif.h"
