@@ -251,6 +251,7 @@ HPExport void plugin_init (void)
     addHookPre(clif, skillinfoblock, eclif_skillinfoblock_pre);
     addHookPre(clif, addskill, eclif_addskill_pre);
     addHookPre(clif, skillinfo, eclif_skillinfo_pre);
+    addHookPre(clif, rodex_icon, eclif_rodex_icon_pre);
     addHookPre(itemdb, is_item_usable, eitemdb_is_item_usable_pre);
     addHookPre(itemdb, readdb_additional_fields, eitemdb_readdb_additional_fields_pre);
     addHookPre(itemdb, destroy_item_data, edestroy_item_data_pre);

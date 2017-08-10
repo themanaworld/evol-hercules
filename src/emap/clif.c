@@ -1270,3 +1270,17 @@ void eclif_parse_NpcStringInput(int fd,
     safestrncpy(global_npc_str, message, message_len);
     npc->scriptcont(sd, npcid, false);
 }
+
+void eclif_rodex_icon_pre(int *fdPtr,
+                          bool *showPtr __attribute__ ((unused)))
+{
+    struct map_session_data *sd = sockt->session[*fdPtr]->session_data;
+    struct SessionExt *data = session_get_bysd(sd);
+    if (!data)
+        return;
+    if (data->clientVersion < 23)
+    {
+        hookStop();
+        return;
+    }
+}

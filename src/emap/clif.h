@@ -87,4 +87,6 @@ void eclif_party_info_post(struct party_data *p,
                            struct map_session_data *sd);
 void eclif_parse_NpcStringInput(int fd,
                                 struct map_session_data* sd) __attribute__((nonnull (2)));
+void eclif_rodex_icon_pre(int *fdPtr,
+                          bool *showPtr);
 #endif  // EVOL_MAP_CLIF
