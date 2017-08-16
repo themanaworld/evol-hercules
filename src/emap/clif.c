@@ -113,7 +113,7 @@ void eclif_quest_send_list_pre(TBL_PC **sdPtr)
         int info_len = 4 + 1 + 3 * 4 + 4;
         int len = sd->avail_quests * info_len + 8;
         WFIFOHEAD(fd, len);
-        WFIFOW(fd, 0) = 0xb23;
+        WFIFOW(fd, 0) = 0xb23 + evolPacketOffset;
         WFIFOW(fd, 2) = len;
         WFIFOL(fd, 4) = sd->avail_quests;
         for (int i = 0; i < sd->avail_quests; i++ )
@@ -175,7 +175,7 @@ void eclif_quest_add(TBL_PC *sd,
     else
     {  // data->clientVersion >= 20
         WFIFOHEAD(fd, 23);
-        WFIFOW(fd, 0) = 0xb24;
+        WFIFOW(fd, 0) = 0xb24 + evolPacketOffset;
         WFIFOL(fd, 2) = qd->quest_id;
         WFIFOB(fd, 6) = qd->state;
         WFIFOL(fd, 7) = qd->count[0];
@@ -213,7 +213,7 @@ void eclif_charnameack_pre(int *fdPtr,
         {
             char *buf;
             CREATE(buf, char, len);
-            WBUFW(buf, 0) = 0xB01;
+            WBUFW(buf, 0) = 0xB01 + evolPacketOffset;
             WBUFW(buf, 2) = len;
             WBUFL(buf, 4) = bl->id;
             memcpy(WBUFP(buf, 8), tr, trLen);
@@ -223,7 +223,7 @@ void eclif_charnameack_pre(int *fdPtr,
         else
         {
             WFIFOHEAD(fd, len);
-            WFIFOW(fd, 0) = 0xB01;
+            WFIFOW(fd, 0) = 0xB01 + evolPacketOffset;
             WFIFOW(fd, 2) = len;
             WFIFOL(fd, 4) = bl->id;
             memcpy(WFIFOP(fd, 8), tr, trLen);
@@ -277,7 +277,7 @@ void eclif_charnameack_pre(int *fdPtr,
         {
             char *buf;
             CREATE(buf, char, len);
-            WBUFW(buf, 0) = 0xB01;
+            WBUFW(buf, 0) = 0xB01 + evolPacketOffset;
             WBUFW(buf, 2) = len;
             WBUFL(buf, 4) = bl->id;
             memcpy(WBUFP(buf, 8), tr, trLen);
@@ -287,7 +287,7 @@ void eclif_charnameack_pre(int *fdPtr,
         else
         {
             WFIFOHEAD(fd, len);
-            WFIFOW(fd, 0) = 0xB01;
+            WFIFOW(fd, 0) = 0xB01 + evolPacketOffset;
             WFIFOW(fd, 2) = len;
             WFIFOL(fd, 4) = bl->id;
             memcpy(WFIFOP(fd, 8), tr, trLen);
@@ -534,7 +534,7 @@ int eclif_send_actual_pre(int *fd,
             hookStop();
             return 0;
         }
-        if (packet == 0xb1e)
+        if (packet == 0xb1e + evolPacketOffset)
         {
             struct SessionExt *data = session_get(*fd);
             if (!data)
@@ -801,7 +801,7 @@ void eclif_getareachar_item_pre(struct map_session_data **sdPtr,
         return;
 
     WFIFOHEAD(fd, 28);
-    WFIFOW(fd, 0) = 0xb18;
+    WFIFOW(fd, 0) = 0xb18 + evolPacketOffset;
     WFIFOL(fd, 2) = fitem->bl.id;
     if((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
         WFIFOW(fd, 6) = view;
@@ -845,7 +845,7 @@ void eclif_dropflooritem_pre(struct flooritem_data **fitemPtr)
             fitem->suby = 0;
     }
 
-    WBUFW(buf, 0) = 0xb19;
+    WBUFW(buf, 0) = 0xb19 + evolPacketOffset;
     WBUFL(buf, 2) = fitem->bl.id;
     if((view = itemdb_viewid(fitem->item_data.nameid)) > 0)
         WBUFW(buf, 6) = view;
@@ -874,7 +874,7 @@ void eclif_sendbgemblem_area_pre(struct map_session_data **sdPtr)
     if (!sd || !data)
         return;
 
-    WBUFW(buf, 0) = 0xb1a;
+    WBUFW(buf, 0) = 0xb1a + evolPacketOffset;
     WBUFL(buf, 2) = sd->bl.id;
     safestrncpy(WBUFP(buf,6), sd->status.name, NAME_LENGTH); // name don't show in screen.
     WBUFW(buf, 30) = sd->bg_id;
@@ -897,7 +897,7 @@ void eclif_sendbgemblem_single_pre(int *fdPtr,
     }
 
     WFIFOHEAD(fd, 34);
-    WFIFOW(fd, 0) = 0xb1a;
+    WFIFOW(fd, 0) = 0xb1a + evolPacketOffset;
     WFIFOL(fd, 2) = sd->bl.id;
     safestrncpy(WFIFOP(fd, 6), sd->status.name, NAME_LENGTH);
     WFIFOW(fd, 30) = sd->bg_id;
@@ -999,7 +999,7 @@ void eclif_useskill(struct block_list* bl,
 
     // for client >= 18
     const int len = 36;
-    WBUFW(buf, 0) = 0xb1e;
+    WBUFW(buf, 0) = 0xb1e + evolPacketOffset;
     WBUFW(buf, 2) = len;
     WBUFL(buf, 4) = src_id;
     WBUFL(buf, 8) = dst_id;
@@ -1122,7 +1122,7 @@ void eclif_addskill_pre(struct map_session_data **sdPtr,
     const int sz = 45;
 
     WFIFOHEAD(fd, sz);
-    WFIFOW(fd, 0) = 0xb1f;
+    WFIFOW(fd, 0) = 0xb1f + evolPacketOffset;
     WFIFOW(fd, 2) = sz;
     WFIFOW(fd, 4) = id;
     WFIFOL(fd, 6) = skill->get_inf(id);
@@ -1171,7 +1171,7 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
 
     const int sz = 21;
     WFIFOHEAD(fd, sz);
-    WFIFOW(fd, 0) = 0xb20;
+    WFIFOW(fd, 0) = 0xb20 + evolPacketOffset;
     WFIFOW(fd, 2) = sz;
     WFIFOW(fd, 4) = skill_id;
     WFIFOL(fd, 6) = inf ? inf : skill->get_inf(skill_id);

@@ -196,18 +196,18 @@ HPExport void plugin_init (void)
     do_init_langs();
 
     addPacket(0x7530, 22, map_parse_version, hpClif_Parse);
-    addPacket(0xb07, 26, map_parse_join_channel, hpClif_Parse);
-    addPacket(0xb09, 26, map_parse_part_channel, hpClif_Parse);
-    addPacket(0xb0c, -1, map_parse_pet_say, hpClif_Parse);
-    addPacket(0xb0d, 3, map_parse_pet_emote, hpClif_Parse);
-    addPacket(0xb0e, 4, map_parse_set_status, hpClif_Parse);
-    addPacket(0xb0f, 2, map_parse_get_online_list, hpClif_Parse);
-    addPacket(0xb11, 10, map_parse_pet_move, hpClif_Parse);
-    addPacket(0xb12, 9, map_parse_pet_dir, hpClif_Parse);
-    addPacket(0xb13, -1, map_parse_homun_say, hpClif_Parse);
-    addPacket(0xb14, 3, map_parse_homun_emote, hpClif_Parse);
-    addPacket(0xb15, 9, map_parse_homun_dir, hpClif_Parse);
-    addPacket(0xb26, 6, map_clif_parse_useitem2, hpClif_Parse);
+    addPacket(0xb07 + evolPacketOffset, 26, map_parse_join_channel, hpClif_Parse);
+    addPacket(0xb09 + evolPacketOffset, 26, map_parse_part_channel, hpClif_Parse);
+    addPacket(0xb0c + evolPacketOffset, -1, map_parse_pet_say, hpClif_Parse);
+    addPacket(0xb0d + evolPacketOffset, 3, map_parse_pet_emote, hpClif_Parse);
+    addPacket(0xb0e + evolPacketOffset, 4, map_parse_set_status, hpClif_Parse);
+    addPacket(0xb0f + evolPacketOffset, 2, map_parse_get_online_list, hpClif_Parse);
+    addPacket(0xb11 + evolPacketOffset, 10, map_parse_pet_move, hpClif_Parse);
+    addPacket(0xb12 + evolPacketOffset, 9, map_parse_pet_dir, hpClif_Parse);
+    addPacket(0xb13 + evolPacketOffset, -1, map_parse_homun_say, hpClif_Parse);
+    addPacket(0xb14 + evolPacketOffset, 3, map_parse_homun_emote, hpClif_Parse);
+    addPacket(0xb15 + evolPacketOffset, 9, map_parse_homun_dir, hpClif_Parse);
+    addPacket(0xb26 + evolPacketOffset, 6, map_clif_parse_useitem2, hpClif_Parse);
 
     addHookPre(atcommand, msgfd, eatcommand_msgfd_pre);
     addHookPre(atcommand, msgsd, eatcommand_msgsd_pre);

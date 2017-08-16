@@ -34,7 +34,7 @@ void send_npccommand (struct map_session_data *sd, int npcId, int cmd)
 
     int  fd = sd->fd;
     WFIFOHEAD (fd, 16);
-    WFIFOW (fd, 0) = 0xB00;
+    WFIFOW (fd, 0) = 0xB00 + evolPacketOffset;
     WFIFOL (fd, 2) = npcId;
     WFIFOW (fd, 6) = cmd;
     WFIFOL (fd, 8) = 0;
@@ -51,7 +51,7 @@ void send_npccommand2 (struct map_session_data *sd, int npcId, int cmd, int id, 
 
     int  fd = sd->fd;
     WFIFOHEAD (fd, 16);
-    WFIFOW (fd, 0) = 0xB00;
+    WFIFOW (fd, 0) = 0xB00 + evolPacketOffset;
     WFIFOL (fd, 2) = npcId;
     WFIFOW (fd, 6) = cmd;
     WFIFOL (fd, 8) = id;
@@ -94,7 +94,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
     if (tdata)
     {
         WFIFOHEAD (fd, 19);
-        WFIFOW (fd, 0) = 0xb17;
+        WFIFOW (fd, 0) = 0xb17 + evolPacketOffset;
         WFIFOL (fd, 2) = id;
         WFIFOB (fd, 6) = type;
         WFIFOW (fd, 7) = val;
@@ -133,7 +133,7 @@ void send_changelook(struct map_session_data* sd, struct map_session_data* sd2, 
 void send_mapmask(int fd, int mask)
 {
     WFIFOHEAD (fd, 10);
-    WFIFOW (fd, 0) = 0xb02;
+    WFIFOW (fd, 0) = 0xb02 + evolPacketOffset;
     WFIFOL (fd, 2) = mask;
     WFIFOL (fd, 6) = 0;
     WFIFOSET (fd, 10);
@@ -145,7 +145,7 @@ void send_mapmask_brodcast(const int map, const int mask)
     char buf[10];
 
     bl.m = map;
-    WBUFW (buf, 0) = 0xb02;
+    WBUFW (buf, 0) = 0xb02 + evolPacketOffset;
     WBUFL (buf, 2) = mask;
     WBUFL (buf, 6) = 0;
     clif->send(buf, 10, &bl, ALL_SAMEMAP);
@@ -160,7 +160,7 @@ void send_mob_info(struct block_list* bl1, struct block_list* bl2,
     char buf[12];
     TBL_MOB *md = (TBL_MOB *)bl1;
 
-    WBUFW (buf, 0) = 0xb03;
+    WBUFW (buf, 0) = 0xb03 + evolPacketOffset;
     WBUFW (buf, 2) = 12; // len
     WBUFL (buf, 4) = md->bl.id;
     WBUFL (buf, 8) = md->status.rhw.range;
@@ -182,7 +182,7 @@ void send_pc_own_flags(struct block_list* bl)
 
     const int fd = sd->fd;
     WFIFOHEAD(fd, 8);
-    WFIFOW(fd, 0) = 0xb25;
+    WFIFOW(fd, 0) = 0xb25 + evolPacketOffset;
     WFIFOW(fd, 2) = 8;
     WFIFOL(fd, 4) = sd->group_id;
     WFIFOSET(fd, 8);
@@ -211,7 +211,7 @@ void send_pc_info(struct block_list* bl1,
     if (bl1 == bl2 || tdata->clientVersion >= 21)
         len = 16;
     char buf[len];
-    WBUFW (buf, 0) = 0xb0a;
+    WBUFW (buf, 0) = 0xb0a + evolPacketOffset;
     WBUFW (buf, 2) = len;
     WBUFL (buf, 4) = sd->bl.id;
     if (pc_has_permission(sd, permission_send_gm_flag))
@@ -243,7 +243,7 @@ void send_npc_info(struct block_list* bl1,
     TBL_NPC *const nd = (TBL_NPC*)bl1;
 
     char buf[12];
-    WBUFW (buf, 0) = 0xb0b;
+    WBUFW (buf, 0) = 0xb0b + evolPacketOffset;
     WBUFW (buf, 2) = 12; // len
     WBUFL (buf, 4) = nd->bl.id;
     WBUFL (buf, 8) = nd->area_size;
@@ -277,7 +277,7 @@ void send_advmoving(struct unit_data* ud, bool moving, struct block_list *tbl, e
 
     char *buf;
     CREATE(buf, char, i);
-    WBUFW (buf, 0) = 0xb04;
+    WBUFW (buf, 0) = 0xb04 + evolPacketOffset;
     WBUFW (buf, 2) = i;
     WBUFL (buf, 4) = bl->id;
     WBUFW (buf, 8) = status->get_speed(bl);
@@ -300,7 +300,7 @@ void send_changemusic_brodcast(const int map, const char *music)
 
     CREATE(buf, char, sz);
     bl.m = map;
-    WBUFW (buf, 0) = 0xb05;
+    WBUFW (buf, 0) = 0xb05 + evolPacketOffset;
     WBUFW (buf, 2) = sz;
     strcpy (WBUFP (buf, 4), music);
     clif->send (buf, sz, &bl, ALL_SAMEMAP);
@@ -316,7 +316,7 @@ void send_changenpc_title (struct map_session_data *sd, const int npcId, const c
     const int len = (int)strlen(name);
     const int sz = len + 10;
     WFIFOHEAD (fd, sz);
-    WFIFOW (fd, 0) = 0xb06;
+    WFIFOW (fd, 0) = 0xb06 + evolPacketOffset;
     WFIFOW (fd, 2) = sz;
     WFIFOL (fd, 4) = npcId;
     WFIFOW (fd, 8) = len;
@@ -330,7 +330,7 @@ void send_join_ack(int fd, const char *const name, int flag)
         return;
 
     WFIFOHEAD (fd, 27);
-    WFIFOW (fd, 0) = 0xb08;
+    WFIFOW (fd, 0) = 0xb08 + evolPacketOffset;
     safestrncpy (WFIFOP (fd, 2), name, 24);
     WFIFOB (fd, 26) = flag;
     WFIFOSET (fd, 27);
@@ -359,7 +359,7 @@ void send_online_list(int fd, const char *buf, unsigned size)
         return;
     const unsigned int len = size + 4 + 1;
     WFIFOHEAD (fd, len);
-    WFIFOW (fd, 0) = 0xb10;
+    WFIFOW (fd, 0) = 0xb10 + evolPacketOffset;
     WFIFOW (fd, 2) = len;
     memcpy (WFIFOP (fd, 4), buf, size);
     WFIFOB (fd, size + 4) = 0;
@@ -377,7 +377,7 @@ void send_client_command(struct map_session_data *sd, const char *const command)
     const unsigned int len = (unsigned int)strlen(command);
     const int fd = sd->fd;
     WFIFOHEAD (fd, len);
-    WFIFOW (fd, 0) = 0xb16;
+    WFIFOW (fd, 0) = 0xb16 + evolPacketOffset;
     WFIFOW (fd, 2) = len + 4;
     memcpy (WFIFOP (fd, 4), command, len);
     WFIFOSET (fd, len + 4);
@@ -390,7 +390,7 @@ void send_changelook2(struct map_session_data* sd, struct block_list *bl, int id
     unsigned char buf[32];
     int i;
 
-    WBUFW(buf, 0) = 0xb17;
+    WBUFW(buf, 0) = 0xb17 + evolPacketOffset;
     WBUFL(buf, 2) = id;
     WBUFB(buf, 6) = type;
     WBUFW(buf, 7) = val;
@@ -430,7 +430,7 @@ void send_setwall(int m, int layer, int x1, int y1, int x2, int y2, int mask, en
 {
     unsigned char buf[50];
 
-    WBUFW(buf, 0) = 0xb1b;
+    WBUFW(buf, 0) = 0xb1b + evolPacketOffset;
     WBUFW(buf, 2) = x1;
     WBUFW(buf, 4) = y1;
     WBUFW(buf, 6) = x2;
@@ -454,7 +454,7 @@ void send_setwall_single(int fd, int m, int layer, int x1, int y1, int x2, int y
         return;
 
     WFIFOHEAD (fd, 34);
-    WFIFOW(fd, 0) = 0xb1b;
+    WFIFOW(fd, 0) = 0xb1b + evolPacketOffset;
     WFIFOW(fd, 2) = x1;
     WFIFOW(fd, 4) = y1;
     WFIFOW(fd, 6) = x2;
@@ -475,7 +475,7 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
 
     const int sz = (int)strlen(skin) + 9;
     WFIFOHEAD (fd, sz);
-    WFIFOW(fd, 0) = 0xb1c;
+    WFIFOW(fd, 0) = 0xb1c + evolPacketOffset;
     WFIFOW(fd, 2) = sz;
     WFIFOL(fd, 4) = npcId;
     strcpy(WFIFOP (fd, 8), skin);
@@ -489,7 +489,7 @@ void send_pc_killed(int fd, struct block_list* bl)
         return;
 
     WFIFOHEAD (fd, 6);
-    WFIFOW(fd, 0) = 0xb1d;
+    WFIFOW(fd, 0) = 0xb1d + evolPacketOffset;
     if (bl)
         WFIFOL(fd, 2) = bl->id;
     else
@@ -500,7 +500,7 @@ void send_pc_killed(int fd, struct block_list* bl)
 void send_walk_fail(int fd, int x, int y)
 {
     WFIFOHEAD(fd, 10);
-    WFIFOW(fd,0) = 0xb21;
+    WFIFOW(fd,0) = 0xb21 + evolPacketOffset;
     WFIFOL(fd, 2) = (unsigned int)timer->gettick();
     WFIFOW(fd, 6) = x;
     WFIFOW(fd, 8) = y;
@@ -519,7 +519,7 @@ void send_homun_exp(struct homun_data *hd,
         return;
 
     WFIFOHEAD(fd, 10);
-    WFIFOW(fd, 0) = 0xb22;
+    WFIFOW(fd, 0) = 0xb22 + evolPacketOffset;
     WFIFOL(fd, 2) = exp;
     WFIFOL(fd, 6) = 0;
     WFIFOSET(fd, 10);

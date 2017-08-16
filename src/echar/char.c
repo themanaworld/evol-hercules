@@ -288,7 +288,7 @@ void send_additional_slots(int fd, struct char_session_data* sd)
         if (type == 0)
             continue;
         WFIFOHEAD (fd, 19);
-        WFIFOW (fd, 0) = 0xb17;
+        WFIFOW (fd, 0) = 0xb17 + evolPacketOffset;
         WFIFOL (fd, 2) = char_id;
         WFIFOB (fd, 6) = (unsigned char)type;
         WFIFOW (fd, 7) = name_id;
