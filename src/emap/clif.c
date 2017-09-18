@@ -302,8 +302,8 @@ void eclif_charnameack_pre(int *fdPtr,
     if (equip >= 0) \
     { \
         item = sd->inventory_data[equip]; \
-        if (item && item->look) \
-            send_changelook(sd, sd2, fd, id, field, item->look, 0, item, equip); \
+        if (item && item->view_sprite) \
+            send_changelook(sd, sd2, fd, id, field, item->view_sprite, 0, item, equip); \
     }
 
 #define equipPosId(index, field) \
@@ -354,9 +354,9 @@ static void eclif_send_additional_slots(TBL_PC* sd, TBL_PC* sd2)
     if (equip >= 0) \
     { \
         item = sd->inventory_data[equip]; \
-        if (item && item->look) \
+        if (item && item->view_sprite) \
         { \
-            send_changelook2(sd, bl, bl->id, field, item->look, 0, item, equip, AREA); \
+            send_changelook2(sd, bl, bl->id, field, item->view_sprite, 0, item, equip, AREA); \
         } \
     }
 

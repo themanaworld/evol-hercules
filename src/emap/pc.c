@@ -86,7 +86,7 @@ int epc_setregistry_pre(TBL_PC **sdPtr,
     if (pos & (mask)) \
     { \
         if (id) \
-            sd->status.field = id->look; \
+            sd->status.field = id->view_sprite; \
         else \
             sd->status.field = 0; \
         eclif_changelook2(&sd->bl, lookf, sd->status.field, id, n); \
@@ -96,7 +96,7 @@ int epc_setregistry_pre(TBL_PC **sdPtr,
     if (pos & (mask)) \
     { \
         if (id) \
-            eclif_changelook2(&sd->bl, lookf, id->look, id, n); \
+            eclif_changelook2(&sd->bl, lookf, id->view_sprite, id, n); \
         else \
             eclif_changelook2(&sd->bl, lookf, 0, id, n); \
     }
@@ -116,46 +116,52 @@ void epc_equipitem_pos_pre(TBL_PC **sdPtr,
     if (!id || !sd)
         return;
 
-    if (pos & (EQP_HAND_R|EQP_SHADOW_WEAPON))
+    if (pos & (EQP_HAND_R | EQP_SHADOW_WEAPON))
     {
-        if(id)
+        if (id != NULL)
         {
-            sd->weapontype1 = id->look;
+            sd->weapontype1 = id->subtype;
+            sd->status.look.weapon = id->view_sprite;
         }
         else
         {
-            sd->weapontype1 = 0;
+            sd->weapontype1 = W_FIST;
+            sd->status.look.weapon = 0;
         }
         pc->calcweapontype(sd);
-        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.weapon, id, n);
+        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.look.weapon, id, n);
     }
-    if (pos & (EQP_HAND_L|EQP_SHADOW_SHIELD))
+    if (pos & (EQP_HAND_L | EQP_SHADOW_SHIELD))
     {
-        if (id)
+        if (id != NULL)
         {
-            if(id->type == IT_WEAPON)
+            if (id->type == IT_WEAPON)
             {
-                sd->status.shield = 0;
-                sd->weapontype2 = id->look;
+                sd->has_shield = false;
+                sd->status.look.shield = 0;
+                sd->weapontype2 = id->subtype;
             }
             else if (id->type == IT_ARMOR)
             {
-                sd->status.shield = id->look;
-                sd->weapontype2 = 0;
+                sd->has_shield = true;
+                sd->status.look.shield = id->view_sprite;
+                sd->weapontype2 = W_FIST;
             }
         }
         else
         {
-            sd->status.shield = sd->weapontype2 = 0;
+            sd->has_shield = false;
+            sd->status.look.shield = 0;
+            sd->weapontype2 = W_FIST;
         }
         pc->calcweapontype(sd);
-        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.shield, id, n);
+        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.look.shield, id, n);
     }
 
-    equipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);
-    equipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);
-    equipPos(EQP_HEAD_MID, head_mid, LOOK_HEAD_MID);
-    equipPos(EQP_GARMENT, robe, LOOK_ROBE);
+    equipPos(EQP_HEAD_LOW, look.head_bottom, LOOK_HEAD_BOTTOM);
+    equipPos(EQP_HEAD_TOP, look.head_top, LOOK_HEAD_TOP);
+    equipPos(EQP_HEAD_MID, look.head_mid, LOOK_HEAD_MID);
+    equipPos(EQP_GARMENT, look.robe, LOOK_ROBE);
     equipPos2(EQP_SHOES, LOOK_SHOES);
     equipPos2(EQP_COSTUME_HEAD_TOP, 13);
     equipPos2(EQP_COSTUME_HEAD_MID, 14);
@@ -197,24 +203,26 @@ void epc_unequipitem_pos_pre(TBL_PC **sdPtr,
 
     if (pos & EQP_HAND_R)
     {
-        sd->weapontype1 = 0;
-        sd->status.weapon = sd->weapontype2;
+        sd->weapontype1 = W_FIST;
         pc->calcweapontype(sd);
-        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.weapon, 0, n);
+        sd->status.look.weapon = 0;
+        eclif_changelook2(&sd->bl, LOOK_WEAPON, sd->status.look.weapon, 0, n);
         if (!battle->bc->dancing_weaponswitch_fix)
             status_change_end(&sd->bl, SC_DANCING, INVALID_TIMER);
     }
     if (pos & EQP_HAND_L)
     {
-        sd->status.shield = sd->weapontype2 = 0;
+        sd->has_shield = false;
+        sd->status.look.shield = 0;
+        sd->weapontype2 = W_FIST;
         pc->calcweapontype(sd);
-        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.shield, 0, n);
+        eclif_changelook2(&sd->bl, LOOK_SHIELD, sd->status.look.shield, 0, n);
     }
 
-    unequipPos(EQP_HEAD_LOW, head_bottom, LOOK_HEAD_BOTTOM);
-    unequipPos(EQP_HEAD_TOP, head_top, LOOK_HEAD_TOP);
-    unequipPos(EQP_HEAD_MID, head_mid, LOOK_HEAD_MID);
-    unequipPos(EQP_GARMENT, robe, LOOK_ROBE);
+    unequipPos(EQP_HEAD_LOW, look.head_bottom, LOOK_HEAD_BOTTOM);
+    unequipPos(EQP_HEAD_TOP, look.head_top, LOOK_HEAD_TOP);
+    unequipPos(EQP_HEAD_MID, look.head_mid, LOOK_HEAD_MID);
+    unequipPos(EQP_GARMENT, look.robe, LOOK_ROBE);
     unequipPos2(EQP_SHOES, LOOK_SHOES);
     unequipPos2(EQP_COSTUME_HEAD_TOP, 13);
     unequipPos2(EQP_COSTUME_HEAD_MID, 14);
