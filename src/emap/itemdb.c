@@ -146,7 +146,10 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
         {
             const char *name = config_setting_name(it2);
             if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
+            {
+                ShowWarning("Unknown field AllowCards for item %s\n", item->name);
                 continue;
+            }
             const int val = libconfig->setting_get_int(it2);
 
             VECTOR_ENSURE(data->allowedCards, 1, 1);
@@ -177,7 +180,10 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
         {
             const char *name = config_setting_name(it2);
             if (name && strncmp(name, "id", 2) && strncmp(name, "Id", 2))
+            {
+                ShowWarning("Unknown field AllowAmmo for item %s\n", item->name);
                 continue;
+            }
             VECTOR_ENSURE(data->allowedAmmo, 1, 1);
             VECTOR_PUSH(data->allowedAmmo, atoi(name + 2));
             cnt ++;
