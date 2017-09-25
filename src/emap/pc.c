@@ -37,8 +37,8 @@
 int langScriptId;
 int mountScriptId;
 
-int epc_readparam_pre(const TBL_PC **sdPtr,
-                      int *type)
+int64 epc_readparam_pre(const TBL_PC **sdPtr,
+                        int *type)
 {
     if (*type == Const_ClientVersion)
     {

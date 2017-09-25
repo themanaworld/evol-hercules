@@ -9,8 +9,8 @@ enum VarConst
     Const_ClientVersion = 10000
 };
 
-int epc_readparam_pre(const TBL_PC **sdPtr,
-                      int *type);
+int64 epc_readparam_pre(const TBL_PC **sdPtr,
+                        int *type);
 
 int epc_setregistry_pre(TBL_PC **sdPtr,
                         int64 *reg,
