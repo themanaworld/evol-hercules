@@ -813,7 +813,7 @@ BUILDIN(setNpcSex)
         sex = script_getnum(st, 3);
     }
 
-    if (!nd || !nd->vd)
+    if (!nd)
     {
         ShowWarning("npc not found\n");
         script->reportsrc(st);
@@ -821,7 +821,7 @@ BUILDIN(setNpcSex)
     }
 
     clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
-    nd->vd->sex = sex;
+    nd->vd.sex = sex;
     clif->spawn(&nd->bl);
     return true;
 }
@@ -1386,7 +1386,7 @@ BUILDIN(npcSit)
         script->reportsrc(st);
         return false;
     }
-    nd->vd->dead_sit = 2;
+    nd->vd.dead_sit = 2;
     clif->sitting(&nd->bl);
     return true;
 }
@@ -1416,7 +1416,7 @@ BUILDIN(npcStand)
         script->reportsrc(st);
         return false;
     }
-    nd->vd->dead_sit = 0;
+    nd->vd.dead_sit = 0;
     clif->standing(&nd->bl);
     return true;
 }
@@ -1440,7 +1440,7 @@ BUILDIN(npcWalkTo)
         {
             status_calc_npc(nd, SCO_NONE);
         }
-        nd->vd->dead_sit = 0;
+        nd->vd.dead_sit = 0;
         script_pushint(st, unit->walktoxy(&nd->bl,x,y,0));
         return true;
     }

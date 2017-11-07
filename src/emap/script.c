@@ -145,7 +145,7 @@ void eset_reg_npcscope_num_pre(struct script_state **stPtr,
     {
         getExt1();
         clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
-        nd->vd->sex = *val;
+        nd->vd.sex = *val;
         clif->spawn(&nd->bl);
         hookStop();
     }
@@ -206,14 +206,14 @@ void eset_reg_npcscope_num_pre(struct script_state **stPtr,
     else if (!strcmp(name, ".sit"))
     {
         getExt1();
-        nd->vd->dead_sit = (*val) ? 2 : 0;
+        nd->vd.dead_sit = (*val) ? 2 : 0;
         clif->sitting(&nd->bl);
         hookStop();
     }
     else if (!strcmp(name, ".stand"))
     {
         getExt1();
-        nd->vd->dead_sit = (*val) ? 0 : 2;
+        nd->vd.dead_sit = (*val) ? 0 : 2;
         clif->sitting(&nd->bl);
         hookStop();
     }
@@ -258,7 +258,7 @@ int eget_val_npcscope_num_pre(struct script_state **stPtr,
     {
         getExt1Return(0);
         hookStop();
-        return nd->vd->sex;
+        return nd->vd.sex;
     }
     else if (!strcmp(name, ".distance"))
     {
@@ -306,13 +306,13 @@ int eget_val_npcscope_num_pre(struct script_state **stPtr,
     {
         getExt1Return(0);
         hookStop();
-        return nd->vd->dead_sit == 2 ? 1 : 0;
+        return nd->vd.dead_sit == 2 ? 1 : 0;
     }
     else if (!strcmp(name, ".stand"))
     {
         getExt1Return(0);
         hookStop();
-        return nd->vd->dead_sit == 0 ? 1 : 0;
+        return nd->vd.dead_sit == 0 ? 1 : 0;
     }
     else if (!strcmp(name, ".walkmask"))
     {

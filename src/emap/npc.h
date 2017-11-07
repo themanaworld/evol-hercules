@@ -34,7 +34,4 @@ int enpc_get_var_num(const TBL_NPC *const npc,
 int enpc_unload_pre(struct npc_data** ndPtr,
                     bool *singlePtr);
 
-struct view_data *enpc_get_viewdata_post(struct view_data *retVal,
-                                         int class_);
-
 #endif  // EVOL_MAP_NPC

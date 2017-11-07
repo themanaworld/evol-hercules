@@ -155,6 +155,8 @@ bool enpc_db_checkid_pre(const int *idPtr)
         return true;
     if (id >= MAX_NPC_CLASS2_START && id < MAX_NPC_CLASS2_END) // Second range
         return true;
+    if (pc->db_checkid(id))
+        return true;
     // Anything else is invalid
     return false;
 }
@@ -266,7 +268,6 @@ int enpc_unload_pre(struct npc_data** ndPtr,
 {
     struct npc_data *nd = *ndPtr;
     nullpo_ret(nd);
-    aFree(nd->vd);
     if (nd->subtype == SCRIPT)
     {
         if (nd->src_id != 0)
@@ -294,15 +295,4 @@ int enpc_unload_pre(struct npc_data** ndPtr,
         }
     }
     return 0;
-}
-
-struct view_data *enpc_get_viewdata_post(struct view_data *retVal,
-                                         int class_ __attribute__ ((unused)))
-{
-    nullpo_retr(NULL, retVal);
-
-    struct view_data *vd;
-    CREATE(vd, struct view_data, 1);
-    memcpy(vd, retVal, sizeof(struct view_data));
-    return vd;
 }

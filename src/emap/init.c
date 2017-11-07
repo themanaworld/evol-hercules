@@ -280,7 +280,6 @@ HPExport void plugin_init (void)
     addHookPre(script, hardcoded_constants, escript_hardcoded_constants_pre);
     addHookPre(script, run_use_script, escript_run_use_script_pre);
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
-    addHookPre(status, set_viewdata, estatus_set_viewdata_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
 
     addHookPost(battle, calc_weapon_attack, ebattle_calc_weapon_attack_post);
@@ -310,7 +309,6 @@ HPExport void plugin_init (void)
     addHookPost(map, addflooritem, emap_addflooritem_post);
     addHookPost(mob, read_db_mode_sub, emob_read_db_mode_sub_post);
     addHookPost(mob, spawn_dataset, emob_spawn_dataset_post);
-    addHookPost(npc, get_viewdata, enpc_get_viewdata_post);
     addHookPost(skill, check_condition_castend, eskill_check_condition_castend_post);
     addHookPost(skill, get_index, eskill_get_index_post);
     addHookPost(pc, additem, epc_additem_post);

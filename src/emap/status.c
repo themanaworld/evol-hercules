@@ -60,17 +60,6 @@ int estatus_init_post(int retVal,
     return retVal;
 }
 
-void estatus_set_viewdata_pre(struct block_list **blPtr,
-                              int *classPtr_ __attribute__ ((unused)))
-{
-    struct block_list *bl = *blPtr;
-    if (bl->type != BL_NPC)
-        return;
-    TBL_NPC *const npc = (TBL_NPC*)bl;
-    aFree(npc->vd);
-    npc->vd = NULL;
-}
-
 void estatus_set_viewdata_post(struct block_list *bl,
                                int class_ __attribute__ ((unused)))
 {
@@ -80,10 +69,10 @@ void estatus_set_viewdata_post(struct block_list *bl,
         return;
     TBL_NPC *const npc = (TBL_NPC*)bl;
     struct NpcdExt *data = npcd_get(npc);
-    if (data && data->init == false && npc->vd)
+    if (data && data->init == false)
     {
         data->init = true;
-        npc->vd->sex = 3;
+        npc->vd.sex = 3;
         if (npc->subtype == SCRIPT)
         {
             if (npc->u.scr.script)
