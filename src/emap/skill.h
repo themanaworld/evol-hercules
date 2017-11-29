@@ -5,7 +5,7 @@
 #define EVOL_MAP_SKILL
 
 int eskill_get_index_post(int retVal,
-                          uint16 skill_id);
+                          int skill_id);
 
 int eskill_check_condition_castend_post(int retVal,
                                         TBL_PC* sd,

@@ -44,7 +44,7 @@ void commonClean(void)
 
 void common_online(void)
 {
-    checkVar(MAX_SKILL, 1532);
+    checkVar(MAX_SKILL_DB, 1532);
     checkVar(MAX_SKILL_ID, 20022);
     checkVar(SC_MAX, 658);
     checkVar(SI_MAX, 971);

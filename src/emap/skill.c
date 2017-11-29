@@ -31,7 +31,7 @@
 #include "plugins/HPMHooking.h"
 
 int eskill_get_index_post(int retVal,
-                          uint16 skill_id)
+                          int skill_id)
 {
     if (skill_id >= EVOL_FIRST_SKILL && skill_id < EVOL_FIRST_SKILL + MAX_EVOL_SKILLS)
     {

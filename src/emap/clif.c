@@ -1022,6 +1022,10 @@ void eclif_useskill(struct block_list* bl,
     {
         clif->send(buf, len, bl, AREA);
     }
+#if PACKETVER >= 20151223
+   if ((skill->get_inf2(skill_id) & INF2_SHOW_SKILL_SCALE) != 0)
+       clif->skill_scale(bl, src_id, bl->x, bl->y, skill_id, skill_lv, casttime);
+#endif
 }
 
 void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
@@ -1038,11 +1042,11 @@ void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
     if (!fd)
         return;
 
-    WFIFOHEAD(fd, MAX_SKILL * 41 + 4);
+    WFIFOHEAD(fd, MAX_SKILL_DB * 41 + 4);
     WFIFOW(fd, 0) = 0x10f;
     int len = 4;
     int i;
-    for (i = 0; i < MAX_SKILL; i++)
+    for (i = 0; i < MAX_SKILL_DB; i++)
     {
         int id = sd->status.skill[i].id;
         if (id != 0)
@@ -1078,7 +1082,7 @@ void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
     WFIFOSET(fd, len);
 
     // workaround for bugreport:5348; send the remaining skills one by one to bypass packet size limit
-    for ( ; i < MAX_SKILL; i++)
+    for ( ; i < MAX_SKILL_DB; i++)
     {
         int id = sd->status.skill[i].id;
         if (id != 0)
@@ -1163,7 +1167,7 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
 
     int skill_id = *skill_idPtr;
     int idx = skill->get_index(skill_id);
-    Assert_retv(idx >= 0 && idx < MAX_SKILL);
+    Assert_retv(idx >= 0 && idx < MAX_SKILL_DB);
     int inf = *infPtr;
 
     const int fd = sd->fd;
