@@ -20,13 +20,22 @@
 
 void send_server_version(int fd)
 {
-    WFIFOHEAD(fd, 4 + 8);
+    const int sz = 20;
+    WFIFOHEAD(fd, sz);
     WFIFOW(fd, 0) = 0x7531;
-    WFIFOW(fd, 2) = 18;
+    WFIFOW(fd, 2) = sz;
     WFIFOL(fd, 4) = 0;   // unused
-    WFIFOL(fd, 8) = 19;  // plugin version
+    WFIFOL(fd, 8) = 20;  // plugin version
     WFIFOL(fd, 12) = serverPacketVersion;  // server packet version
     WFIFOW(fd, 16) = evolPacketOffset;     // packet id offset
+    int flags = 0;
+#ifdef PACKETVER_RE
+    flag |= 1;
+#endif
+#ifdef PACKETVER_ZERO
+    flag |= 2;
+#endif
+    WFIFOW(fd, 18) = flags;
 
     WFIFOSET(fd, WFIFOW(fd,2));
 }
