@@ -343,7 +343,7 @@ int pass_ok(const char *password, const char *crypted)
     if (!password || !crypted)
         return 0;
 
-    char buf[40], *salt=buf+1;
+    char buf[41], *salt = buf + 1;
 
     strncpy(buf, crypted, 40);
     buf[39] = 0;
