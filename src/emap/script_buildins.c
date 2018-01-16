@@ -1204,7 +1204,7 @@ BUILDIN(successRemoveCardsIndex)
             {
                 // get back the cart in inventory
                 clif->additem(sd, 0, 0, flag);
-                map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+                map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
             }
         }
     }
@@ -1261,7 +1261,7 @@ BUILDIN(failedRemoveCardsIndex)
                 if ((flag = pc->additem(sd, &item_tmp, 1, LOG_TYPE_SCRIPT)))
                 {
                     clif->additem(sd, 0, 0, flag);
-                    map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0);
+                    map->addflooritem(&sd->bl, &item_tmp, 1, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, false);
                 }
             }
         }

@@ -74,7 +74,8 @@ int emap_addflooritem_post(int retVal,
                            int first_charid __attribute__ ((unused)),
                            int second_charid __attribute__ ((unused)),
                            int third_charid __attribute__ ((unused)),
-                           int flags __attribute__ ((unused)))
+                           int flags __attribute__ ((unused)),
+                           bool showdropeffect __attribute__ ((unused)))
 {
     TBL_ITEM* fitem = (TBL_ITEM*)idb_get(map->id_db, retVal);
     if (fitem)

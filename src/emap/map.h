@@ -14,7 +14,8 @@ int emap_addflooritem_post(int retVal,
                            int first_charid,
                            int second_charid,
                            int third_charid,
-                           int flags);
+                           int flags,
+                           bool showdropeffect);
 void emap_online_list(int fd);
 int emap_getcellp_pre(struct map_data **mPtr,
                       const struct block_list **blPtr,
