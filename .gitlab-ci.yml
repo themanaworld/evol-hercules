@@ -69,13 +69,13 @@ clang-3.9-i386:
 gcc-snapshot_lto-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-lto
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-snapshot-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
+  - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
 gcc-4.8-sanitize:
@@ -94,13 +94,13 @@ gcc-4.9-sanitize:
 gcc-5-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
 gcc-6-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc6.sh --enable-werror
+  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
 gcc-4.9_lto-sanitize:
@@ -112,13 +112,13 @@ gcc-4.9_lto-sanitize:
 gcc-5_lto-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-6_lto-sanitize:
   stage: test
   script:
-  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto
+  - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-4.8-lto:
@@ -163,7 +163,7 @@ gcc-4.8_stable_lto-sanitize:
 gcc-5_unstable_lto-sanitize:
   stage: legacy
   script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto
+  - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 # reports
