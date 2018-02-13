@@ -208,7 +208,9 @@ void send_pc_info(struct block_list* bl1,
         return;
 
     int len = 14;
-    if (bl1 == bl2 || tdata->clientVersion >= 21)
+    if (tdata->clientVersion >= 24)
+        len = 20;
+    else if (bl1 == bl2 || tdata->clientVersion >= 21)
         len = 16;
     char buf[len];
     WBUFW (buf, 0) = 0xb0a + evolPacketOffset;
@@ -221,6 +223,14 @@ void send_pc_info(struct block_list* bl1,
     WBUFW (buf, 12) = data->mount;
     if (bl1 == bl2 || tdata->clientVersion >= 21)
         WBUFW (buf, 14) = data->language;
+    if (tdata->clientVersion >= 24)
+    {
+        int clanId = 0;
+        struct clan *const clan = tsd->clan;
+        if (clan != NULL)
+            clanId = clan->clan_id;
+        WBUFL (buf, 16) = clanId;
+    }
 
     clif->send(&buf, (int)sizeof(buf), bl2, target);
 }
