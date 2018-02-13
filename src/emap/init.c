@@ -19,6 +19,7 @@
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/clan.h"
 #include "map/clif.h"
 #include "map/duel.h"
 #include "map/elemental.h"
@@ -47,6 +48,7 @@
 #include "emap/atcommand.h"
 #include "emap/battle.h"
 #include "emap/battleground.h"
+#include "emap/clan.h"
 #include "emap/clif.h"
 #include "emap/config.h"
 #include "emap/console.h"
@@ -286,6 +288,8 @@ HPExport void plugin_init (void)
     addHookPost(battle, calc_magic_attack, ebattle_calc_weapon_attack_post);
     addHookPost(battle, calc_misc_attack, ebattle_calc_weapon_attack_post);
     addHookPost(battle, check_arrows, ebattle_check_arrows_post);
+    addHookPost(clan, join, eclan_join_post);
+    addHookPost(clan, leave, eclan_leave_post);
     addHookPost(clif, addcards, eclif_addcards_post);
     addHookPost(clif, addcards2, eclif_addcards2_post);
     addHookPost(clif, getareachar_unit, eclif_getareachar_unit_post);
