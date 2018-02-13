@@ -15,5 +15,7 @@ aptget_install gcc-snapshot \
 do_init
 build_init
 
+# look like in gcc snapshot bug in this flag
+export CFLAGS="-Wno-restrict"
 run_configure $*
 run_make
