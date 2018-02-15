@@ -97,25 +97,56 @@ int format_sub(struct script_state* st, int translate)
     }
 
     char *ptr = line;
-    int sz = (int)strlen(line);
-    while (script_hasdata(st, idx))
+
+    if (strstr(ptr, "@@"))
     {
-        char *tmp = strstr(ptr, "@@");
-        if (!tmp)
-            break;
-        const char *item = script_getstr(st, idx);
-        int len = (int)strlen(item);
-        if (len > 50)
-            break;
-        sz += len - 2;
-        if (sz > 490)
-            break;
-        memmove(tmp + len, tmp + 2, strlen(tmp + 2) + 1);
-        memcpy(tmp, item, len);
-        ptr = tmp + len;
-        idx ++;
+        int sz = (int)strlen(line);
+
+        while (script_hasdata(st, idx))
+        {
+            char *tmp = strstr(ptr, "@@");
+            if (!tmp)
+                break;
+            const char *item = script_getstr(st, idx);
+            int len = (int)strlen(item);
+            if (len > 50)
+                break;
+            sz += len - 2;
+            if (sz > 490)
+                break;
+            memmove(tmp + len, tmp + 2, strlen(tmp + 2) + 1);
+            memcpy(tmp, item, len);
+            ptr = tmp + len;
+            idx ++;
+        }
+
+        script_pushstr(st, line);
+    }
+    else
+    {
+        char start = (translate == 2 ? 3 : 2);
+
+        if (script_hasdata(st, start + 1))
+        {
+            struct StringBuf pfbuf;
+            StrBuf->Init(&pfbuf);
+
+            // modify the string directly in the stack, for use by script_sprintf
+            st->stack->stack_data[st->start + start].u.str = line;
+
+            if (!script->sprintf(st, start, &pfbuf))
+            {
+                StrBuf->Destroy(&pfbuf);
+                script_pushstr(st, line);
+                return false;
+            }
+
+            strcpy(line, StrBuf->Value(&pfbuf));
+            StrBuf->Destroy(&pfbuf);
+        }
+
+        script_pushstr(st, line);
     }
 
-    script_pushstr(st, line);
     return 0;
 }
