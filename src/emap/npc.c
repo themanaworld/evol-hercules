@@ -24,6 +24,7 @@
 #include "emap/data/npcd.h"
 #include "emap/struct/mapdext.h"
 #include "emap/struct/npcdext.h"
+#include "emap/map.h"
 #include "emap/npc.h"
 
 void enpc_parse_unknown_mapflag_pre(const char **namePtr,
