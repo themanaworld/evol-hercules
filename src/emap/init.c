@@ -194,6 +194,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getitemoptionvaluebyindex", "ii", getItemOptionValueByIndex);
     addScriptCommand("getitemoptionparambyindex", "ii", getItemOptionParamByIndex);
     addScriptCommand("setitemoptionbyindex", "iii*", setItemOptionByIndex);
+    addScriptCommand("isinstance", "i", isInstance);
 
     do_init_langs();
 

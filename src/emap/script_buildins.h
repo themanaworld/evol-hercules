@@ -93,5 +93,6 @@ BUILDIN(getItemOptionIdByIndex);
 BUILDIN(getItemOptionValueByIndex);
 BUILDIN(getItemOptionParamByIndex);
 BUILDIN(setItemOptionByIndex);
+BUILDIN(isInstance);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS

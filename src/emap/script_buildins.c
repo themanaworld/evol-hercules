@@ -13,6 +13,7 @@
 #include "common/timer.h"
 #include "map/chat.h"
 #include "map/chrif.h"
+#include "map/instance.h"
 #include "map/npc.h"
 #include "map/pc.h"
 #include "map/script.h"
@@ -2244,5 +2245,12 @@ BUILDIN(setItemOptionByIndex)
     clif->additem(sd, n, 1, 0);
     logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n], sd->inventory_data[n]);
 
+    return true;
+}
+
+BUILDIN(isInstance)
+{
+    const int instance_id = script_getnum(st, 2);
+    script_pushint(st, instance->valid(instance_id) ? 1 : 0);
     return true;
 }
