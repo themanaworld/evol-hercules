@@ -603,6 +603,12 @@ void map_alwaysVisible_send(TBL_PC *sd)
     {
         const int id = VECTOR_INDEX(data->npcs, f);
         TBL_NPC *npc = map->id2nd(id);
+        if (npc == NULL)
+        {
+            ShowError("npc present in always visible list "
+                "but not in map: id=%d\n", id);
+            continue;
+        }
         clif->set_unit_idle(&npc->bl, sd, SELF);
         clif->charnameack(sd->fd, &npc->bl);
     }

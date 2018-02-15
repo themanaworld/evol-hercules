@@ -268,6 +268,7 @@ int enpc_unload_pre(struct npc_data** ndPtr,
 {
     struct npc_data *nd = *ndPtr;
     nullpo_ret(nd);
+    map_alwaysVisible_delete(&nd->bl);
     if (nd->subtype == SCRIPT)
     {
         if (nd->src_id != 0)
