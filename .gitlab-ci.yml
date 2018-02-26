@@ -94,6 +94,18 @@ clang-6-i386:
   - ./tools/ci/jobs/clang6.sh --enable-werror
   image: vicamo/debian:sid-i386
 
+clang-7:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang7.sh --enable-werror
+  image: debian:unstable
+
+clang-7-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang7.sh --enable-werror
+  image: vicamo/debian:sid-i386
+
 # tests
 
 gcc-snapshot_lto-sanitize:
