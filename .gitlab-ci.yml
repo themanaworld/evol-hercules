@@ -52,11 +52,23 @@ gcc-6:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
   image: debian:unstable
 
+gcc-6-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc6.sh --enable-werror
+  image: vicamo/debian:sid-i386
+
 gcc-7:
   stage: build
   script:
   - ./tools/ci/jobs/gcc7.sh --enable-werror
   image: debian:unstable
+
+gcc-7-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc7.sh --enable-werror
+  image: vicamo/debian:sid-i386
 
 clang-3.9:
   stage: build
