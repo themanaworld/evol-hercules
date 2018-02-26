@@ -1965,6 +1965,12 @@ BUILDIN(htSize)
     return true;
 }
 
+BUILDIN(htExists)
+{
+    int64 id = script_getnum(st, 2);
+    script_pushint(st, htreg->hashtable_exists(id));
+}
+
 BUILDIN(htIterator)
 {
     int64 id = script_getnum(st, 2);

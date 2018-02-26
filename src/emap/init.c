@@ -181,6 +181,7 @@ HPExport void plugin_init (void)
     addScriptCommand("htclear", "i", htClear);
     addScriptCommand("htdelete", "i", htDelete);
     addScriptCommand("htsize", "i", htSize);
+    addScriptCommand("htexists", "i", htExists);
     addScriptCommand("htiterator", "i", htIterator);
     addScriptCommand("htinextkey", "i", htiNextKey);
     addScriptCommand("hticheck", "i", htiCheck);

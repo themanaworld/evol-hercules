@@ -80,6 +80,7 @@ BUILDIN(htPut);
 BUILDIN(htClear);
 BUILDIN(htDelete);
 BUILDIN(htSize);
+BUILDIN(htExists);
 BUILDIN(htIterator);
 BUILDIN(htiNextKey);
 BUILDIN(htiCheck);
