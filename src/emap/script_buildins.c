@@ -1969,6 +1969,7 @@ BUILDIN(htExists)
 {
     int64 id = script_getnum(st, 2);
     script_pushint(st, htreg->hashtable_exists(id));
+    return true;
 }
 
 BUILDIN(htIterator)
