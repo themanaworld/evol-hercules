@@ -97,46 +97,25 @@ int format_sub(struct script_state* st, int translate)
     }
 
     char *ptr = line;
-
-    if (strstr(ptr, "@@"))
+    int sz = (int)strlen(line);
+    while (script_hasdata(st, idx))
     {
-        int sz = (int)strlen(line);
-
-        while (script_hasdata(st, idx))
-        {
-            char *tmp = strstr(ptr, "@@");
-            if (!tmp)
-                break;
-            const char *item = script_getstr(st, idx);
-            int len = (int)strlen(item);
-            if (len > 50)
-                break;
-            sz += len - 2;
-            if (sz > 490)
-                break;
-            memmove(tmp + len, tmp + 2, strlen(tmp + 2) + 1);
-            memcpy(tmp, item, len);
-            ptr = tmp + len;
-            idx ++;
-        }
-
-        script_pushstr(st, line);
-    }
-    else
-    {
-        struct StringBuf pfbuf;
-        StrBuf->Init(&pfbuf);
-
-        if (!script->sprintf(st, translate == 2 ? 3 : 2, &pfbuf))
-        {
-            StrBuf->Destroy(&pfbuf);
-            script_pushstr(st, line);
-            return false;
-        }
-
-        script_pushstrcopy(st, StrBuf->Value(&pfbuf));
-        StrBuf->Destroy(&pfbuf);
+        char *tmp = strstr(ptr, "@@");
+        if (!tmp)
+            break;
+        const char *item = script_getstr(st, idx);
+        int len = (int)strlen(item);
+        if (len > 50)
+            break;
+        sz += len - 2;
+        if (sz > 490)
+            break;
+        memmove(tmp + len, tmp + 2, strlen(tmp + 2) + 1);
+        memcpy(tmp, item, len);
+        ptr = tmp + len;
+        idx ++;
     }
 
+    script_pushstr(st, line);
     return 0;
 }
