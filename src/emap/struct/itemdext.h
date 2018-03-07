@@ -48,6 +48,7 @@ struct ItemdExt
     int16_t subY;
     bool allowPickup;
     bool charmItem;
+    bool identified;
 };
 
 #endif  // EVOL_MAP_ITEMDEXT

@@ -12,6 +12,7 @@
 #include "common/db.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/nullpo.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "map/itemdb.h"
@@ -93,6 +94,8 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
         data->requiredSkill = i32;
     if (libconfig->setting_lookup_bool(it, "Charm", &i32) && i32 >= 0)
         data->charmItem = i32 ? true : false;
+    if (libconfig->setting_lookup_bool(it, "Identified", &i32) && i32 >= 0)
+        data->identified = i32 ? true : false;
     if ((t = libconfig->setting_get_member(it, "MaxFloorOffset")))
     {
         if (config_setting_is_aggregate(t))
@@ -212,4 +215,25 @@ void edestroy_item_data_pre(struct item_data **selfPtr,
         script->free_code(data->insertScript);
     VECTOR_CLEAR(data->allowedCards);
     VECTOR_CLEAR(data->allowedAmmo);
+}
+
+int eitemdb_isidentified(int nameid)
+{
+    struct item_data *item = itemdb->exists(nameid);
+    nullpo_ret(item);
+
+    struct ItemdExt *data = itemd_get(item);
+    if (!data)
+        return 0;
+    return data->identified;
+}
+
+int eitemdb_isidentified2(struct item_data *item)
+{
+    nullpo_ret(item);
+
+    struct ItemdExt *data = itemd_get(item);
+    if (!data)
+        return 0;
+    return data->identified;
 }

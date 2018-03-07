@@ -12,4 +12,8 @@ void eitemdb_readdb_additional_fields_pre(int *itemid,
 void edestroy_item_data_pre(struct item_data **selfPtr,
                             int *free_selfPtr);
 
+int eitemdb_isidentified(int nameid);
+
+int eitemdb_isidentified2(struct item_data *item);
+
 #endif  // EVOL_MAP_ITEMDB

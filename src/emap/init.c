@@ -347,6 +347,8 @@ HPExport void plugin_init (void)
     clif->pWalkToXY = eclif_parse_WalkToXY;
     clif->pNpcStringInput = eclif_parse_NpcStringInput;
     pc->jobchange = epc_jobchange;
+    itemdb->isidentified = eitemdb_isidentified;
+    itemdb->isidentified2 = eitemdb_isidentified2;
 
     langScriptId = script->add_str("Lang");
     mountScriptId = script->add_str("mount");
