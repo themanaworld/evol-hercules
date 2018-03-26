@@ -1991,12 +1991,51 @@ BUILDIN(htIterator)
         return false; \
     }
 
+BUILDIN(htiFirstKey)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    const char * key = htreg->iterator_firstkey(id);
+    if (key)
+        script_pushstrcopy(st, key);
+    else
+        script_pushstrcopy(st, "");
+    return true;
+}
+
+BUILDIN(htiLastKey)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    const char * key = htreg->iterator_lastkey(id);
+    if (key)
+        script_pushstrcopy(st, key);
+    else
+        script_pushstrcopy(st, "");
+    return true;
+}
+
 BUILDIN(htiNextKey)
 {
     int64 id = script_getnum(st, 2);
     checkHtIteratorExists(id);
 
     const char * key = htreg->iterator_nextkey(id);
+    if (key)
+        script_pushstrcopy(st, key);
+    else
+        script_pushstrcopy(st, "");
+    return true;
+}
+
+BUILDIN(htiPrevKey)
+{
+    int64 id = script_getnum(st, 2);
+    checkHtIteratorExists(id);
+
+    const char * key = htreg->iterator_prevkey(id);
     if (key)
         script_pushstrcopy(st, key);
     else

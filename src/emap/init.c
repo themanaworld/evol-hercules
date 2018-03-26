@@ -183,7 +183,10 @@ HPExport void plugin_init (void)
     addScriptCommand("htsize", "i", htSize);
     addScriptCommand("htexists", "i", htExists);
     addScriptCommand("htiterator", "i", htIterator);
+    addScriptCommand("htifirstkey", "i", htiFirstKey);
+    addScriptCommand("htilastkey", "i", htiLastKey);
     addScriptCommand("htinextkey", "i", htiNextKey);
+    addScriptCommand("htiprevkey", "i", htiPrevKey);
     addScriptCommand("hticheck", "i", htiCheck);
     addScriptCommand("htidelete", "i", htiDelete);
     addScriptCommand("setfakecells", "iii??", setFakeCells);

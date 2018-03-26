@@ -134,6 +134,32 @@ bool htreg_iterator_exists(int64 id)
     return i64db_exists(htreg->iterators, id);
 }
 
+const char* htreg_iterator_firstkey(int64 id)
+{
+    struct DBIterator *it = i64db_get(htreg->iterators, id);
+    if (it)
+    {
+        union DBKey key;
+        it->first(it, &key);
+        if (dbi_exists(it))
+            return key.str;
+    }
+    return NULL;
+}
+
+const char* htreg_iterator_lastkey(int64 id)
+{
+    struct DBIterator *it = i64db_get(htreg->iterators, id);
+    if (it)
+    {
+        union DBKey key;
+        it->last(it, &key);
+        if (dbi_exists(it))
+            return key.str;
+    }
+    return NULL;
+}
+
 const char* htreg_iterator_nextkey(int64 id)
 {
     struct DBIterator *it = i64db_get(htreg->iterators, id);
@@ -141,6 +167,19 @@ const char* htreg_iterator_nextkey(int64 id)
     {
         union DBKey key;
         it->next(it, &key);
+        if (dbi_exists(it))
+            return key.str;
+    }
+    return NULL;
+}
+
+const char* htreg_iterator_prevkey(int64 id)
+{
+    struct DBIterator *it = i64db_get(htreg->iterators, id);
+    if (it)
+    {
+        union DBKey key;
+        it->prev(it, &key);
         if (dbi_exists(it))
             return key.str;
     }
@@ -212,5 +251,8 @@ void htreg_defaults(void)
     htreg->destroy_iterator = htreg_destroy_iterator;
     htreg->iterator_check = htreg_iterator_check;
     htreg->iterator_exists = htreg_iterator_exists;
+    htreg->iterator_firstkey = htreg_iterator_firstkey;
+    htreg->iterator_lastkey = htreg_iterator_lastkey;
     htreg->iterator_nextkey = htreg_iterator_nextkey;
+    htreg->iterator_prevkey = htreg_iterator_prevkey;
 }

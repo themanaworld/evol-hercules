@@ -31,7 +31,10 @@ struct htreg_interface
     bool (*destroy_iterator) (int64 id);
     bool (*iterator_check) (int64 id);
     bool (*iterator_exists) (int64 id);
+    const char* (*iterator_firstkey) (int64 id);
+    const char* (*iterator_lastkey) (int64 id);
     const char* (*iterator_nextkey) (int64 id);
+    const char* (*iterator_prevkey) (int64 id);
 };
 
 void htreg_defaults(void);
