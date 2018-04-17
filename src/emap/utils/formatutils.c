@@ -134,7 +134,7 @@ int format_sub(struct script_state* st, int translate)
             // modify the string directly in the stack, for use by script_sprintf
             st->stack->stack_data[st->start + start].u.str = line;
 
-            if (!script->sprintf(st, start, &pfbuf))
+            if (!script->sprintf_helper(st, start, &pfbuf))
             {
                 StrBuf->Destroy(&pfbuf);
                 script_pushstr(st, line);
