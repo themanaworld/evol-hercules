@@ -235,3 +235,13 @@ int estatus_change_end__post(int retVal,
 */
     return retVal;
 }
+
+void estatus_calc_pc_recover_hp_pre(struct map_session_data **sdPtr __attribute__ ((unused)),
+                                    struct status_data **bstatusPtr)
+{
+    struct status_data *bstatus = *bstatusPtr;
+    nullpo_retv(bstatus);
+
+    bstatus->hp = APPLY_RATE(bstatus->max_hp, battle->bc->restart_hp_rate);
+    hookStop();
+}

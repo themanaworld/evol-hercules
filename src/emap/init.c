@@ -293,6 +293,7 @@ HPExport void plugin_init (void)
     addHookPre(script, hardcoded_constants, escript_hardcoded_constants_pre);
     addHookPre(script, run_use_script, escript_run_use_script_pre);
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
+    addHookPre(status, calc_pc_recover_hp, estatus_calc_pc_recover_hp_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
 
     addHookPost(battle, calc_weapon_attack, ebattle_calc_weapon_attack_post);

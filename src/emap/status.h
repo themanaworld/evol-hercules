@@ -42,4 +42,7 @@ int estatus_change_end__post(int retVal,
                              enum sc_type type, int tid,
                              const char* file, int line);
 
+void estatus_calc_pc_recover_hp_pre(struct map_session_data **sdPtr,
+                                    struct status_data **bstatusPtr);
+
 #endif  // EVOL_MAP_STATUS
