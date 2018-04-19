@@ -136,4 +136,7 @@ void epc_calc_skilltree_bonus_pre(struct map_session_data **sdPtr,
 
 void epc_checkbaselevelup_sc_pre(struct map_session_data **sdPtr);
 
+bool epc_resetskill_job_pre(struct map_session_data** sdPtr,
+                            int *indexPtr);
+
 #endif  // EVOL_MAP_PC

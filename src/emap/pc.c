@@ -1052,3 +1052,12 @@ void epc_checkbaselevelup_sc_pre(struct map_session_data **sdPtr __attribute__ (
 {
     hookStop();
 }
+
+
+// disable job based resets
+bool epc_resetskill_job_pre(struct map_session_data** sdPtr __attribute__ ((unused)),
+                            int *indexPtr __attribute__ ((unused)))
+{
+    hookStop();
+    return false;
+}
