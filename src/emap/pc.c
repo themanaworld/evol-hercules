@@ -1061,3 +1061,9 @@ bool epc_resetskill_job_pre(struct map_session_data** sdPtr __attribute__ ((unus
     hookStop();
     return false;
 }
+
+bool epc_isDeathPenaltyJob_pre(uint16 *jobPtr __attribute__ ((unused)))
+{
+    hookStop();
+    return true;
+}
