@@ -1040,3 +1040,10 @@ void epc_calc_skilltree_clear_pre(struct map_session_data **sdPtr)
     }
     hookStop();
 }
+
+// disable job based bonuses
+void epc_calc_skilltree_bonus_pre(struct map_session_data **sdPtr __attribute__ ((unused)),
+                                  int *classidxPtr __attribute__ ((unused)))
+{
+    hookStop();
+}
