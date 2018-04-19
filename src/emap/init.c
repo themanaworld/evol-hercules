@@ -239,6 +239,7 @@ HPExport void plugin_init (void)
     addHookPre(pc, checkbaselevelup_sc, epc_checkbaselevelup_sc_pre);
     addHookPre(pc, resetskill_job, epc_resetskill_job_pre);
     addHookPre(pc, isDeathPenaltyJob, epc_isDeathPenaltyJob_pre);
+    addHookPre(pc, read_skill_job_skip, epc_read_skill_job_skip_pre);
     addHookPre(mob, deleteslave_sub, emob_deleteslave_sub_pre);
     addHookPre(mob, read_db_additional_fields, emob_read_db_additional_fields_pre);
     addHookPre(mob, dead, emob_dead_pre);

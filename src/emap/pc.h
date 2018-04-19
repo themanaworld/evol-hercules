@@ -141,4 +141,7 @@ bool epc_resetskill_job_pre(struct map_session_data** sdPtr,
 
 bool epc_isDeathPenaltyJob_pre(uint16 *jobPtr);
 
+bool epc_read_skill_job_skip_pre(short *skill_idPtr,
+                                 int *job_idPtr);
+
 #endif  // EVOL_MAP_PC

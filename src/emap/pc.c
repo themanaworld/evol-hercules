@@ -1067,3 +1067,10 @@ bool epc_isDeathPenaltyJob_pre(uint16 *jobPtr __attribute__ ((unused)))
     hookStop();
     return true;
 }
+
+bool epc_read_skill_job_skip_pre(short *skill_idPtr __attribute__ ((unused)),
+                                 int *job_idPtr __attribute__ ((unused)))
+{
+    hookStop();
+    return false;
+}
