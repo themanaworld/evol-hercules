@@ -134,4 +134,6 @@ void epc_calc_skilltree_clear_pre(struct map_session_data **sdPtr);
 void epc_calc_skilltree_bonus_pre(struct map_session_data **sdPtr,
                                   int *classidxPtr);
 
+void epc_checkbaselevelup_sc_pre(struct map_session_data **sdPtr);
+
 #endif  // EVOL_MAP_PC
