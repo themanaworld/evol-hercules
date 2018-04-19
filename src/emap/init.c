@@ -234,6 +234,7 @@ HPExport void plugin_init (void)
     addHookPre(pc, dropitem, epc_dropitem_pre);
     addHookPre(pc, insert_card, epc_insert_card_pre);
     addHookPre(pc, process_chat_message, epc_process_chat_message_pre);
+    addHookPre(pc, calc_skilltree_clear, epc_calc_skilltree_clear_pre);
     addHookPre(mob, deleteslave_sub, emob_deleteslave_sub_pre);
     addHookPre(mob, read_db_additional_fields, emob_read_db_additional_fields_pre);
     addHookPre(mob, dead, emob_dead_pre);

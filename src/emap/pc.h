@@ -129,4 +129,6 @@ int epc_jobchange(struct map_session_data *sd,
                   int job,
                   int upper);
 
+void epc_calc_skilltree_clear_pre(struct map_session_data **sdPtr);
+
 #endif  // EVOL_MAP_PC

@@ -1011,3 +1011,32 @@ int epc_jobchange(struct map_session_data *sd,
 
     return 0;
 }
+
+// copy from pc_calc_skilltree_clear, disabled NV_TRICKDEAD.
+void epc_calc_skilltree_clear_pre(struct map_session_data **sdPtr)
+{
+    struct map_session_data *sd = *sdPtr;
+    nullpo_retv(sd);
+
+    for (int i = 0; i < MAX_SKILL_DB; i++)
+    {
+        if (sd->status.skill[i].flag != SKILL_FLAG_PLAGIARIZED && sd->status.skill[i].flag != SKILL_FLAG_PERM_GRANTED) //Don't touch these
+            sd->status.skill[i].id = 0; //First clear skills.
+        /* permanent skills that must be re-checked */
+//        if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT)
+//        {
+//            switch (skill->dbs->db[i].nameid)
+//            {
+//                case NV_TRICKDEAD:
+//                    if ((sd->job & MAPID_UPPERMASK) != MAPID_NOVICE)
+//                    {
+//                        sd->status.skill[i].id = 0;
+//                        sd->status.skill[i].lv = 0;
+//                        sd->status.skill[i].flag = 0;
+//                    }
+//                    break;
+//            }
+//        }
+    }
+    hookStop();
+}
