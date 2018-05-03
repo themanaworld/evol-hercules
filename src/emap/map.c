@@ -463,7 +463,7 @@ void emap_iwall_get_pre(struct map_session_data **sdPtr)
     hookStop();
 }
 
-void emap_iwall_remove_pre(const char **namePtr)
+bool emap_iwall_remove_pre(const char **namePtr)
 {
     struct WallData *wall;
     const char *name = *namePtr;
@@ -471,7 +471,7 @@ void emap_iwall_remove_pre(const char **namePtr)
     if ((wall = (struct WallData *)strdb_get(map->iwall_db, name)) == NULL)
     {
         hookStop();
-        return; // Nothing to do
+        return false; // Nothing to do
     }
 
     int x;
@@ -496,6 +496,7 @@ void emap_iwall_remove_pre(const char **namePtr)
     map->list[wall->m].iwall_num--;
     strdb_remove(map->iwall_db, wall->name);
     hookStop();
+    return true;
 }
 
 bool emap_iwall_set2(int m,

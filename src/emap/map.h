@@ -36,7 +36,7 @@ bool emap_iwall_set_pre(int16 *m,
                         bool *shootable,
                         const char **wall_namePtr);
 void emap_iwall_get_pre(struct map_session_data **sdPtr);
-void emap_iwall_remove_pre(const char **namePtr);
+bool emap_iwall_remove_pre(const char **namePtr);
 bool emap_iwall_set2(int m,
                      int layer,
                      int x1, int y1,

@@ -305,15 +305,6 @@ void send_additional_slots(int fd, struct char_session_data* sd)
     SQL->StmtFree(stmt);
 }
 
-void echar_parse_frommap_request_stats_report_pre(int *fdPtr)
-{
-    const int fd = *fdPtr;
-    RFIFOSKIP(fd, 2);  /* we skip first 2 bytes which are the 0x3008, so we end up with a buffer equal to the one we send */
-    RFIFOSKIP(fd, RFIFOW(fd,2));  /* skip this packet */
-    RFIFOFLUSH(fd);
-    hookStop();
-}
-
 void echar_parse_map_serverexit(int mapFd)
 {
     const int code = RFIFOW(mapFd, 2);
