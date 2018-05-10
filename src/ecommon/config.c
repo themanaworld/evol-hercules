@@ -23,6 +23,11 @@ int default_y = 0;
 void config_default_map(const char *key __attribute__ ((unused)),
                         const char *val)
 {
+    if (mapindex->default_map != NULL &&
+        strcmp(mapindex->default_map, MAP_DEFAULT) == 0)
+    {
+        aFree(mapindex->default_map);
+    }
     mapindex->default_map = aStrdup(val);
 }
 

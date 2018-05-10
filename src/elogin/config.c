@@ -20,11 +20,13 @@ char *update_server = NULL;
 void config_update_server(const char *key __attribute__ ((unused)),
                           const char *val)
 {
+    if (update_server != NULL)
+        aFree(update_server);
     update_server = aStrdup(val);
 }
 
 void config_final(void)
 {
-    if (update_server)
+    if (update_server != NULL)
         aFree(update_server);
 }
