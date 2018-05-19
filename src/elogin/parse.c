@@ -34,7 +34,8 @@ void login_parse_version(int fd)
 
     clientVersion = RFIFOL(fd, 2);
 
-    if (clientVersion < 16)
+    // check for minimal supported version
+    if (clientVersion < 17)
     {
         lclif->login_error(fd, 5);
         return;
@@ -58,7 +59,8 @@ bool elogin_client_login_pre(int *fdPtr,
     char username[NAME_LENGTH];
     safestrncpy(username, RFIFOP(fd, 6), NAME_LENGTH);
     int len = (int)safestrnlen(username, NAME_LENGTH);
-    if (clientVersion < 16)
+    // check for minimal supported version
+    if (clientVersion < 17)
     {
         lclif->login_error(fd, 5);
         hookStop();

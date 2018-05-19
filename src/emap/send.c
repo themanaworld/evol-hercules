@@ -495,7 +495,7 @@ void send_pc_skin(int fd, int npcId, const char *const skin)
 void send_pc_killed(int fd, struct block_list* bl)
 {
     struct SessionExt *data = session_get(fd);
-    if (!data || data->clientVersion < 17)
+    if (!data)
         return;
 
     WFIFOHEAD (fd, 6);
