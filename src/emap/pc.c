@@ -267,9 +267,9 @@ void epc_validate_levels_pre(void)
         if (pc->job_is_dummy(i))
             continue; //Classes that do not need exp tables.
         int j = pc->class2idx(i);
-        if (pc->max_level[j][0] == 0)
+        if (pc->dbs->class_exp_table[j][CLASS_EXP_TABLE_BASE] == NULL)
             ShowWarning("Class %d does not has a base exp table.\n", i);
-        if (pc->max_level[j][1] == 0)
+        if (pc->dbs->class_exp_table[j][CLASS_EXP_TABLE_JOB] == NULL)
             ShowWarning("Class %d does not has a job exp table.\n", i);
     }
     hookStop();
