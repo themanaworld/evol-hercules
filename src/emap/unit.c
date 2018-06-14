@@ -65,7 +65,7 @@ int eunit_can_move_pre(struct block_list **blPtr)
     if (sd && (
         sd->state.vending ||
         sd->state.buyingstore ||
-        sd->state.blockedmove))
+        sd->block_action.move))
     {
         hookStop();
         return 0; //Can't move
