@@ -101,6 +101,8 @@ HPExport void plugin_init (void)
     addAtcommand("slide", slide);
     addAtcommand("mapexit", mapExit);
     addAtcommand("serverexit", serverExit);
+    addAtcommand("hugo", hugo);
+    addAtcommand("linus", linus);
 
     addCPCommand("serverexit", serverExit);
 

@@ -12,6 +12,7 @@ struct SessionExt
     int teamId;
     uint16 mount;
     uint8 state;
+    int jump_iterate_id;
 };
 
 #endif  // EVOL_MAP_SESSIONEXT

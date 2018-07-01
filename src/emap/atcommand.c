@@ -24,6 +24,8 @@
 #include "emap/atcommand.h"
 #include "emap/lang.h"
 #include "emap/inter.h"
+#include "emap/struct/sessionext.h"
+#include "emap/data/session.h"
 
 const char* eatcommand_msgsd_pre(struct map_session_data **sdPtr,
                                  int *msgPtr)
@@ -64,6 +66,94 @@ const char* eatcommand_msgfd_pre(int *fdPtr,
     }
     hookStop();
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
+}
+
+bool jump_iterate(struct map_session_data *sd, bool forward)
+{
+    struct SessionExt *session_ext = session_get_bysd(sd);
+
+    if (!session_ext)
+        return false;
+
+    struct map_session_data *pl_sd = map->id2sd(session_ext->jump_iterate_id);
+    struct map_session_data *buff_sd = NULL;
+
+    bool has_next = false;
+    int fd = NULL != pl_sd ? pl_sd->fd : sd->fd;
+    int user_count = map->getusers();
+
+    if (user_count == 1)
+    {
+        session_ext->jump_iterate_id = 0;
+        clif->message(sd->fd, "You are alone at map server!");
+        return true;
+    }
+
+    int max_counter = sockt->fd_max;
+
+    do
+    {
+        if (forward)
+        {
+            fd++;
+            has_next = fd < sockt->fd_max;
+        }
+        else
+        {
+            fd--;
+            has_next = fd > 0;
+        }
+
+        if (!has_next)
+        {
+            fd = (forward ? -1 : sockt->fd_max + 1);
+        }
+        else
+        {
+            if (sockt->session_is_active(fd))
+            {
+                buff_sd = sockt->session[fd]->session_data;
+
+                if (NULL != buff_sd)
+                {
+                    if (
+                        (sd == buff_sd) ||
+                        (map->list[buff_sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
+                       )
+                    {
+                        buff_sd = NULL;
+                    } 
+                    else if (sd->bl.m == buff_sd->bl.m && sd->bl.x == buff_sd->bl.x && sd->bl.y == buff_sd->bl.y)
+                    {
+                        if (user_count == 2) {
+                            return true;
+                        }
+
+                        buff_sd = NULL;
+                    }
+                }
+            }
+        }
+
+        --max_counter;
+    } while (NULL == buff_sd && (max_counter >= 0));
+
+    if (NULL != buff_sd)
+    {
+        char message[80];
+
+        pc->setpos(sd, buff_sd->mapindex, buff_sd->bl.x, buff_sd->bl.y, CLR_TELEPORT);
+
+        sprintf (message, "Jump to %s", buff_sd->status.name);
+
+        clif->message(sd->fd, message);
+
+        session_ext->jump_iterate_id = buff_sd->bl.id;
+
+        return true;
+    }
+
+    return false;
 }
 
 ACMD2(setSkill)
@@ -129,6 +219,16 @@ ACMD2(slide)
     clif->slide(&sd->bl, x, y);
     unit->movepos(&sd->bl, x, y, 1, 0);
     return true;
+}
+
+ACMD3(hugo)
+{
+    return jump_iterate(sd, true);
+}
+
+ACMD3(linus)
+{
+    return jump_iterate(sd, false);
 }
 
 ACMD1(mapExit)
