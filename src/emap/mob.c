@@ -192,6 +192,7 @@ static void emob_load_weaponattacks(const char *type,
     {
         for (int f = 0; f < MAX_WEAPON_TYPE; f ++)
             data->weaponAttacks[f] = val;
+        return;
     }
     else
     {
