@@ -73,7 +73,7 @@ void eskill_unit_onplace_unknown(struct skill_unit *src,
                                  struct block_list *bl,
                                  int64 *tick);
 
-void eskill_check_condition_castend_unknown(struct map_session_data *sd,
+bool eskill_check_condition_castend_unknown(struct map_session_data *sd,
                                             uint16 *skill_id,
                                             uint16 *skill_lv);
 

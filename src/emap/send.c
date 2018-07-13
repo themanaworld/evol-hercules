@@ -359,7 +359,7 @@ void send_slave_say(struct map_session_data *sd,
 
     snprintf(buf, len, "%s's %s : %s", sd->status.name, name, message);
     buf[len - 1] = 0;
-    clif->disp_overhead(bl, buf);
+    clif->disp_overhead(bl, buf, AREA_CHAT_WOC, NULL);
     aFree(buf);
 }
 

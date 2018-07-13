@@ -158,10 +158,11 @@ void eskill_unit_onplace_unknown(struct skill_unit *src __attribute__ ((unused))
 {
 }
 
-void eskill_check_condition_castend_unknown(struct map_session_data *sd __attribute__ ((unused)),
+bool eskill_check_condition_castend_unknown(struct map_session_data *sd __attribute__ ((unused)),
                                             uint16 *skill_id __attribute__ ((unused)),
                                             uint16 *skill_lv __attribute__ ((unused)))
 {
+    return false;
 }
 
 void eskill_get_requirement_unknown(struct status_change *sc __attribute__ ((unused)),
