@@ -50,5 +50,6 @@ struct SessionExt *session_create(void)
     data->onlinelistlasttime = 0;
     data->teamId = 0;
     data->mount = 0;
+    data->jump_iterate_id = 0;
     return data;
 }
