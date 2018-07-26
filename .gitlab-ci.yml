@@ -2,8 +2,6 @@ stages:
   - build
   - test
   - legacy
-  - success
-  - failure
 
 before_script:
   - uname -a
@@ -225,23 +223,3 @@ gcc-5_unstable_lto-sanitize:
   script:
   - ./tools/ci/jobs/gcc5.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
-
-# reports
-
-success:
-  stage: success
-  script:
-  - echo "do nothing"
-  image: debian:unstable
-  when: on_success
-  variables:
-    GIT_STRATEGY: none
-
-failure:
-  stage: failure
-  script:
-  - echo "do nothing"
-  image: debian:unstable
-  when: on_failure
-  variables:
-    GIT_STRATEGY: none
