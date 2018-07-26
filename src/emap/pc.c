@@ -20,6 +20,7 @@
 #include "map/itemdb.h"
 #include "map/npc.h"
 #include "map/pc.h"
+#include "map/quest.h"
 
 #include "plugins/HPMHooking.h"
 
@@ -1008,6 +1009,8 @@ int epc_jobchange(struct map_session_data *sd,
             break;
         }
     }
+
+    quest->questinfo_refresh(sd);
 
     return 0;
 }

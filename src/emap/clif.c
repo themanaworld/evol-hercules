@@ -811,7 +811,7 @@ void eclif_getareachar_item_pre(struct map_session_data **sdPtr,
     WFIFOB(fd, 9) = fitem->item_data.identify;
     WFIFOB(fd, 10) = fitem->item_data.attribute;
     WFIFOB(fd, 11) = fitem->item_data.refine;
-    clif->addcards(WFIFOP(fd, 12), &fitem->item_data);
+    clif->addcards((struct EQUIPSLOTINFO*)WFIFOP(fd, 12), &fitem->item_data);
     WFIFOW(fd, 20) = fitem->bl.x;
     WFIFOW(fd, 22) = fitem->bl.y;
     WFIFOW(fd, 24) = fitem->item_data.amount;
@@ -855,7 +855,7 @@ void eclif_dropflooritem_pre(struct flooritem_data **fitemPtr)
     WBUFB(buf, 9) = fitem->item_data.identify;
     WBUFB(buf, 10) = fitem->item_data.attribute;
     WBUFB(buf, 11) = fitem->item_data.refine;
-    clif->addcards(WBUFP(buf, 12), &fitem->item_data);
+    clif->addcards((struct EQUIPSLOTINFO*)WBUFP(buf, 12), &fitem->item_data);
     WBUFW(buf, 20) = fitem->bl.x;
     WBUFW(buf, 22) = fitem->bl.y;
     WBUFW(buf, 24) = fitem->item_data.amount;
@@ -936,29 +936,17 @@ void eclif_disp_message_pre(struct block_list **srcPtr,
     clif->send(buf, WBUFW(buf, 2), src, *targetPtr);
 }
 
-void eclif_addcards_post(unsigned char *buf, struct item *item)
+void eclif_addcards_post(struct EQUIPSLOTINFO *buf,
+                         struct item *item)
 {
     if (!buf || !item)
         return;
     if (item->card[0] == CARD0_PET)
     {
-        WBUFW(buf, 0) = item->card[0];
-        WBUFW(buf, 2) = item->card[1];
-        WBUFW(buf, 4) = item->card[2];
-        WBUFW(buf, 6) = item->card[3];
-    }
-}
-
-void eclif_addcards2_post(unsigned short *cards, struct item *item)
-{
-    if (!cards || !item)
-        return;
-    if (item->card[0] == CARD0_PET)
-    {
-        cards[0] = item->card[0];
-        cards[1] = item->card[1];
-        cards[2] = item->card[2];
-        cards[3] = item->card[3];
+        buf->card[0] = item->card[0];
+        buf->card[1] = item->card[1];
+        buf->card[2] = item->card[2];
+        buf->card[3] = item->card[3];
     }
 }
 

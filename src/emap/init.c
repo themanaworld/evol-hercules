@@ -305,7 +305,6 @@ HPExport void plugin_init (void)
     addHookPost(clan, join, eclan_join_post);
     addHookPost(clan, leave, eclan_leave_post);
     addHookPost(clif, addcards, eclif_addcards_post);
-    addHookPost(clif, addcards2, eclif_addcards2_post);
     addHookPost(clif, getareachar_unit, eclif_getareachar_unit_post);
     addHookPost(clif, authok, eclif_authok_post);
     addHookPost(clif, changemap, eclif_changemap_post);

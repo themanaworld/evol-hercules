@@ -63,10 +63,8 @@ void eclif_disp_message_pre(struct block_list **srcPtr,
                             const char **mesPtr,
                             enum send_target *targetPtr);
 
-void eclif_addcards_post(unsigned char *buf,
+void eclif_addcards_post(struct EQUIPSLOTINFO *buf,
                          struct item *item);
-void eclif_addcards2_post(unsigned short *cards,
-                          struct item *item);
 void eclif_useskill(struct block_list* bl,
                     int src_id,
                     int dst_id,

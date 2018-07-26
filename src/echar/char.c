@@ -194,10 +194,10 @@ void send_additional_slots(int fd, struct char_session_data* sd)
     int char_id;
     int name_id;
     int slot;
-    short card0;
-    short card1;
-    short card2;
-    short card3;
+    int card0;
+    int card1;
+    int card2;
+    int card3;
 
     if (!sd)
         return;
@@ -216,13 +216,13 @@ void send_additional_slots(int fd, struct char_session_data* sd)
         "LEFT JOIN inventory ON inventory.char_id = `char`.char_id "
         "WHERE account_id = '%d' AND equip <> 0 AND amount > 0 ORDER BY inventory.char_id", sd->account_id)
         || SQL_ERROR == SQL->StmtExecute(stmt)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,   &char_id, sizeof char_id, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT,   &name_id, sizeof name_id, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_INT,   &slot, sizeof slot, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_SHORT, &card0, sizeof card0, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_SHORT, &card1, sizeof card1, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_SHORT, &card2, sizeof card2, NULL, NULL)
-        || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_SHORT, &card3, sizeof card3, NULL, NULL))
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT, &char_id, sizeof char_id, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_INT, &name_id, sizeof name_id, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 2,  SQLDT_INT, &slot, sizeof slot, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 3,  SQLDT_INT, &card0, sizeof card0, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 4,  SQLDT_INT, &card1, sizeof card1, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 5,  SQLDT_INT, &card2, sizeof card2, NULL, NULL)
+        || SQL_ERROR == SQL->StmtBindColumn(stmt, 6,  SQLDT_INT, &card3, sizeof card3, NULL, NULL))
     {
         SqlStmt_ShowDebug(stmt);
         SQL->StmtFree(stmt);

@@ -6,7 +6,7 @@
 
 struct ItemCardExt
 {
-    unsigned short id;
+    int id;
     unsigned short amount;
 };
 
