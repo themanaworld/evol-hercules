@@ -141,9 +141,10 @@ void send_mapmask(int fd, int mask)
 
 void send_mapmask_brodcast(const int map, const int mask)
 {
-    struct block_list bl = {0};
+    struct block_list bl;
     char buf[10];
 
+    memset(&bl, 0, sizeof(bl));
     bl.m = map;
     WBUFW (buf, 0) = 0xb02 + evolPacketOffset;
     WBUFL (buf, 2) = mask;
@@ -304,10 +305,11 @@ void send_changemusic_brodcast(const int map, const char *music)
     if (!music)
         return;
 
-    struct block_list bl = {0};
+    struct block_list bl;
     const int sz = (int)strlen(music) + 5;
     char *buf;
 
+    memset(&bl, 0, sizeof(bl));
     CREATE(buf, char, sz);
     bl.m = map;
     WBUFW (buf, 0) = 0xb05 + evolPacketOffset;
