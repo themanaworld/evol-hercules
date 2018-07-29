@@ -141,7 +141,7 @@ void send_mapmask(int fd, int mask)
 
 void send_mapmask_brodcast(const int map, const int mask)
 {
-    struct block_list bl;
+    struct block_list bl = {0};
     char buf[10];
 
     bl.m = map;
@@ -304,7 +304,7 @@ void send_changemusic_brodcast(const int map, const char *music)
     if (!music)
         return;
 
-    struct block_list bl;
+    struct block_list bl = {0};
     const int sz = (int)strlen(music) + 5;
     char *buf;
 
