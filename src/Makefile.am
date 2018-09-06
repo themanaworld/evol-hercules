@@ -136,7 +136,7 @@ MAP_SRC = emap/atcommand.c \
 
 # need remove -Wno-unused
 
-SHARED_CFLAGS = ${CFLAGS} -O3 -pipe -ffast-math -std=c99 -Wall -Wextra -Wno-sign-compare -Wno-unused -fno-omit-frame-pointer \
+SHARED_CFLAGS = ${CFLAGS} -O3 -pipe -ffast-math -std=c11 -Wall -Wextra -Wno-sign-compare -Wno-unused -fno-omit-frame-pointer \
     -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty \
     -DPACKETVER=20150513 \
     -DevolPacketOffset=0
