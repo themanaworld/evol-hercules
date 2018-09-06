@@ -534,28 +534,12 @@ int eclif_send_actual_pre(int *fd,
             hookStop();
             return 0;
         }
-        if (packet == 0xb1e + evolPacketOffset)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 18)
-            {   // not sending new packets to old clients
-//                ShowWarning("skip packet %d\n", packet);
-                hookStop();
-                return 0;
-            }
-        }
         if (packet == 0x7fb)
         {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion >= 18)
-            {   // not sending old packets to new clients
-                hookStop();
-                return 0;
-            }
+            // not sending old packets to new clients
+            // probably useless?
+            hookStop();
+            return 0;
         }
         if (packet == 0x9cb)
         {
@@ -1020,11 +1004,6 @@ void eclif_skillinfoblock_pre(struct map_session_data **sdPtr)
 {
     struct map_session_data *sd = *sdPtr;
     nullpo_retv(sd);
-    struct SessionExt *data = session_get_bysd(sd);
-    if (!data)
-        return;
-    if (data->clientVersion < 18)
-        return;
 
     int fd = sd->fd;
     if (!fd)
@@ -1088,13 +1067,6 @@ void eclif_addskill_pre(struct map_session_data **sdPtr,
     struct map_session_data *sd = *sdPtr;
     nullpo_retv(sd);
     int id = *idPtr;
-
-    struct SessionExt *data = session_get_bysd(sd);
-    if (!data)
-        return;
-    if (data->clientVersion < 18)
-        return;
-
     int fd = sd->fd;
     if (!fd)
     {
@@ -1146,12 +1118,6 @@ void eclif_skillinfo_pre(struct map_session_data **sdPtr,
 {
     struct map_session_data *sd = *sdPtr;
     nullpo_retv(sd);
-
-    struct SessionExt *data = session_get_bysd(sd);
-    if (!data)
-        return;
-    if (data->clientVersion < 18)
-        return;
 
     int skill_id = *skill_idPtr;
     int idx = skill->get_index(skill_id);
@@ -1216,11 +1182,6 @@ void eclif_parse_WalkToXY(int fd,
         if (unit->walktoxy(&sd->bl, x, y, 4) &&
             sd->ud.state.change_walk_target == 1)
         {
-            struct SessionExt *data = session_get_bysd(sd);
-            if (!data)
-                return;
-            if (data->clientVersion < 18)
-                return;
             send_walk_fail(sd->fd, x, y);
         }
     }

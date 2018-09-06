@@ -527,7 +527,7 @@ void send_homun_exp(struct homun_data *hd,
 
     const int fd = hd->master->fd;
     struct SessionExt *data = session_get(fd);
-    if (!data || data->clientVersion < 18)
+    if (!data)
         return;
 
     WFIFOHEAD(fd, 10);
