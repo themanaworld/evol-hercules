@@ -203,7 +203,8 @@ gcc-7_lto:
   - ./tools/ci/jobs/gcc7.sh --enable-werror --enable-lto
   image: debian:unstable
 
-gcc-4.6:
+# disabled due not support -std=c11
+.gcc-4.6:
   stage: test
   script:
   - ./tools/ci/jobs/gcc46.sh --enable-werror
