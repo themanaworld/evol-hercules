@@ -211,7 +211,7 @@ int lang_getId(const char *str)
     char *str2 = NULL;
     int f;
 
-    if ((str2 = strchr(str, '.')))
+    if ((str2 = (char*)strchr(str, '.')))
         *str2 = 0;
 
     for (f = 0; f < MAX_LANGS && lang_langs[f]; f ++)
@@ -223,7 +223,7 @@ int lang_getId(const char *str)
         }
     }
 
-    if ((str2 = strchr(str1, '_')))
+    if ((str2 = (char*)strchr(str1, '_')))
         *str2 = 0;
 
     for (f = 0; f < MAX_LANGS && lang_langs[f]; f ++)

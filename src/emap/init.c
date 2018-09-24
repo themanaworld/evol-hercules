@@ -16,6 +16,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "map/achievement.h"
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"

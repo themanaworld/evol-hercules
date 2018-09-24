@@ -11,6 +11,7 @@
 #include "common/memmgr.h"
 #include "common/utils.h"
 #include "common/timer.h"
+#include "map/achievement.h"
 #include "map/chat.h"
 #include "map/chrif.h"
 #include "map/instance.h"
@@ -1158,7 +1159,7 @@ BUILDIN(successRefIndex)
     logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n],sd->inventory_data[n]);
     clif->additem(sd, n, 1, 0);
     clif->misceffect(&sd->bl, 3);
-    achievement->validate_refine(sd, i, true); // Achievements [Smokexyz/Hercules]
+    achievement->validate_refine(sd, n, true); // Achievements [Smokexyz/Hercules]
 
     if (sd->status.inventory[n].refine == 10 &&
         sd->status.inventory[n].card[0] == CARD0_FORGE &&

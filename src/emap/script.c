@@ -10,6 +10,7 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
+#include "map/achievement.h"
 #include "map/npc.h"
 #include "map/pc.h"
 #include "map/script.h"

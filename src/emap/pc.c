@@ -14,6 +14,7 @@
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
+#include "map/achievement.h"
 #include "map/chrif.h"
 #include "map/homunculus.h"
 #include "map/elemental.h"
