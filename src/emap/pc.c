@@ -733,6 +733,11 @@ bool epc_adoption_pre(struct map_session_data **p1_sdPtr,
     pc->skill(p1_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
     pc->skill(p2_sd, WE_CALLBABY, 1, SKILL_GRANT_PERMANENT);
 
+    // Achievements [Smokexyz/Hercules]
+    achievement->validate_adopt(p1_sd, true); // Parent 1
+    achievement->validate_adopt(p2_sd, true); // Parent 2
+    achievement->validate_adopt(b_sd, false); // Baby
+
     hookStop();
     return true;
 }
@@ -833,13 +838,13 @@ int epc_jobchange(struct map_session_data *sd,
     {
         // changing from 1st to 2nd job
         sd->change_level_2nd = sd->status.job_level;
-        pc_setglobalreg(sd, script->add_str("jobchange_level"), sd->change_level_2nd);
+        pc_setglobalreg(sd, script->add_variable("jobchange_level"), sd->change_level_2nd);
     }
     else if ((job & JOBL_THIRD) != 0 && (sd->job & JOBL_THIRD) == 0)
     {
         // changing from 2nd to 3rd job
         sd->change_level_3rd = sd->status.job_level;
-        pc_setglobalreg(sd, script->add_str("jobchange_level_3rd"), sd->change_level_3rd);
+        pc_setglobalreg(sd, script->add_variable("jobchange_level_3rd"), sd->change_level_3rd);
     }
 */
 
@@ -854,8 +859,8 @@ int epc_jobchange(struct map_session_data *sd,
             clif->deleteskill(sd, sd->cloneskill_id);
         }
         sd->cloneskill_id = 0;
-        pc_setglobalreg(sd, script->add_str("CLONE_SKILL"), 0);
-        pc_setglobalreg(sd, script->add_str("CLONE_SKILL_LV"), 0);
+        pc_setglobalreg(sd, script->add_variable("CLONE_SKILL"), 0);
+        pc_setglobalreg(sd, script->add_variable("CLONE_SKILL_LV"), 0);
     }
 
     if(sd->reproduceskill_id)
@@ -869,8 +874,8 @@ int epc_jobchange(struct map_session_data *sd,
             clif->deleteskill(sd, sd->reproduceskill_id);
         }
         sd->reproduceskill_id = 0;
-        pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL"),0);
-        pc_setglobalreg(sd, script->add_str("REPRODUCE_SKILL_LV"),0);
+        pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL"),0);
+        pc_setglobalreg(sd, script->add_variable("REPRODUCE_SKILL_LV"),0);
     }
 
 /*
@@ -1011,6 +1016,8 @@ int epc_jobchange(struct map_session_data *sd,
     }
 
     quest->questinfo_refresh(sd);
+
+    achievement->validate_jobchange(sd); // Achievements [Smokexyz/Hercules]
 
     return 0;
 }

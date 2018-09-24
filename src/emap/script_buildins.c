@@ -1094,6 +1094,9 @@ BUILDIN(failedRefIndex)
     if (sd->status.inventory[n].nameid <= 0 || sd->status.inventory[n].amount <= 0)
         return false;
 
+    // Call before changing refine to 0.
+    achievement->validate_refine(sd, n, false);
+
     sd->status.inventory[n].refine = 0;
     if (sd->status.inventory[n].equip)
         pc->unequipitem(sd, n, PCUNEQUIPITEM_RECALC|PCUNEQUIPITEM_FORCE);
@@ -1124,6 +1127,9 @@ BUILDIN(downRefIndex)
     clif->delitem(sd, n, 1, DELITEM_MATERIALCHANGE);
     logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n], sd->inventory_data[n]);
     clif->additem(sd, n, 1, 0);
+
+    achievement->validate_refine(sd, n, false); // Achievements [Smokexyz/Hercules]
+
     clif->misceffect(&sd->bl, 2);
     return true;
 }
@@ -1152,6 +1158,7 @@ BUILDIN(successRefIndex)
     logs->pick_pc(sd, LOG_TYPE_SCRIPT, 1, &sd->status.inventory[n],sd->inventory_data[n]);
     clif->additem(sd, n, 1, 0);
     clif->misceffect(&sd->bl, 3);
+    achievement->validate_refine(sd, i, true); // Achievements [Smokexyz/Hercules]
 
     if (sd->status.inventory[n].refine == 10 &&
         sd->status.inventory[n].card[0] == CARD0_FORGE &&

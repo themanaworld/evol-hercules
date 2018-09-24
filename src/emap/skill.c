@@ -59,8 +59,8 @@ int eskill_check_condition_castend_post(int retVal,
             struct event_data* ev = node->data;
             if (ev)
             {
-                pc->setreg(sd, script->add_str("@skillId"), skill_id);
-                pc->setreg(sd, script->add_str("@skillLv"), skill_lv);
+                pc->setreg(sd, script->add_variable("@skillId"), skill_id);
+                pc->setreg(sd, script->add_variable("@skillLv"), skill_lv);
                 script->run(ev->nd->u.scr.script, ev->pos, sd->bl.id, ev->nd->bl.id);
             }
             node = node->next;

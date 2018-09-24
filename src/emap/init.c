@@ -361,8 +361,8 @@ HPExport void plugin_init (void)
     itemdb->isidentified = eitemdb_isidentified;
     itemdb->isidentified2 = eitemdb_isidentified2;
 
-    langScriptId = script->add_str("Lang");
-    mountScriptId = script->add_str("mount");
+    langScriptId = script->add_variable("Lang");
+    mountScriptId = script->add_variable("mount");
 
     isInit = true;
 }
