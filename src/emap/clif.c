@@ -237,7 +237,8 @@ struct packet_reqnameall_legacy_ack {
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
 static void eclif_charnameack_legacy(int fd, struct block_list *bl)
 {
-    struct packet_reqnameall_legacy_ack packet = { 0 };
+    struct packet_reqnameall_legacy_ack packet;
+    memset(&packet, 0, sizeof(struct packet_reqnameall_legacy_ack));
     int len = sizeof(struct packet_reqnameall_legacy_ack);
 
     nullpo_retv(bl);
@@ -382,52 +383,53 @@ static void eclif_charnameack_legacy(int fd, struct block_list *bl)
 //Needed because when you send a 0x95 packet, the client will not remove the cached party/guild info that is not sent.
 static void eclif_charnameupdate_legacy(struct map_session_data *ssd)
 {
-	int ps = -1;
-	struct party_data *p = NULL;
-	struct guild *g = NULL;
-	struct packet_reqnameall_legacy_ack packet = { 0 };
+    int ps = -1;
+    struct party_data *p = NULL;
+    struct guild *g = NULL;
+    struct packet_reqnameall_legacy_ack packet;
+    memset(&packet, 0, sizeof(struct packet_reqnameall_legacy_ack));
 
-	nullpo_retv(ssd);
+    nullpo_retv(ssd);
 
-	if (ssd->fakename[0])
-		return; //No need to update as the party/guild was not displayed anyway.
+    if (ssd->fakename[0])
+        return; //No need to update as the party/guild was not displayed anyway.
 
-	packet.packet_id = 0x195;  //reqNameAllType;
-	packet.gid = ssd->bl.id;
+    packet.packet_id = 0x195;  //reqNameAllType;
+    packet.gid = ssd->bl.id;
 
-	memcpy(packet.name, ssd->status.name, NAME_LENGTH);
+    memcpy(packet.name, ssd->status.name, NAME_LENGTH);
 
-	if (!battle->bc->display_party_name) {
-		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
-			p = party->search(ssd->status.party_id);
-	} else {
-		if (ssd->status.party_id > 0)
-			p = party->search(ssd->status.party_id);
-	}
+    if (!battle->bc->display_party_name) {
+        if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
+            p = party->search(ssd->status.party_id);
+    } else {
+        if (ssd->status.party_id > 0)
+            p = party->search(ssd->status.party_id);
+    }
 
-	if (ssd->status.guild_id > 0 && (g = ssd->guild) != NULL) {
-		int i;
-		ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
-		if( i < g->max_member ) ps = g->member[i].position;
-	}
+    if (ssd->status.guild_id > 0 && (g = ssd->guild) != NULL) {
+        int i;
+        ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+        if( i < g->max_member ) ps = g->member[i].position;
+    }
 
-	if (p != NULL)
-		memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+    if (p != NULL)
+        memcpy(packet.party_name, p->party.name, NAME_LENGTH);
 
-	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
-		memcpy(packet.guild_name, g->name,NAME_LENGTH);
-		memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
-	}
+    if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+        memcpy(packet.guild_name, g->name,NAME_LENGTH);
+        memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+    }
 
 //#if PACKETVER >= 20150503
-//	// Achievement System [Dastgir/Hercules]
-//	if (ssd->status.title_id > 0) {
-//		packet.title_id = ssd->status.title_id;
-//	}
+//    // Achievement System [Dastgir/Hercules]
+//    if (ssd->status.title_id > 0) {
+//        packet.title_id = ssd->status.title_id;
+//    }
 //#endif
 
-	// Update nearby clients
-	clif->send(&packet, sizeof(packet), &ssd->bl, AREA);
+    // Update nearby clients
+    clif->send(&packet, sizeof(packet), &ssd->bl, AREA);
 }
 
 //
