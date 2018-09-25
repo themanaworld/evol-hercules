@@ -16,9 +16,15 @@
 #include "common/cbasetypes.h"
 #include "common/random.h"
 #include "common/timer.h"
+#include "map/battle.h"
+#include "map/elemental.h"
+#include "map/homunculus.h"
 #include "map/guild.h"
 #include "map/mob.h"
 #include "map/npc.h"
+#include "map/mercenary.h"
+#include "map/party.h"
+#include "map/pet.h"
 #include "map/pc.h"
 #include "map/quest.h"
 
@@ -34,6 +40,8 @@
 #include "emap/struct/itemdext.h"
 #include "emap/struct/mapdext.h"
 #include "emap/struct/sessionext.h"
+
+#include <math.h>
 
 extern bool isInit;
 extern char global_npc_str[1001];
@@ -187,8 +195,264 @@ void eclif_quest_add(TBL_PC *sd,
     hookStop();
 }
 
+// legacy eclif_charnameack_legacy start
+// clientVersion <= 24
+//
+
+unsigned int eget_percentage(const unsigned int A, const unsigned int B);
+unsigned int eget_percentage(const unsigned int A, const unsigned int B)
+{
+    double result;
+
+    if( B == 0 )
+    {
+        ShowError("get_percentage(): division by zero! (A=%u,B=%u)\n", A, B);
+        return ~0U;
+    }
+
+    result = 100 * ((double)A / (double)B);
+
+    if( result > UINT_MAX )
+    {
+        ShowError("get_percentage(): result percentage too high! (A=%u,B=%u,result=%g)\n", A, B, result);
+        return UINT_MAX;
+    }
+
+    return (unsigned int)floor(result);
+}
+
+// ZC_ACK_REQNAMEALL / ZC_ACK_REQNAMEALL2
+struct packet_reqnameall_legacy_ack {
+    uint16 packet_id;
+    int32 gid;
+    char name[NAME_LENGTH];
+    char party_name[NAME_LENGTH];
+    char guild_name[NAME_LENGTH];
+    char position_name[NAME_LENGTH];
+} __attribute__((packed));
+
+/// Updates the object's (bl) name on client.
+/// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
+/// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
+/// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
+static void eclif_charnameack_legacy(int fd, struct block_list *bl)
+{
+    struct packet_reqnameall_legacy_ack packet = { 0 };
+    int len = sizeof(struct packet_reqnameall_legacy_ack);
+
+    nullpo_retv(bl);
+
+    packet.packet_id = reqName;
+    packet.gid = bl->id;
+
+    switch(bl->type) {
+        case BL_PC:
+        {
+            const struct map_session_data *ssd = BL_UCCAST(BL_PC, bl);
+            const struct party_data *p = NULL;
+            const struct guild *g = NULL;
+            int ps = -1;
+
+            if (ssd->fakename[0] != '\0' || ssd->status.guild_id > 0 || ssd->status.party_id > 0 || ssd->status.title_id > 0) {
+                packet.packet_id = 0x195; //reqNameAllType;
+            }
+
+            //Requesting your own "shadow" name. [Skotlex]
+            if (ssd->fd == fd && ssd->disguise != -1) {
+                packet.gid = -bl->id;
+            }
+
+            if (ssd->fakename[0] != '\0') {
+                memcpy(packet.name, ssd->fakename, NAME_LENGTH);
+                break;
+            }
+
+//#if PACKETVER >= 20150503
+//            // Title System [Dastgir/Hercules]
+//            if (ssd->status.title_id > 0) {
+//                packet.title_id = ssd->status.title_id;
+//            }
+//#endif
+
+            memcpy(packet.name, ssd->status.name, NAME_LENGTH);
+
+            if (ssd->status.party_id != 0) {
+                p = party->search(ssd->status.party_id);
+            }
+            if (ssd->status.guild_id != 0) {
+                if ((g = ssd->guild) != NULL) {
+                    int i;
+                    ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+                    if (i < g->max_member)
+                        ps = g->member[i].position;
+                }
+            }
+
+            if (!battle->bc->display_party_name && g == NULL) {
+                // do not display party unless the player is also in a guild
+                p = NULL;
+            }
+
+            if (p == NULL && g == NULL)
+                break;
+
+            if (p != NULL) {
+                memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+            }
+
+            if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+                memcpy(packet.guild_name, g->name,NAME_LENGTH);
+                memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+            }
+        }
+            break;
+        //[blackhole89]
+        case BL_HOM:
+            memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
+            break;
+        case BL_MER:
+            memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
+            break;
+        case BL_PET:
+            memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
+            break;
+        case BL_NPC:
+            memcpy(packet.name, BL_UCCAST(BL_NPC, bl)->name, NAME_LENGTH);
+            break;
+        case BL_MOB:
+        {
+            const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
+
+            memcpy(packet.name, md->name, NAME_LENGTH);
+            if (md->guardian_data && md->guardian_data->g) {
+                packet.packet_id = 0x195; //reqNameAllType;
+                memcpy(packet.guild_name, md->guardian_data->g->name, NAME_LENGTH);
+                memcpy(packet.position_name, md->guardian_data->castle->castle_name, NAME_LENGTH);
+
+            } else if (battle->bc->show_mob_info) {
+                char mobhp[50], *str_p = mobhp;
+                packet.packet_id = 0x195;  //reqNameAllType;
+                if (battle->bc->show_mob_info&4)
+                    str_p += sprintf(str_p, "Lv. %d | ", md->level);
+                if (battle->bc->show_mob_info&1)
+                    str_p += sprintf(str_p, "HP: %u/%u | ", md->status.hp, md->status.max_hp);
+                if (battle->bc->show_mob_info&2)
+                    str_p += sprintf(str_p, "HP: %u%% | ", eget_percentage(md->status.hp, md->status.max_hp));
+                //Even thought mobhp ain't a name, we send it as one so the client
+                //can parse it. [Skotlex]
+                if (str_p != mobhp) {
+                    *(str_p-3) = '\0'; //Remove trailing space + pipe.
+                    memcpy(packet.party_name, mobhp, NAME_LENGTH);
+                }
+            }
+        }
+            break;
+        case BL_CHAT:
+#if 0 //FIXME: Clients DO request this... what should be done about it? The chat's title may not fit... [Skotlex]
+            memcpy(packet.name, BL_UCCAST(BL_CHAT, bl)->title, NAME_LENGTH);
+            break;
+#endif
+            return;
+        case BL_ELEM:
+            memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
+            break;
+        default:
+            ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
+            return;
+    }
+
+    if (packet.packet_id == reqName) {
+        len = sizeof(struct packet_reqname_ack);
+    }
+    // if no recipient specified just update nearby clients
+    // if no recipient specified just update nearby clients
+    if (fd == 0) {
+        clif->send(&packet, len, bl, AREA);
+    } else {
+        struct map_session_data *sd = sockt->session_is_valid(fd) ? sockt->session[fd]->session_data : NULL;
+        if (sd != NULL) {
+            clif->send(&packet, len, &sd->bl, SELF);
+        } else {
+            clif->send(&packet, len, bl, SELF);
+        }
+    }
+}
+
+//Used to update when a char leaves a party/guild. [Skotlex]
+//Needed because when you send a 0x95 packet, the client will not remove the cached party/guild info that is not sent.
+static void eclif_charnameupdate_legacy(struct map_session_data *ssd)
+{
+	int ps = -1;
+	struct party_data *p = NULL;
+	struct guild *g = NULL;
+	struct packet_reqnameall_legacy_ack packet = { 0 };
+
+	nullpo_retv(ssd);
+
+	if (ssd->fakename[0])
+		return; //No need to update as the party/guild was not displayed anyway.
+
+	packet.packet_id = 0x195;  //reqNameAllType;
+	packet.gid = ssd->bl.id;
+
+	memcpy(packet.name, ssd->status.name, NAME_LENGTH);
+
+	if (!battle->bc->display_party_name) {
+		if (ssd->status.party_id > 0 && ssd->status.guild_id > 0 && (g = ssd->guild) != NULL)
+			p = party->search(ssd->status.party_id);
+	} else {
+		if (ssd->status.party_id > 0)
+			p = party->search(ssd->status.party_id);
+	}
+
+	if (ssd->status.guild_id > 0 && (g = ssd->guild) != NULL) {
+		int i;
+		ARR_FIND(0, g->max_member, i, g->member[i].account_id == ssd->status.account_id && g->member[i].char_id == ssd->status.char_id);
+		if( i < g->max_member ) ps = g->member[i].position;
+	}
+
+	if (p != NULL)
+		memcpy(packet.party_name, p->party.name, NAME_LENGTH);
+
+	if (g != NULL && ps >= 0 && ps < MAX_GUILDPOSITION) {
+		memcpy(packet.guild_name, g->name,NAME_LENGTH);
+		memcpy(packet.position_name, g->position[ps].name, NAME_LENGTH);
+	}
+
+//#if PACKETVER >= 20150503
+//	// Achievement System [Dastgir/Hercules]
+//	if (ssd->status.title_id > 0) {
+//		packet.title_id = ssd->status.title_id;
+//	}
+//#endif
+
+	// Update nearby clients
+	clif->send(&packet, sizeof(packet), &ssd->bl, AREA);
+}
+
+//
+// clientVersion <= 24
+// legacy eclif_charnameack_legacy end
+
 void eclif_charnameack_pre(int *fdPtr,
                            struct block_list **blPtr)
+{
+    eclif_charnameack_pre_sub(fdPtr, blPtr);
+    if (hookStopped())
+        return;
+
+    struct SessionExt *data = session_get(*fdPtr);
+    if (!data)
+        return;
+    if (data->clientVersion <= 24)
+    {
+        eclif_charnameack_legacy(*fdPtr, *blPtr);
+        hookStop();
+    }
+}
+
+void eclif_charnameack_pre_sub(int *fdPtr,
+                               struct block_list **blPtr)
 {
     struct block_list *bl = *blPtr;
     if (!bl)
@@ -293,6 +557,18 @@ void eclif_charnameack_pre(int *fdPtr,
             memcpy(WFIFOP(fd, 8), tr, trLen);
             WFIFOSET(fd, len);
         }
+        hookStop();
+    }
+}
+
+void eclif_charnameupdate_pre(struct map_session_data **ssdPtr)
+{
+    struct SessionExt *data = session_get_bysd(*ssdPtr);
+    if (!data)
+        return;
+    if (data->clientVersion <= 24)
+    {
+        eclif_charnameupdate_legacy(*ssdPtr);
         hookStop();
     }
 }

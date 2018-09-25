@@ -17,6 +17,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 #include "map/achievement.h"
+#include "map/battle.h"
 #include "map/channel.h"
 #include "map/chat.h"
 #include "map/chrif.h"
@@ -254,6 +255,7 @@ HPExport void plugin_init (void)
     addHookPre(clif, quest_send_list, eclif_quest_send_list_pre);
     addHookPre(clif, quest_add, eclif_quest_add_pre);
     addHookPre(clif, charnameack, eclif_charnameack_pre);
+    addHookPre(clif, charnameupdate, eclif_charnameupdate_pre);
     addHookPre(clif, getareachar_item, eclif_getareachar_item_pre);
     addHookPre(clif, dropflooritem, eclif_dropflooritem_pre);
     addHookPre(clif, disp_message, eclif_disp_message_pre);
