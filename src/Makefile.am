@@ -140,7 +140,7 @@ SHARED_CFLAGS = ${CFLAGS} -O3 -pipe -ffast-math -std=c11 -Wall -Wextra -Wno-sign
     -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty \
     -DPACKETVER=20150513 \
     -DevolPacketOffset=0
-SHARED_LDFLAGS = -avoid-version -Wl,--no-undefined
+SHARED_LDFLAGS = -lm -avoid-version -Wl,--no-undefined
 
 if ENABLE_STATIC_BUILD
 SHARED_CFLAGS += "-static-libgcc"
