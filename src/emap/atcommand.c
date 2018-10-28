@@ -68,7 +68,7 @@ const char* eatcommand_msgfd_pre(int *fdPtr,
     return lang_pctrans(atcommand->msg_table[0][msg_number], sd);
 }
 
-bool jump_iterate(struct map_session_data *sd, bool forward)
+static bool eatcommand_jump_iterate(struct map_session_data *sd, bool forward)
 {
     struct SessionExt *session_ext = session_get_bysd(sd);
 
@@ -78,21 +78,16 @@ bool jump_iterate(struct map_session_data *sd, bool forward)
     struct map_session_data *pl_sd = map->id2sd(session_ext->jump_iterate_id);
     struct map_session_data *buff_sd = NULL;
 
-    bool has_next = false;
     int fd = NULL != pl_sd ? pl_sd->fd : sd->fd;
-    int user_count = map->getusers();
 
-    if (user_count == 1)
-    {
-        session_ext->jump_iterate_id = 0;
-        clif->message(sd->fd, "You are alone at map server!");
-        return true;
-    }
-
+    bool has_skipped = false;
+    int start_fd = fd;
     int max_counter = sockt->fd_max;
 
     do
     {
+        bool has_next = false;
+
         if (forward)
         {
             fd++;
@@ -108,37 +103,37 @@ bool jump_iterate(struct map_session_data *sd, bool forward)
         {
             fd = (forward ? -1 : sockt->fd_max + 1);
         }
-        else
+        else if (sockt->session_is_active(fd))
         {
-            if (sockt->session_is_active(fd))
+            buff_sd = sockt->session[fd]->session_data;
+
+            if (
+                NULL != buff_sd &&
+                (
+                    (sd == buff_sd) ||
+                    (map->list[buff_sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE)) ||
+                    (sd->bl.m == buff_sd->bl.m && sd->bl.x == buff_sd->bl.x && sd->bl.y == buff_sd->bl.y)
+                )
+            )
             {
-                buff_sd = sockt->session[fd]->session_data;
-
-                if (NULL != buff_sd)
+                if (sd != buff_sd)
                 {
-                    if (
-                        (sd == buff_sd) ||
-                        (map->list[buff_sd->bl.m].flag.nowarpto && !pc_has_permission(sd, PC_PERM_WARP_ANYWHERE))
-                       )
-                    {
-                        buff_sd = NULL;
-                    } 
-                    else if (sd->bl.m == buff_sd->bl.m && sd->bl.x == buff_sd->bl.x && sd->bl.y == buff_sd->bl.y)
-                    {
-                        if (user_count == 2) {
-                            return true;
-                        }
-
-                        buff_sd = NULL;
-                    }
+                    has_skipped = true;
                 }
+
+                buff_sd = NULL;
             }
         }
 
         --max_counter;
-    } while (NULL == buff_sd && (max_counter >= 0));
+    } while ((NULL == buff_sd) && (fd != start_fd) && (max_counter >= 0));
 
-    if (NULL != buff_sd)
+    if (NULL == buff_sd && !has_skipped)
+    {
+        session_ext->jump_iterate_id = 0;
+        clif->message(sd->fd, "You are alone at map server!");
+    }
+    else if (NULL != buff_sd)
     {
         char message[80];
 
@@ -149,11 +144,9 @@ bool jump_iterate(struct map_session_data *sd, bool forward)
         clif->message(sd->fd, message);
 
         session_ext->jump_iterate_id = buff_sd->bl.id;
-
-        return true;
     }
 
-    return false;
+    return true;
 }
 
 ACMD2(setSkill)
@@ -223,12 +216,12 @@ ACMD2(slide)
 
 ACMD3(hugo)
 {
-    return jump_iterate(sd, true);
+    return eatcommand_jump_iterate(sd, true);
 }
 
 ACMD3(linus)
 {
-    return jump_iterate(sd, false);
+    return eatcommand_jump_iterate(sd, false);
 }
 
 ACMD1(mapExit)
