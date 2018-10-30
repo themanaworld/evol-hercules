@@ -105,6 +105,8 @@ HPExport void plugin_init (void)
     addAtcommand("serverexit", serverExit);
     addAtcommand("hugo", hugo);
     addAtcommand("linus", linus);
+    addAtcommand("tee", tee);
+    addAtcommand("log", log);
 
     addCPCommand("serverexit", serverExit);
 

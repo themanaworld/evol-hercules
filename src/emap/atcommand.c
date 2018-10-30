@@ -235,6 +235,18 @@ ACMD1(mapExit)
     return true;
 }
 
+ACMD0(log)
+{
+    return true;
+}
+
+ACMD4(tee)
+{
+    clif->disp_overhead(&sd->bl, message, AREA_CHAT_WOC, NULL);
+    
+    return true;
+}
+
 // 100 - terminate all servers
 // 101 - restart all servers
 // 102 - restart char and map servers
