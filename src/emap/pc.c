@@ -411,7 +411,7 @@ int epc_setnewpc_post(int retVal,
 
 int epc_additem_post(int retVal,
                      struct map_session_data *sd,
-                     struct item *item_data,
+                     const struct item *item_data,
                      int amount __attribute__ ((unused)),
                      e_log_pick_type log_type __attribute__ ((unused)))
 {
