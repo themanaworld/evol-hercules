@@ -18,7 +18,7 @@
 #include "emap/data/itemd.h"
 #include "emap/struct/itemdext.h"
 
-struct ItemdExt *itemd_get_by_item(struct item *item)
+struct ItemdExt *itemd_get_by_item(const struct item *item)
 {
     if (!item)
         return NULL;
