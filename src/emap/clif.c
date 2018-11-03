@@ -754,31 +754,14 @@ void eclif_sendlook_pre(struct block_list **blPtr,
     eclif_handle_invisible_map(bl, *target);
 }
 
-bool eclif_send_pre(const void **bufPtr,
+bool eclif_send_pre(const void **bufPtr __attribute__ ((unused)),
                     int *len __attribute__ ((unused)),
                     struct block_list **blPtr,
                     enum send_target *type)
 {
     struct block_list *bl = *blPtr;
-    const void *buf = *bufPtr;
     if (*type == SELF)
     {
-        if (*len >= 2)
-        {
-            const int packet = RBUFW (buf, 0);
-            if (packet == 0x9cb)
-            {
-                struct map_session_data *sd = BL_CAST(BL_PC, bl);
-                struct SessionExt *data = session_get_bysd(sd);
-                if (!data)
-                    return true;
-                if (data->clientVersion < 19)
-                {   // not sending new packet to old clients
-                    hookStop();
-                    return true;
-                }
-            }
-        }
         return true;
     }
     eclif_handle_invisible_map(bl, *type);
@@ -797,7 +780,7 @@ void eclif_set_unit_idle_pre(struct block_list **blPtr,
     eclif_handle_invisible_map(bl, *target);
 }
 
-int eclif_send_actual_pre(int *fd,
+int eclif_send_actual_pre(int *fd __attribute__ ((unused)),
                           void **bufPtr,
                           int *len)
 {
@@ -818,17 +801,6 @@ int eclif_send_actual_pre(int *fd,
             // probably useless?
             hookStop();
             return 0;
-        }
-        if (packet == 0x9cb)
-        {
-            struct SessionExt *data = session_get(*fd);
-            if (!data)
-                return 0;
-            if (data->clientVersion < 19)
-            {   // not sending new packets to old clients
-                hookStop();
-                return 0;
-            }
         }
     }
     return 0;
