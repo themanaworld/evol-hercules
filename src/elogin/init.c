@@ -10,6 +10,7 @@
 #include "common/HPMi.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/packets.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -47,6 +48,8 @@ HPExport void plugin_init (void)
     addPacket(0x027c, 91, elogin_parse_client_login2, hpParse_Login);
     addPacket(0x5000, 54, elogin_parse_change_paassword, hpParse_FromChar);
     addPacket(0x5003, 4, elogin_parse_serverexit, hpParse_FromChar);
+    packets->addLen(0x7531, -1);
+    packets->addLen(0x63, -1);
 
     addHookPre(login, client_login, elogin_client_login_pre);
     addHookPre(login, check_password, elogin_check_password_pre);

@@ -11,6 +11,7 @@
 #include "common/memmgr.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
+#include "common/packets.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/sql.h"
@@ -53,6 +54,8 @@ HPExport void plugin_init (void)
     addPacket(0x0061, 50, echar_parse_change_paassword, hpParse_Char);
     addPacket(0x5001, 7, echar_parse_login_password_change_ack, hpParse_FromLogin);
     addPacket(0x5002, 4, echar_parse_map_serverexit, hpParse_FromMap);
+
+    packets->addLen(0xb17 + evolPacketOffset, 19);
 
     addHookPre(chr, parse_char_create_new_char, echar_parse_char_create_new_char);
     addHookPre(chr, creation_failed, echar_creation_failed);

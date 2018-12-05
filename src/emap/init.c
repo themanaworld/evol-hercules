@@ -13,6 +13,7 @@
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "common/nullpo.h"
+#include "common/packets.h"
 #include "common/socket.h"
 #include "common/strlib.h"
 #include "common/timer.h"
@@ -221,6 +222,32 @@ HPExport void plugin_init (void)
     addPacket(0xb14 + evolPacketOffset, 3, map_parse_homun_emote, hpClif_Parse);
     addPacket(0xb15 + evolPacketOffset, 9, map_parse_homun_dir, hpClif_Parse);
     addPacket(0xb26 + evolPacketOffset, 6, map_clif_parse_useitem2, hpClif_Parse);
+    packets->addLen(0xB00 + evolPacketOffset, 16);
+    packets->addLen(0xB01 + evolPacketOffset, -1);
+    packets->addLen(0xb02 + evolPacketOffset, 10);
+    packets->addLen(0xb03 + evolPacketOffset, -1);
+    packets->addLen(0xb04 + evolPacketOffset, -1);
+    packets->addLen(0xb05 + evolPacketOffset, -1);
+    packets->addLen(0xb06 + evolPacketOffset, -1);
+    packets->addLen(0xb08 + evolPacketOffset, 27);
+    packets->addLen(0xb0a + evolPacketOffset, -1);
+    packets->addLen(0xb0b + evolPacketOffset, -1);
+    packets->addLen(0xb10 + evolPacketOffset, -1);
+    packets->addLen(0xb16 + evolPacketOffset, -1);
+    packets->addLen(0xb17 + evolPacketOffset, 19);
+    packets->addLen(0xb18 + evolPacketOffset, 28);
+    packets->addLen(0xb1a + evolPacketOffset, 34);
+    packets->addLen(0xb1b + evolPacketOffset, 34);
+    packets->addLen(0xb1c + evolPacketOffset, -1);
+    packets->addLen(0xb1d + evolPacketOffset, 6);
+    packets->addLen(0xb1f + evolPacketOffset, -1);
+    packets->addLen(0xb20 + evolPacketOffset, -1);
+    packets->addLen(0xb21 + evolPacketOffset, 10);
+    packets->addLen(0xb22 + evolPacketOffset, 10);
+    packets->addLen(0xb23 + evolPacketOffset, -1);
+    packets->addLen(0xb24 + evolPacketOffset, 23);
+    packets->addLen(0xb25 + evolPacketOffset, 8);
+
 
     addHookPre(atcommand, msgfd, eatcommand_msgfd_pre);
     addHookPre(atcommand, msgsd, eatcommand_msgsd_pre);
