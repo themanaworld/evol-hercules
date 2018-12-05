@@ -56,8 +56,8 @@ void map_parse_join_channel(int fd)
     if (chan)
     {
         int k;
-        ARR_FIND(0, sd->channel_count, k, sd->channels[k] == chan);
-        if (k < sd->channel_count || channel->join(chan, sd, "", true) == HCS_STATUS_OK)
+        ARR_FIND(0, VECTOR_LENGTH(sd->channels), k, VECTOR_INDEX(sd->channels, k) == chan);
+        if (k < VECTOR_LENGTH(sd->channels) || channel->join(chan, sd, "", true) == HCS_STATUS_OK)
             res = 1;
         else
             res = 0;
@@ -81,33 +81,26 @@ void map_parse_part_channel(int fd)
     else
         p = name;
 
-    for (k = 0; k < sd->channel_count; k ++)
+    ARR_FIND(0, VECTOR_LENGTH(sd->channels), k, strcmpi(p, VECTOR_INDEX(sd->channels, k)->name) == 0);
+    if (k == VECTOR_LENGTH(sd->channels))
     {
-        if (strcmpi(p, sd->channels[k]->name) == 0)
-            break;
+        return;
     }
 
-    if (k == sd->channel_count)
-        return;
-
-    if (sd->channels[k]->type == HCS_TYPE_ALLY)
+    if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY)
     {
-        do
+        for (k = VECTOR_LENGTH(sd->channels) - 1; k >= 0; k--)
         {
-            for (k = 0; k < sd->channel_count; k++)
+            // Loop downward to avoid issues when channel->leave() compacts the array
+            if (VECTOR_INDEX(sd->channels, k)->type == HCS_TYPE_ALLY)
             {
-                if (sd->channels[k]->type == HCS_TYPE_ALLY)
-                {
-                    channel->leave(sd->channels[k], sd);
-                    break;
-                }
+                channel->leave(VECTOR_INDEX(sd->channels, k), sd);
             }
         }
-        while (k != sd->channel_count);
     }
     else
     {
-        channel->leave(sd->channels[k], sd);
+        channel->leave(VECTOR_INDEX(sd->channels, k), sd);
     }
 }
 
