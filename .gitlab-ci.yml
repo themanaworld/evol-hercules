@@ -72,7 +72,7 @@ clang-3.9:
   stage: build
   script:
   - ./tools/ci/jobs/clang39.sh --enable-werror
-  image: debian:unstable
+  image: debian:stable
 
 .clang-3.9-i386:
   stage: build
