@@ -236,10 +236,12 @@ HPExport void plugin_init (void)
     packets->addLen(0xb16 + evolPacketOffset, -1);
     packets->addLen(0xb17 + evolPacketOffset, 19);
     packets->addLen(0xb18 + evolPacketOffset, 28);
+    packets->addLen(0xb19 + evolPacketOffset, 28);
     packets->addLen(0xb1a + evolPacketOffset, 34);
     packets->addLen(0xb1b + evolPacketOffset, 34);
     packets->addLen(0xb1c + evolPacketOffset, -1);
     packets->addLen(0xb1d + evolPacketOffset, 6);
+    packets->addLen(0xb1e + evolPacketOffset, -1);
     packets->addLen(0xb1f + evolPacketOffset, -1);
     packets->addLen(0xb20 + evolPacketOffset, -1);
     packets->addLen(0xb21 + evolPacketOffset, 10);
