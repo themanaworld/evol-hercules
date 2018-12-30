@@ -42,7 +42,7 @@ void map_parse_join_channel(int fd)
     char *p;
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     int res = 0;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
 
     safestrncpy(name, RFIFOP(fd, 2), 24);
@@ -72,7 +72,7 @@ void map_parse_part_channel(int fd)
     char *p;
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     int k;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
 
     safestrncpy(name, RFIFOP(fd, 2), 24);
@@ -109,7 +109,7 @@ void map_parse_pet_say(int fd)
     char message[500];
 
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd || !sd->pd)
+    if (!sd || !sd->pd || !sd->bl.prev)
         return;
 
     if (!pc->can_talk(sd))
@@ -125,7 +125,7 @@ void map_parse_pet_say(int fd)
 void map_parse_pet_emote(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd || !sd->pd)
+    if (!sd || !sd->pd || !sd->bl.prev)
         return;
     const time_t t = time(NULL);
     if (sd->emotionlasttime + 1 >= t)
@@ -154,7 +154,7 @@ void map_parse_get_online_list(int fd)
 void map_parse_pet_move(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd || !sd->pd)
+    if (!sd || !sd->pd || !sd->bl.prev)
         return;
     short x = RFIFOW(fd, 6);
     short y = RFIFOW(fd, 8);
@@ -167,7 +167,7 @@ void map_parse_pet_move(int fd)
 void map_parse_pet_dir(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd || !sd->pd)
+    if (!sd || !sd->pd || !sd->bl.prev)
         return;
     unit->setdir(&sd->pd->bl, RFIFOB(fd, 8));
 }
@@ -177,7 +177,7 @@ void map_parse_homun_say(int fd)
     char message[500];
 
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
     if (!pc->can_talk(sd))
         return;
@@ -194,7 +194,7 @@ void map_parse_homun_say(int fd)
 void map_parse_homun_emote(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
     const time_t t = time(NULL);
     if (sd->emotionlasttime + 1 >= t)
@@ -213,7 +213,7 @@ void map_parse_homun_emote(int fd)
 void map_parse_homun_dir(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
     if (sd->md && sd->md->db)
         unit->setdir(&sd->md->bl, RFIFOB(fd, 8));
@@ -224,7 +224,7 @@ void map_parse_homun_dir(int fd)
 void map_clif_parse_useitem2(int fd)
 {
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
-    if (!sd)
+    if (!sd || !sd->bl.prev)
         return;
 
     if (pc_isdead(sd))
