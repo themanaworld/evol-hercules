@@ -106,7 +106,7 @@
 
 #define getInventoryIndex(idx) \
     const int n = script_getnum(st, idx); \
-    if (n < 0 || n >= MAX_INVENTORY) \
+    if (n < 0 || n >= sd->status.inventorySize) \
     { \
         ShowWarning("Wrong inventory index\n"); \
         script->reportsrc(st); \

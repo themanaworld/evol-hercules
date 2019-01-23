@@ -124,6 +124,7 @@ void echar_creation_failed(int *fdPtr, int *result)
     /* 0x02 = Symbols in Character Names are forbidden */
     /* 0x03 = You are not eligible to open the Character Slot. */
     /* 0x0B = This service is only available for premium users.  */
+    /* 0x0C = Character name is invalid. */
     switch (*result)
     {
         case -1: WFIFOB(fd, 2) = 0x00; break; // 'Charname already exists'
@@ -176,7 +177,7 @@ void echar_parse_login_password_change_ack(int charFd)
     }
 }
 
-void echar_mmo_char_send099d_post(int fd, struct char_session_data *sd)
+void echar_send_HC_ACK_CHARINFO_PER_PAGE_post(int fd, struct char_session_data *sd)
 {
     send_additional_slots(fd, sd);
 }

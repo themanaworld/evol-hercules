@@ -1710,7 +1710,7 @@ BUILDIN(getInvIndexLink)
 
     int index = script_getnum (st, 2);
 
-    if (index < 0 || index >= MAX_INVENTORY)
+    if (index < 0 || index >= MAX_INVENTORY || (sd && index >= sd->status.inventorySize))
     {
         script_pushstr(st, "");
         return false;

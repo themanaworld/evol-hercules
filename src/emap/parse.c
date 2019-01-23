@@ -239,7 +239,7 @@ void map_clif_parse_useitem2(int fd)
     // Whether the item is used or not is irrelevant, the char ain't idle. [Skotlex]
     pc->update_idle_time(sd, BCIDLE_USEITEM);
     const int n = RFIFOW(fd, 2) - 2;
-    if (n < 0 || n >= MAX_INVENTORY)
+    if (n < 0 || n >= sd->status.inventorySize)
         return;
 
     struct item_data *item = itemdb->exists(sd->inventory_data[n]->nameid);

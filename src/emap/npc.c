@@ -104,6 +104,13 @@ int enpc_buysellsel_pre(TBL_PC **sdPtr,
             hookStop();
             return 0;
         }
+        else if (nd->u.scr.shop->type == NST_BARTER)
+        {
+            clif->npc_barter_open(sd, nd);
+            sd->npc_shopid = nd->bl.id;
+            hookStop();
+            return 0;
+        }
         else if (nd->u.scr.shop->type == NST_CUSTOM)
         {
             clif->cashshop_show(sd, nd);

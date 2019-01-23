@@ -286,7 +286,7 @@ int epc_isequip_post(int retVal,
         if (!sd)
             return 0;
 
-        if (n < 0 || n >= MAX_INVENTORY)
+        if (n < 0 || n >= sd->status.inventorySize)
             return 0;
 
         struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
@@ -322,7 +322,7 @@ int epc_useitem_post(int retVal,
     if (!sd)
         return retVal;
 
-    if (n < 0 || n >= MAX_INVENTORY)
+    if (n < 0 || n >= sd->status.inventorySize)
         return retVal;
 
     struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
@@ -343,7 +343,7 @@ static void equippost_effect(struct map_session_data *const sd,
     if (!sd)
         return;
 
-    if (n < 0 || n >= MAX_INVENTORY)
+    if (n < 0 || n >= sd->status.inventorySize)
         return;
 
     struct ItemdExt *data = itemd_get(sd->inventory_data[n]);
@@ -526,7 +526,7 @@ int epc_dropitem_pre(struct map_session_data **sdPtr,
 {
     struct map_session_data *sd = *sdPtr;
     const int n = *nPtr;
-    if (!sd || n < 0 || n >= MAX_INVENTORY)
+    if (!sd || n < 0 || n >= sd->status.inventorySize)
     {
         tempN = 0;
         tempId = 0;
@@ -612,9 +612,9 @@ int epc_insert_card_pre(struct map_session_data **sdPtr,
     struct map_session_data *sd = *sdPtr;
     if (!sd ||
         *idx_equip < 0 ||
-        *idx_equip >= MAX_INVENTORY ||
+        *idx_equip >= sd->status.inventorySize ||
         *idx_card < 0 ||
-        *idx_card >= MAX_INVENTORY)
+        *idx_card >= sd->status.inventorySize)
     {
         tempN = 0;
         tempId = 0;

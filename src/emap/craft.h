@@ -35,7 +35,7 @@ void do_init_craft(void);
 void do_final_craft(void);
 bool craft_checkstr(TBL_PC *sd, const char *craftstr);
 int str_to_craftvar(TBL_PC *sd, const char *craftstr);
-struct craft_vardata *craft_str_to_craft(const char *craftstr);
+struct craft_vardata *craft_str_to_craft(TBL_PC *sd, const char *craftstr);
 void craft_dump(TBL_PC *sd, const int id);
 void craft_delete(const int id);
 struct craft_slot *craft_get_slot(const int id, const int slot);

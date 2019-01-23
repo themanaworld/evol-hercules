@@ -89,7 +89,7 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
         const char *slotstr = VECTOR_INDEX(craftdata->parts, index + 1);
         if (!slotstr || !*slotstr)
             continue;
-        struct strutil_data *slotdata = strutil_split(slotstr, ';', MAX_INVENTORY + 1);
+        struct strutil_data *slotdata = strutil_split(slotstr, ';', sd->status.inventorySize + 1);
         if (!slotdata)
         {
             strutil_free(slotdata);
@@ -110,7 +110,7 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
                 index = atoi(itemstr);
                 amount = 1;
             }
-            if (index < 0 || index >= MAX_INVENTORY)
+            if (index < 0 || index >= sd->status.inventorySize)
             {   // wrong item index
                 strutil_free(slotdata);
                 strutil_free(craftdata);
@@ -137,7 +137,7 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
     }
     strutil_free(craftdata);
 
-    for (f = 0; f < MAX_INVENTORY; f ++)
+    for (f = 0; f < sd->status.inventorySize; f ++)
     {
         const int amount = amounts[f];
         if (!amount)
@@ -152,9 +152,9 @@ bool craft_checkstr(TBL_PC *sd, const char *craftstr)
     return true;
 }
 
-struct craft_vardata *craft_str_to_craft(const char *craftstr)
+struct craft_vardata *craft_str_to_craft(TBL_PC *sd, const char *craftstr)
 {
-    if (!craftstr)
+    if (!sd || !craftstr)
         return false;
     struct strutil_data *craftdata = strutil_split(craftstr, '|', craft_inventory_size + 1);
     if (!craftdata)
@@ -176,7 +176,7 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
         const char *slotstr = VECTOR_INDEX(craftdata->parts, index + 1);
         if (!slotstr || !*slotstr)
             continue;
-        struct strutil_data *slotdata = strutil_split(slotstr, ';', MAX_INVENTORY + 1);
+        struct strutil_data *slotdata = strutil_split(slotstr, ';', sd->status.inventorySize + 1);
         if (!slotdata)
         {
             strutil_free(slotdata);
@@ -199,7 +199,7 @@ struct craft_vardata *craft_str_to_craft(const char *craftstr)
                 amount = 1;
             }
             if (index < 0 ||
-                index >= MAX_INVENTORY)
+                index >= sd->status.inventorySize)
             {   // wrong item index
                 strutil_free(slotdata);
                 strutil_free(craftdata);
@@ -227,7 +227,7 @@ int str_to_craftvar(TBL_PC *sd, const char *craftstr)
         return -1;
     }
 
-    struct craft_vardata *craft = craft_str_to_craft(craftstr);
+    struct craft_vardata *craft = craft_str_to_craft(sd, craftstr);
     if (!craft)
         return -1;
     craft_counter ++;
@@ -259,7 +259,7 @@ void craft_dump(TBL_PC *sd, const int id)
             struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
             const int invIndex = pair->index;
             if (invIndex >= 0 &&
-                invIndex < MAX_INVENTORY &&
+                invIndex < sd->status.inventorySize &&
                 sd->status.inventory[invIndex].nameid)
             {
                 const int item_id = sd->status.inventory[invIndex].nameid;
@@ -340,7 +340,7 @@ bool craft_validate(TBL_PC *sd, const int id)
             struct item_pair *pair = &VECTOR_INDEX(crslot->items, slot);
             const int invIndex = pair->index;
             if (invIndex < 0 ||
-                invIndex >= MAX_INVENTORY ||
+                invIndex >= sd->status.inventorySize ||
                 !sd->status.inventory[invIndex].nameid ||
                 sd->status.inventory[invIndex].amount <= 0 ||
                 sd->status.inventory[invIndex].equip > 0)
@@ -350,7 +350,7 @@ bool craft_validate(TBL_PC *sd, const int id)
             amounts[invIndex] += pair->amount;
         }
     }
-    for (f = 0; f < MAX_INVENTORY; f ++)
+    for (f = 0; f < sd->status.inventorySize; f ++)
     {
         const int amount = amounts[f];
         if (!amount)
@@ -372,7 +372,7 @@ static int find_inventory_item(TBL_PC *sd,
     int i;
     if (!sd)
         return -1;
-    for (i = 0; i < MAX_INVENTORY; i++)
+    for (i = 0; i < sd->status.inventorySize; i++)
     {
         if (sd->status.inventory[i].nameid == id &&
             sd->status.inventory[i].amount >= amount &&
@@ -390,7 +390,7 @@ static int find_inventory_equipped_item(TBL_PC *sd,
     int i;
     if (!sd)
         return -1;
-    for (i = 0; i < MAX_INVENTORY; i++)
+    for (i = 0; i < sd->status.inventorySize; i++)
     {
         if (sd->status.inventory[i].nameid == id &&
             sd->status.inventory[i].amount > 0 &&
@@ -402,13 +402,14 @@ static int find_inventory_equipped_item(TBL_PC *sd,
     return -1;
 }
 
-static int find_local_inventory_item(struct item_pair *local_inventory,
+static int find_local_inventory_item(TBL_PC *sd,
+                                     struct item_pair *local_inventory,
                                      const int id)
 {
     int i;
-    if (!local_inventory)
+    if (!sd || !local_inventory)
         return -1;
-    for (i = 0; i < MAX_INVENTORY; i++)
+    for (i = 0; i < sd->status.inventorySize; i++)
     {
         struct item_pair *pair = &local_inventory[i];
         if (pair->index == id &&
@@ -420,13 +421,14 @@ static int find_local_inventory_item(struct item_pair *local_inventory,
     return -1;
 }
 
-static bool check_items_collection(struct item_pair *local_inventory,
+static bool check_items_collection(TBL_PC *sd,
+                                   struct item_pair *local_inventory,
                                    struct craft_items_collection *vector)
 {
+    if (!sd || !local_inventory)
+        return false;
     int len = VECTOR_LENGTH(*vector);
     int i;
-    if (!local_inventory)
-        return false;
     if (len > 0)
     {
         for (i = 0; i < len; i ++)
@@ -435,7 +437,8 @@ static bool check_items_collection(struct item_pair *local_inventory,
             int needAmount = itemPair->amount;
             while (needAmount > 0)
             {
-                const int index =  find_local_inventory_item(local_inventory,
+                const int index =  find_local_inventory_item(sd,
+                    local_inventory,
                     itemPair->index);
                 if (index < 0)
                     return false;
@@ -595,7 +598,7 @@ static void init_inventory_copy(TBL_PC *sd,
     int f;
     if (!sd || !local_inventory)
         return;
-    for (f = 0; f < MAX_INVENTORY; f ++)
+    for (f = 0; f < sd->status.inventorySize; f ++)
     {
         const int id = sd->status.inventory[f].nameid;
         const int amount = sd->status.inventory[f].amount;
@@ -687,10 +690,10 @@ static int craft_get_recipe(TBL_PC *sd,
         if (!apply_craft_inventory(entry->selected_inventory, craft, &temp_inventory[0]))
             continue;
         //ShowInfo("apply craft correct\n");
-        if (!check_items_collection(&temp_inventory[0], &entry->delete_items))
+        if (!check_items_collection(sd, &temp_inventory[0], &entry->delete_items))
             continue;
         //ShowInfo("delete_items correct\n");
-        if (!check_items_collection(&temp_inventory[0], &entry->required_items))
+        if (!check_items_collection(sd, &temp_inventory[0], &entry->required_items))
             continue;
         //ShowInfo("required_items correct\n");
         if (!check_equips(sd, &entry->required_equips))

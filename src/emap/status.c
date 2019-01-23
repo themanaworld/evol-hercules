@@ -118,7 +118,7 @@ void estatus_calc_pc_additional_pre(struct map_session_data **sdPtr,
         return;
     }
 
-    for (f = 0; f < MAX_INVENTORY; f ++)
+    for (f = 0; f < sd->status.inventorySize; f ++)
     {
         struct item_data *const item = sd->inventory_data[f];
         if (!item)
