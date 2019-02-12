@@ -9,7 +9,7 @@ source ./tools/ci/scripts/init.sh
 aptget_install gcc-6 \
     git-core \
     make autoconf automake autopoint \
-    libtool libmysqlclient-dev libz-dev libpcre3-dev
+    libtool mariadb-client libmariadbclient-dev-compat libz-dev libpcre3-dev
 
 do_init
 build_init
