@@ -15,6 +15,8 @@ void echar_parse_login_password_change_ack(int charFd);
 
 void echar_send_HC_ACK_CHARINFO_PER_PAGE_post(int fd, struct char_session_data *sd);
 
+void echar_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre(int *fdPtr, struct char_session_data **sdPtr);
+
 int echar_mmo_char_send_characters_post(int retVal, int fd, struct char_session_data *sd);
 
 void send_additional_slots(int fd, struct char_session_data* sd);

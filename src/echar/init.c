@@ -60,6 +60,7 @@ HPExport void plugin_init (void)
     addHookPre(chr, parse_char_create_new_char, echar_parse_char_create_new_char);
     addHookPre(chr, creation_failed, echar_creation_failed);
     addHookPre(chr, parse_char_connect, echar_parse_char_connect_pre);
+    addHookPre(chr, send_HC_ACK_CHARINFO_PER_PAGE_tail, echar_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre);
 
     addHookPost(chr, send_HC_ACK_CHARINFO_PER_PAGE, echar_send_HC_ACK_CHARINFO_PER_PAGE_post);
     addHookPost(chr, mmo_char_send_characters, echar_mmo_char_send_characters_post);
