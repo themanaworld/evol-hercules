@@ -48,13 +48,13 @@ gcc-6:
   stage: build
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
-  image: debian:unstable
+  image: debian:stretch
 
 .gcc-6-i386:
   stage: build
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:stretch
 
 gcc-7:
   stage: build
@@ -141,7 +141,7 @@ gcc-6-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-sanitize
-  image: debian:unstable
+  image: debian:stretch
 
 gcc-7-sanitize:
   stage: test
@@ -165,7 +165,7 @@ gcc-6_lto-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:unstable
+  image: debian:stretch
 
 gcc-7_lto-sanitize:
   stage: test
@@ -195,7 +195,7 @@ gcc-6_lto:
   stage: test
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto
-  image: debian:unstable
+  image: debian:stretch
 
 gcc-7_lto:
   stage: test
@@ -229,4 +229,4 @@ gcc-6_unstable_lto-sanitize:
   stage: legacy
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror --enable-lto --enable-sanitize
-  image: debian:unstable
+  image: debian:stretch
