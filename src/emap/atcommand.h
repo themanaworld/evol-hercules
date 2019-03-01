@@ -41,5 +41,6 @@ ACMD1(mapExit);
 ACMD1(serverExit);
 ACMD0(log);
 ACMD4(tee);
+ACMD4(getName);
 
 #endif  // EVOL_MAP_ATCOMMAND

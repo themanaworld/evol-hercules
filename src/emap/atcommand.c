@@ -243,7 +243,6 @@ ACMD0(log)
 ACMD4(tee)
 {
     clif->disp_overhead(&sd->bl, message, AREA_CHAT_WOC, NULL);
-    
     return true;
 }
 
@@ -268,6 +267,25 @@ ACMD1(serverExit)
 
     map->retval = code;
     map->do_shutdown();
+
+    return true;
+}
+
+ACMD1(getName)
+{
+    int id = 0;
+    if (!*message || sscanf(message, "%10d", &id) < 1)
+        return false;
+
+    const struct block_list* bl = map->id2bl(id);
+    if (bl == NULL)
+    {
+        clif->message(fd, "Unit not found");
+    }
+    else
+    {
+        clif->message(fd, status->get_name(bl));
+    }
 
     return true;
 }
