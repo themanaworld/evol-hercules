@@ -138,8 +138,8 @@ MAP_SRC = emap/atcommand.c \
 
 SHARED_CFLAGS = ${CFLAGS} -O3 -pipe -ffast-math -std=c11 -Wall -Wextra -Wno-sign-compare -Wno-unused -fno-omit-frame-pointer \
     -DPCRE_SUPPORT -I../../.. -I../../../../3rdparty \
-    -DPACKETVER=20181002 \
-    -DevolPacketOffset=0x200
+    -DPACKETVER=20150513 \
+    -DevolPacketOffset=0
 SHARED_LDFLAGS = -lm -avoid-version -Wl,--no-undefined
 
 if ENABLE_STATIC_BUILD
