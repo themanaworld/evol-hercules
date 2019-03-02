@@ -409,6 +409,9 @@ void emap_setgatcell2(int16 m,
 
     j = x + y * map->list[m].xs;
 
+    if (map->list[m].cell == (struct mapcell *)0xdeadbeaf)
+        map->cellfromcache(&map->list[m]);
+
     struct mapcell cell0 = map->gat2cell(gat);
     struct mapcell2 *cell = (struct mapcell2 *)&cell0;
     struct mapcell2 *cell2 = (struct mapcell2 *)&map->list[m].cell[j];
