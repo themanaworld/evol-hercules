@@ -45,6 +45,7 @@
 #include "map/trade.h"
 #include "map/quest.h"
 #include "map/rodex.h"
+#include "map/stylist.h"
 
 #include "ecommon/config.h"
 #include "ecommon/init.h"
