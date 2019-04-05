@@ -730,6 +730,32 @@ BUILDIN(setMapMask)
     return true;
 }
 
+// sendMapMask(mask{, "player name"})
+BUILDIN(sendMapMask)
+{
+    const int val = script_getnum(st, 2);
+
+    struct map_session_data *sd = NULL;
+    if (script_hasdata(st, 3) && script_isstringtype(st, 3))
+    {
+        sd = script->nick2sd(st, script_getstr(st, 3));
+    }
+    else
+    {
+        sd = script->rid2sd(st);
+    }
+
+    if (sd == NULL)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    send_mapmask(sd->fd, val);
+    return true;
+}
+
 BUILDIN(getMapMask)
 {
     const char *const mapName = script_getstr(st, 2);
