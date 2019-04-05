@@ -51,4 +51,5 @@ void common_online(void)
     checkVar(OLD_MAX_SKILL_DB, 1510);
     checkVar(MAX_EVOL_SKILLS, 22);
     checkVar(EVOL_FIRST_SKILL, 20000);
+    checkVar(MAX_SKILL_TREE, 110);
 }
