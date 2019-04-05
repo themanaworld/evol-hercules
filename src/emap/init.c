@@ -153,6 +153,7 @@ HPExport void plugin_init (void)
     addScriptCommand("npcwalkto", "ii", npcWalkTo);
     addScriptCommand("rif", "is*", rif);
     addScriptCommand("setmapmask", "si", setMapMask);
+    addScriptCommand("sendmapmask", "i*", sendMapMask);
     addScriptCommand("addmapmask", "si", addMapMask);
     addScriptCommand("removemapmask", "si", removeMapMask);
     addScriptCommand("getmapmask", "s", getMapMask);

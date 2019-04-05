@@ -29,6 +29,7 @@ BUILDIN(setq);
 BUILDIN(setNpcDir);
 BUILDIN(rif);
 BUILDIN(setMapMask);
+BUILDIN(sendMapMask);
 BUILDIN(getMapMask);
 BUILDIN(addMapMask);
 BUILDIN(removeMapMask);
