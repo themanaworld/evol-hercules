@@ -149,7 +149,7 @@ void eclif_quest_add(TBL_PC *sd,
     hookStop();
 }
 
-// legacy eclif_charnameack_legacy start
+// legacy eclif_blname_ack_legacy start
 // clientVersion <= 24
 //
 
@@ -189,7 +189,7 @@ struct packet_reqnameall_legacy_ack {
 /// 0095 <id>.L <char name>.24B (ZC_ACK_REQNAME)
 /// 0195 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B (ZC_ACK_REQNAMEALL)
 /// 0A30 <id>.L <char name>.24B <party name>.24B <guild name>.24B <position name>.24B <title id>.L (ZC_ACK_REQNAMEALL2)
-static void eclif_charnameack_legacy(int fd, struct block_list *bl)
+static void eclif_blname_ack_legacy(int fd, struct block_list *bl)
 {
     struct packet_reqnameall_legacy_ack packet;
     memset(&packet, 0, sizeof(struct packet_reqnameall_legacy_ack));
@@ -312,7 +312,7 @@ static void eclif_charnameack_legacy(int fd, struct block_list *bl)
             memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
             break;
         default:
-            ShowError("clif_charnameack: bad type %u(%d)\n", bl->type, bl->id);
+            ShowError("clif_blname_ack: bad type %u(%d)\n", bl->type, bl->id);
             return;
     }
 
@@ -388,12 +388,12 @@ static void eclif_charnameupdate_legacy(struct map_session_data *ssd)
 
 //
 // clientVersion <= 24
-// legacy eclif_charnameack_legacy end
+// legacy eclif_blname_ack_legacy end
 
-void eclif_charnameack_pre(int *fdPtr,
-                           struct block_list **blPtr)
+void eclif_blname_ack_pre(int *fdPtr,
+                          struct block_list **blPtr)
 {
-    eclif_charnameack_pre_sub(fdPtr, blPtr);
+    eclif_blname_ack_pre_sub(fdPtr, blPtr);
     if (hookStopped())
         return;
 
@@ -402,13 +402,13 @@ void eclif_charnameack_pre(int *fdPtr,
         return;
     if (data->clientVersion <= 24)
     {
-        eclif_charnameack_legacy(*fdPtr, *blPtr);
+        eclif_blname_ack_legacy(*fdPtr, *blPtr);
         hookStop();
     }
 }
 
-void eclif_charnameack_pre_sub(int *fdPtr,
-                               struct block_list **blPtr)
+void eclif_blname_ack_pre_sub(int *fdPtr,
+                              struct block_list **blPtr)
 {
     struct block_list *bl = *blPtr;
     if (!bl)

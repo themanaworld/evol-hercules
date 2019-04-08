@@ -614,7 +614,7 @@ void map_alwaysVisible_send(TBL_PC *sd)
             continue;
         }
         clif->set_unit_idle(&npc->bl, sd, SELF);
-        clif->charnameack(sd->fd, &npc->bl);
+        clif->blname_ack(sd->fd, &npc->bl);
     }
 }
 

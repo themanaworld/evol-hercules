@@ -9,10 +9,10 @@ void eclif_quest_add(TBL_PC *sd,
                      struct quest *qd);
 void eclif_quest_add_pre(TBL_PC **sdPtr,
                          struct quest **qdPtr);
-void eclif_charnameack_pre(int *fdPtr,
-                           struct block_list **blPtr);
-void eclif_charnameack_pre_sub(int *fdPtr,
-                               struct block_list **blPtr);
+void eclif_blname_ack_pre(int *fdPtr,
+                          struct block_list **blPtr);
+void eclif_blname_ack_pre_sub(int *fdPtr,
+                              struct block_list **blPtr);
 void eclif_charnameupdate_pre(struct map_session_data **ssdPtr);
 void eclif_getareachar_unit_post(TBL_PC *sd,
                                  struct block_list *bl);

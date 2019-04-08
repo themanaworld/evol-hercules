@@ -288,7 +288,7 @@ HPExport void plugin_init (void)
     addHookPre(npc, unload, enpc_unload_pre);
     addHookPre(clif, quest_send_list, eclif_quest_send_list_pre);
     addHookPre(clif, quest_add, eclif_quest_add_pre);
-    addHookPre(clif, charnameack, eclif_charnameack_pre);
+    addHookPre(clif, blname_ack, eclif_blname_ack_pre);
     addHookPre(clif, charnameupdate, eclif_charnameupdate_pre);
     addHookPre(clif, getareachar_item, eclif_getareachar_item_pre);
     addHookPre(clif, dropflooritem, eclif_dropflooritem_pre);
