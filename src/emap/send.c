@@ -211,7 +211,7 @@ void send_pc_info(struct block_list* bl1,
     int len = 14;
     if (tdata->clientVersion >= 24)
         len = 20;
-    else if (bl1 == bl2 || tdata->clientVersion >= 21)
+    else if (bl1 == bl2)
         len = 16;
     char buf[len];
     WBUFW (buf, 0) = 0xb0a + evolPacketOffset;
@@ -222,7 +222,7 @@ void send_pc_info(struct block_list* bl1,
     else
         WBUFL (buf, 8) = 0;
     WBUFW (buf, 12) = data->mount;
-    if (bl1 == bl2 || tdata->clientVersion >= 21)
+    if (bl1 == bl2)
         WBUFW (buf, 14) = data->language;
     if (tdata->clientVersion >= 24)
     {
