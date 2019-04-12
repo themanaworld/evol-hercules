@@ -388,7 +388,7 @@ void send_client_command(struct map_session_data *sd, const char *const command)
 
     const unsigned int len = (unsigned int)strlen(command);
     const int fd = sd->fd;
-    WFIFOHEAD (fd, len);
+    WFIFOHEAD (fd, len + 4);
     WFIFOW (fd, 0) = 0xb16 + evolPacketOffset;
     WFIFOW (fd, 2) = len + 4;
     memcpy (WFIFOP (fd, 4), command, len);
