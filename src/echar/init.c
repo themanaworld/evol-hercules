@@ -56,6 +56,7 @@ HPExport void plugin_init (void)
     addPacket(0x5002, 4, echar_parse_map_serverexit, hpParse_FromMap);
 
     packets->addLen(0xb17 + evolPacketOffset, 19);
+    packets->addLen(0x970, 36);
 
     addHookPre(chr, parse_char_create_new_char, echar_parse_char_create_new_char);
     addHookPre(chr, creation_failed, echar_creation_failed);
