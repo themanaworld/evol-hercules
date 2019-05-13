@@ -35,11 +35,6 @@ HPExport struct hplugin_info pinfo =
     HPM_VERSION
 };
 
-#define addHookPrePriv(ifname, type, funcname, hook) ( \
-        (void)((HPMHOOK_pre_ ## type ## _ ## funcname)0 == (hook)), \
-        HPMi->hooking->AddHook(HOOK_TYPE_PRE, #ifname "->" #funcname, (hook), HPMi->pid) \
-        )
-
 HPExport void plugin_init (void)
 {
     interfaces_init_common();
@@ -53,7 +48,7 @@ HPExport void plugin_init (void)
 
     addHookPre(login, client_login, elogin_client_login_pre);
     addHookPre(login, check_password, elogin_check_password_pre);
-    addHookPrePriv(lclif->p, PRIV__lclif, parse_CA_CONNECT_INFO_CHANGED, elogin_parse_ping_pre);
+    addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, elogin_parse_ping_pre);
 
     addHookPost(login, client_login, elogin_client_login_post);
 }

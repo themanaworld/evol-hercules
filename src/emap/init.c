@@ -40,6 +40,7 @@
 #include "map/party.h"
 #include "map/pet.h"
 #include "map/pc.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/storage.h"
 #include "map/trade.h"

@@ -17,6 +17,7 @@
 #include "map/instance.h"
 #include "map/npc.h"
 #include "map/pc.h"
+#include "map/refine.h"
 #include "map/script.h"
 #include "map/quest.h"
 
