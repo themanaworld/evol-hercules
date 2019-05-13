@@ -64,6 +64,7 @@ int eunit_can_move_pre(struct block_list **blPtr)
 
     if (sd && (
         sd->state.vending ||
+        sd->state.prevend ||
         sd->state.buyingstore ||
         sd->block_action.move))
     {
