@@ -529,6 +529,102 @@ void eclif_charnameupdate_pre(struct map_session_data **ssdPtr)
     }
 }
 
+// clientVersion < 26
+void eclif_homname_ack_pre(int *fdPtr, struct block_list **blPtr)
+{
+    struct block_list *bl = *blPtr;
+    int fd = *fdPtr;
+    struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
+    if (data->clientVersion >= 26)
+    {
+        return;
+    }
+
+    nullpo_retv(bl);
+    Assert_retv(bl->type == BL_HOM);
+
+    struct packet_reqname_ack packet = { 0 };
+    packet.packet_id = reqName;
+    packet.gid = bl->id;
+    memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
+    clif->send_selforarea(fd, bl, &packet, sizeof(struct packet_reqname_ack));
+    hookStop();
+}
+
+// clientVersion < 26
+void eclif_mername_ack_pre(int *fdPtr, struct block_list **blPtr)
+{
+    struct block_list *bl = *blPtr;
+    int fd = *fdPtr;
+    struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
+    if (data->clientVersion >= 26)
+    {
+        return;
+    }
+
+    nullpo_retv(bl);
+    Assert_retv(bl->type == BL_MER);
+
+    struct packet_reqname_ack packet = { 0 };
+    packet.packet_id = reqName;
+    packet.gid = bl->id;
+    memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
+    clif->send_selforarea(fd, bl, &packet, sizeof(struct packet_reqname_ack));
+    hookStop();
+}
+
+// clientVersion < 26
+void eclif_petname_ack_pre(int *fdPtr, struct block_list **blPtr)
+{
+    struct block_list *bl = *blPtr;
+    int fd = *fdPtr;
+    struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
+    if (data->clientVersion >= 26)
+    {
+        return;
+    }
+
+    nullpo_retv(bl);
+    Assert_retv(bl->type == BL_PET);
+
+    struct packet_reqname_ack packet = { 0 };
+    packet.packet_id = reqName;
+    packet.gid = bl->id;
+    memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
+    clif->send_selforarea(fd, bl, &packet, sizeof(struct packet_reqname_ack));
+    hookStop();
+}
+
+// clientVersion < 26
+void eclif_elemname_ack_pre(int *fdPtr, struct block_list **blPtr)
+{
+    struct block_list *bl = *blPtr;
+    int fd = *fdPtr;
+    struct SessionExt *data = session_get(fd);
+    if (!data)
+        return;
+    if (data->clientVersion >= 26)
+    {
+        return;
+    }
+
+    nullpo_retv(bl);
+    Assert_retv(bl->type == BL_ELEM);
+
+    struct packet_reqname_ack packet = { 0 };
+    packet.packet_id = reqName;
+    packet.gid = bl->id;
+    memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
+    clif->send_selforarea(fd, bl, &packet, sizeof(struct packet_reqname_ack));
+    hookStop();
+}
+
 #define equipPos(index, field) \
     equip = sd->equip_index[index]; \
     if (equip >= 0) \
