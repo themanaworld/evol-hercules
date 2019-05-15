@@ -545,7 +545,8 @@ void eclif_homname_ack_pre(int *fdPtr, struct block_list **blPtr)
     nullpo_retv(bl);
     Assert_retv(bl->type == BL_HOM);
 
-    struct packet_reqname_ack packet = { 0 };
+    struct packet_reqname_ack packet;
+    memset(&packet, 0, sizeof(packet));
     packet.packet_id = reqName;
     packet.gid = bl->id;
     memcpy(packet.name, BL_UCCAST(BL_HOM, bl)->homunculus.name, NAME_LENGTH);
@@ -569,7 +570,8 @@ void eclif_mername_ack_pre(int *fdPtr, struct block_list **blPtr)
     nullpo_retv(bl);
     Assert_retv(bl->type == BL_MER);
 
-    struct packet_reqname_ack packet = { 0 };
+    struct packet_reqname_ack packet;
+    memset(&packet, 0, sizeof(packet));
     packet.packet_id = reqName;
     packet.gid = bl->id;
     memcpy(packet.name, BL_UCCAST(BL_MER, bl)->db->name, NAME_LENGTH);
@@ -593,7 +595,8 @@ void eclif_petname_ack_pre(int *fdPtr, struct block_list **blPtr)
     nullpo_retv(bl);
     Assert_retv(bl->type == BL_PET);
 
-    struct packet_reqname_ack packet = { 0 };
+    struct packet_reqname_ack packet;
+    memset(&packet, 0, sizeof(packet));
     packet.packet_id = reqName;
     packet.gid = bl->id;
     memcpy(packet.name, BL_UCCAST(BL_PET, bl)->pet.name, NAME_LENGTH);
@@ -617,7 +620,8 @@ void eclif_elemname_ack_pre(int *fdPtr, struct block_list **blPtr)
     nullpo_retv(bl);
     Assert_retv(bl->type == BL_ELEM);
 
-    struct packet_reqname_ack packet = { 0 };
+    struct packet_reqname_ack packet;
+    memset(&packet, 0, sizeof(packet));
     packet.packet_id = reqName;
     packet.gid = bl->id;
     memcpy(packet.name, BL_UCCAST(BL_ELEM, bl)->db->name, NAME_LENGTH);
