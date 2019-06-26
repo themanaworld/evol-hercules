@@ -1282,7 +1282,8 @@ BUILDIN(failedRemoveCardsIndex)
         if (sd->status.inventory[i].card[c] && itemdb_type(sd->status.inventory[i].card[c]) == IT_CARD)
         {
             cardflag = 1;
-            sd->status.inventory[i].card[c] = 0;
+            if (typefail == 1)
+                sd->status.inventory[i].card[c] = 0;
 
             if (typefail == 2)
             {   // add cards to inventory, clear
@@ -1468,6 +1469,12 @@ BUILDIN(npcWalkTo)
     if (nd)
     {
         unit->bl2ud2(&nd->bl); // ensure nd->ud is safe to edit
+        if (nd->ud == NULL)
+        {
+            ShowWarning("buildin_npcwalkto: floating NPC don't have unit data.\n");
+            return false;
+        }
+
         if (!nd->status.hp)
         {
             status_calc_npc(nd, SCO_FIRST);
@@ -1477,7 +1484,7 @@ BUILDIN(npcWalkTo)
             status_calc_npc(nd, SCO_NONE);
         }
         nd->vd.dead_sit = 0;
-        script_pushint(st, unit->walktoxy(&nd->bl,x,y,0));
+        script_pushint(st, unit->walktoxy(&nd->bl, x, y, 0));
         return true;
     }
     else
