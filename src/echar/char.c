@@ -346,3 +346,19 @@ void echat_send_login_serverexit(const int code)
     WFIFOW(chr->login_fd, 2) = code;
     WFIFOSET(chr->login_fd, 4);
 }
+
+// send non-binary gender to map server
+int echar_mmo_gender(const struct char_session_data **sd __attribute__ ((unused)),
+                     const struct mmo_charstatus **p __attribute__ ((unused)), char *sex)
+{
+    hookStop();
+
+    switch (*sex) {
+        case 'M':
+            return SEX_MALE;
+        case 'F':
+            return SEX_FEMALE;
+        default:
+            return 3; // FIXME: this enum has no SEX_OTHER
+    }
+}

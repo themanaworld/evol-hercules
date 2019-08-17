@@ -66,6 +66,9 @@ HPExport void plugin_init (void)
     addHookPre(chr, parse_char_connect, echar_parse_char_connect_pre);
     addHookPre(chr, send_HC_ACK_CHARINFO_PER_PAGE_tail, echar_send_HC_ACK_CHARINFO_PER_PAGE_tail_pre);
 
+    // non-binary gender stuff:
+    addHookPre(chr, mmo_gender, echar_mmo_gender);
+
     addHookPost(chr, send_HC_ACK_CHARINFO_PER_PAGE, echar_send_HC_ACK_CHARINFO_PER_PAGE_post);
     addHookPost(chr, mmo_char_send_characters, echar_mmo_char_send_characters_post);
     addHookPost(chr, parse_char_connect, echar_parse_char_connect_post);
