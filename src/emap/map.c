@@ -30,6 +30,7 @@
 #include "emap/data/mobd.h"
 #include "emap/data/npcd.h"
 #include "emap/data/session.h"
+#include "emap/enum/beingflag.h"
 #include "emap/struct/itemdext.h"
 #include "emap/struct/mapdext.h"
 #include "emap/struct/mobdext.h"
@@ -144,15 +145,18 @@ void emap_online_list(int fd)
             continue;
 
         uint8 state = data->state;
-        if (sd->status.sex == 1)
-            state |= 128;
+
+        if (sd->status.sex == SEX_MALE)
+            state = (state | BEINGFLAG_GENDER_MALE) & ~BEINGFLAG_GENDER_HIDDEN;
+        else if (sd->status.sex == SEX_FEMALE)
+            state &= ~(BEINGFLAG_GENDER_MALE | BEINGFLAG_GENDER_HIDDEN);
         else
-            state = (state | 128) ^ 128;
+            state = (state | BEINGFLAG_GENDER_HIDDEN) & ~BEINGFLAG_GENDER_MALE;
 
         if (pc_has_permission(sd, permission_send_gm_flag))
-            state |= 64;
+            state |= BEINGFLAG_GM;
         else
-            state = (state | 64) ^ 64;
+            state ^= BEINGFLAG_GM;
 
         *ptr = state;
         ptr ++;
