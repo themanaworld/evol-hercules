@@ -53,6 +53,7 @@
 #include "emap/atcommand.h"
 #include "emap/battle.h"
 #include "emap/battleground.h"
+#include "emap/chrif.h"
 #include "emap/clan.h"
 #include "emap/clif.h"
 #include "emap/config.h"
@@ -266,6 +267,7 @@ HPExport void plugin_init (void)
     addHookPre(pc, can_Adopt, epc_can_Adopt_pre);
     addHookPre(pc, adoption, epc_adoption_pre);
     addHookPre(pc, readparam, epc_readparam_pre);
+    addHookPre(pc, setparam, epc_setparam_pre);
     addHookPre(pc, setregistry, epc_setregistry_pre);
     addHookPre(pc, equipitem_pos, epc_equipitem_pos_pre);
     addHookPre(pc, unequipitem_pos, epc_unequipitem_pos_pre);
@@ -344,6 +346,7 @@ HPExport void plugin_init (void)
     addHookPre(status, calc_pc_additional, estatus_calc_pc_additional_pre);
     addHookPre(status, calc_pc_recover_hp, estatus_calc_pc_recover_hp_pre);
     addHookPre(homun, gainexp, ehomunculus_gainexp_pre);
+    addHookPre(chrif, changesex, echrif_changesex);
 
     addHookPost(battle, calc_weapon_attack, ebattle_calc_weapon_attack_post);
     addHookPost(battle, calc_magic_attack, ebattle_calc_weapon_attack_post);

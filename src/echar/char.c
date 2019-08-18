@@ -21,6 +21,8 @@
 
 #include "plugins/HPMHooking.h"
 
+#include "ecommon/enum/gender.h"
+
 #include "echar/char.h"
 #include "echar/config.h"
 
@@ -355,10 +357,52 @@ int echar_mmo_gender(const struct char_session_data **sd __attribute__ ((unused)
 
     switch (*sex) {
         case 'M':
-            return SEX_MALE;
+            return GENDER_MALE;
         case 'F':
-            return SEX_FEMALE;
+            return GENDER_FEMALE;
         default:
-            return 3; // FIXME: this enum has no SEX_OTHER
+            return GENDER_NONBINARY;
     }
+}
+
+// update sql from map to char with the new gender
+// XXX: this whole hook is only to change one line; we might want to change it
+//      upstream in hercules
+int echar_changecharsex(int *char_idPtr, int *sexPtr)
+{
+    int char_id = *char_idPtr;
+    int sex = *sexPtr;
+
+    int account_id = 0;
+    char *data;
+
+    // get character data
+    if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `account_id` FROM `char` WHERE `char_id` = '%d'", char_id)) {
+        Sql_ShowDebug(inter->sql_handle);
+        hookStop();
+        return 1;
+    }
+
+    if (SQL->NumRows(inter->sql_handle) != 1 || SQL_ERROR == SQL->NextRow(inter->sql_handle)) {
+        SQL->FreeResult(inter->sql_handle);
+        hookStop();
+        return 1;
+    }
+
+    SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
+    SQL->FreeResult(inter->sql_handle);
+
+    if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `char` SET `sex` = '%c' WHERE `char_id` = '%d'", sex == SEX_MALE ? 'M' : (sex == SEX_FEMALE ? 'F' : 'U'), char_id)) {
+        Sql_ShowDebug(inter->sql_handle);
+        hookStop();
+        return 1;
+    }
+
+    // disconnect player if online on char-server
+    chr->disconnect_player(account_id);
+
+    // notify all mapservers about this change
+    chr->changesex(account_id, sex);
+    hookStop();
+    return 0;
 }

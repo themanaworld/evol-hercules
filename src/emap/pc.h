@@ -12,6 +12,10 @@ enum VarConst
 int64 epc_readparam_pre(const TBL_PC **sdPtr,
                         int *type);
 
+int epc_setparam_pre(TBL_PC **sdPtr,
+                     int *type,
+                     int64 *val);
+
 int epc_setregistry_pre(TBL_PC **sdPtr,
                         int64 *reg,
                         int *val);

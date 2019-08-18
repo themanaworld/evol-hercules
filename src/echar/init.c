@@ -68,6 +68,7 @@ HPExport void plugin_init (void)
 
     // non-binary gender stuff:
     addHookPre(chr, mmo_gender, echar_mmo_gender);
+    addHookPre(chr, changecharsex, echar_changecharsex);
 
     addHookPost(chr, send_HC_ACK_CHARINFO_PER_PAGE, echar_send_HC_ACK_CHARINFO_PER_PAGE_post);
     addHookPost(chr, mmo_char_send_characters, echar_mmo_char_send_characters_post);

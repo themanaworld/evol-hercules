@@ -7,6 +7,7 @@ CHAR_SRC = echar/char.c \
     echar/init.c \
     ecommon/config.c \
     ecommon/config.h \
+    ecommon/enum/gender.h \
     ecommon/init.c \
     ecommon/init.h \
     ecommon/serverversion.h
@@ -36,6 +37,8 @@ MAP_SRC = emap/atcommand.c \
     emap/battle.h \
     emap/battleground.c \
     emap/battleground.h \
+    emap/chrif.c \
+    emap/chrif.h \
     emap/clan.c \
     emap/clan.h \
     emap/clif.c \
@@ -128,6 +131,7 @@ MAP_SRC = emap/atcommand.c \
     emap/utils/formatutils.h \
     ecommon/config.c \
     ecommon/config.h \
+    ecommon/enum/gender.h \
     ecommon/init.c \
     ecommon/init.h \
     ecommon/serverversion.h \

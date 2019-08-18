@@ -31,4 +31,6 @@ void echat_send_login_serverexit(const int code);
 
 int echar_mmo_gender(const struct char_session_data **, const struct mmo_charstatus **, char *sex);
 
+int echar_changecharsex(int *char_idPtr, int *sexPtr);
+
 #endif  // EVOL_CHAR_CHAR

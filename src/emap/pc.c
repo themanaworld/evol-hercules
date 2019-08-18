@@ -25,6 +25,8 @@
 
 #include "plugins/HPMHooking.h"
 
+#include "ecommon/enum/gender.h"
+
 #include "emap/clif.h"
 #include "emap/pc.h"
 #include "emap/send.h"
@@ -51,6 +53,51 @@ int64 epc_readparam_pre(const TBL_PC **sdPtr,
         return data->clientVersion;
     }
     return 0;
+}
+
+/**
+ * change sex without the complicated RO stuff
+ * @return 1 on success
+**/
+static int epc_changesex(TBL_PC *sd, unsigned char sex)
+{
+    // because this is evol we do not any of the bulky sex change stuff
+    // since every gender can use every job and every item
+    switch (sex) {
+        case GENDER_FEMALE:
+        case GENDER_MALE:
+        case GENDER_NONBINARY:
+            sd->status.sex = sex;
+            break;
+        default:
+            return 0;
+    }
+
+    // FIXME: there's no way to tell manaplus we changed gender!
+    //clif->updatestatus(sd, SP_SEX);
+
+    // FIXME: show gender change to other players:
+    //pc->stop_following(sd); // fixpos
+
+    // TODO: add a packet to manaplus that calls dstBeing->setGender() in ea/beingrecv or modify an existing packet and bump the protocol version
+
+    // tell char server we changed sex
+    chrif->changesex(sd, 0);
+
+    // XXX: we kick to the char server because we currently can't update in manaplus
+    eclif_force_charselect(sd);
+    return 1;
+}
+
+int epc_setparam_pre(TBL_PC **sd, int *type, int64 *val)
+{
+    if (*type == SP_SEX)
+    {
+        int ret = epc_changesex(*sd, *val);
+        hookStop();
+        return ret;
+    }
+    return 1;
 }
 
 int epc_setregistry_pre(TBL_PC **sdPtr,

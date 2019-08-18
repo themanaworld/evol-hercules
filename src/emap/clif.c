@@ -17,6 +17,7 @@
 #include "common/random.h"
 #include "common/timer.h"
 #include "map/battle.h"
+#include "map/chrif.h"
 #include "map/elemental.h"
 #include "map/homunculus.h"
 #include "map/guild.h"
@@ -1539,5 +1540,22 @@ void eclif_rodex_icon_pre(int *fdPtr,
     {
         hookStop();
         return;
+    }
+}
+
+void eclif_force_charselect(struct map_session_data *sd)
+{
+	int fd = sd->fd;
+
+    /* Rovert's Prevent logout option - Fixed [Valaris] */
+    if (!sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK]
+        && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC__INVISIBILITY] && !sd->sc.data[SC_SUHIDE]
+        && (!battle->bc->prevent_logout || DIFF_TICK(timer->gettick(), sd->canlog_tick) > battle->bc->prevent_logout)
+    ) {
+        //Send to char-server for character selection.
+        chrif->charselectreq(sd, sockt->session[fd]->client_addr);
+    } else {
+        // GM-kick the player
+        clif->GM_kick(NULL, sd);
     }
 }

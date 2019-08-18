@@ -94,4 +94,5 @@ void eclif_parse_NpcStringInput(int fd,
                                 struct map_session_data* sd) __attribute__((nonnull (2)));
 void eclif_rodex_icon_pre(int *fdPtr,
                           bool *showPtr);
+void eclif_force_charselect(struct map_session_data *sd);
 #endif  // EVOL_MAP_CLIF
