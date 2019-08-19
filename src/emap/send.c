@@ -178,8 +178,6 @@ void send_pc_own_flags(struct block_list* bl)
     struct SessionExt *data = session_get_bysd(sd);
     if (!data)
         return;
-    if (data->clientVersion < 22)
-        return;
 
     const int fd = sd->fd;
     WFIFOHEAD(fd, 8);
