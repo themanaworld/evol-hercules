@@ -18,7 +18,7 @@ gcc-snapshot:
   stage: build
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:unstable
 
 gcc-4.8:
   stage: build
@@ -31,18 +31,6 @@ gcc-4.9:
   script:
   - ./tools/ci/jobs/gcc49.sh --enable-werror
   image: debian:jessie
-
-.gcc-5:
-  stage: build
-  script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror
-  image: debian:unstable
-
-.gcc-5-i386:
-  stage: build
-  script:
-  - ./tools/ci/jobs/gcc5.sh --enable-werror
-  image: vicamo/debian:sid-i386
 
 gcc-6:
   stage: build
@@ -66,19 +54,31 @@ gcc-7:
   stage: build
   script:
   - ./tools/ci/jobs/gcc7.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:unstable
+
+gcc-8:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc8.sh --enable-werror
+  image: debian:unstable
+
+gcc-9:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc9.sh --enable-werror
+  image: debian:unstable
 
 clang-3.9:
   stage: build
   script:
   - ./tools/ci/jobs/clang39.sh --enable-werror
-  image: debian:stable
+  image: debian:stretch
 
 .clang-3.9-i386:
   stage: build
   script:
   - ./tools/ci/jobs/clang39.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:unstable
 
 clang-6:
   stage: build
@@ -90,7 +90,7 @@ clang-6:
   stage: build
   script:
   - ./tools/ci/jobs/clang6.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:unstable
 
 clang-7:
   stage: build
@@ -102,7 +102,13 @@ clang-7:
   stage: build
   script:
   - ./tools/ci/jobs/clang7.sh --enable-werror
-  image: vicamo/debian:sid-i386
+  image: i386/debian:unstable
+
+clang-8:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang8.sh --enable-werror
+  image: debian:unstable
 
 # tests
 
@@ -149,6 +155,18 @@ gcc-7-sanitize:
   - ./tools/ci/jobs/gcc7.sh --enable-werror --enable-sanitize
   image: debian:unstable
 
+gcc-8-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc8.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
+gcc-9-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc9.sh --enable-werror --enable-sanitize
+  image: debian:unstable
+
 gcc-4.9_lto-sanitize:
   stage: test
   script:
@@ -171,6 +189,18 @@ gcc-7_lto-sanitize:
   stage: test
   script:
   - ./tools/ci/jobs/gcc7.sh --enable-werror --enable-lto --enable-sanitize
+  image: debian:unstable
+
+gcc-8_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc8.sh --enable-werror --enable-lto --enable-sanitize
+  image: debian:unstable
+
+gcc-9_lto-sanitize:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc9.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-4.8-lto:
@@ -201,6 +231,18 @@ gcc-7_lto:
   stage: test
   script:
   - ./tools/ci/jobs/gcc7.sh --enable-werror --enable-lto
+  image: debian:unstable
+
+gcc-8_lto:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc8.sh --enable-werror --enable-lto
+  image: debian:unstable
+
+gcc-9_lto:
+  stage: test
+  script:
+  - ./tools/ci/jobs/gcc9.sh --enable-werror --enable-lto
   image: debian:unstable
 
 # disabled due not support -std=c11
