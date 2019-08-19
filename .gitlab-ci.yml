@@ -14,7 +14,7 @@ gcc-snapshot:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
   image: debian:unstable
 
-.gcc-snapshot-i386:
+gcc-snapshot-i386:
   stage: build
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
@@ -38,7 +38,7 @@ gcc-6:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
   image: debian:stretch
 
-.gcc-6-i386:
+gcc-6-i386:
   stage: build
   script:
   - ./tools/ci/jobs/gcc6.sh --enable-werror
@@ -50,7 +50,7 @@ gcc-7:
   - ./tools/ci/jobs/gcc7.sh --enable-werror
   image: debian:unstable
 
-.gcc-7-i386:
+gcc-7-i386:
   stage: build
   script:
   - ./tools/ci/jobs/gcc7.sh --enable-werror
@@ -62,11 +62,23 @@ gcc-8:
   - ./tools/ci/jobs/gcc8.sh --enable-werror
   image: debian:unstable
 
+gcc-8-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc8.sh --enable-werror
+  image: i386/debian:unstable
+
 gcc-9:
   stage: build
   script:
   - ./tools/ci/jobs/gcc9.sh --enable-werror
   image: debian:unstable
+
+gcc-9-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/gcc9.sh --enable-werror
+  image: i386/debian:unstable
 
 clang-3.9:
   stage: build
@@ -109,6 +121,12 @@ clang-8:
   script:
   - ./tools/ci/jobs/clang8.sh --enable-werror
   image: debian:unstable
+
+clang-8-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang8.sh --enable-werror
+  image: i386/debian:unstable
 
 # tests
 
