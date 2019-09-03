@@ -293,6 +293,11 @@ int epc_isequip_post(int retVal,
         if (!data)
             return retVal;
 
+        // test for missing basic stats calculation
+        if (sd->regen.sregen == NULL)
+        {
+            return retVal;
+        }
         if (sd->battle_status.str < data->requiredStr ||
             sd->battle_status.agi < data->requiredAgi ||
             sd->battle_status.vit < data->requiredVit ||
