@@ -2163,9 +2163,15 @@ BUILDIN(input)
         sd->state.menu_or_input = 1;
         st->state = RERUNLINE;
         if (is_string_variable(name))
+        {
             clif->scriptinputstr(sd, st->oid);
+        }
         else
+        {
+            sd->npc_amount_min = min;
+            sd->npc_amount_max = max;
             clif->scriptinput(sd, st->oid);
+        }
     }
     else
     {
