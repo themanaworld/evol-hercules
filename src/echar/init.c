@@ -39,6 +39,9 @@
 #include "echar/config.h"
 
 #include "plugins/HPMHooking.h"
+
+HPExport struct HPMHooking_interface HPMHooking_s;
+
 #include "common/HPMDataCheck.h" /* should always be the last file included! (if you don't make it last, it'll intentionally break compile time) */
 
 HPExport struct hplugin_info pinfo =

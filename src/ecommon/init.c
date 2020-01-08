@@ -8,6 +8,11 @@
 #include <string.h>
 
 #include "common/HPMi.h"
+
+HPExport struct HPMi_interface HPMi_s;
+HPExport struct HPMi_interface *HPMi;
+HPExport void *(*import_symbol) (char *name, unsigned int pID);
+
 #include "common/conf.h"
 #include "common/memmgr.h"
 #include "common/mapindex.h"
