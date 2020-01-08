@@ -52,4 +52,5 @@ void common_online(void)
     checkVar(MAX_EVOL_SKILLS, 22);
     checkVar(EVOL_FIRST_SKILL, 20000);
     checkVar(MAX_SKILL_TREE, 110);
+    checkVar(BASE_GUILD_SIZE, 100);
 }
