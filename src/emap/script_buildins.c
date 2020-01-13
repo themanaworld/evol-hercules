@@ -2348,3 +2348,94 @@ BUILDIN(isInstance)
     script_pushint(st, instance->valid(instance_id) ? 1 : 0);
     return true;
 }
+
+/*==========================================
+ * return the battle stats of a structure
+ * Supported values are most of UDT_* ones
+ * Not all values are supported; Only those without
+ * another assessor are (eg. MaxHP vs UDT_MAXHP)
+ *
+ * From 1 onwards: Str, Agi, Vit, Int, Dex, Luck
+ * From 7 onwards: AtkMin, AtkMax, Def, MDef, Hit, Flee
+ * From 13 onwards: MAtkMin, MatkMax
+ *------------------------------------------*/
+BUILDIN(readBattleParam)
+{
+    struct map_session_data *sd;
+    sd = script->id2sd(st, script_getnum(st, 2));
+    int data = script_getnum(st,3);
+
+    // Error
+    if (sd == NULL) {
+        ShowError("Target is not player in readbattleparam(%d)\n", data);
+        script_pushint(st, -1);
+        return true;
+    }
+
+    switch (data) {
+        // * From 1 onwards: Str, Agi, Vit, Int, Dex, Luck
+        case UDT_STR:
+            script_pushint(st, sd->battle_status.str);
+            break;
+        case UDT_AGI:
+            script_pushint(st, sd->battle_status.agi);
+            break;
+        case UDT_VIT:
+            script_pushint(st, sd->battle_status.vit);
+            break;
+        case UDT_INT:
+            script_pushint(st, sd->battle_status.int_);
+            break;
+        case UDT_DEX:
+            script_pushint(st, sd->battle_status.dex);
+            break;
+        case UDT_LUK:
+            script_pushint(st, sd->battle_status.luk);
+            break;
+        case UDT_ATKRANGE:
+            script_pushint(st, sd->battle_status.rhw.range);
+            break;
+        case UDT_ATKMIN:
+            script_pushint(st, sd->battle_status.rhw.atk);
+            break;
+        case UDT_ATKMAX:
+            script_pushint(st, sd->battle_status.rhw.atk+sd->battle_status.batk);
+            break;
+        case UDT_DEF:
+            script_pushint(st, sd->battle_status.def);
+            break;
+        case UDT_MDEF:
+            script_pushint(st, sd->battle_status.mdef+sd->battle_status.mdef2);
+            break;
+        case UDT_HIT:
+            script_pushint(st, sd->battle_status.hit);
+            break;
+        case UDT_FLEE:
+            script_pushint(st, sd->battle_status.flee);
+            break;
+        case UDT_MATKMIN:
+            script_pushint(st, sd->battle_status.matk_min);
+            break;
+        case UDT_MATKMAX:
+            script_pushint(st, sd->battle_status.matk_max);
+            break;
+        case UDT_CRIT:
+            script_pushint(st, sd->battle_status.cri);
+            break;
+        case UDT_ELETYPE:
+            script_pushint(st, sd->battle_status.def_ele);
+            break;
+        case UDT_ADELAY:
+            script_pushint(st, sd->battle_status.adelay);
+            break;
+        case UDT_DMOTION:
+            script_pushint(st, sd->battle_status.dmotion);
+            break;
+        default:
+            ShowError("Wrong paramType in readbattleparam(%d)\nAre you sure you used the right constants?\n", data);
+            script_pushint(st, -1);
+            break;
+    }
+
+    return true;
+}
