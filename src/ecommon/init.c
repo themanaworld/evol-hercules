@@ -52,7 +52,7 @@ void common_online(void)
     checkVar(MAX_SKILL_DB, 1532);
     checkVar(MAX_SKILL_ID, 20022);
     checkVar(SC_MAX, 658);
-    checkVar(SI_MAX, 971);
+    checkVar(SI_MAX, 991);
     checkVar(OLD_MAX_SKILL_DB, 1510);
     checkVar(MAX_EVOL_SKILLS, 22);
     checkVar(EVOL_FIRST_SKILL, 20000);
