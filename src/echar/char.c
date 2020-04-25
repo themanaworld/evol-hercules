@@ -349,7 +349,7 @@ void echat_send_login_serverexit(const int code)
     WFIFOSET(chr->login_fd, 4);
 }
 
-// send non-binary gender to map server
+// send all genders to map server
 int echar_mmo_gender(const struct char_session_data **sd __attribute__ ((unused)),
                      const struct mmo_charstatus **p __attribute__ ((unused)), char *sex)
 {
@@ -361,7 +361,7 @@ int echar_mmo_gender(const struct char_session_data **sd __attribute__ ((unused)
         case 'F':
             return GENDER_FEMALE;
         default:
-            return GENDER_NONBINARY;
+            return GENDER_HIDDEN;
     }
 }
 

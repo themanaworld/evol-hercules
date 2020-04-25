@@ -95,7 +95,7 @@ void escript_hardcoded_constants_pre(void)
     script->set_constant("Gender", SP_SEX, true, false);
     script->set_constant("GENDER_FEMALE", GENDER_FEMALE, false, false);
     script->set_constant("GENDER_MALE", GENDER_MALE, false, false);
-    script->set_constant("GENDER_NONBINARY", GENDER_NONBINARY, false, false);
+    script->set_constant("GENDER_HIDDEN", GENDER_HIDDEN, false, false);
     script->constdb_comment(NULL);
     eskill_addskill_conststants();
 }

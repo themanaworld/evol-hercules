@@ -7,14 +7,14 @@
 #include "common/mmo.h"
 
 /**
- *  identical to SEX_ but also includes nonbinary
+ *  identical to SEX_ but also includes the hidden value
  */
 typedef enum Gender
 {
     GENDER_FEMALE = SEX_FEMALE,
     GENDER_MALE = SEX_MALE,
     __UNUSED_GENDER_SERVER = SEX_SERVER,
-    GENDER_NONBINARY,
+    GENDER_HIDDEN,
 } Gender;
 
 #endif  // EVOL_ENUM_GENDER

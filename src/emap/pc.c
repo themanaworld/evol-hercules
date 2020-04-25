@@ -66,7 +66,7 @@ static int epc_changesex(TBL_PC *sd, unsigned char sex)
     switch (sex) {
         case GENDER_FEMALE:
         case GENDER_MALE:
-        case GENDER_NONBINARY:
+        case GENDER_HIDDEN:
             sd->status.sex = sex;
             break;
         default:
