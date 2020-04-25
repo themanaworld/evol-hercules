@@ -156,7 +156,7 @@ void emap_online_list(int fd)
         if (pc_has_permission(sd, permission_send_gm_flag))
             state |= BEINGFLAG_GM;
         else
-            state ^= BEINGFLAG_GM;
+            state &= ~BEINGFLAG_GM;
 
         *ptr = state;
         ptr ++;
