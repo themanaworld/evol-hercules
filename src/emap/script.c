@@ -17,6 +17,8 @@
 
 #include "plugins/HPMHooking.h"
 
+#include "ecommon/enum/gender.h"
+
 #include "emap/script.h"
 #include "emap/map.h"
 #include "emap/data/itemd.h"
@@ -88,6 +90,12 @@ void escript_hardcoded_constants_pre(void)
 {
     script->constdb_comment("Evol constants");
     script->set_constant("MAX_SLOTS", MAX_SLOTS, false, false);
+
+    // genders: for use with the Sex param
+    script->set_constant("Gender", SP_SEX, true, false);
+    script->set_constant("GENDER_FEMALE", GENDER_FEMALE, false, false);
+    script->set_constant("GENDER_MALE", GENDER_MALE, false, false);
+    script->set_constant("GENDER_NONBINARY", GENDER_NONBINARY, false, false);
     script->constdb_comment(NULL);
     eskill_addskill_conststants();
 }
