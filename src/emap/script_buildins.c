@@ -2351,14 +2351,14 @@ BUILDIN(isInstance)
 
 BUILDIN(getNpcSubtype)
 {
-    TBL_NPC *nd = map->id2bl(st->oid);
+    TBL_NPC *nd = map->id2nd(st->oid);
 
     if (script_hasdata(st, 2))
     {
         if (script_isstringtype(st, 2)) {
             nd = npc->name2id(script_getstr(st, 2));
         } else {
-            nd = map->id2bl(script_getnum(st, 2));
+            nd = map->id2nd(script_getnum(st, 2));
         }
     }
 
