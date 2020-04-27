@@ -215,6 +215,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setitemoptionbyindex", "iii*", setItemOptionByIndex);
     addScriptCommand("isinstance", "i", isInstance);
     addScriptCommand("readbattleparam","ii",readBattleParam);
+    addScriptCommand("getnpcsubtype", "?", getNpcSubtype);
 
     do_init_langs();
 

@@ -100,5 +100,6 @@ BUILDIN(getItemOptionParamByIndex);
 BUILDIN(setItemOptionByIndex);
 BUILDIN(isInstance);
 BUILDIN(readBattleParam);
+BUILDIN(getNpcSubtype);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS

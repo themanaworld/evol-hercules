@@ -2349,6 +2349,30 @@ BUILDIN(isInstance)
     return true;
 }
 
+BUILDIN(getNpcSubtype)
+{
+    TBL_NPC *nd = map->id2bl(st->oid);
+
+    if (script_hasdata(st, 2))
+    {
+        if (script_isstringtype(st, 2)) {
+            nd = npc->name2id(script_getstr(st, 2));
+        } else {
+            nd = map->id2bl(script_getnum(st, 2));
+        }
+    }
+
+    if (!nd)
+    {
+        ShowWarning("npc not found\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    script_pushint(st, nd->subtype);
+    return true;
+}
+
 /*==========================================
  * return the battle stats of a structure
  * Supported values are most of UDT_* ones

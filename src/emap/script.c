@@ -96,6 +96,13 @@ void escript_hardcoded_constants_pre(void)
     script->set_constant("GENDER_FEMALE", GENDER_FEMALE, false, false);
     script->set_constant("GENDER_MALE", GENDER_MALE, false, false);
     script->set_constant("GENDER_HIDDEN", GENDER_HIDDEN, false, false);
+
+    // npc subtypes
+    script->set_constant("NPCSUBTYPE_WARP", WARP, false, false);
+    script->set_constant("NPCSUBTYPE_SHOP", SHOP, false, false);
+    script->set_constant("NPCSUBTYPE_SCRIPT", SCRIPT, false, false);
+    script->set_constant("NPCSUBTYPE_CASHSHOP", CASHSHOP, false, false);
+    script->set_constant("NPCSUBTYPE_TOMB", TOMB, false, false);
     script->constdb_comment(NULL);
     eskill_addskill_conststants();
 }
