@@ -51,11 +51,11 @@ void common_online(void)
 {
     checkVar(MAX_SKILL_DB, 1532);
     checkVar(MAX_SKILL_ID, 20022);
-    checkVar(SC_MAX, 658);
-    checkVar(SI_MAX, 991);
+    checkVar(SC_MAX, 682);
+    checkVar(SI_MAX, 1175);
     checkVar(OLD_MAX_SKILL_DB, 1510);
     checkVar(MAX_EVOL_SKILLS, 22);
     checkVar(EVOL_FIRST_SKILL, 20000);
-    checkVar(MAX_SKILL_TREE, 110);
+    checkVar(MAX_SKILL_TREE, 108);
     checkVar(BASE_GUILD_SIZE, 100);
 }
