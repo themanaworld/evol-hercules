@@ -44,7 +44,7 @@ void eInitChangeTables(void)
     status->set_sc(EVOL_PHYSICAL_SHIELD,
         (sc_type)SC_PHYSICAL_SHIELD,
         SCB_DEF | SCB_DEF2 | SCB_ASPD);
-    status->dbs->IconChangeTable[EVOL_PHYSICAL_SHIELD].relevant_bl_types |= BL_SCEFFECT;
+    status->dbs->IconChangeTable[SC_PHYSICAL_SHIELD].relevant_bl_types |= BL_SCEFFECT;
 }
 
 int estatus_init_post(int retVal,
