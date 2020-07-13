@@ -15,6 +15,7 @@
 #include "map/chat.h"
 #include "map/chrif.h"
 #include "map/instance.h"
+#include "map/mob.h"
 #include "map/npc.h"
 #include "map/pc.h"
 #include "map/refine.h"
@@ -2461,5 +2462,77 @@ BUILDIN(readBattleParam)
             break;
     }
 
+    return true;
+}
+
+// Returns the Acc. ID of the owner of an instance
+BUILDIN(InstanceOwner)
+{
+    int instance_id = -1;
+
+    if (script_hasdata(st, 2)) {
+        instance_id = script_getnum(st, 2);
+    } else if (st->instance_id >= 0) {
+        instance_id = st->instance_id;
+    } else {
+        ShowError("buildin_instanceowner: no instance attached\n");
+        script_pushint(st, false);
+        return true;
+    }
+
+    // Do instance exists?
+    if (!instance->valid(instance_id)) {
+        script_pushint(st, false);
+        return true;
+    }
+
+    // Note: This does not returns type!
+    // using this against party/guilds instances not advised.
+    // returns 0 if either instance doesn't exists or is global
+    script_pushint(st, (int)instance->list[instance_id].owner_id);
+    return true;
+}
+
+
+// Advanced monster data overrider
+// aggravate(guid)
+BUILDIN(aggravate)
+{
+    struct block_list *bl;
+    struct map_session_data *sd = NULL;
+
+    bl = map->id2bl(script_getnum(st, 2));
+
+    // We only work with mobs
+    if (bl == NULL) {
+        ShowWarning("buildin_aggravate: Error in finding object with given GID %d!\n", script_getnum(st, 2));
+        script_pushint(st, false);
+        return false;
+    }
+
+    if (bl->type != BL_MOB) {
+        ShowWarning("buildin_aggravate: GID %d is not a monster!\n", script_getnum(st, 2));
+        script_pushint(st, false);
+        return false;
+    }
+
+    // Player must be attached
+    sd = script->rid2sd(st);
+    if (sd == NULL) {
+        ShowWarning("buildin_aggravate: Ran without player attached!");
+        script_pushint(st, false);
+        return false;
+    }
+
+    // Create monster structure
+    struct mob_data *md = BL_UCAST(BL_MOB, bl);
+
+    // Override the provoke flag
+    md->state.provoke_flag = sd->status.account_id;
+    // We could use mob->target()
+    // But I want aggravate to apply without any checks
+    // Skipping chase checks
+    md->target_id = sd->status.account_id;
+    script_pushint(st, true);
     return true;
 }
