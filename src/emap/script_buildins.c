@@ -1473,6 +1473,7 @@ BUILDIN(npcWalkTo)
         if (nd->ud == NULL)
         {
             ShowWarning("buildin_npcwalkto: floating NPC don't have unit data.\n");
+            script_pushint(st, 0);
             return false;
         }
 
@@ -1485,7 +1486,7 @@ BUILDIN(npcWalkTo)
             status_calc_npc(nd, SCO_NONE);
         }
         nd->vd.dead_sit = 0;
-        script_pushint(st, unit->walktoxy(&nd->bl, x, y, 0));
+        script_pushint(st, unit->walk_toxy(&nd->bl, x, y, 0) ^ 1);
         return true;
     }
     else
@@ -1524,14 +1525,14 @@ BUILDIN(chatJoin)
     if (script_hasdata(st, 4))
     {
         if (script_isstringtype(st, 3))
-            sd = map->nick2sd(script_getstr(st, 3));
+            sd = map->nick2sd(script_getstr(st, 3), false);
         if (script_isstringtype(st, 4))
             password = script_getstr(st, 4);
     }
     else if (script_hasdata(st, 3))
     {
         if (script_isstringtype(st, 3))
-            sd = map->nick2sd(script_getstr(st, 3));
+            sd = map->nick2sd(script_getstr(st, 3), false);
     }
     else
     {

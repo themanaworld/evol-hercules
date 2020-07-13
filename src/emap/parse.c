@@ -161,7 +161,7 @@ void map_parse_pet_move(int fd)
 
     struct block_list *pdBl = &sd->pd->bl;
     if (map->getcell(pdBl->m, pdBl, x, y, CELL_CHKPASS))
-        unit->walktoxy(pdBl, x, y, 0);
+        unit->walk_toxy(pdBl, x, y, 0);
 }
 
 void map_parse_pet_dir(int fd)
@@ -169,7 +169,7 @@ void map_parse_pet_dir(int fd)
     TBL_PC* sd = (TBL_PC*)sockt->session[fd]->session_data;
     if (!sd || !sd->pd || !sd->bl.prev)
         return;
-    unit->setdir(&sd->pd->bl, RFIFOB(fd, 8));
+    unit->set_dir(&sd->pd->bl, (enum unit_dir)RFIFOB(fd, 8));
 }
 
 void map_parse_homun_say(int fd)
@@ -216,9 +216,9 @@ void map_parse_homun_dir(int fd)
     if (!sd || !sd->bl.prev)
         return;
     if (sd->md && sd->md->db)
-        unit->setdir(&sd->md->bl, RFIFOB(fd, 8));
+        unit->set_dir(&sd->md->bl, (enum unit_dir)RFIFOB(fd, 8));
     else if (sd->hd && homun_alive(sd->hd))
-        unit->setdir(&sd->hd->bl, RFIFOB(fd, 8));
+        unit->set_dir(&sd->hd->bl, (enum unit_dir)RFIFOB(fd, 8));
 }
 
 void map_clif_parse_useitem2(int fd)

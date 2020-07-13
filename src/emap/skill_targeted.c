@@ -1,6 +1,7 @@
 // Copyright (c) Copyright (c) Hercules Dev Team, licensed under GNU GPL.
 // Copyright (c) 2014 - 2016 Evol developers
 
+#include "common/hercules.h"
 #include "map/clif.h"
 #include "map/map.h"
 #include "map/status.h"

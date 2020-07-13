@@ -1484,7 +1484,7 @@ void eclif_parse_WalkToXY(int fd,
 
     if (sd->ud.state.change_walk_target == 0)
     {
-        if (unit->walktoxy(&sd->bl, x, y, 4) &&
+        if (unit->walk_toxy(&sd->bl, x, y, 4) == 0 &&
             sd->ud.state.change_walk_target == 1)
         {
             send_walk_fail(sd->fd, x, y);
@@ -1492,7 +1492,7 @@ void eclif_parse_WalkToXY(int fd,
     }
     else
     {
-        unit->walktoxy(&sd->bl, x, y, 4);
+        unit->walk_toxy(&sd->bl, x, y, 4);
     }
 }
 

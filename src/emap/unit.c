@@ -171,5 +171,5 @@ int eunit_walktoxy_pre(struct block_list **blPtr  __attribute__ ((unused)),
         skill->sit(sd, 0);
     }
 
-    return 1;
+    return 0;
 }

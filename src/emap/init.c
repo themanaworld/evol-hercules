@@ -323,7 +323,7 @@ HPExport void plugin_init (void)
     addHookPre(itemdb, readdb_additional_fields, eitemdb_readdb_additional_fields_pre);
     addHookPre(itemdb, destroy_item_data, edestroy_item_data_pre);
     addHookPre(unit, can_move, eunit_can_move_pre);
-    addHookPre(unit, walktoxy, eunit_walktoxy_pre);
+    addHookPre(unit, walk_toxy, eunit_walktoxy_pre);
     addHookPre(mail, invalid_operation, email_invalid_operation_pre);
     addHookPre(map, list_final, edo_final_maps_pre);
     addHookPre(map, cell2gat, emap_cell2gat_pre);
