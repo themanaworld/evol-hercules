@@ -308,6 +308,7 @@ int emap_getcellp_pre(struct map_data **mPtr,
                 case CELL_CHKNOCHAT:
                 case CELL_CHKICEWALL:
                 case CELL_CHKNOICEWALL:
+                case CELL_CHKNOSKILL:
                     break;
             }
         }
