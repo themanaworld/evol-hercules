@@ -16,7 +16,8 @@ uint32 emob_read_db_mode_sub_post(uint32 retVal,
                                   struct mob_db *entry,
                                   struct config_setting_t *t);
 struct mob_data *emob_spawn_dataset_post(struct mob_data *retVal,
-                                         struct spawn_data *data);
+                                         struct spawn_data *data,
+                                         int npc_id);
 int emob_dead_pre(struct mob_data **mdPtr,
                   struct block_list **srcPtr,
                   int *typePtr);

@@ -214,26 +214,6 @@ int estatus_change_start_post(int retVal,
     return retVal;
 }
 
-int estatus_change_end__post(int retVal,
-                             struct block_list* bl __attribute__ ((unused)),
-                             enum sc_type type __attribute__ ((unused)),
-                             int tid __attribute__ ((unused)),
-                             const char* file __attribute__ ((unused)),
-                             int line __attribute__ ((unused)))
-{
-    if (!retVal)
-        return retVal;
-
-/*
-    switch ((esc_type)type)
-    {
-        default:
-            break;
-    }
-*/
-    return retVal;
-}
-
 void estatus_calc_pc_recover_hp_pre(struct map_session_data **sdPtr __attribute__ ((unused)),
                                     struct status_data **bstatusPtr)
 {

@@ -37,11 +37,6 @@ int estatus_change_start_post(int retVal,
                               int rate, int val1, int val2,
                               int val3, int val4, int tick, int flag);
 
-int estatus_change_end__post(int retVal,
-                             struct block_list* bl,
-                             enum sc_type type, int tid,
-                             const char* file, int line);
-
 void estatus_calc_pc_recover_hp_pre(struct map_session_data **sdPtr,
                                     struct status_data **bstatusPtr);
 

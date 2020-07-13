@@ -272,7 +272,8 @@ int enpc_get_var_num(const TBL_NPC *const npc,
 }
 
 int enpc_unload_pre(struct npc_data** ndPtr,
-                    bool *singlePtr __attribute__ ((unused)))
+                    bool *singlePtr __attribute__ ((unused)),
+                    bool *unloadMobsPtr __attribute__ ((unused)))
 {
     struct npc_data *nd = *ndPtr;
     nullpo_ret(nd);

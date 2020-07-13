@@ -294,7 +294,8 @@ uint32 emob_read_db_mode_sub_post(uint32 retVal,
 }
 
 struct mob_data *emob_spawn_dataset_post(struct mob_data *retVal,
-                                         struct spawn_data *data __attribute__ ((unused)))
+                                         struct spawn_data *data __attribute__ ((unused)),
+                                         int npc_id __attribute__ ((unused)))
 {
     if (retVal)
     {
