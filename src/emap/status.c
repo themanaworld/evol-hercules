@@ -43,21 +43,8 @@ void eInitChangeTables(void)
 {
     status->set_sc(EVOL_PHYSICAL_SHIELD,
         (sc_type)SC_PHYSICAL_SHIELD,
-        SI_PHYSICAL_SHIELD,
         SCB_DEF | SCB_DEF2 | SCB_ASPD);
-
-	status->dbs->IconChangeTable[SC_INCAGI] = SI_EVOL_INCAGI;
-	status->dbs->IconChangeTable[SC_INCVIT] = SI_EVOL_INCVIT;
-	status->dbs->IconChangeTable[SC_INCINT] = SI_EVOL_INCINT;
-	status->dbs->IconChangeTable[SC_INCDEX] = SI_EVOL_INCDEX;
-	status->dbs->IconChangeTable[SC_INCLUK] = SI_EVOL_INCLUK;
-
-	status->dbs->IconChangeTable[SC_INCHIT] = SI_EVOL_INCHIT;
-	status->dbs->IconChangeTable[SC_INCFLEE] = SI_EVOL_INCFLEE;
-	status->dbs->IconChangeTable[SC_WALKSPEED] = SI_EVOL_WALKSPEED;
-	status->dbs->IconChangeTable[SC_INCMHPRATE] = SI_EVOL_INCMHPRATE;
-	status->dbs->IconChangeTable[SC_INCMSPRATE] = SI_EVOL_INCMSPRATE;
-//    status->dbs->DisplayType[SC_PHYSICAL_SHIELD] = true;
+    status->dbs->IconChangeTable[EVOL_PHYSICAL_SHIELD].relevant_bl_types |= BL_SCEFFECT;
 }
 
 int estatus_init_post(int retVal,
