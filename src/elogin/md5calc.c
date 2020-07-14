@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include "mt_rand.h"
 
+#include "common/strlib.h"
+
 #ifndef UINT_MAX
 #define UINT_MAX 4294967295U
 #endif
@@ -323,6 +325,10 @@ char *MD5_saltcrypt(const char *key, const char *salt)
 
     // Hash the buffer back into sbuf
     MD5_String(buf, sbuf);
+
+    // explicitly truncate the hash to fit in obuf
+    int salt_len = (int)safestrnlen(salt, 30);
+    sbuf[30 - salt_len] = '\0';
 
     snprintf(obuf, 32, "!%s$%s", salt, sbuf);
     return(obuf);
