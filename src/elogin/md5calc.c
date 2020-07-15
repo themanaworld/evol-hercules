@@ -253,7 +253,7 @@ void MD5_String2binary (const char *string, char *output)
     memset (padding_message + copy_len, 0, 64 - copy_len);  //It buries by 0 until it becomes extended bit length.
     padding_message[copy_len] |= 0x80;  //The next of a message is 1.
 
-    //1-4 
+    //1-4
     //If 56 bytes or more (less than 64 bytes) of remainder becomes, it will calculate by extending to 64 bytes.
     if (56 <= copy_len)
     {
@@ -326,11 +326,13 @@ char *MD5_saltcrypt(const char *key, const char *salt)
     // Hash the buffer back into sbuf
     MD5_String(buf, sbuf);
 
-    // explicitly truncate the hash to fit in obuf
-    int salt_len = (int)safestrnlen(salt, 30);
-    sbuf[30 - salt_len] = '\0';
+    char *p = obuf;
+    *p = '!';
+    strncpy(++p, salt, 30);
+    int len = (int)safestrnlen(p, 30);
+    *(p + len) = '$';
+    strncpy(p + len + 1, sbuf, 29 - len);
 
-    snprintf(obuf, 32, "!%s$%s", salt, sbuf);
     return(obuf);
 }
 
@@ -409,4 +411,3 @@ in_addr_t MD5_ip(char *secret, in_addr_t ip)
 
     return conv.ip;
 }
-
