@@ -2,7 +2,6 @@ stages:
   - build
   - test
   - legacy
-  - broken
 
 before_script:
   - uname -a
@@ -10,13 +9,13 @@ before_script:
 # simple builds
 
 gcc-snapshot:
-  stage: broken
+  stage: build
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
   image: debian:unstable
 
 gcc-snapshot-i386:
-  stage: broken
+  stage: build
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror
   image: i386/debian:unstable
@@ -132,13 +131,13 @@ clang-8-i386:
 # tests
 
 gcc-snapshot_lto-sanitize:
-  stage: broken
+  stage: test
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-lto --enable-sanitize
   image: debian:unstable
 
 gcc-snapshot-sanitize:
-  stage: broken
+  stage: test
   script:
   - ./tools/ci/jobs/gccsnapshot.sh --enable-werror --enable-sanitize
   image: debian:unstable
