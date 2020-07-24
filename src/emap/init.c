@@ -218,6 +218,7 @@ HPExport void plugin_init (void)
     addScriptCommand("instanceowner", "i", InstanceOwner);
     addScriptCommand("aggravate", "i", aggravate);
     addScriptCommand("getnpcsubtype", "?", getNpcSubtype);
+    addScriptCommand("kick", "v?", kick);
 
     do_init_langs();
 

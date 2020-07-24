@@ -2537,3 +2537,37 @@ BUILDIN(aggravate)
     script_pushint(st, true);
     return true;
 }
+
+BUILDIN(kick)
+{
+    struct map_session_data *tsd = NULL;
+
+    if (script_isstringtype(st, 2)) {
+        tsd = map->nick2sd(script_getstr(st, 2), false);
+    } else {
+        tsd = map->id2sd(script_getnum(st, 2));
+    }
+
+    if (tsd == NULL) {
+        // silently fail
+        script_pushint(st, 0);
+        return true;
+    }
+
+    // clif_authfail_fd reason
+    // see https://github.com/ManaPlus/ManaPlus/blob/master/src/net/eathena/generalrecv.cpp#L48
+    int reason = 15; // default: 15 - disconnection forced by a GM
+
+    if (script_hasdata(st, 3)) {
+        reason = script_getnum(st, 3);
+    }
+
+    if (tsd->fd > 0) {
+        clif->authfail_fd(tsd->fd, reason);
+    } else {
+        map->quit(tsd);
+    }
+
+    script_pushint(st, 1);
+    return true;
+}
