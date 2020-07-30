@@ -97,6 +97,12 @@ void escript_hardcoded_constants_pre(void)
     script->set_constant("GENDER_MALE", GENDER_MALE, false, false);
     script->set_constant("GENDER_HIDDEN", GENDER_HIDDEN, false, false);
 
+    // for servers that do not use sex/gender
+    script->set_constant("BodyType", SP_SEX, true, false);
+    script->set_constant("BODYTYPE_1", GENDER_HIDDEN, false, false);
+    script->set_constant("BODYTYPE_2", GENDER_FEMALE, false, false);
+    script->set_constant("BODYTYPE_3", GENDER_MALE, false, false);
+
     // npc subtypes
     script->set_constant("NPCSUBTYPE_WARP", WARP, false, false);
     script->set_constant("NPCSUBTYPE_SHOP", SHOP, false, false);
@@ -158,6 +164,14 @@ void eset_reg_npcscope_num_pre(struct script_state **stPtr,
         hookStop();
     }
     else if (!strcmp(name, ".sex"))
+    {
+        getExt1();
+        clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
+        nd->vd.sex = *val;
+        clif->spawn(&nd->bl);
+        hookStop();
+    }
+    else if (!strcmp(name, ".bodytype"))
     {
         getExt1();
         clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
@@ -271,6 +285,12 @@ int eget_val_npcscope_num_pre(struct script_state **stPtr,
         return ext->language;
     }
     else if (!strcmp(name, ".sex"))
+    {
+        getExt1Return(0);
+        hookStop();
+        return nd->vd.sex;
+    }
+    else if (!strcmp(name, ".bodytype"))
     {
         getExt1Return(0);
         hookStop();
