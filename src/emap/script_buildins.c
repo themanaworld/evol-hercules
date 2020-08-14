@@ -1775,7 +1775,7 @@ BUILDIN(getCraftRecipe)
     const char *name5 = reference_getname(data5);
     struct reg_db *ref5 = reference_getref(data5);
 
-    size_t size = 0;
+    uint32 size = 0;
 
     for (int i = 0; i < craft_inventory_size; i++) {
         struct item_pair *entryItem = &entry_inventory->items[i];
