@@ -146,6 +146,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getcraftslotid", "ii", getCraftSlotId);
     addScriptCommand("getcraftslotamount", "ii", getCraftSlotAmount);
     addScriptCommand("validatecraft", "i", validateCraft);
+    addScriptCommand("getcraftrecipe", "iirr", getCraftRecipe);
     addScriptCommand("getq", "i", getq);
     addScriptCommand("getq1", "i", getq);
     addScriptCommand("getq2", "i", getq2);

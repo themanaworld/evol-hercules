@@ -24,6 +24,7 @@
 
 #include "emap/clif.h"
 #include "emap/craft.h"
+#include "emap/craftconf.h"
 #include "emap/lang.h"
 #include "emap/map.h"
 #include "emap/hashtable.h"
@@ -1727,6 +1728,70 @@ BUILDIN(findCraftEntry)
     return true;
 }
 
+BUILDIN(getCraftRecipe)
+{
+    // arg 0: recipe id
+    // arg 1: inventory id
+    // arg 2: qty array
+    // arg 3: item array
+    // returns size
+
+    struct script_data *data4 = script_getdata(st, 4);
+    struct script_data *data5 = script_getdata(st, 5);
+
+    if (!data_isreference(data4) || reference_toconstant(data4)
+        || !data_isreference(data5) || reference_toconstant(data5)) {
+        ShowError("script:getcraftrecipe: 3rd and 4th arguments must be variables\n");
+        st->state = END;
+        return false;
+    }
+
+    int recipe_id = script_getnum(st, 2);
+    struct craft_db_entry *entry = idb_get(craftconf_db, recipe_id);
+
+    if (!entry) {
+        // recipe does not exist
+        script_pushint(st, -1);
+        return true;
+    }
+
+    int inventory_id = script_getnum(st, 3);
+    int inv_count = VECTOR_LENGTH(entry->inventories);
+
+    if (inventory_id >= inv_count) {
+        // inventory does not exist
+        script_pushint(st, -2);
+        return true;
+    }
+
+    struct craft_db_inventory *entry_inventory = &VECTOR_INDEX(entry->inventories, inventory_id);
+
+    int32 id4 = reference_getid(data4);
+    uint32 start4 = reference_getindex(data4);
+    const char *name4 = reference_getname(data4);
+    struct reg_db *ref4 = reference_getref(data4);
+    int32 id5 = reference_getid(data5);
+    uint32 start5 = reference_getindex(data5);
+    const char *name5 = reference_getname(data5);
+    struct reg_db *ref5 = reference_getref(data5);
+
+    size_t size = 0;
+
+    for (int i = 0; i < craft_inventory_size; i++) {
+        struct item_pair *entryItem = &entry_inventory->items[i];
+
+        int index4 = start4 + size;
+        int index5 = start5 + size;
+
+        script->set_reg(st, NULL, reference_uid(id4, index4), name4, (const void *)h64BPTRSIZE(entryItem->amount), ref4);
+        script->set_reg(st, NULL, reference_uid(id5, index5), name5, (const void *)h64BPTRSIZE(entryItem->index), ref5);
+        size++;
+    }
+
+    script_pushint(st, size);
+    return true;
+}
+
 BUILDIN(useCraft)
 {
     getSD()
@@ -1805,9 +1870,9 @@ BUILDIN(getInvIndexLink)
 }
 
 /*==========================================
- * Shows an emoticon on top of the player/npc
- * emotion emotion#, <target: 0 - NPC, 1 - PC>, <NPC/PC name>
- *------------------------------------------*/
+* Shows an emoticon on top of the player/npc
+* emotion emotion#, <target: 0 - NPC, 1 - PC>, <NPC/PC name>
+*------------------------------------------*/
 //Optional second parameter added by [Skotlex]
 BUILDIN(emotion)
 {
@@ -2376,15 +2441,15 @@ BUILDIN(getNpcSubtype)
 }
 
 /*==========================================
- * return the battle stats of a structure
- * Supported values are most of UDT_* ones
- * Not all values are supported; Only those without
- * another assessor are (eg. MaxHP vs UDT_MAXHP)
- *
- * From 1 onwards: Str, Agi, Vit, Int, Dex, Luck
- * From 7 onwards: AtkMin, AtkMax, Def, MDef, Hit, Flee
- * From 13 onwards: MAtkMin, MatkMax
- *------------------------------------------*/
+* return the battle stats of a structure
+* Supported values are most of UDT_* ones
+* Not all values are supported; Only those without
+* another assessor are (eg. MaxHP vs UDT_MAXHP)
+*
+* From 1 onwards: Str, Agi, Vit, Int, Dex, Luck
+* From 7 onwards: AtkMin, AtkMax, Def, MDef, Hit, Flee
+* From 13 onwards: MAtkMin, MatkMax
+*------------------------------------------*/
 BUILDIN(readBattleParam)
 {
     struct map_session_data *sd;
