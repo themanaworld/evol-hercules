@@ -1780,8 +1780,8 @@ BUILDIN(getCraftRecipe)
     for (int i = 0; i < craft_inventory_size; i++) {
         struct item_pair *entryItem = &entry_inventory->items[i];
 
-        int index4 = start4 + size;
-        int index5 = start5 + size;
+        uint32 index4 = start4 + size;
+        uint32 index5 = start5 + size;
 
         script->set_reg(st, NULL, reference_uid(id4, index4), name4, (const void *)h64BPTRSIZE(entryItem->amount), ref4);
         script->set_reg(st, NULL, reference_uid(id5, index5), name5, (const void *)h64BPTRSIZE(entryItem->index), ref5);
