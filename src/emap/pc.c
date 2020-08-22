@@ -461,6 +461,29 @@ int epc_setnewpc_post(int retVal,
     return retVal;
 }
 
+int epc_additem_pre(struct map_session_data **sdPtr __attribute__ ((unused)),
+                    const struct item **item_dataPtr,
+                    int *amountPtr __attribute__ ((unused)),
+                    e_log_pick_type *log_typePtr __attribute__ ((unused)))
+{
+#ifndef IT_VIRTUAL
+    return 0;
+#endif
+
+    const struct item *item_data = *item_dataPtr;
+
+    if (item_data != NULL) {
+        struct item_data *data = itemdb->search(item_data->nameid);
+
+        if (data != NULL && data->type == IT_VIRTUAL) {
+            hookStop();
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int epc_additem_post(int retVal,
                      struct map_session_data *sd,
                      const struct item *item_data,
@@ -542,11 +565,28 @@ bool epc_can_insert_card_into_post(bool retVal,
         const int newCardId = sd->status.inventory[idx_card].nameid;
         int cardAmountLimit = 0;
 
+        struct item_group *card_group = NULL;
+
         for (f = 0; f < sz; f ++)
         {
             struct ItemCardExt *const card = &VECTOR_INDEX(data->allowedCards, f);
-            if (card->id == newCardId)
-            {
+            struct item_data *card_itemdata = itemdb->search(card->id);
+
+            if (card_itemdata->group != NULL) {
+                card_group = card_itemdata->group;
+
+                for (int c = 0; c < card_group->qty; c++) {
+                    if (card_group->nameid[c] == newCardId) {
+                        cardAmountLimit = card->amount;
+                        break;
+                    }
+                }
+
+                if (cardAmountLimit) {
+                    // we found it in a group, so break
+                    break;
+                }
+            } else if (card->id == newCardId) {
                 cardAmountLimit = card->amount;
                 break;
             }
@@ -559,8 +599,17 @@ bool epc_can_insert_card_into_post(bool retVal,
         for (f = 0; f < slots; f ++)
         {
             const int cardId = sd->status.inventory[idx_equip].card[f];
-            if (cardId == newCardId)
+            if (cardId == newCardId) {
                 cardsAmount ++;
+            } else if (card_group != NULL) {
+                // use the same counter for all cards that belong to the group
+                for (int c = 0; c < card_group->qty; c++) {
+                    if (card_group->nameid[c] == cardId) {
+                        cardsAmount++;
+                        break;
+                    }
+                }
+            }
         }
         return cardAmountLimit > cardsAmount;
     }

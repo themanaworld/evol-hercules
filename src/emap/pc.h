@@ -63,6 +63,11 @@ int epc_setnewpc_post(int retVal,
                       int sex,
                       int fd);
 
+int epc_additem_pre(struct map_session_data **sdPtr,
+                    const struct item **item_dataPtr,
+                    int *amountPtr,
+                    e_log_pick_type *log_typePtr);
+
 int epc_additem_post(int retVal,
                      struct map_session_data *sd,
                      const struct item *item_data,
