@@ -109,6 +109,12 @@ void escript_hardcoded_constants_pre(void)
     script->set_constant("NPCSUBTYPE_SCRIPT", SCRIPT, false, false);
     script->set_constant("NPCSUBTYPE_CASHSHOP", CASHSHOP, false, false);
     script->set_constant("NPCSUBTYPE_TOMB", TOMB, false, false);
+
+    // new item types
+#ifdef IT_VIRTUAL
+    script->set_constant("IT_VIRTUAL", IT_VIRTUAL, false, false);
+#endif
+
     script->constdb_comment(NULL);
     eskill_addskill_conststants();
 }

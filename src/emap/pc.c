@@ -461,6 +461,29 @@ int epc_setnewpc_post(int retVal,
     return retVal;
 }
 
+int epc_additem_pre(struct map_session_data **sdPtr __attribute__ ((unused)),
+                    const struct item **item_dataPtr,
+                    int *amountPtr __attribute__ ((unused)),
+                    e_log_pick_type *log_typePtr __attribute__ ((unused)))
+{
+#ifndef IT_VIRTUAL
+    return 0;
+#endif
+
+    const struct item *item_data = *item_dataPtr;
+
+    if (item_data != NULL) {
+        struct item_data *data = itemdb->search(item_data->nameid);
+
+        if (data != NULL && data->type == IT_VIRTUAL) {
+            hookStop();
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int epc_additem_post(int retVal,
                      struct map_session_data *sd,
                      const struct item *item_data,
