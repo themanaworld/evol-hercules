@@ -542,11 +542,28 @@ bool epc_can_insert_card_into_post(bool retVal,
         const int newCardId = sd->status.inventory[idx_card].nameid;
         int cardAmountLimit = 0;
 
+        struct item_group *card_group = NULL;
+
         for (f = 0; f < sz; f ++)
         {
             struct ItemCardExt *const card = &VECTOR_INDEX(data->allowedCards, f);
-            if (card->id == newCardId)
-            {
+            struct item_data *card_itemdata = itemdb->search(card->id);
+
+            if (card_itemdata->group != NULL) {
+                card_group = card_itemdata->group;
+
+                for (int c = 0; c < card_group->qty; c++) {
+                    if (card_group->nameid[c] == newCardId) {
+                        cardAmountLimit = card->amount;
+                        break;
+                    }
+                }
+
+                if (cardAmountLimit) {
+                    // we found it in a group, so break
+                    break;
+                }
+            } else if (card->id == newCardId) {
                 cardAmountLimit = card->amount;
                 break;
             }
@@ -559,8 +576,17 @@ bool epc_can_insert_card_into_post(bool retVal,
         for (f = 0; f < slots; f ++)
         {
             const int cardId = sd->status.inventory[idx_equip].card[f];
-            if (cardId == newCardId)
+            if (cardId == newCardId) {
                 cardsAmount ++;
+            } else if (card_group != NULL) {
+                // use the same counter for all cards that belong to the group
+                for (int c = 0; c < card_group->qty; c++) {
+                    if (card_group->nameid[c] == cardId) {
+                        cardsAmount++;
+                        break;
+                    }
+                }
+            }
         }
         return cardAmountLimit > cardsAmount;
     }
