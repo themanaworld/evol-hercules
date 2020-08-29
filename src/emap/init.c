@@ -220,6 +220,7 @@ HPExport void plugin_init (void)
     addScriptCommand("aggravate", "i", aggravate);
     addScriptCommand("getnpcsubtype", "?", getNpcSubtype);
     addScriptCommand("kick", "v?", kick);
+    addScriptCommand("getskillname", "i", getskillname);
 
     do_init_langs();
 
