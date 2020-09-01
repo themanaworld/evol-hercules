@@ -20,6 +20,7 @@
 #include "map/pc.h"
 #include "map/refine.h"
 #include "map/script.h"
+#include "map/skill.h"
 #include "map/quest.h"
 
 #include "emap/clif.h"
@@ -2636,3 +2637,17 @@ BUILDIN(kick)
     script_pushint(st, 1);
     return true;
 }
+
+BUILDIN(getskillname)
+{
+    int skill_id = script_getnum(st, 2);
+
+    if (skill_id < 0) {
+        script_pushstr(st, "");
+        return false;
+    }
+
+    script_pushstrcopy(st, skill->get_desc(skill_id));
+    return true;
+}
+

@@ -105,5 +105,6 @@ BUILDIN(aggravate);
 BUILDIN(getNpcSubtype);
 BUILDIN(kick);
 BUILDIN(getCraftRecipe);
+BUILDIN(getskillname);
 
 #endif  // EVOL_MAP_SCRIPT_BUILDINS
