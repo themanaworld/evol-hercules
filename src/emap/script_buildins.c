@@ -1463,11 +1463,23 @@ BUILDIN(npcStand)
 
 BUILDIN(npcWalkTo)
 {
-    struct npc_data *nd = map->id2nd(st->oid);
+    struct npc_data *nd = NULL;
     int x = 0, y = 0;
 
     x = script_getnum(st, 2);
     y = script_getnum(st, 3);
+    if (script_hasdata(st, 4) && script_isstringtype(st, 4))
+    {
+        nd = npc->name2id(script_getstr(st, 4));
+    }
+    else if (script_hasdata(st, 4))
+    {
+        nd = map->id2nd(script_getnum(st, 4));
+    }
+    else
+    {
+        nd = map->id2nd(st->oid);
+    }
 
     if (nd)
     {
