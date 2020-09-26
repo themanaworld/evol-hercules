@@ -921,6 +921,30 @@ BUILDIN(changeMusic)
     return true;
 }
 
+// changePlayerMusic(music)
+BUILDIN(changePlayerMusic)
+{
+    const char *const music = script_getstr(st, 2);
+    if (!music)
+    {
+        ShowWarning("invalid music file\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    struct map_session_data *sd = NULL;
+    sd = script->rid2sd(st);
+    if (sd == NULL)
+    {
+        ShowWarning("player not attached\n");
+        script->reportsrc(st);
+        return false;
+    }
+
+    send_changemusic(sd->fd, music);
+    return true;
+}
+
 BUILDIN(setNpcDialogTitle)
 {
     const char *const name = script_getstr(st, 2);
