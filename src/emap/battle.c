@@ -91,8 +91,8 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
                                               struct block_list *src,
                                               struct block_list *target,
                                               uint16 skill_id,
-                                              uint16 skill_lv __attribute__ ((unused)),
-                                              int wflag __attribute__ ((unused)))
+                                              uint16 skill_lv,
+                                              int wflag)
 {
     if (src == NULL)
         return retVal;
@@ -100,6 +100,14 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
     struct map_session_data *sd = BL_CAST(BL_PC, src);
     if (sd == NULL)
         return retVal;
+
+    // Staffs and Books will use MATK instead of ATK.
+    // These regular attacks are still subject to regular DEF/Evade/etc.
+    // And base attack bonus might still be gained from STR instead of INT.
+    // TODO: Move this to a pre-hook to avoid extra calculation
+    if (!skill_id && (sd->weapontype == W_STAFF || sd->weapontype == W_BOOK)) {
+        retVal=battle->calc_magic_attack(src, target, skill_id, skill_lv, wflag);
+    }
 
     struct mob_data *md = BL_CAST(BL_MOB, target);
     if (md == NULL)
