@@ -39,6 +39,7 @@ BUILDIN(setAvatarDir);
 BUILDIN(setAvatarAction);
 BUILDIN(clear);
 BUILDIN(changeMusic);
+BUILDIN(changePlayerMusic);
 BUILDIN(setNpcDialogTitle);
 BUILDIN(getMapName);
 BUILDIN(unequipById);

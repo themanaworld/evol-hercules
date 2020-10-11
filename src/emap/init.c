@@ -169,6 +169,7 @@ HPExport void plugin_init (void)
     addScriptCommand("setavataraction", "i", setAvatarAction);
     addScriptCommand("clear", "", clear);
     addScriptCommand("changemusic", "ss", changeMusic);
+    addScriptCommand("changeplayermusic", "s", changePlayerMusic);
     addScriptCommand("setnpcdialogtitle", "s", setNpcDialogTitle);
     addScriptCommand("getmapname", "", getMapName);
     addScriptCommand("unequipbyid", "i", unequipById);

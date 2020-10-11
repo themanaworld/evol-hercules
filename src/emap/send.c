@@ -298,6 +298,24 @@ void send_advmoving(struct unit_data* ud, bool moving, struct block_list *tbl, e
     aFree(buf);
 }
 
+void send_changemusic(int fd, const char *music)
+{
+    if (!music)
+        return;
+
+    const int sz = (int)strlen(music) + 5;
+    char *buf;
+
+    CREATE(buf, char, sz);
+    WBUFW (buf, 0) = 0xb05 + evolPacketOffset;
+    WBUFW (buf, 2) = sz;
+    strcpy (WBUFP (buf, 4), music);
+	WFIFOHEAD(fd,sz);
+	memcpy(WFIFOP(fd,0), buf, sz);
+	WFIFOSET(fd,sz);
+    aFree(buf);
+}
+
 void send_changemusic_brodcast(const int map, const char *music)
 {
     if (!music)

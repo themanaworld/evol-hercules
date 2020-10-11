@@ -22,6 +22,7 @@ void send_mapmask(int fd, int mask);
 void send_mapmask_brodcast(const int map, const int mask);
 void send_mob_info(struct block_list* bl1, struct block_list* bl2, enum send_target target);
 void send_advmoving(struct unit_data* ud, bool moving, struct block_list *tbl, enum send_target target);
+void send_changemusic(int fd, const char *music);
 void send_changemusic_brodcast(const int map, const char *music);
 void send_changenpc_title (struct map_session_data *sd, const int npcId, const char *name);
 void send_join_ack(int fd, const char *const name, int flag);
