@@ -91,8 +91,8 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
                                               struct block_list *src,
                                               struct block_list *target,
                                               uint16 skill_id,
-                                              uint16 skill_lv,
-                                              int wflag)
+                                              uint16 skill_lv __attribute__ ((unused)),
+                                              int wflag __attribute__ ((unused)))
 {
     if (src == NULL)
         return retVal;
