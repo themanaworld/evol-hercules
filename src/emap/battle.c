@@ -105,9 +105,11 @@ struct Damage ebattle_calc_weapon_attack_post(struct Damage retVal,
     // These regular attacks are still subject to regular DEF/Evade/etc.
     // And base attack bonus might still be gained from STR instead of INT.
     // TODO: Move this to a pre-hook to avoid extra calculation
+    /* FIXME - Uncomment & Deploy after fixing infinite loop
     if (!skill_id && (sd->weapontype == W_STAFF || sd->weapontype == W_BOOK)) {
         retVal=battle->calc_magic_attack(src, target, skill_id, skill_lv, wflag);
     }
+    */
 
     struct mob_data *md = BL_CAST(BL_MOB, target);
     if (md == NULL)
