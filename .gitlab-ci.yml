@@ -116,17 +116,30 @@ clang-3.9:
   - ./tools/ci/jobs/clang7.sh --enable-werror
   image: i386/debian:unstable
 
-clang-8:
+.clang-8:
   stage: build
   script:
   - ./tools/ci/jobs/clang8.sh --enable-werror
   image: debian:unstable
 
-clang-8-i386:
+.clang-8-i386:
   stage: build
   script:
   - ./tools/ci/jobs/clang8.sh --enable-werror
   image: i386/debian:unstable
+
+clang-10:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang10.sh --enable-werror
+  image: debian:unstable
+
+clang-10-i386:
+  stage: build
+  script:
+  - ./tools/ci/jobs/clang10.sh --enable-werror
+  image: i386/debian:unstable
+
 
 # tests
 
