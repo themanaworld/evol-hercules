@@ -130,7 +130,7 @@ HPExport void plugin_init (void)
     addScriptCommand("getitemlink", "v*", getItemLink);
     addScriptCommand("getinvindexlink", "i", getInvIndexLink);
     addScriptCommand("l", "s*", l);
-    addScriptCommand("lg", "s*", lg);
+    addScriptCommandDeprecated("lg", "s*", lg);
     addScriptCommand("requestlang", "", requestLang);
     addScriptCommand("requestitem", "", requestItem);
     addScriptCommand("requestitems", "*", requestItems);
